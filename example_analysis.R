@@ -73,6 +73,7 @@ dfS2 <- dfS1[dfS1$t < 140,]
 # Calculate the locations of equally spaced knots
 knots <- get_knots(dfS2$t, days_per_knot = 5, spline_degree = 3)
 
+
 ps_mp_data <- list(num_data = nrow(dfS2),
                    num_path = 3,
                    num_knots = length(knots),
@@ -80,7 +81,10 @@ ps_mp_data <- list(num_data = nrow(dfS2),
                    spline_degree=3,
                    Y = dfS2$y,
                    X = dfS2$t,
-                   P = t(matrix(data= c(dfS2$H3N2, dfS2$H1N1, dfS2$B), ncol=3)) ) 
+                   P = t(matrix(data= c(dfS2$H3N2, dfS2$H1N1, dfS2$B), ncol=3)),
+                   week_effect = 1,
+                   DOW = (dfS2$t %% 1)+1,
+                   cov_structure = 0) 
 
 ps_mp_fit <- sampling(ps_mp_mod,
                       iter= 2000,
