@@ -1,17 +1,9 @@
-setwd("C:/Users/EALESO/OneDrive - The University of Melbourne/Projects/EpidemicAnalytics")
 
 # Loading required packages
 library(ggplot2)
 library(rstan)
 
-
-# Loading required functions
-source('R/rw_analysis_scripts.R')
-source('R/ps_analysis_scripts.R')
-source('R/rw_single_analysis_scripts.R')
-source('R/ps_single_analysis_scripts.R')
-
-# Load some real data 
+# Load aus data
 df1 <- read.csv('example_data/aus_influenza_data.csv')
 
 # Set limits on dates to consider
@@ -35,6 +27,7 @@ dfC1 <- dfC1[dfC1$geography=="England",]
 
 dfC1 <- dfC1[order(dfC1$date),]
 dfC1$time <- seq(1, nrow(dfC1))
+
 # Set some stan settings
 rstan::rstan_options(auto_write = TRUE)
 options(mc.cores = 4)
@@ -44,28 +37,26 @@ options(mc.cores = 4)
 #############################################################################################################################################
 ## Example 1
 # Random-walk model, influenza A not-subtyped nuance, fit to Australian influenza data (obtained from WHO)
-rw_influenza_mod <- stan_model('stan/rw_influenza.stan')
 
-rw_influenza_data1 <- list(num_data = nrow(df1),
-                           num_path = 4,
-                           Y = df1$ili,
-                           P1 = t(matrix(data= c(df1$inf_A, df1$inf_B, df1$num_spec-df1$inf_all), ncol=3) ),
-                           P2 = t(matrix(data= c(df1$inf_H3N2, df1$inf_H1N1), ncol=2) ),
-                           week_effect = 1,
-                           DOW = (df1$time %% 1)+1,
-                           cov_structure = 1)
-
-rw_influenza_fit <- sampling(rw_influenza_mod,
-                   iter=2000,
-                   warmup =500,
-                   chains=4,
-                   data = rw_influenza_data1)
+rw_influenza_fit <- rw_influenza_stan(
+  num_data = nrow(df1),
+  num_path = 4,
+  Y = df1$ili,
+  P1 = t(matrix(data = c(df1$inf_A, df1$inf_B,
+                         df1$num_spec - df1$inf_all),
+                ncol = 3) ),
+  P2 = t(matrix(data = c(df1$inf_H3N2, df1$inf_H1N1),
+                ncol = 2) ),
+  week_effect = 1,
+  DOW = (df1$time %% 1) + 1,
+  cov_structure = 1,
+  iter = 2000,
+  warmup = 500,
+  chains = 4)
 
 ######################################################################################################################################################
-## Example 2 
+## Example 2
 #Penalised-spline model, multiple-pathogens, fit up to day 140 of simulated dataset to demonstrate utility during flu-season/pandemic
-
-ps_mp_mod <- stan_model('stan/ps_mp.stan')
 
 # Fitting the model 'mid-season', only include first 140 days
 dfS2 <- dfS1[dfS1$t < 140,]
@@ -73,56 +64,48 @@ dfS2 <- dfS1[dfS1$t < 140,]
 # Calculate the locations of equally spaced knots
 knots <- get_knots(dfS2$t, days_per_knot = 5, spline_degree = 3)
 
-
-ps_mp_data <- list(num_data = nrow(dfS2),
-                   num_path = 3,
-                   num_knots = length(knots),
-                   knots = knots,
-                   spline_degree=3,
-                   Y = dfS2$y,
-                   X = dfS2$t,
-                   P = t(matrix(data= c(dfS2$H3N2, dfS2$H1N1, dfS2$B), ncol=3)),
-                   week_effect = 1,
-                   DOW = (dfS2$t %% 1)+1,
-                   cov_structure = 0) 
-
-ps_mp_fit <- sampling(ps_mp_mod,
-                      iter= 2000,
-                      warmup = 500,
-                      chains=4,
-                      data = ps_mp_data)
+ps_mp_fit <- ps_mp_stan(
+  num_data = nrow(dfS2),
+  num_path = 3,
+  num_knots = length(knots),
+  knots = knots,
+  spline_degree = 3,
+  Y = dfS2$y,
+  X = dfS2$t,
+  P = t(matrix(data = c(dfS2$H3N2, dfS2$H1N1, dfS2$B),
+               ncol = 3)),
+  week_effect = 1,
+  DOW = (dfS2$t %% 1) + 1,
+  cov_structure = 0,
+  iter = 2000,
+  warmup = 500,
+  chains = 4)
 
 
 ######################################################################################################################################################
 ## Example 3
 #Penalised-spline model, multiple-pathogens, fit up to day 140 of simulated dataset to demonstrate utility during flu-season/pandemic
 
-ps_single_mod <- stan_model('stan/ps_single.stan')
-
 # Fitting the model 'mid-season', only include first 140 days
 
 # Calculate the locations of equally spaced knots
 knots <- get_knots(dfC1$time, days_per_knot = 5, spline_degree = 3)
 
-ps_single_data <- list(num_data = nrow(dfC1),
-                   num_knots = length(knots),
-                   knots = knots,
-                   spline_degree=3,
-                   Y = dfC1$metric_value,
-                   X = dfC1$time,
-                   week_effect=7,
-                   DOW = (dfC1$time %% 7)+1) 
-
-ps_single_fit <- sampling(ps_single_mod,
-                      iter= 2000,
-                      warmup = 500,
-                      chains=4,
-                      data = ps_single_data)
-
-
+ps_single_fit <- ps_single_stan(
+  num_data = nrow(dfC1),
+  num_knots = length(knots),
+  knots = knots,
+  spline_degree = 3,
+  Y = dfC1$metric_value,
+  X = dfC1$time,
+  week_effect = 7,
+  DOW = (dfC1$time %% 7) + 1,
+  iter = 2000,
+  warmup = 500,
+  chains = 4)
 
 ######################################################################################################################################################
-## Example 1 Figures 
+## Example 1 Figures
 
 rw_mod_inc <- rw_incidence(rw_influenza_fit, num_days = nrow(df1), time_labels = df1$week)
 
@@ -171,7 +154,7 @@ ggplot(rw_mod_gr)+
   theme_bw(base_size = 14)+
   geom_hline(yintercept = 0, linetype="dashed")+
   scale_y_continuous(
-    "Growth rate", 
+    "Growth rate",
     sec.axis = sec_axis(~., breaks=c(log(2)*7/3, log(2)*7/5, log(2)*7/7, log(2)*7/14,0, -log(2)*7/14, -log(2)*7/7, -log(2)*7/5, -log(2)*7/3), labels = c("3", "5", "7", "14", expression(infinity/-infinity), "-14", "-7", "-5", "-3"), name = "Doubling(+) / Halving(-) time (days)")
   )
 
@@ -202,7 +185,7 @@ ggplot(mod_inc)+
   geom_ribbon(aes(x=time, y=y, ymin=lb_50, ymax=ub_50, fill=pathogen), alpha=0.2)+
   geom_ribbon(aes(x=time, y=y, ymin=lb_95, ymax=ub_95, fill=pathogen), alpha=0.2)+
   geom_point(data=dfS1, aes(x=t+0.2, y=y))
-#geom_point(data=dfS1, aes(x=t, y=y*H3N2/tests, color="Influenza A H3N2"))+ 
+#geom_point(data=dfS1, aes(x=t, y=y*H3N2/tests, color="Influenza A H3N2"))+
 #geom_point(data=dfS1, aes(x=t, y=y*H1N1/tests, color="Influenza A H1N1"))+
 #geom_point(data=dfS1, aes(x=t, y=y*B/tests, color="Influenza B"))
 
@@ -233,7 +216,7 @@ ggplot(mod_gr)+
   theme_bw(base_size = 14)+
   geom_hline(yintercept = 0, linetype="dashed")+
   scale_y_continuous(
-    "Growth rate", 
+    "Growth rate",
     sec.axis = sec_axis(~., breaks=c(log(2)/3, log(2)/5, log(2)/7, log(2)/14,0, -log(2)/14, -log(2)/7, -log(2)/5, -log(2)/3), labels = c("3", "5", "7", "14", expression(infinity/-infinity), "-14", "-7", "-5", "-3"), name = "Doubling(+) / Halving(-) time (days)")
   )
 
@@ -290,7 +273,7 @@ ggplot(cov_mod_gr)+
   theme_bw(base_size = 14)+
   geom_hline(yintercept = 0, linetype="dashed")+
   scale_y_continuous(
-    "Growth rate", 
+    "Growth rate",
     sec.axis = sec_axis(~., breaks=c(log(2)/3, log(2)/5, log(2)/7, log(2)/14,0, -log(2)/14, -log(2)/7, -log(2)/5, -log(2)/3), labels = c("3", "5", "7", "14", expression(infinity/-infinity), "-14", "-7", "-5", "-3"), name = "Doubling(+) / Halving(-) time (days)")
   )
 
