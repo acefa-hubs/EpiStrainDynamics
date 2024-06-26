@@ -54,7 +54,7 @@ rw_single_growth_rate <- function(rw_fit, num_days, time_labels){
 
 
 # Modeled Rt estimates from incidence curve
-rw_Rt <- function(rw_fit,
+rw_single_Rt <- function(rw_fit,
                   num_days, time_labels,
                   tau_max=7,
                   gi_dist){
