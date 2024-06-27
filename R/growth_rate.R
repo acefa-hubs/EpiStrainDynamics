@@ -1,8 +1,8 @@
 
 # Returns data.frame() of modeled growth rates
-rw_single_growth_rate <- function(rw_fit, num_days, time_labels){
+rw_single_growth_rate <- function(fit, num_days, time_labels){
 
-  post <- rstan::extract(rw_fit)
+  post <- rstan::extract(fit)
 
   df <- data.frame()
 
@@ -28,9 +28,9 @@ rw_single_growth_rate <- function(rw_fit, num_days, time_labels){
 }
 
 # Returns data.frame() of modeled growth rates
-rw_growth_rate <- function(rw_fit, num_days, time_labels, num_path=4, pathogen_names=c("Influenza A H3N2", "Influenza A H1N1", "Influenza B", "Unknown")){
+rw_growth_rate <- function(fit, num_days, time_labels, num_path=4, pathogen_names=c("Influenza A H3N2", "Influenza A H1N1", "Influenza B", "Unknown")){
 
-  post <- rstan::extract(rw_fit)
+  post <- rstan::extract(fit)
 
   df <- data.frame()
 
@@ -80,7 +80,7 @@ rw_growth_rate <- function(rw_fit, num_days, time_labels, num_path=4, pathogen_n
 
 
 # Returns data.frame() of modeled growth rates
-ps_single_growth_rate <- function(ps_fit,
+ps_single_growth_rate <- function(fit,
                                   X,
                                   num_days = length(X), time_labels,
                                   days_per_knot = 5, spline_degree = 3){
@@ -99,7 +99,7 @@ ps_single_growth_rate <- function(ps_fit,
   B_true <- t(predict(B_true, X))
 
 
-  post <- rstan::extract(ps_fit)
+  post <- rstan::extract(fit)
 
   a <- array(data=NA, dim=c(nrow(post$a), num_days))
 
@@ -130,7 +130,7 @@ ps_single_growth_rate <- function(ps_fit,
 
 
 # Returns data.frame() of modeled growth rates
-ps_growth_rate <- function(ps_fit,
+ps_growth_rate <- function(fit,
                            X,
                            num_days = length(X), time_labels,
                            days_per_knot = 5, spline_degree = 3,
@@ -150,7 +150,7 @@ ps_growth_rate <- function(ps_fit,
   B_true <- t(predict(B_true, X))
 
 
-  post <- rstan::extract(ps_fit)
+  post <- rstan::extract(fit)
 
   a <- array(data=NA, dim=c(nrow(post$a), num_path, num_days))
 
@@ -190,7 +190,7 @@ ps_growth_rate <- function(ps_fit,
     prop <- length(total_i[ (log(total_i)-log(total_im1)) >0])/length(log(total_i)-log(total_im1))
     row <- data.frame(time = time_labels[i],
                       t_step = i,
-                      y=quan[[1]],
+                      y = quan[[1]],
                       lb_50 = quan[[3]],
                       ub_50 = quan[[4]],
                       lb_95 = quan[[2]],
