@@ -2,6 +2,7 @@
 # Loading required packages
 library(ggplot2)
 library(rstan)
+library(EpiStrainDynamics)
 
 # Load aus data
 df1 <- read.csv('example_data/aus_influenza_data.csv')
@@ -31,6 +32,9 @@ dfC1$time <- seq(1, nrow(dfC1))
 # Set some stan settings
 rstan::rstan_options(auto_write = TRUE)
 options(mc.cores = 4)
+iter <- 500
+warmup <- 200
+chains <- 3
 
 ## Loading and fitting Stan models example code for a few representative models
 
@@ -50,9 +54,9 @@ rw_influenza_fit <- rw_influenza_stan(
   week_effect = 1,
   DOW = (df1$time %% 1) + 1,
   cov_structure = 1,
-  iter = 2000,
-  warmup = 500,
-  chains = 4)
+  iter = iter,
+  warmup = warmup,
+  chains = chains)
 
 ######################################################################################################################################################
 ## Example 2
@@ -77,9 +81,9 @@ ps_mp_fit <- ps_mp_stan(
   week_effect = 1,
   DOW = (dfS2$t %% 1) + 1,
   cov_structure = 0,
-  iter = 2000,
-  warmup = 500,
-  chains = 4)
+  iter = iter,
+  warmup = warmup,
+  chains = chains)
 
 
 ######################################################################################################################################################
@@ -100,9 +104,9 @@ ps_single_fit <- ps_single_stan(
   X = dfC1$time,
   week_effect = 7,
   DOW = (dfC1$time %% 7) + 1,
-  iter = 2000,
-  warmup = 500,
-  chains = 4)
+  iter = iter,
+  warmup = warmup,
+  chains = chains)
 
 ######################################################################################################################################################
 ## Example 1 Figures
@@ -125,7 +129,10 @@ ggplot(rw_mod_inc[rw_mod_inc$pathogen %in% c("Influenza A H3N2", "Influenza A H1
   geom_point(data=df1, aes(x=week, y=ili*(inf_B/num_spec),  color="Influenza B"))+
   theme_bw()
 
-rw_mod_prop <- rw_proportion(rw_influenza_fit, num_days = nrow(df1), time_labels = df1$week)
+rw_mod_prop <- proportion(fit = rw_influenza_fit,
+                          method = 'rw',
+                          num_days = nrow(df1),
+                          time_labels = df1$week)
 
 ggplot(rw_mod_prop[rw_mod_prop$pathogen%in%c("Influenza", "Influenza A", "Influenza B"),])+
   geom_line(aes(x=time, y=y, color=pathogen))+
@@ -189,11 +196,15 @@ ggplot(mod_inc)+
 #geom_point(data=dfS1, aes(x=t, y=y*H1N1/tests, color="Influenza A H1N1"))+
 #geom_point(data=dfS1, aes(x=t, y=y*B/tests, color="Influenza B"))
 
-mod_prop <- ps_proportion(ps_mp_fit, dfS2$t, num_days=nrow(dfS2), time_labels = dfS2$t,
-                          num_path = 3,
-                          comb_num=list(c(1), c(2), c(3)),
-                          comb_den=list(c(1,2,3), c(1,2,3), c(1,2,3)),
-                          comb_names=c("Influenza A H3N2", "Influenza A H1N1", "Influenza B"))
+mod_prop <- proportion(fit = ps_mp_fit,
+                       X = dfS2$t,
+                       method = 'ps',
+                       num_days = nrow(dfS2),
+                       time_labels = dfS2$t,
+                       num_path = 3,
+                       comb_num = list(c(1), c(2), c(3)),
+                       comb_den = list(c(1,2,3), c(1,2,3), c(1,2,3)),
+                       comb_names = c("Influenza A H3N2", "Influenza A H1N1", "Influenza B"))
 
 ggplot(mod_prop)+
   geom_line(aes(x=time, y=y, color=pathogen))+
