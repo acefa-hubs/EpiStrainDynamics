@@ -1,18 +1,3 @@
-# rw_proportion <- function(fit,
-#                           num_days, time_labels,
-#                           num_path=4,
-#                           comb_num=list(c(1,2,3), c(1,2), c(3), c(1), c(2)),
-#                           comb_den=list(c(1,2,3,4), c(1,2,3,4), c(1,2,3,4), c(1,2), c(1,2) ),
-#                           comb_names=c("Influenza", "Influenza A", "Influenza B", "H3N2", "H1N1")){
-# ps_proportion <- function(fit,
-#                           X,
-#                           num_days = length(X), time_labels,
-#                           days_per_knot = 5, spline_degree = 3,
-#                           num_path=4,
-#                           comb_num=list(c(1,2,3), c(1,2), c(3), c(1), c(2)),
-#                           comb_den=list(c(1,2,3,4), c(1,2,3,4), c(1,2,3,4), c(1,2), c(1,2) ),
-#                           comb_names=c("Influenza", "Influenza A", "Influenza B", "H3N2", "H1N1") ){
-
 #' Get proportion from model fit
 #'
 #' @param fit model fit
