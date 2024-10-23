@@ -7,6 +7,7 @@ library(EpiStrainDynamics)
 source('R/fit_model.R')
 source('R/get_pathogen_info.R')
 source('R/get_model_info.R')
+source('R/get_knots.R')
 
 # Load aus data
 df1 <- read.csv('example_data/aus_influenza_data.csv')
@@ -62,3 +63,24 @@ out1 <- fit_model(data,
                  iter = 500,
                  warmup = 300,
                  chains = 3)
+
+# Example 2
+# Fitting the model 'mid-season', only include first 140 days
+dfS2 <- dfS1[dfS1$t < 140,]
+
+cases <- dfS2$y
+
+main_pathogens <- list(
+  influenzaA.H3N2 = dfS2$H3N2,
+  influenzaA.H1N1 = dfS2$H1N1,
+  influenzaB = dfS2$B)
+
+data <- list(cases = cases,
+             main_pathogens = main_pathogens)
+
+out2 <- fit_model(data,
+                  method = 'p-spline',
+                  iter = 500,
+                  warmup = 300,
+                  chains = 3)
+
