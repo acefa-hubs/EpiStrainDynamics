@@ -41,8 +41,6 @@ options(mc.cores = 4)
 
 # Example 1
 # create data objects
-cases <- df1$ili
-
 main_pathogens <- list(
   influenzaA = df1$inf_A,
   influenzaB = df1$inf_B,
@@ -52,8 +50,8 @@ influenzaA_subtypes <- list(
   influenzaA.H3N2 = df1$inf_H3N2,
   influenzaA.H1N1 = df1$inf_H1N1)
 
-
-data <- list(cases = cases,
+data <- list(cases = df1$ili,
+             time = df1$time,
              main_pathogens = main_pathogens,
              influenzaA_subtypes = influenzaA_subtypes)
 
@@ -68,14 +66,13 @@ out1 <- fit_model(data,
 # Fitting the model 'mid-season', only include first 140 days
 dfS2 <- dfS1[dfS1$t < 140,]
 
-cases <- dfS2$y
-
 main_pathogens <- list(
   influenzaA.H3N2 = dfS2$H3N2,
   influenzaA.H1N1 = dfS2$H1N1,
   influenzaB = dfS2$B)
 
-data <- list(cases = cases,
+data <- list(cases = dfS2$y,
+             time = dfS2$t,
              main_pathogens = main_pathogens)
 
 out2 <- fit_model(data,
@@ -84,3 +81,14 @@ out2 <- fit_model(data,
                   warmup = 300,
                   chains = 3)
 
+# Example 3
+# Penalised-spline model, multiple-pathogens, fit up to day 140 of simulated
+# dataset to demonstrate utility during flu-season/pandemic
+data <- list(cases = dfC1$metric_value,
+             time = dfC1$time)
+
+out3 <- fit_model(data,
+                  method = 'p-spline',
+                  iter = 500,
+                  warmup = 300,
+                  chains = 3)
