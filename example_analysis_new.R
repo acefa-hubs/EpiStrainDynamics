@@ -6,6 +6,7 @@ library(rstan)
 library(EpiStrainDynamics)
 source('R/fit_model.R')
 source('R/get_pathogen_info.R')
+source('R/get_model_info.R')
 
 # Load aus data
 df1 <- read.csv('example_data/aus_influenza_data.csv')
