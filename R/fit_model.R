@@ -6,17 +6,8 @@ fit_model <- function (data,
                        warmup,
                        chains) {
 
-  if ('influenzaA_subtypes' %in% names(data)) {
-    pathogen_type <- 'influenzaA_subtypes'
-    pathogen_names <- c(
-      names(data$influenzaA_subtypes),
-      names(data$main_pathogens)[names(data$main_pathogens) != 'influenzaA']
-    )
-  }
-  if (!'influenzaA_subtypes' %in% names(data)) {
-    pathogen_type <- 'other'
-    pathogen_names <- names(data$main_pathogens)
-  }
+  pathogen_type <- get_pathogen_info(data)$pathogen_type
+  pathogen_names <- get_pathogen_info(data)$pathogen_names
 
   # single pathogens
   if (length(pathogen_names) == 1 & method == 'p-spline') {
