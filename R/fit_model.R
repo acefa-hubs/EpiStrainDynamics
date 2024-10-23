@@ -1,6 +1,5 @@
 fit_model <- function (data,
                        method = c('p-spline', 'random_walk'),
-                       dow = TRUE,
                        covariance_structure = NULL,
                        iter,
                        warmup,
