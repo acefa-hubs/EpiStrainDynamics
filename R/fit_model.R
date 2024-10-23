@@ -12,20 +12,9 @@ fit_model <- function (data,
 
   # data into format for stan
   Y <- data$cases
-  main_pathogens <- t(matrix(
-    data = c(
-      data$main_pathogens$influenzaA,
-      data$main_pathogens$influenzaB,
-      data$main_pathogens$influenzaOther
-    )
-    ,
-    ncol = 3
-  ))
+  main_pathogens <- t(matrix(data = do.call(c, data$main_pathogens), ncol = 3))
   influenzaA_subtypes <- t(matrix(
-    data = c(
-      data$influenzaA_subtypes$influenzaA.H3N2,
-      data$influenzaA_subtypes$influenzaA.H1N1
-    ),
+    data = do.call(c, data$influenzaA_subtypes),
     ncol = 2
   ))
 
