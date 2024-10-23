@@ -13,11 +13,13 @@ fit_model <- function (data,
   # data into format for stan
   cases <- data$cases
   time <- data$time
-  main_pathogens <- t(matrix(
-    data = do.call(c, data$main_pathogens),
-    ncol = length(data$main_pathogens)
-  ))
-  if (pathogen_type == 'influenzaA_subtypes') {
+  if ('main_pathogens' %in% names(data)) {
+    main_pathogens <- t(matrix(
+      data = do.call(c, data$main_pathogens),
+      ncol = length(data$main_pathogens)
+    ))
+  }
+  if ('influenzaA_subtypes' %in% names(data)) {
     influenzaA_subtypes <- t(matrix(
       data = do.call(c, data$influenzaA_subtypes),
       ncol = length(data$influenzaA_subtypes)
@@ -25,7 +27,6 @@ fit_model <- function (data,
   }
 
   if (method == 'p-spline') {
-
     # Calculate the locations of equally spaced knots
     knots <- get_knots(time, days_per_knot = 5, spline_degree = 3)
   }
