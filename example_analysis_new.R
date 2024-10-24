@@ -9,86 +9,113 @@ source('R/get_pathogen_info.R')
 source('R/get_model_info.R')
 source('R/get_knots.R')
 
-# Load aus data
-df1 <- read.csv('example_data/aus_influenza_data.csv')
-
-# Set limits on dates to consider
-min_date <- as.Date("2011-08-29")
-max_date <- as.Date("2020-03-01")
-
-df1$week <- as.Date(df1$week)
-
-df1 <- df1[df1$week<max_date & df1$week>=min_date,]
-
-df1 <- df1[order(df1$week),]
-
-df1$time <- seq(1, nrow(df1))
-
-# Load some simulated data
-dfS1 <- read.csv('example_data/simulated_data1.csv')
-
-# Load some COVID data from the UK
-dfC1 <- read.csv('example_data/ukhsa-covid-data.csv')
-dfC1 <- dfC1[dfC1$geography=="England",]
-
-dfC1 <- dfC1[order(dfC1$date),]
-dfC1$time <- seq(1, nrow(dfC1))
-
 # Set some stan settings
 rstan::rstan_options(auto_write = TRUE)
 options(mc.cores = 4)
 
 
-# Example 1
+# Example 1 "influenza" models
 # create data objects
+# Load aus data
+influenza_data <- read.csv('example_data/aus_influenza_data.csv')
+
+# Set limits on dates to consider
+min_date <- as.Date("2011-08-29")
+max_date <- as.Date("2020-03-01")
+
+influenza_data$week <- as.Date(influenza_data$week)
+influenza_data <- influenza_data[influenza_data$week < max_date & influenza_data$week >= min_date, ]
+influenza_data <- influenza_data[order(influenza_data$week), ]
+influenza_data$time <- seq(1, nrow(influenza_data))
+
 main_pathogens <- list(
-  influenzaA = df1$inf_A,
-  influenzaB = df1$inf_B,
-  influenzaOther = df1$num_spec - df1$inf_all)
+  influenzaA = influenza_data$inf_A,
+  influenzaB = influenza_data$inf_B,
+  influenzaOther = influenza_data$num_spec - influenza_data$inf_all
+)
 
-influenzaA_subtypes <- list(
-  influenzaA.H3N2 = df1$inf_H3N2,
-  influenzaA.H1N1 = df1$inf_H1N1)
+influenzaA_subtypes <- list(influenzaA.H3N2 = influenza_data$inf_H3N2,
+                            influenzaA.H1N1 = influenza_data$inf_H1N1)
 
-data <- list(cases = df1$ili,
-             time = df1$time,
-             main_pathogens = main_pathogens,
-             influenzaA_subtypes = influenzaA_subtypes)
+influenza_data_list <- list(
+  cases = influenza_data$ili,
+  time = influenza_data$time,
+  main_pathogens = main_pathogens,
+  influenzaA_subtypes = influenzaA_subtypes
+)
 
 # fit
-out1 <- fit_model(data,
-                 method = 'random_walk',
-                 iter = 500,
-                 warmup = 300,
-                 chains = 3)
+rw_influenza <- fit_model(
+  influenza_data_list,
+  method = 'random_walk',
+  iter = 500,
+  warmup = 300,
+  chains = 3
+)
+ps_influenza <- fit_model(
+  influenza_data_list,
+  method = 'p-spline',
+  iter = 500,
+  warmup = 300,
+  chains = 3
+)
 
-# Example 2
+# Example 2 "mp" models
 # Fitting the model 'mid-season', only include first 140 days
-dfS2 <- dfS1[dfS1$t < 140,]
+# Load some simulated data
+sim_data_raw <- read.csv('example_data/simulated_data1.csv')
+sim_data <- sim_data_raw[sim_data_raw$t < 140, ]
 
 main_pathogens <- list(
-  influenzaA.H3N2 = dfS2$H3N2,
-  influenzaA.H1N1 = dfS2$H1N1,
-  influenzaB = dfS2$B)
+  influenzaA.H3N2 = sim_data$H3N2,
+  influenzaA.H1N1 = sim_data$H1N1,
+  influenzaB = sim_data$B
+)
 
-data <- list(cases = dfS2$y,
-             time = dfS2$t,
-             main_pathogens = main_pathogens)
+sim_data_list <- list(cases = sim_data$y,
+                      time = sim_data$t,
+                      main_pathogens = main_pathogens)
 
-out2 <- fit_model(data,
-                  method = 'p-spline',
-                  iter = 500,
-                  warmup = 300,
-                  chains = 3)
+rw_mp <- fit_model(
+  sim_data_list,
+  method = 'random_walk',
+  iter = 500,
+  warmup = 300,
+  chains = 3
+)
+ps_mp <- fit_model(
+  sim_data_list,
+  method = 'p-spline',
+  iter = 500,
+  warmup = 300,
+  chains = 3
+)
 
-# Example 3
+# Example 3 "single" models
 # Penalised-spline model, multiple-pathogens, fit up to day 140 of simulated
 # dataset to demonstrate utility during flu-season/pandemic
-data <- list(cases = dfC1$metric_value,
-             time = dfC1$time)
+# Load some COVID data from the UK
+covid_data <- read.csv('example_data/ukhsa-covid-data.csv')
+covid_data <- covid_data[covid_data$geography == "England", ]
 
-out3 <- fit_model(data,
-                  method = 'p-spline',
-                  iter = 500,
-                  warmup = 300,
-                  chains = 3)
+covid_data <- covid_data[order(covid_data$date), ]
+covid_data$time <- seq(1, nrow(covid_data))
+
+covid_data_list <- list(cases = covid_data$metric_value,
+                        time = covid_data$time)
+
+rw_single <- fit_model(
+  covid_data_list,
+  method = 'random_walk',
+  iter = 500,
+  warmup = 300,
+  chains = 3
+)
+ps_single <- fit_model(
+  covid_data_list,
+  method = 'p-spline',
+  iter = 500,
+  warmup = 300,
+  chains = 3
+)
+
