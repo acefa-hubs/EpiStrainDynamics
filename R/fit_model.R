@@ -45,6 +45,39 @@ fit_model <- function (data,
       warmup = warmup,
       chains = chains)
   }
+  if (model == 'ps_influenza') {
+    fit <- ps_influenza_stan(
+      num_data = length(cases),
+      num_path = length(pathogen_names),
+      num_knots = length(knots),
+      knots = knots,
+      spline_degree = 3,
+      Y = cases,
+      X = time,
+      P1 = main_pathogens,
+      P2 = influenzaA_subtypes,
+      week_effect = 1,
+      DOW = (time %% 1) + 1,
+      cov_structure = 1,
+      iter = iter,
+      warmup = warmup,
+      chains = chains)
+  }
+
+  if (model == 'rw_mp') {
+    fit <- rw_mp_stan(
+      num_data = length(cases),
+      num_path = length(pathogen_names),
+      Y = cases,
+      P = main_pathogens,
+      week_effect = 1,
+      DOW = (time %% 1) + 1,
+      cov_structure = 1,
+      iter = iter,
+      warmup = warmup,
+      chains = chains
+    )
+  }
   if (model == 'ps_mp') {
     fit <- ps_mp_stan(
       num_data = length(cases),
@@ -60,10 +93,12 @@ fit_model <- function (data,
       cov_structure = 0,
       iter = iter,
       warmup = warmup,
-      chains = chains)
+      chains = chains
+    )
   }
+
   if (model == 'ps_single') {
-    ps_single_fit <- ps_single_stan(
+    fit <- ps_single_stan(
       num_data = length(cases),
       num_knots = length(knots),
       knots = knots,
@@ -74,7 +109,16 @@ fit_model <- function (data,
       DOW = (time %% 7) + 1,
       iter = iter,
       warmup = warmup,
-      chains = chains)
+      chains = chains
+    )
+  }
+  if (model == 'rw_single') {
+    fit <- rw_single_stan(
+      num_data = length(cases),
+      Y = cases,
+      week_effect = 1,
+      DOW = (time %% 1) + 1
+    )
   }
 
   out <- list(fit = fit,
@@ -82,4 +126,5 @@ fit_model <- function (data,
               pathogen_names = pathogen_names)
 
   class(out) <- 'EpiStrain.fit'
+  return(out)
 }
