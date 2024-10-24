@@ -24,18 +24,21 @@ min_date <- as.Date("2011-08-29")
 max_date <- as.Date("2020-03-01")
 
 influenza_data$week <- as.Date(influenza_data$week)
-influenza_data <- influenza_data[influenza_data$week < max_date & influenza_data$week >= min_date, ]
+influenza_data <- influenza_data[influenza_data$week < max_date &
+                                   influenza_data$week >= min_date, ]
 influenza_data <- influenza_data[order(influenza_data$week), ]
 influenza_data$time <- seq(1, nrow(influenza_data))
 
 main_pathogens <- list(
   influenzaA = influenza_data$inf_A,
   influenzaB = influenza_data$inf_B,
-  influenzaOther = influenza_data$num_spec - influenza_data$inf_all
+  other = influenza_data$num_spec - influenza_data$inf_all
 )
 
-influenzaA_subtypes <- list(influenzaA.H3N2 = influenza_data$inf_H3N2,
-                            influenzaA.H1N1 = influenza_data$inf_H1N1)
+influenzaA_subtypes <- list(
+  influenzaA.H3N2 = influenza_data$inf_H3N2,
+  influenzaA.H1N1 = influenza_data$inf_H1N1
+)
 
 influenza_data_list <- list(
   cases = influenza_data$ili,
@@ -56,6 +59,7 @@ ps_influenza <- fit_model(
   influenza_data_list,
   method = 'p-spline',
   spline_degree = 3,
+  days_per_knot = 5,
   iter = 500,
   warmup = 300,
   chains = 3
@@ -88,6 +92,7 @@ ps_mp <- fit_model(
   sim_data_list,
   method = 'p-spline',
   spline_degree = 3,
+  days_per_knot = 5,
   iter = 500,
   warmup = 300,
   chains = 3
@@ -116,6 +121,7 @@ ps_single <- fit_model(
   covid_data_list,
   method = 'p-spline',
   spline_degree = 3,
+  days_per_knot = 5,
   iter = 500,
   warmup = 300,
   chains = 3
