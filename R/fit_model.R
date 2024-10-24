@@ -1,6 +1,7 @@
 fit_model <- function (data,
                        method = c('p-spline', 'random_walk'),
                        spline_degree = NULL,
+                       days_per_knot = NULL,
                        covariance_structure = NULL,
                        iter,
                        warmup,
@@ -31,7 +32,8 @@ fit_model <- function (data,
 
   if (method == 'p-spline') {
     # Calculate the locations of equally spaced knots
-    knots <- get_knots(time, days_per_knot = 5, spline_degree = spline_degree)
+    knots <- get_knots(time, days_per_knot = days_per_knot,
+                       spline_degree = spline_degree)
   }
 
   # fit stan model
