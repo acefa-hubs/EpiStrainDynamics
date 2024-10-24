@@ -17,10 +17,10 @@ fit_model <- function (data,
   # data into format for stan
   cases <- data$cases
   time <- data$time
-  if ('main_pathogens' %in% names(data)) {
-    main_pathogens <- t(matrix(
-      data = do.call(c, data$main_pathogens),
-      ncol = length(data$main_pathogens)
+  if ('component_pathogens' %in% names(data)) {
+    component_pathogens <- t(matrix(
+      data = do.call(c, data$component_pathogens),
+      ncol = length(data$component_pathogens)
     ))
   }
   if ('influenzaA_subtypes' %in% names(data)) {
@@ -42,7 +42,7 @@ fit_model <- function (data,
       num_data = length(cases),
       num_path = length(pathogen_names),
       Y = cases,
-      P1 = main_pathogens,
+      P1 = component_pathogens,
       P2 = influenzaA_subtypes,
       week_effect = 1,
       DOW = (time %% 1) + 1,
@@ -60,7 +60,7 @@ fit_model <- function (data,
       spline_degree = spline_degree,
       Y = cases,
       X = time,
-      P1 = main_pathogens,
+      P1 = component_pathogens,
       P2 = influenzaA_subtypes,
       week_effect = 1,
       DOW = (time %% 1) + 1,
@@ -75,7 +75,7 @@ fit_model <- function (data,
       num_data = length(cases),
       num_path = length(pathogen_names),
       Y = cases,
-      P = main_pathogens,
+      P = component_pathogens,
       week_effect = 1,
       DOW = (time %% 1) + 1,
       cov_structure = 1,
@@ -93,7 +93,7 @@ fit_model <- function (data,
       spline_degree = spline_degree,
       Y = cases,
       X = time,
-      P = main_pathogens,
+      P = component_pathogens,
       week_effect = 1,
       DOW = (time %% 1) + 1,
       cov_structure = 0,
