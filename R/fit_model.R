@@ -128,6 +128,9 @@ fit_model <- function (data,
   out <- list(fit = fit,
               model = model,
               pathogen_names = pathogen_names)
+  if (exists(knots)) {
+    out <- c(out, knots = knots)
+  }
 
   class(out) <- 'EpiStrain.fit'
   return(out)
