@@ -1,9 +1,13 @@
 fit_model <- function (data,
                        method = c('p-spline', 'random_walk'),
+                       spline_degree = NULL,
                        covariance_structure = NULL,
                        iter,
                        warmup,
                        chains) {
+
+  try(if (model == 'p-spline' & is.null(spline_degree))
+    stop("Must specify spline_degree if using p-spline method"))
 
   pathogen_type <- get_pathogen_info(data)$pathogen_type
   pathogen_names <- get_pathogen_info(data)$pathogen_names
@@ -27,7 +31,7 @@ fit_model <- function (data,
 
   if (method == 'p-spline') {
     # Calculate the locations of equally spaced knots
-    knots <- get_knots(time, days_per_knot = 5, spline_degree = 3)
+    knots <- get_knots(time, days_per_knot = 5, spline_degree = spline_degree)
   }
 
   # fit stan model
@@ -51,7 +55,7 @@ fit_model <- function (data,
       num_path = length(pathogen_names),
       num_knots = length(knots),
       knots = knots,
-      spline_degree = 3,
+      spline_degree = spline_degree,
       Y = cases,
       X = time,
       P1 = main_pathogens,
@@ -84,7 +88,7 @@ fit_model <- function (data,
       num_path = length(pathogen_names),
       num_knots = length(knots),
       knots = knots,
-      spline_degree = 3,
+      spline_degree = spline_degree,
       Y = cases,
       X = time,
       P = main_pathogens,
@@ -102,7 +106,7 @@ fit_model <- function (data,
       num_data = length(cases),
       num_knots = length(knots),
       knots = knots,
-      spline_degree = 3,
+      spline_degree = spline_degree,
       Y = cases,
       X = time,
       week_effect = 7,

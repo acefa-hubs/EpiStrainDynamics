@@ -55,6 +55,7 @@ rw_influenza <- fit_model(
 ps_influenza <- fit_model(
   influenza_data_list,
   method = 'p-spline',
+  spline_degree = 3,
   iter = 500,
   warmup = 300,
   chains = 3
@@ -86,12 +87,12 @@ rw_mp <- fit_model(
 ps_mp <- fit_model(
   sim_data_list,
   method = 'p-spline',
+  spline_degree = 3,
   iter = 500,
   warmup = 300,
   chains = 3
 )
 
-# Example 3 "single" models
 # Penalised-spline model, multiple-pathogens, fit up to day 140 of simulated
 # dataset to demonstrate utility during flu-season/pandemic
 # Load some COVID data from the UK
@@ -114,6 +115,7 @@ rw_single <- fit_model(
 ps_single <- fit_model(
   covid_data_list,
   method = 'p-spline',
+  spline_degree = 3,
   iter = 500,
   warmup = 300,
   chains = 3
