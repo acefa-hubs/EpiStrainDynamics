@@ -29,7 +29,7 @@ influenza_data <- influenza_data[influenza_data$week < max_date &
 influenza_data <- influenza_data[order(influenza_data$week), ]
 influenza_data$time <- seq(1, nrow(influenza_data))
 
-main_pathogens <- list(
+component_pathogens <- list(
   influenzaA = influenza_data$inf_A,
   influenzaB = influenza_data$inf_B,
   other = influenza_data$num_spec - influenza_data$inf_all
@@ -43,7 +43,7 @@ influenzaA_subtypes <- list(
 influenza_data_list <- list(
   cases = influenza_data$ili,
   time = influenza_data$time,
-  main_pathogens = main_pathogens,
+  component_pathogens = component_pathogens,
   influenzaA_subtypes = influenzaA_subtypes
 )
 
@@ -71,7 +71,7 @@ ps_influenza <- fit_model(
 sim_data_raw <- read.csv('example_data/simulated_data1.csv')
 sim_data <- sim_data_raw[sim_data_raw$t < 140, ]
 
-main_pathogens <- list(
+component_pathogens <- list(
   influenzaA.H3N2 = sim_data$H3N2,
   influenzaA.H1N1 = sim_data$H1N1,
   influenzaB = sim_data$B
@@ -79,7 +79,7 @@ main_pathogens <- list(
 
 sim_data_list <- list(cases = sim_data$y,
                       time = sim_data$t,
-                      main_pathogens = main_pathogens)
+                      component_pathogens = component_pathogens)
 
 rw_mp <- fit_model(
   sim_data_list,
