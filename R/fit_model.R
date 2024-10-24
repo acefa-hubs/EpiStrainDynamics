@@ -2,6 +2,7 @@ fit_model <- function (data,
                        method = c('p-spline', 'random_walk'),
                        spline_degree = NULL,
                        days_per_knot = NULL,
+                       dow_effect = TRUE,
                        covariance_structure = NULL,
                        iter,
                        warmup,
@@ -36,6 +37,15 @@ fit_model <- function (data,
                        spline_degree = spline_degree)
   }
 
+  if (dow_effect) {
+    week_effect <- 7
+    DOW <- (time %% 7) + 1
+  }
+  if (!dow_effect) {
+    week_effect <- 1
+    DOW <- (time %% 1) + 1
+  }
+
   # fit stan model
   if (model == 'rw_influenza') {
     fit <- rw_influenza_stan(
@@ -44,8 +54,8 @@ fit_model <- function (data,
       Y = cases,
       P1 = component_pathogens,
       P2 = influenzaA_subtypes,
-      week_effect = 1,
-      DOW = (time %% 1) + 1,
+      week_effect = week_effect,
+      DOW = DOW,
       cov_structure = 1,
       iter = iter,
       warmup = warmup,
@@ -62,8 +72,8 @@ fit_model <- function (data,
       X = time,
       P1 = component_pathogens,
       P2 = influenzaA_subtypes,
-      week_effect = 1,
-      DOW = (time %% 1) + 1,
+      week_effect = week_effect,
+      DOW = DOW,
       cov_structure = 1,
       iter = iter,
       warmup = warmup,
@@ -76,8 +86,8 @@ fit_model <- function (data,
       num_path = length(pathogen_names),
       Y = cases,
       P = component_pathogens,
-      week_effect = 1,
-      DOW = (time %% 1) + 1,
+      week_effect = week_effect,
+      DOW = DOW,
       cov_structure = 1,
       iter = iter,
       warmup = warmup,
@@ -94,8 +104,8 @@ fit_model <- function (data,
       Y = cases,
       X = time,
       P = component_pathogens,
-      week_effect = 1,
-      DOW = (time %% 1) + 1,
+      week_effect = week_effect,
+      DOW = DOW,
       cov_structure = 0,
       iter = iter,
       warmup = warmup,
@@ -111,8 +121,8 @@ fit_model <- function (data,
       spline_degree = spline_degree,
       Y = cases,
       X = time,
-      week_effect = 7,
-      DOW = (time %% 7) + 1,
+      week_effect = week_effect,
+      DOW = DOW,
       iter = iter,
       warmup = warmup,
       chains = chains
@@ -122,8 +132,8 @@ fit_model <- function (data,
     fit <- rw_single_stan(
       num_data = length(cases),
       Y = cases,
-      week_effect = 1,
-      DOW = (time %% 1) + 1
+      week_effect = week_effect,
+      DOW = DOW
     )
   }
 
