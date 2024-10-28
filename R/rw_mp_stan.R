@@ -4,9 +4,10 @@
 #'
 #' @param num_data number of data points
 #' @param num_path number of pathogens
-#' @param Y daily number of 'cases'
+#' @param Y outcome variable, eg daily number of cases
 #' @param P daily number of lab tests positive for each pathogen
-#' @param week_effect Number of days in day of week effect? 1=none, 2=weekends?, 7=all days
+#' @param week_effect Number of distinct days in day of week effect. 1 = single
+#'  effect shared by all days (essentially no DOW), 7 = each day a unique effect
 #' @param DOW integer of day of the week
 #' @param cov_structure 0 is tau[1], 1 is tau[num_path], 2 is Sigma[num_path, num_path]
 #' @param ... Arguments passed to `rstan::sampling` (e.g. iter, chains).

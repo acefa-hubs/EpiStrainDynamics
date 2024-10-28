@@ -3,15 +3,17 @@
 #' @export
 #'
 #' @param num_data number of data points
-#' @param num_knots num of knots
-#' @param num_path
+#' @param num_knots number of knots
+#' @param num_path number of pathogens
 #' @param knots the sequence of knots
 #' @param spline_degree the degree of spline (is equal to order - 1)
-#' @param Y
-#' @param P1 daily number of lab tests positive for influenza A (1st entry) and all other pathogens
-#' @param P2 daily number of influenza A H3N2, and influenza A H1N1
-#' @param X
-#' @param week_effect Number of days in day of week effect? 1=none, 2=weekends?, 7=all days
+#' @param Y outcome variable, eg daily number of cases
+#' @param P1 daily number of lab tests positive for influenza A (must be 1st
+#'  column) and all other pathogens
+#' @param P2 daily number of influenza A subtypes eg H3N2, H1N1
+#' @param X time data
+#' @param week_effect Number of distinct days in day of week effect. 1 = single
+#'  effect shared by all days (essentially no DOW), 7 = each day a unique effect
 #' @param DOW integer of day of the week
 #' @param cov_structure 0 is tau[1], 1 is tau[num_path], 2 is Sigma[num_path, num_path]
 #' @param ... Arguments passed to `rstan::sampling` (e.g. iter, chains).
