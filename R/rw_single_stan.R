@@ -3,8 +3,9 @@
 #' @export
 #'
 #' @param num_data number of data points
-#' @param Y daily number of 'cases'
-#' @param week_effect number of days in day of week effect? 1=none, 2=weekends?, 7=all days
+#' @param Y outcome variable, eg daily number of cases
+#' @param week_effect Number of distinct days in day of week effect. 1 = single
+#'  effect shared by all days (essentially no DOW), 7 = each day a unique effect
 #' @param DOW integer of day of the week
 #' @param ... Arguments passed to `rstan::sampling` (e.g. iter, chains).
 #'
