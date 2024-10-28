@@ -3,12 +3,13 @@
 #' @export
 #'
 #' @param num_data number of data points
-#' @param num_knots num of knots
+#' @param num_knots number of knots
 #' @param knots the sequence of knots
 #' @param spline_degree the degree of spline (is equal to order - 1)
-#' @param Y
-#' @param X
-#' @param week_effect Number of days in day of week effect? 1=none, 2=weekends?, 7=all days
+#' @param Y outcome variable, eg daily number of cases
+#' @param X time data
+#' @param week_effect Number of distinct days in day of week effect. 1 = single
+#'  effect shared by all days (essentially no DOW), 7 = each day a unique effect
 #' @param DOW integer of day of the week
 #' @param ... Arguments passed to `rstan::sampling` (e.g. iter, chains).
 #'
