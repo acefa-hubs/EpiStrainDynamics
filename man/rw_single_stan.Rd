@@ -9,9 +9,10 @@ rw_single_stan(num_data, Y, week_effect, DOW, ...)
 \arguments{
 \item{num_data}{number of data points}
 
-\item{Y}{daily number of 'cases'}
+\item{Y}{outcome variable, eg daily number of cases}
 
-\item{week_effect}{number of days in day of week effect? 1=none, 2=weekends?, 7=all days}
+\item{week_effect}{Number of distinct days in day of week effect. 1 = single
+effect shared by all days (essentially no DOW), 7 = each day a unique effect}
 
 \item{DOW}{integer of day of the week}
 

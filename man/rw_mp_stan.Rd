@@ -20,11 +20,12 @@ rw_mp_stan(
 
 \item{num_path}{number of pathogens}
 
-\item{Y}{daily number of 'cases'}
+\item{Y}{outcome variable, eg daily number of cases}
 
 \item{P}{daily number of lab tests positive for each pathogen}
 
-\item{week_effect}{Number of days in day of week effect? 1=none, 2=weekends?, 7=all days}
+\item{week_effect}{Number of distinct days in day of week effect. 1 = single
+effect shared by all days (essentially no DOW), 7 = each day a unique effect}
 
 \item{DOW}{integer of day of the week}
 
