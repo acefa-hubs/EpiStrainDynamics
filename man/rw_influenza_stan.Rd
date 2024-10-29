@@ -21,13 +21,15 @@ rw_influenza_stan(
 
 \item{num_path}{number of pathogens}
 
-\item{Y}{daily number of 'cases'}
+\item{Y}{outcome variable, eg daily number of cases}
 
-\item{P1}{daily number of lab tests positive for influenza A (1st entry) and all other pathogens}
+\item{P1}{daily number of lab tests positive for influenza A (must be 1st
+column) and all other pathogens}
 
 \item{P2}{daily number of influenza A H3N2, and influenza A H1N1}
 
-\item{week_effect}{Number of days in day of week effect? 1=none, 2=weekends?, 7=all days}
+\item{week_effect}{Number of distinct days in day of week effect. 1 = single
+effect shared by all days (essentially no DOW), 7 = each day a unique effect}
 
 \item{DOW}{integer of day of the week}
 

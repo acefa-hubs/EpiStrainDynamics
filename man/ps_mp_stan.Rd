@@ -22,19 +22,28 @@ ps_mp_stan(
 \arguments{
 \item{num_data}{number of data points}
 
-\item{num_knots}{num of knots}
+\item{num_knots}{number of knots}
+
+\item{num_path}{number of pathogens}
 
 \item{knots}{the sequence of knots}
 
 \item{spline_degree}{the degree of spline (is equal to order - 1)}
 
-\item{week_effect}{Number of days in day of week effect? 1=none, 2=weekends?, 7=all days}
+\item{Y}{outcome variable, eg daily number of cases}
+
+\item{P}{daily number of lab tests positive for each pathogen}
+
+\item{X}{time data}
+
+\item{week_effect}{Number of distinct days in day of week effect. 1 = single
+effect shared by all days (essentially no DOW), 7 = each day a unique effect}
+
+\item{DOW}{integer of day of the week}
 
 \item{cov_structure}{0 is tau\link{1}, 1 is tau\link{num_path}, 2 is Sigma\link{num_path, num_path}}
 
 \item{...}{Arguments passed to \code{rstan::sampling} (e.g. iter, chains).}
-
-\item{DOW[num_data]}{integer of day of the week}
 }
 \value{
 An object of class \code{stanfit} returned by \code{rstan::sampling}

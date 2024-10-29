@@ -23,17 +23,25 @@ ps_influenza_stan(
 \arguments{
 \item{num_data}{number of data points}
 
-\item{num_knots}{num of knots}
+\item{num_knots}{number of knots}
+
+\item{num_path}{number of pathogens}
 
 \item{knots}{the sequence of knots}
 
 \item{spline_degree}{the degree of spline (is equal to order - 1)}
 
-\item{P1}{daily number of lab tests positive for influenza A (1st entry) and all other pathogens}
+\item{Y}{outcome variable, eg daily number of cases}
 
-\item{P2}{daily number of influenza A H3N2, and influenza A H1N1}
+\item{P1}{daily number of lab tests positive for influenza A (must be 1st
+column) and all other pathogens}
 
-\item{week_effect}{Number of days in day of week effect? 1=none, 2=weekends?, 7=all days}
+\item{P2}{daily number of influenza A subtypes eg H3N2, H1N1}
+
+\item{X}{time data}
+
+\item{week_effect}{Number of distinct days in day of week effect. 1 = single
+effect shared by all days (essentially no DOW), 7 = each day a unique effect}
 
 \item{DOW}{integer of day of the week}
 
