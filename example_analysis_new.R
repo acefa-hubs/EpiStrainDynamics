@@ -51,6 +51,7 @@ influenza_data_list <- list(
 rw_influenza <- fit_model(
   influenza_data_list,
   method = 'random_walk',
+  smoothing_structure = 'independent',
   iter = 500,
   warmup = 300,
   chains = 3
