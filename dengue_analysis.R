@@ -1,5 +1,3 @@
-setwd("C:/Users/EALESO/OneDrive - The University of Melbourne/Projects/EpidemicAnalytics/GitHubRelease")
-
 # Loading required packages
 library(ggplot2)
 library(rstan)
