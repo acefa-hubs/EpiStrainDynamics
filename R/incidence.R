@@ -8,7 +8,7 @@ rw_single_incidence <- function(rw_fit, num_days, time_labels){
   df <- data.frame()
 
   for(i in 1:num_days){
-    quan<- quantile(post$a[,i], c(0.5,0.025, 0.25, 0.75, 0.975))
+    quan <- quantile(post$a[,i], c(0.5,0.025, 0.25, 0.75, 0.975))
     row <- data.frame(time = time_labels[i],
                       t_step = i,
                       y=exp(quan[[1]]),
@@ -24,7 +24,11 @@ rw_single_incidence <- function(rw_fit, num_days, time_labels){
 }
 
 # Returns data.frame() of modeled incidence
-rw_incidence <- function(rw_fit, num_days, time_labels, num_path=4, pathogen_names=c("Influenza A H3N2", "Influenza A H1N1", "Influenza B", "Unknown")){
+rw_incidence <- function(rw_fit, num_days, time_labels, num_path=4,
+                         pathogen_names=c("Influenza A H3N2",
+                                          "Influenza A H1N1",
+                                          "Influenza B",
+                                          "Unknown")){
 
   post <- rstan::extract(rw_fit)
 
