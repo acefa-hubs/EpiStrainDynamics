@@ -1,14 +1,22 @@
 fit_model <- function (data,
-                       method = c('p-spline', 'random_walk'),
+                       method = c(
+                         'p-spline',
+                         'random_walk'),
                        spline_degree = NULL,
                        days_per_knot = NULL,
                        dow_effect = TRUE,
-                       smoothing_structure = 2,
+                       smoothing_structure = c(
+                         'single',
+                         'independent',
+                         'correlated'),
                        iter,
                        warmup,
                        chains) {
 
-  try(if (model == 'p-spline' & is.null(spline_degree))
+  # add this check for days_per_knot as well
+  pspline_dependencies <- method == 'p-spline' &
+    (is.null(spline_degree) | is.null(days_per_knot))
+  try (if (pspline_dependencies)
     stop("Must specify spline_degree if using p-spline method"))
 
   pathogen_type <- get_pathogen_info(data)$pathogen_type
@@ -17,6 +25,7 @@ fit_model <- function (data,
 
   # data into format for stan
   cases <- data$cases
+  # need to set checks or internal code to modify format so that it's integer
   time <- data$time
   if ('component_pathogens' %in% names(data)) {
     component_pathogens <- t(matrix(
@@ -46,6 +55,10 @@ fit_model <- function (data,
     DOW <- (time %% 1) + 1
   }
 
+  if (smoothing_structure == 'single') cov_structure <- 0
+  if (smoothing_structure == 'independent') cov_structure <- 1
+  if (smoothing_structure == 'correlated') cov_structure <- 2
+
   # fit stan model
   if (model == 'rw_influenza') {
     fit <- rw_influenza_stan(
@@ -56,7 +69,7 @@ fit_model <- function (data,
       P2 = influenzaA_subtypes,
       week_effect = week_effect,
       DOW = DOW,
-      cov_structure = smoothing_structure,
+      cov_structure = cov_structure,
       iter = iter,
       warmup = warmup,
       chains = chains)
@@ -74,7 +87,7 @@ fit_model <- function (data,
       P2 = influenzaA_subtypes,
       week_effect = week_effect,
       DOW = DOW,
-      cov_structure = smoothing_structure,
+      cov_structure = cov_structure,
       iter = iter,
       warmup = warmup,
       chains = chains)
@@ -88,7 +101,7 @@ fit_model <- function (data,
       P = component_pathogens,
       week_effect = week_effect,
       DOW = DOW,
-      cov_structure = smoothing_structure,
+      cov_structure = cov_structure,
       iter = iter,
       warmup = warmup,
       chains = chains
@@ -106,7 +119,7 @@ fit_model <- function (data,
       P = component_pathogens,
       week_effect = week_effect,
       DOW = DOW,
-      cov_structure = smoothing_structure,
+      cov_structure = cov_structure,
       iter = iter,
       warmup = warmup,
       chains = chains
@@ -140,7 +153,7 @@ fit_model <- function (data,
   out <- list(fit = fit,
               model = model,
               pathogen_names = pathogen_names)
-  if (exists(knots)) {
+  if (exists('knots')) {
     out <- c(out, knots = knots)
   }
 
