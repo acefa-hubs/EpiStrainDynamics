@@ -1,4 +1,4 @@
-### Inferring temporal trends of multiple pathogens, variants, subtypes or serotypes from routine surveillance data.
+# Inferring temporal trends of multiple pathogens, variants, subtypes or serotypes from routine surveillance data.
 
 This repository recreates all analyses in the preprint:  Inferring temporal trends of multiple pathogens, variants, subtypes or serotypes from routine surveillance data.
 
