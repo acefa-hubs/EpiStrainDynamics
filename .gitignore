@@ -1,0 +1,6 @@
+.DS_Store
+Figures/
+FitStanModels/
+.Rhistory
+.Rproj.user/
+stan/*.rds
