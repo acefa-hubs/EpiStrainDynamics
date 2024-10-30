@@ -42,7 +42,7 @@ df1$time <- seq(1, nrow(df1))
 df2$time <- seq(1, nrow(df2))
 df3$time <- seq(1, nrow(df3))
 
-########################################################################################################################################################
+###############################################################################
 ## Set some stan settings
 rstan::rstan_options(auto_write = TRUE)
 options(mc.cores = 4)
@@ -50,7 +50,7 @@ options(mc.cores = 4)
 ## Loading stan model used for influenza analysis
 rw_influenza_mod <- stan_model('stan/rw_influenza_finalV2.stan')
 
-#############################################################################################################################################
+###############################################################################
 ## Models fit to Australia (for main analysis)
 rw_influenza_data1 <- list(
   num_data = nrow(df1),
@@ -108,7 +108,7 @@ rw_influenza_fit1_N1 <- sampling(
 saveRDS(rw_influenza_fit1_N1,
         "FitStanModels/rw_influenza_fit1_N1.rds")
 
-#############################################################################################################################################
+###############################################################################
 ## Model fit to United States of America (for main analysis)
 rw_influenza_data2 <- list(
   num_data = nrow(df2),
@@ -137,7 +137,8 @@ rw_influenza_fit2 <- sampling(
 
 saveRDS(rw_influenza_fit2, "FitStanModels/rw_influenza_fit2_N0.rds")
 
-## Model fit to United States of America with additional noise (for supplementary analysis)
+## Model fit to United States of America with additional noise
+# (for supplementary analysis)
 rw_influenza_data2_N1 <- list(
   num_data = nrow(df2),
   num_path = 4,
@@ -165,7 +166,7 @@ rw_influenza_fit2_N1 <- sampling(
 
 saveRDS(rw_influenza_fit2_N1, "FitStanModels/rw_influenza_fit2_N1.rds")
 
-#############################################################################################################################################
+###############################################################################
 ## Model fit to Singapore (for main analysis)
 rw_influenza_data3 <- list(
   num_data = nrow(df3),
@@ -223,9 +224,9 @@ rw_influenza_fit3_N1 <- sampling(
 saveRDS(rw_influenza_fit3_N1,
         "FitStanModels/rw_influenza_fit3_N1.rds")
 
-######################################################################################################################################################
+###############################################################################
 ## Main figures
-#########################################################################################################################################################
+###############################################################################
 # Read in the stan models that were saved
 rw_influenza_fit1 <- readRDS("FitStanModels/rw_influenza_fit1_N0.rds")
 rw_influenza_fit2 <- readRDS("FitStanModels/rw_influenza_fit2_N0.rds")
@@ -1004,7 +1005,8 @@ ggsave("Figures/InfluenzaNoise2.png",
        width = 10,
        height = 12)
 
-# Can also plot for Singapore, but model does not converge for the two noise parameters (see sup materials and below)
+# Can also plot for Singapore, but model does not converge for the two noise
+# parameters (see sup materials and below)
 # so this was not included in the paper
 ggplot(rw_mod3) +
   geom_line(aes(x = time, y = y, color = label), size = 0.2) +
@@ -1106,8 +1108,8 @@ ggplot(rw_mod_prop[rw_mod_prop$pathogen == "Influenza", ]) +
     ymax = ub_95,
     fill = country
   ), alpha = 0.2) +
-  coord_cartesian(xlim = c(as.Date("2012-01-01") + 180, as.Date("2024-01-01") -
-                             180)) +
+  coord_cartesian(xlim = c(as.Date("2012-01-01") + 180,
+                           as.Date("2024-01-01") - 180)) +
   scale_x_date(date_breaks = "1 year", date_labels =  "%Y") +
   scale_color_brewer("", palette = "Dark2") +
   scale_fill_brewer("", palette = "Dark2") +
