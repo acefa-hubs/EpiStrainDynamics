@@ -670,14 +670,6 @@ plt3 <- plt3 +
   theme(legend.position = "bottom",
         plot.tag.position = c(0.01, 0.96))
 
-plt4 <- plt4 +
-  labs(tag = "A") +
-  theme(
-    axis.title.x = element_blank(),
-    axis.text.x = element_blank(),
-    plot.tag.position = c(0.01, 0.96)
-  )
-
 plt1 + plt1i + plt2 + plt2i + plt3 + plot_spacer() +
   plot_layout(ncol = 2,
               widths = c(3, 1),
