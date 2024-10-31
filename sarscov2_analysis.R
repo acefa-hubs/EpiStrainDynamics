@@ -1,5 +1,4 @@
 
-
 # Loading required packages
 library(ggplot2)
 library(rstan)
@@ -86,10 +85,11 @@ df$total <- rowSums(mat)
 df$t <- as.numeric(df$date)
 df$t <- df$t - min(df$t) + 1
 
-# Include data after threshold for number of variants determined per day is reached
+# Include data after threshold for number of variants determined per day is
+# reached
 df <- df[df$date >= as.Date("2020-09-23"), ]
 
-##############################################################################################################################################
+###############################################################################
 # Set some stan settings
 rstan::rstan_options(auto_write = TRUE)
 options(mc.cores = 4)
@@ -98,7 +98,7 @@ options(mc.cores = 4)
 ps_single_mod <- stan_model('stan/ps_single_final.stan')
 ps_mp_mod <- stan_model('stan/ps_mp_finalV2.stan')
 
-######################################################################################################################################################
+###############################################################################
 ## Fitting to all data
 # Calculate the locations of equally spaced knots
 knots <- get_knots(df$t, days_per_knot = 5, spline_degree = 3)
@@ -128,8 +128,9 @@ ps_mp_fit <- sampling(
 )
 saveRDS(ps_mp_fit, "FitStanModels/ps_mp_fit.rds")
 
-######################################################################################################################################################
-## Subsetting data for analysis of Delta emergence fitting up to multiple time-points
+###############################################################################
+## Subsetting data for analysis of Delta emergence fitting up to multiple
+# time-points
 
 df3 <- df[df$date >= as.Date("2020-09-23") &
             df$date <= as.Date("2021-05-04"), ]
@@ -144,7 +145,7 @@ df7 <- df[df$date >= as.Date("2020-09-23") &
 df8 <- df[df$date >= as.Date("2020-09-23") &
             df$date <= as.Date("2021-06-08"), ]
 
-######################################################################################################################################################
+###############################################################################
 ## Models fit up to first time point
 
 knots3 <- get_knots(df3$t, days_per_knot = 5, spline_degree = 3)
@@ -197,7 +198,7 @@ ps_single_fit3 <- sampling(
 )
 saveRDS(ps_single_fit3, "FitStanModels/ps_single_fit3.rds")
 
-######################################################################################################################################################
+###############################################################################
 ## Models fit up to second time point
 
 knots4 <- get_knots(df4$t, days_per_knot = 5, spline_degree = 3)
@@ -249,7 +250,7 @@ ps_single_fit4 <- sampling(
 )
 saveRDS(ps_single_fit4, "FitStanModels/ps_single_fit4.rds")
 
-######################################################################################################################################################
+###############################################################################
 ## Models fit up to third time point
 
 knots5 <- get_knots(df5$t, days_per_knot = 5, spline_degree = 3)
@@ -301,7 +302,7 @@ ps_single_fit5 <- sampling(
 )
 saveRDS(ps_single_fit5, "FitStanModels/ps_single_fit5.rds")
 
-######################################################################################################################################################
+###############################################################################
 ## Models fit up to fourth timepoint
 knots6 <- get_knots(df6$t, days_per_knot = 5, spline_degree = 3)
 
@@ -404,7 +405,7 @@ ps_single_fit7 <- sampling(
 )
 saveRDS(ps_single_fit7, "FitStanModels/ps_single_fit7.rds")
 
-######################################################################################################################################################
+###############################################################################
 ## Models fit up to sixth time point
 
 knots8 <- get_knots(df8$t, days_per_knot = 5, spline_degree = 3)
@@ -501,7 +502,8 @@ for (i in 1:length(pathogens)) {
   mod_inc[mod_inc$pathogen == pathogens[i] &
             (mod_inc$time >= min_date & mod_inc$time <= max_date), ]$mask <- 1
   print(pathogens[i])
-  #mod_gr<-mod_gr[ (!(mod_gr$pathogen==pathogens[i])) | (mod_gr$time>min_date & mod_gr$time<max_date) ,]
+  #mod_gr<-mod_gr[ (!(mod_gr$pathogen==pathogens[i])) | (mod_gr$time>min_date &
+  # mod_gr$time<max_date) ,]
 }
 mod_gr[mod_gr$pathogen == "Other", ]$mask <- 0
 mod_gr[mod_gr$pathogen == "Other" &
@@ -931,7 +933,8 @@ mod_inc6$group <- 6
 mod_inc7$group <- 7
 mod_inc8$group <- 8
 
-mod_inc_comb1 <- rbind(mod_inc3, mod_inc4, mod_inc5, mod_inc6, mod_inc7, mod_inc8)
+mod_inc_comb1 <- rbind(mod_inc3, mod_inc4, mod_inc5,
+                       mod_inc6, mod_inc7, mod_inc8)
 
 mod_single_inc3$group <- 3
 mod_single_inc4$group <- 4
@@ -977,7 +980,10 @@ gr_single_comb1 <- rbind(
 )
 
 # Relabel and subset to include only Delta vs Alpha (i.e. no wildtype)
-mod_inc_plt <- mod_inc_comb1[mod_inc_comb1$pathogen %in% c("B.1.1.7 (Alpha)", "B.1.617.2 (Delta)", "Total"), ]
+mod_inc_plt <- mod_inc_comb1[mod_inc_comb1$pathogen %in%
+                               c("B.1.1.7 (Alpha)",
+                                 "B.1.617.2 (Delta)",
+                                 "Total"), ]
 mod_inc_plt <- mod_inc_plt[mod_inc_plt$group > 2, ]
 
 mod_single_inc_plt <- mod_single_inc_comb1
@@ -1151,9 +1157,9 @@ pltV1 + pltV2 + pltV3 + plot_layout(ncol = 3, widths = c(2, 2, 1))
 
 ggsave("Figures/SARS_V2.png", width = 12, height = 12)
 
-##########################################################################################
+###############################################################################
 # Supplementary figure 4 (raw data)
-##########################################################################################
+###############################################################################
 
 df_new <- pivot_longer(df, cols = colnames(df)[3:13])
 
@@ -1539,9 +1545,9 @@ plt_gr1 + plt_gr2 + plt_gr3 + plot_layout(nrow = 3)
 
 ggsave("Figures/SARS_GR1.png", width = 14, height = 10)
 
-#################################################################################
+###############################################################################
 # SupFig 13
-##################################################################################
+###############################################################################
 
 x <- seq(0, 14)
 
