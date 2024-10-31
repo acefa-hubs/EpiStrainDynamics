@@ -17,4 +17,4 @@ Preprint here
 
 ## Contribution
 This is a work in progress. 
-If you see any mistakes in the package (branch `main`) or in the code associated with the analyses for the print (branch `preprint`), let us know by logging a bug on the [issues](https://github.com/acefa-hubs/EpiStrainDynamics/issues) page. 
+If you see any mistakes in the package (branch `main`) or in the code associated with the analyses for the preprint (branch `preprint`), let us know by logging a bug on the [issues](https://github.com/acefa-hubs/EpiStrainDynamics/issues) page. 
