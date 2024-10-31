@@ -1,7 +1,7 @@
 # Inferring temporal trends of multiple pathogens, variants, subtypes or serotypes from routine surveillance data.
 
-This repository contains code corresponding to the analyses in the preprint: _Inferring temporal trends of multiple pathogens, variants, subtypes or serotypes from routine surveillance data. 
-For the R package in development based on these analyses_, see branch [`main`](https://github.com/acefa-hubs/EpiStrainDynamics). 
+This repository contains code corresponding to the analyses in the preprint: _Inferring temporal trends of multiple pathogens, variants, subtypes or serotypes from routine surveillance data_. 
+For the R package in development based on these analyses, see branch [`main`](https://github.com/acefa-hubs/EpiStrainDynamics). 
 
 Estimating the temporal trends in infectious disease activity is crucial for monitoring disease spread and the impact of interventions. 
 Surveillance indicators routinely collected to monitor these trends are often a composite of multiple pathogens. 
