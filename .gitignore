@@ -1,6 +1,8 @@
 .DS_Store
-Figures/
-FitStanModels/
+Figures/*
+!Figures/.gitkeep
+FitStanModels/*
+!FitStanModels/.gitkeep
 .Rhistory
 .Rproj.user/
 stan/*.rds
