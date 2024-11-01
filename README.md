@@ -1,5 +1,7 @@
 # Inferring temporal trends of multiple pathogens, variants, subtypes or serotypes from routine surveillance data.
 
+[![DOI](https://zenodo.org/badge/816127540.svg)](https://doi.org/10.5281/zenodo.14015867)
+
 This repository contains code corresponding to the analyses in the preprint: _Inferring temporal trends of multiple pathogens, variants, subtypes or serotypes from routine surveillance data_. 
 For the R package in development based on these analyses, see branch [`main`](https://github.com/acefa-hubs/EpiStrainDynamics). 
 
