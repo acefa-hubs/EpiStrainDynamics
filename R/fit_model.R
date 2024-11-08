@@ -153,8 +153,11 @@ fit_model <- function (data,
   out <- list(fit = fit,
               model = model,
               pathogen_names = pathogen_names)
-  if (exists('knots')) {
-    out <- c(out, knots = knots)
+  if (exists('spline_degree')) {
+    out <- c(out, spline_degree = spline_degree)
+  }
+  if (exists('days_per_knot')) {
+    out <- c(out, days_per_knot = days_per_knot)
   }
 
   # class(out) <- 'EpiStrain.fit'
