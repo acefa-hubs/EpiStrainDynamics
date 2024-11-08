@@ -8,6 +8,8 @@ source('R/fit_model.R')
 source('R/get_pathogen_info.R')
 source('R/get_model_info.R')
 source('R/get_knots.R')
+source('R/growth_rate.R')
+source('R/predict_B_true.R')
 
 # Set some stan settings
 rstan::rstan_options(auto_write = TRUE)
@@ -97,6 +99,13 @@ ps_mp <- fit_model(
   chains = 3
 )
 
+mod_gr <- ps_growth_rate(
+  ps_mp,
+  sim_data_list$time,
+  time_labels = sim_data_list$time
+)
+
+
 # Penalised-spline model, multiple-pathogens, fit up to day 140 of simulated
 # dataset to demonstrate utility during flu-season/pandemic
 # Load some COVID data from the UK
@@ -128,5 +137,11 @@ ps_single <- fit_model(
   iter = 500,
   warmup = 300,
   chains = 3
+)
+
+ps_single_gr <- ps_single_growth_rate(
+  ps_single,
+  covid_data_list$time,
+  time_labels = covid_data_list$time
 )
 
