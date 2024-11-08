@@ -80,27 +80,19 @@ rw_growth_rate <- function(fit, num_days, time_labels, num_path=4, pathogen_name
 
 
 # Returns data.frame() of modeled growth rates
-ps_single_growth_rate <- function(fit,
-                                  X,
-                                  num_days = length(X), time_labels,
-                                  days_per_knot = 5, spline_degree = 3){
+ps_single_growth_rate <- function(fit_list,
+                                  time,
+                                  time_labels){
 
+  fit <- fit_list$fit
+  days_per_knot <- fit_list$days_per_knot
+  spline_degree <- fit_list$spline_degree
 
-  X <- as.numeric(X)
-
-  knots <- get_knots(X, days_per_knot = days_per_knot, spline_degree = spline_degree)
-  num_knots <- length(knots)
-
-
-  num_basis <- num_knots + spline_degree - 1
-  num_data <- length(X)
-
-  B_true <- splines::bs(seq(knots[1], knots[length(knots)], 1), knots = knots[2:(length(knots)-1)], degree=spline_degree, intercept = TRUE)
-  B_true <- t(predict(B_true, X))
-
+  B_true <- predict_B_true(time, days_per_knot, spline_degree)
 
   post <- rstan::extract(fit)
 
+  num_days <- length(time)
   a <- array(data=NA, dim=c(nrow(post$a), num_days))
 
   for(k in 1:nrow(post$a)){
@@ -130,28 +122,22 @@ ps_single_growth_rate <- function(fit,
 
 
 # Returns data.frame() of modeled growth rates
-ps_growth_rate <- function(fit,
-                           X,
-                           num_days = length(X), time_labels,
-                           days_per_knot = 5, spline_degree = 3,
-                           num_path=4, pathogen_names=c("Influenza A H3N2", "Influenza A H1N1", "Influenza B", "Unknown")){
+ps_growth_rate <- function (fit_list,
+                            time,
+                            time_labels) {
 
+  fit <- fit_list$fit
+  days_per_knot <- fit_list$days_per_knot
+  spline_degree <- fit_list$spline_degree
 
-  X <- as.numeric(X)
+  pathogen_names <- fit_list$pathogen_names
+  num_path <- length(pathogen_names)
 
-  knots <- get_knots(X, days_per_knot = days_per_knot, spline_degree = spline_degree)
-  num_knots <- length(knots)
-
-
-  num_basis <- num_knots + spline_degree - 1
-  num_data <- length(X)
-
-  B_true <- splines::bs(seq(knots[1], knots[length(knots)], 1), knots = knots[2:(length(knots)-1)], degree=spline_degree, intercept = TRUE)
-  B_true <- t(predict(B_true, X))
-
+  B_true <- predict_B_true(time, days_per_knot, spline_degree)
 
   post <- rstan::extract(fit)
 
+  num_days <- length(time)
   a <- array(data=NA, dim=c(nrow(post$a), num_path, num_days))
 
   for(j in 1:num_path){
