@@ -157,6 +157,6 @@ fit_model <- function (data,
     out <- c(out, knots = knots)
   }
 
-  class(out) <- 'EpiStrain.fit'
+  # class(out) <- 'EpiStrain.fit'
   return(out)
 }
