@@ -41,7 +41,8 @@ effect shared by all days (essentially no DOW), 7 = each day a unique effect}
 
 \item{DOW}{integer of day of the week}
 
-\item{cov_structure}{0 is tau\link{1}, 1 is tau\link{num_path}, 2 is Sigma\link{num_path, num_path}}
+\item{cov_structure}{0 is tau of 1, 1 is tau of
+num_path, 2 is Sigma with two dimensions: num_path, num_path.}
 
 \item{...}{Arguments passed to \code{rstan::sampling} (e.g. iter, chains).}
 }
