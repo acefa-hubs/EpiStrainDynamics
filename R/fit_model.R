@@ -17,6 +17,16 @@ fit_model <- function (data,
                        warmup,
                        chains) {
 
+  method <- rlang::arg_match(
+    arg = method
+  )
+  smoothing_structure <- rlang::arg_match(
+    arg = smoothing_structure
+  )
+  observation_noise <- rlang::arg_match(
+    arg = observation_noise
+  )
+
   # add this check for days_per_knot as well
   pspline_dependencies <- method == 'p-spline' &
     (is.null(spline_degree) | is.null(days_per_knot))
