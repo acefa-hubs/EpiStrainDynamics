@@ -1,7 +1,10 @@
 
 # Returns data.frame() of modeled growth rates
-rw_single_growth_rate <- function(fit, num_days, time_labels){
+rw_single_growth_rate <- function (fit_list,
+                                   num_days,
+                                   time_labels) {
 
+  fit <- fit_list$fit
   post <- rstan::extract(fit)
 
   df <- data.frame()
@@ -28,7 +31,13 @@ rw_single_growth_rate <- function(fit, num_days, time_labels){
 }
 
 # Returns data.frame() of modeled growth rates
-rw_growth_rate <- function(fit, num_days, time_labels, num_path=4, pathogen_names=c("Influenza A H3N2", "Influenza A H1N1", "Influenza B", "Unknown")){
+rw_growth_rate <- function (fit_list,
+                            num_days,
+                            time_labels) {
+
+  fit <- fit_list$fit
+  pathogen_names <- fit_list$pathogen_names
+  num_path <- length(pathogen_names)
 
   post <- rstan::extract(fit)
 
