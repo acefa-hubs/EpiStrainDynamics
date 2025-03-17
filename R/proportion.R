@@ -1,20 +1,5 @@
-#' Get proportion from model fit
-#'
-#' @param fit model fit
-#' @param X
-#' @param method ps or rw
-#' @param num_days
-#' @param time_labels
-#' @param days_per_knot
-#' @param spline_degree
-#' @param num_path
-#' @param comb_num
-#' @param comb_den
-#' @param comb_names
-#'
-#' @return
-#' @export
-#'
+# Get proportion from model fit
+
 proportion <- function (fit,
                         X = NULL,
                         method = c('rw', 'ps'),
