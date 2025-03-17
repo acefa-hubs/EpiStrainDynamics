@@ -13,6 +13,7 @@ rw_influenza_stan(
   week_effect,
   DOW,
   cov_structure = c(0, 1, 2),
+  noise_structure = c(0, 1),
   ...
 )
 }
@@ -35,6 +36,9 @@ effect shared by all days (essentially no DOW), 7 = each day a unique effect}
 
 \item{cov_structure}{0 is tau of 1, 1 is tau of
 num_path, 2 is Sigma with two dimensions: num_path, num_path.}
+
+\item{noise_structure}{0 only includes observation noise (same between
+pathogens), 1 includes noise in individual pathogens as well}
 
 \item{...}{Arguments passed to \code{rstan::sampling} (e.g. iter, chains).}
 }
