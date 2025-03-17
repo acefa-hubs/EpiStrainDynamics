@@ -23,13 +23,6 @@ rw_mp_stan <- function (num_data, num_path,
                         noise_structure = c(0, 1),
                         ...) {
 
-  cov_structure <- rlang::arg_match(
-    arg = cov_structure
-  )
-  noise_structure <- rlang::arg_match(
-    arg = noise_structure
-  )
-
   standata <- list(num_data = num_data,
                    num_path = num_path,
                    Y = Y,
