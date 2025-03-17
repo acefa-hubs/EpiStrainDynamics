@@ -13,7 +13,8 @@
 #' @param week_effect Number of distinct days in day of week effect. 1 = single
 #'  effect shared by all days (essentially no DOW), 7 = each day a unique effect
 #' @param DOW integer of day of the week
-#' @param cov_structure 0 is tau[1], 1 is tau[num_path], 2 is Sigma[num_path, num_path]
+#' @param cov_structure 0 is tau of 1, 1 is tau of
+#'    num_path, 2 is Sigma with two dimensions: num_path, num_path.
 #' @param ... Arguments passed to `rstan::sampling` (e.g. iter, chains).
 #'
 #' @return An object of class `stanfit` returned by `rstan::sampling`
