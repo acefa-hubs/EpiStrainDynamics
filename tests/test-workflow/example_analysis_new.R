@@ -63,6 +63,11 @@ ps_influenza <- fit_model(
   warmup = 300,
   chains = 3
 )
+ps_influenza_gr <- ps_growth_rate(
+  ps_influenza,
+  influenza_data_list$time,
+  time_labels = influenza_data_list$time
+)
 
 # Example 2 "mp" models
 # Fitting the model 'mid-season', only include first 140 days
@@ -99,7 +104,7 @@ ps_mp <- fit_model(
   chains = 3
 )
 
-mod_gr <- ps_growth_rate(
+ps_mp_gr <- ps_growth_rate(
   ps_mp,
   sim_data_list$time,
   time_labels = sim_data_list$time
@@ -120,6 +125,7 @@ covid_data_list <- list(
   time = covid_data$time
 )
 
+# very very slow?
 rw_single <- fit_model(
   covid_data_list,
   method = 'random_walk',
