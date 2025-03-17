@@ -18,7 +18,7 @@ options(mc.cores = 4)
 # Example 1 "influenza" models
 # create data objects
 # Load aus data
-influenza_data <- read.csv('example_data/aus_influenza_data.csv')
+influenza_data <- read.csv('tests/test-workflow/example_data/aus_influenza_data.csv')
 
 # Set limits on dates to consider
 min_date <- as.Date("2011-08-29")
@@ -72,7 +72,7 @@ ps_influenza_gr <- ps_growth_rate(
 # Example 2 "mp" models
 # Fitting the model 'mid-season', only include first 140 days
 # Load some simulated data
-sim_data_raw <- read.csv('example_data/simulated_data1.csv')
+sim_data_raw <- read.csv('tests/test-workflow/example_data/simulated_data1.csv')
 sim_data <- sim_data_raw[sim_data_raw$t < 140, ]
 
 sim_data_list <- list(
@@ -114,7 +114,7 @@ ps_mp_gr <- ps_growth_rate(
 # Penalised-spline model, multiple-pathogens, fit up to day 140 of simulated
 # dataset to demonstrate utility during flu-season/pandemic
 # Load some COVID data from the UK
-covid_data <- read.csv('example_data/ukhsa-covid-data.csv')
+covid_data <- read.csv('tests/test-workflow/example_data/ukhsa-covid-data.csv')
 covid_data <- covid_data[covid_data$geography == "England", ]
 
 covid_data <- covid_data[order(covid_data$date), ]
