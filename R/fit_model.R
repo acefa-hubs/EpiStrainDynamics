@@ -9,6 +9,10 @@ fit_model <- function (data,
                          'single',
                          'independent',
                          'correlated'),
+                       observation_noise = c(
+                         'observation_noise_only',
+                         'pathogen_specific_noise'
+                       ),
                        iter,
                        warmup,
                        chains) {
@@ -59,6 +63,9 @@ fit_model <- function (data,
   if (smoothing_structure == 'independent') cov_structure <- 1
   if (smoothing_structure == 'correlated') cov_structure <- 2
 
+  if (observation_noise == 'observation_noise_only') noise_structure <- 0
+  if (observation_noise == 'pathogen_specific_noise') noise_structure <- 1
+
   # fit stan model
   if (model == 'rw_influenza') {
     fit <- rw_influenza_stan(
@@ -70,6 +77,7 @@ fit_model <- function (data,
       week_effect = week_effect,
       DOW = DOW,
       cov_structure = cov_structure,
+      noise_structure = noise_structure,
       iter = iter,
       warmup = warmup,
       chains = chains)
@@ -88,6 +96,7 @@ fit_model <- function (data,
       week_effect = week_effect,
       DOW = DOW,
       cov_structure = cov_structure,
+      noise_structure = noise_structure,
       iter = iter,
       warmup = warmup,
       chains = chains)
@@ -102,6 +111,7 @@ fit_model <- function (data,
       week_effect = week_effect,
       DOW = DOW,
       cov_structure = cov_structure,
+      noise_structure = noise_structure,
       iter = iter,
       warmup = warmup,
       chains = chains
@@ -120,6 +130,7 @@ fit_model <- function (data,
       week_effect = week_effect,
       DOW = DOW,
       cov_structure = cov_structure,
+      noise_structure = noise_structure,
       iter = iter,
       warmup = warmup,
       chains = chains

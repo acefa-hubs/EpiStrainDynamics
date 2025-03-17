@@ -56,6 +56,7 @@ data {
   int week_effect;          // Number of days in day of week effect? 1=none, 2=weekends?, 7=all days
   int DOW[num_data];        // integer of day of the week
   int<lower = 0, upper = 2> cov_structure; //0 is tau[1], 1 is tau[num_path], 2 is Sigma[num_path, num_path]
+  int<lower = 0, upper = 1> noise_structure; //0 is only includes observation noise (same between pathogens), 1 includes noise in individual pathogens as well
 }
 
 transformed data {
@@ -67,18 +68,33 @@ transformed data {
   ext_knots = append_row(ext_knots_temp, rep_vector(knots[num_knots], spline_degree));
   for (ind in 1:num_basis)
     B[ind,:] = to_row_vector(build_b_spline(X, to_array_1d(ext_knots), ind, spline_degree + 1));
+
+  int cols;
+  int rows;
+
+  if(noise_structure==1){
+    cols = num_path;
+    rows = num_data;
+
+  }
+  else{
+    cols = 0;
+    rows = 0;
+  }
 }
 
 parameters {
   matrix[num_path, num_basis] a;
-  matrix<lower=0>[num_path, num_data] c_new;
-  
+
+  matrix<lower=0>[cols,rows] c_new;
+  real<lower=0> eta[noise_structure==1 ? 1: 0 ];
+
   real<lower=0> phi;
-  real<lower=0> eta;
-  
+
   real<lower=0> tau[cov_structure==0 ? 1: cov_structure==1? num_path: 0 ];
+
   cov_matrix[cov_structure==2? num_path: 0] Sigma;
-  
+
   simplex[week_effect] day_of_week_simplex;
 }
 
@@ -88,6 +104,7 @@ transformed parameters {
 
   for (i in 1:num_path)
     a_new[i,] =  a[i,]*B;
+
 }
 
 model {
@@ -96,43 +113,54 @@ model {
   if(cov_structure==2){
     for(i in 3:num_basis)
       a[,i] ~ multi_normal(2*a[,(i-1)] - a[,(i-2)], Sigma);
-  } 
-  
+  }
+
   else if(cov_structure==1){
     for(i in 1:num_path)
       a[i,3:num_basis] ~ normal(2*a[i,2:(num_basis-1)] - a[i,1:(num_basis-2)], tau[i]);
-  } 
-  
+  }
+
   else{
     for(i in 1:num_path)
       a[i,3:num_basis] ~ normal(2*a[i,2:(num_basis-1)] - a[i,1:(num_basis-2)], tau[1]);
   }
-    
-  
+
+
   // Uninformative priors on scale parameters?
 
   //// Likelihood
   // This assumes there is some noise in the number of symptomatic cases for each pathogen individually (with shared parameter eta)
-  for(i in 1:num_path){
-      c_new[i,] ~ gamma(exp(a_new[i,])*eta, eta);
+
+  real y_model[num_data];
+
+  if(noise_structure==1){
+    for(i in 1:num_path){
+      c_new[i,] ~ gamma(exp(a_new[i,])*eta[1], eta[1]);
+    }
+
+    for(i in 1:num_data){
+      y_model[i] = sum(c_new[,i]);
+      P[,i] ~ multinomial(c_new[,i]/y_model[i]);
+    }
+  }
+  else{
+    for(i in 1:num_data){
+      y_model[i] = sum(exp(a_new[,i]));
+      P[,i] ~ multinomial(exp(a_new[,i])/y_model[i]);
+    }
   }
 
-  real y_model;
-  
+
   // Total number of cases (Y[i]) is negative-binomially distributed
   // Proportion of each pathogen is multinomially distributed
   if(week_effect==1){
     for(i in 1:num_data){
-      y_model = sum(c_new[,i]);
-      Y[i] ~ neg_binomial(y_model*phi, phi);
-      P[,i] ~ multinomial(c_new[,i]/y_model);
+      Y[i] ~ neg_binomial(y_model[i]*phi, phi);
       }
-  } 
+  }
   else{
     for(i in 1:num_data){
-      y_model = sum(c_new[,i]);
-      Y[i] ~ neg_binomial(y_model*phi*week_effect*day_of_week_simplex[DOW[i]], phi);
-      P[,i] ~ multinomial(c_new[,i]/y_model);
+      Y[i] ~ neg_binomial(y_model[i]*phi*week_effect*day_of_week_simplex[DOW[i]], phi);
       }
   }
 
