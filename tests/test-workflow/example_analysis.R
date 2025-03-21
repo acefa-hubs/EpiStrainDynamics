@@ -204,3 +204,71 @@ ps_single_gr <- ps_single_growth_rate(
   time_labels = covid_data_list$time
 )
 
+# all examples with option2
+#
+# rw_single <- construct_model(
+#   method = random_walk(),
+#   pathogen_structure = single(
+#     total_case_data = covid_data$metric_value,
+#   ),
+#   dow_data = covid_data$time
+# )
+#
+# ps_single <- construct_model(
+#   method = p_spline(time_data = covid_data$time),
+#   pathogen_structure = single(
+#     total_case_data = covid_data$metric_value,
+#   ),
+#   dow_data = covid_data$time
+# )
+#
+#
+# rw_multiple <- construct_model(
+#   method = random_walk(),
+#   pathogen_structure = multiple(
+#     total_case_data = sim_data$y,
+#     component_pathogen_data = list(
+#       influenzaA.H3N2 = sim_data$H3N2,
+#       influenzaA.H1N1 = sim_data$H1N1,
+#       influenzaB = sim_data$B
+#     ),
+#     smoothing_structure = 'independent',
+#     observation_noise = 'observation_noise_only'
+#   ),
+#   dow_data = sim_data$t
+# )
+#
+# ps_multiple <- construct_model(
+#   method = p_spline(time_data = sim_data$t),
+#   pathogen_structure = multiple(
+#     total_case_data = sim_data$y,
+#     component_pathogen_data = list(
+#       influenzaA.H3N2 = sim_data$H3N2,
+#       influenzaA.H1N1 = sim_data$H1N1,
+#       influenzaB = sim_data$B
+#     ),
+#     smoothing_structure = 'independent',
+#     observation_noise = 'observation_noise_only'
+#   ),
+#   dow_data = sim_data$t
+# )
+#
+#
+# construct_model(
+#   method = random_walk(),
+#   pathogen_structure = subtyped(
+#     total_case_data = influenza_data$ili,
+#     influenzaA_data = influenza_data$inf_A,
+#     other_component_pathogen_data = list(
+#       influenzaB = influenza_data$inf_B,
+#       other = influenza_data$num_spec - influenza_data$inf_all
+#     ),
+#     influenzaA_subtype_data = list(
+#       influenzaA.H3N2 = influenza_data$inf_H3N2,
+#       influenzaA.H1N1 = influenza_data$inf_H1N1
+#     ),
+#     smoothing_structure = 'independent',
+#     observation_noise = 'observation_noise_only'
+#   ),
+#   dow_data = influenza_data$time
+# )
