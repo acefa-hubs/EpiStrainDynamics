@@ -18,7 +18,7 @@ construct_model <- function (method,
     DOW <- (dow_data %% 7) + 1
   }
   if (is.null(dow_data)) {
-    time <- seq(1, length(pathogen_structure$data$total_cases))
+    time <- seq(1, length(pathogen_structure$data$case_timeseries))
     week_effect <- 1
     DOW <- (time %% 1) + 1
   }
@@ -47,14 +47,11 @@ construct_model <- function (method,
   return(model_input)
 }
 
-
-
-
-single <- function (total_case_data) {
+single <- function (case_timeseries) {
   model_inputs <- list(
     pathogen_structure = 'single',
     data = list(
-      total_cases = total_case_data
+      case_timeseries = case_timeseries
     )
   )
 
@@ -62,10 +59,10 @@ single <- function (total_case_data) {
   model_inputs
 }
 
-multiple <- function (total_case_data,
-                      component_pathogen_data,
+multiple <- function (case_timeseries,
+                      component_pathogen_timeseries,
                       smoothing_structure = c(
-                        'single',
+                        'shared',
                         'independent',
                         'correlated'),
                       observation_noise = c(
@@ -82,18 +79,18 @@ multiple <- function (total_case_data,
   cov_structure <- get_cov_structure(smoothing_structure)
   noise_structure <- get_noise_structure(observation_noise)
 
-  pathogen_names <- names(component_pathogen_data)
+  pathogen_names <- names(component_pathogen_timeseries)
 
   component_pathogens <- t(matrix(
-    data = do.call(c, component_pathogen_data),
-    ncol = length(component_pathogen_data)
+    data = do.call(c, component_pathogen_timeseries),
+    ncol = length(component_pathogen_timeseries)
   ))
 
   model_inputs <- list(
     pathogen_structure = 'multiple',
     pathogen_names = pathogen_names,
     data = list(
-      total_cases = total_case_data,
+      case_timeseries = case_timeseries,
       component_pathogens = component_pathogens
     ),
     model_params = list(
@@ -106,12 +103,12 @@ multiple <- function (total_case_data,
   model_inputs
 }
 
-subtyped <- function (total_case_data,
-                      influenzaA_data,
-                      influenzaA_subtype_data,
-                      other_component_pathogen_data,
+subtyped <- function (case_timeseries,
+                      influenzaA_unsubtyped_timeseries,
+                      influenzaA_subtyped_timeseries,
+                      other_pathogen_timeseries,
                       smoothing_structure = c(
-                        'single',
+                        'shared',
                         'independent',
                         'correlated'),
                       observation_noise = c(
@@ -128,33 +125,33 @@ subtyped <- function (total_case_data,
   cov_structure <- get_cov_structure(smoothing_structure)
   noise_structure <- get_noise_structure(observation_noise)
 
-  # add check that influenzaA_subtype_data and other_component_pathogen_data are named lists
+  # add check that influenzaA_subtyped_timeseries and other_pathogen_timeseries are named lists
   pathogen_names <- c(
-    names(influenzaA_subtype_data),
-    names(other_component_pathogen_data)
+    names(influenzaA_subtyped_timeseries),
+    names(other_pathogen_timeseries)
   )
 
   component_pathogens_list <- append(
-    list(influenzaA = influenzaA_data),
-    other_component_pathogen_data
+    list(influenzaA = influenzaA_subtyped_timeseries),
+    other_pathogen_timeseries
   )
 
   component_pathogens <- t(matrix(
     data = do.call(c, component_pathogens_list),
     ncol = length(component_pathogens_list)
   ))
-  influenzaA_subtypes <- t(matrix(
-    data = do.call(c, influenzaA_subtype_data),
-    ncol = length(influenzaA_subtype_data)
+  influenzaA_subtyped <- t(matrix(
+    data = do.call(c, influenzaA_subtyped_timeseries),
+    ncol = length(influenzaA_subtyped_timeseries)
   ))
 
   model_inputs <- list(
     pathogen_structure = 'subtyped',
     pathogen_names = pathogen_names,
     data = list(
-      total_cases = total_case_data,
+      case_timeseries = case_timeseries,
       component_pathogens = component_pathogens,
-      influenzaA_subtypes = influenzaA_subtypes
+      influenzaA_subtyped = influenzaA_subtyped
     ),
     model_params = list(
       cov_structure = cov_structure,
