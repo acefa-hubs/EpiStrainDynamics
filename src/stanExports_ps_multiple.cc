@@ -2,12 +2,12 @@
 
 #include <Rcpp.h>
 using namespace Rcpp ;
-#include "stanExports_ps_influenza.h"
+#include "stanExports_ps_multiple.h"
 
-RCPP_MODULE(stan_fit4ps_influenza_mod) {
+RCPP_MODULE(stan_fit4ps_multiple_mod) {
 
 
-    class_<rstan::stan_fit<stan_model, boost::random::ecuyer1988> >("rstantools_model_ps_influenza")
+    class_<rstan::stan_fit<stan_model, boost::random::ecuyer1988> >("rstantools_model_ps_multiple")
 
     .constructor<SEXP,SEXP,SEXP>()
 
