@@ -5,20 +5,21 @@
 # also separates the decisions needed for data prep and decisions needed to model parameterisation.
 construct_model <- function (method,
                              pathogen_structure,
-                             dow_data = NULL) {
+                             dow_effect = NULL) {
 
   model_type <- get_model_type(
     method$method,
     pathogen_structure$pathogen_structure
   )
 
+  time <- seq(1, length(pathogen_structure$data$case_timeseries))
+
   # Set up day-of-week effects
-  if (!is.null(dow_data)) {
+  if (!is.null(dow_effect)) {
     week_effect <- 7
-    DOW <- (dow_data %% 7) + 1
+    DOW <- (time %% 7) + 1
   }
-  if (is.null(dow_data)) {
-    time <- seq(1, length(pathogen_structure$data$case_timeseries))
+  if (is.null(dow_effect)) {
     week_effect <- 1
     DOW <- (time %% 1) + 1
   }
@@ -33,12 +34,17 @@ construct_model <- function (method,
   if (method$method == 'p-spline') {
     model_params <- append(
       model_params,
-      list(knots = method$knots)
+      method$model_params
     )
   }
 
+  data <- append(
+    list(time = time),
+    pathogen_structure$data
+  )
+
   model_input <- list(
-    data = pathogen_structure$data,
+    data = data,
     model_params = model_params,
     pathogen_names = pathogen_structure$pathogen_names
   )
@@ -132,7 +138,7 @@ subtyped <- function (case_timeseries,
   )
 
   component_pathogens_list <- append(
-    list(influenzaA = influenzaA_subtyped_timeseries),
+    list(influenzaA = influenzaA_unsubtyped_timeseries),
     other_pathogen_timeseries
   )
 
@@ -170,18 +176,15 @@ random_walk <- function () {
   return(out)
 }
 
-p_spline <- function (time_data,
-                      spline_degree = 3,
+p_spline <- function (spline_degree = 3,
                       days_per_knot = 3) {
-
-  # Calculate the locations of equally spaced knots
-  knots <- get_knots(time_data,
-                     days_per_knot = days_per_knot,
-                     spline_degree = spline_degree)
 
   out <- list(
     method = 'p-spline',
-    knots = knots
+    model_params = list(
+      spline_degree = spline_degree,
+      days_per_knot = days_per_knot
+    )
   )
   return(out)
 }
