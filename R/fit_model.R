@@ -46,8 +46,15 @@ fit.ps_influenza <- function (constructed_model, iter, warmup, chains) {
 
   cases <- constructed_model$data$case_timeseries
   pathogen_names <- constructed_model$pathogen_names
+  time <- constructed_model$data$time
+  spline_degree <- constructed_model$model_params$spline_degree
+  knots <- get_knots(
+    time,
+    days_per_knot = constructed_model$model_params$days_per_knot,
+    spline_degree = spline_degree
+  )
 
-  fit <- ps_influenza_stan(
+  fit_object <- ps_influenza_stan(
     num_data = length(cases),
     num_path = length(pathogen_names),
     num_knots = length(knots),
@@ -55,34 +62,64 @@ fit.ps_influenza <- function (constructed_model, iter, warmup, chains) {
     spline_degree = spline_degree,
     Y = cases,
     X = time,
-    P1 = component_pathogens,
-    P2 = influenzaA_subtypes,
-    week_effect = week_effect,
-    DOW = DOW,
-    cov_structure = cov_structure,
-    noise_structure = noise_structure,
+    P1 = constructed_model$data$component_pathogens,
+    P2 = constructed_model$data$influenzaA_subtyped,
+    week_effect = constructed_model$model_params$week_effect,
+    DOW = constructed_model$model_params$DOW,
+    cov_structure = constructed_model$model_params$cov_structure,
+    noise_structure = constructed_model$model_params$noise_structure,
     iter = iter,
     warmup = warmup,
     chains = chains)
+
+  out <- list(fit = fit_object,
+              constructed_model)
+
+  class(out) <- 'EpiStrainDynamics.fit'
+
+  return(out)
 }
 
-if (model == 'rw_mp') {
-  fit <- rw_mp_stan(
+fit.rw_mp <- function (constructed_model, iter, warmup, chains) {
+
+  cases <- constructed_model$data$case_timeseries
+  pathogen_names <- constructed_model$pathogen_names
+
+  fit_object <- rw_mp_stan(
     num_data = length(cases),
     num_path = length(pathogen_names),
     Y = cases,
-    P = component_pathogens,
-    week_effect = week_effect,
-    DOW = DOW,
-    cov_structure = cov_structure,
-    noise_structure = noise_structure,
+    P = constructed_model$data$component_pathogens,
+    week_effect = constructed_model$model_params$week_effect,
+    DOW = constructed_model$model_params$DOW,
+    cov_structure = constructed_model$model_params$cov_structure,
+    noise_structure = constructed_model$model_params$noise_structure,
     iter = iter,
     warmup = warmup,
     chains = chains
   )
+
+  out <- list(fit = fit_object,
+              constructed_model)
+
+  class(out) <- 'EpiStrainDynamics.fit'
+
+  return(out)
 }
-if (model == 'ps_mp') {
-  fit <- ps_mp_stan(
+
+fit.ps_mp <- function (constructed_model, iter, warmup, chains) {
+
+  cases <- constructed_model$data$case_timeseries
+  pathogen_names <- constructed_model$pathogen_names
+  time <- constructed_model$data$time
+  spline_degree <- constructed_model$model_params$spline_degree
+  knots <- get_knots(
+    time,
+    days_per_knot = constructed_model$model_params$days_per_knot,
+    spline_degree = spline_degree
+  )
+
+  fit_object <- ps_mp_stan(
     num_data = length(cases),
     num_path = length(pathogen_names),
     num_knots = length(knots),
@@ -90,37 +127,76 @@ if (model == 'ps_mp') {
     spline_degree = spline_degree,
     Y = cases,
     X = time,
-    P = component_pathogens,
-    week_effect = week_effect,
-    DOW = DOW,
-    cov_structure = cov_structure,
-    noise_structure = noise_structure,
+    P = constructed_model$data$component_pathogens,
+    week_effect = constructed_model$model_params$week_effect,
+    DOW = constructed_model$model_params$DOW,
+    cov_structure = constructed_model$model_params$cov_structure,
+    noise_structure = constructed_model$model_params$noise_structure,
     iter = iter,
     warmup = warmup,
     chains = chains
   )
+
+  out <- list(fit = fit_object,
+              constructed_model)
+
+  class(out) <- 'EpiStrainDynamics.fit'
+
+  return(out)
 }
 
-if (model == 'ps_single') {
-  fit <- ps_single_stan(
+fit.rw_single <- function (constructed_model, iter, warmup, chains) {
+
+  cases <- constructed_model$data$case_timeseries
+
+  fit_object <- rw_single_stan(
+    num_data = length(cases),
+    Y = cases,
+    week_effect = constructed_model$model_params$week_effect,
+    DOW = constructed_model$model_params$DOW,
+    iter = iter,
+    warmup = warmup,
+    chains = chains
+  )
+
+  out <- list(fit = fit_object,
+              constructed_model)
+
+  class(out) <- 'EpiStrainDynamics.fit'
+
+  return(out)
+}
+
+
+fit.ps_single <- function (constructed_model, iter, warmup, chains) {
+
+  cases <- constructed_model$data$case_timeseries
+  time <- constructed_model$data$time
+  spline_degree <- constructed_model$model_params$spline_degree
+  knots <- get_knots(
+    time,
+    days_per_knot = constructed_model$model_params$days_per_knot,
+    spline_degree = spline_degree
+  )
+
+  fit_object <- ps_single_stan(
     num_data = length(cases),
     num_knots = length(knots),
     knots = knots,
     spline_degree = spline_degree,
     Y = cases,
     X = time,
-    week_effect = week_effect,
-    DOW = DOW,
+    week_effect = constructed_model$model_params$week_effect,
+    DOW = constructed_model$model_params$DOW,
     iter = iter,
     warmup = warmup,
     chains = chains
   )
-}
-if (model == 'rw_single') {
-  fit <- rw_single_stan(
-    num_data = length(cases),
-    Y = cases,
-    week_effect = week_effect,
-    DOW = DOW
-  )
+
+  out <- list(fit = fit_object,
+              constructed_model)
+
+  class(out) <- 'EpiStrainDynamics.fit'
+
+  return(out)
 }
