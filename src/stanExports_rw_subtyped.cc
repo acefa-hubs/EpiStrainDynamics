@@ -2,12 +2,12 @@
 
 #include <Rcpp.h>
 using namespace Rcpp ;
-#include "stanExports_rw_influenza.h"
+#include "stanExports_rw_subtyped.h"
 
-RCPP_MODULE(stan_fit4rw_influenza_mod) {
+RCPP_MODULE(stan_fit4rw_subtyped_mod) {
 
 
-    class_<rstan::stan_fit<stan_model, boost::random::ecuyer1988> >("rstantools_model_rw_influenza")
+    class_<rstan::stan_fit<stan_model, boost::random::ecuyer1988> >("rstantools_model_rw_subtyped")
 
     .constructor<SEXP,SEXP,SEXP>()
 

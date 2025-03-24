@@ -15,12 +15,13 @@ fit_model <- function (constructed_model,
 fit <- function (constructed_model, iter, warmup, chains) UseMethod("fit")
 
 # fit stan model
-fit.rw_influenza <- function (constructed_model, iter, warmup, chains) {
+#' @exportS3Method
+fit.rw_subtyped <- function (constructed_model, iter, warmup, chains) {
 
   cases <- constructed_model$data$case_timeseries
   pathogen_names <- constructed_model$pathogen_names
 
-  fit_object <- rw_influenza_stan(
+  fit_object <- rw_subtyped_stan(
     num_data = length(cases),
     num_path = length(pathogen_names),
     Y = cases,
@@ -42,7 +43,8 @@ fit.rw_influenza <- function (constructed_model, iter, warmup, chains) {
   return(out)
 }
 
-fit.ps_influenza <- function (constructed_model, iter, warmup, chains) {
+#' @exportS3Method
+fit.ps_subtyped <- function (constructed_model, iter, warmup, chains) {
 
   cases <- constructed_model$data$case_timeseries
   pathogen_names <- constructed_model$pathogen_names
@@ -54,7 +56,7 @@ fit.ps_influenza <- function (constructed_model, iter, warmup, chains) {
     spline_degree = spline_degree
   )
 
-  fit_object <- ps_influenza_stan(
+  fit_object <- ps_subtyped_stan(
     num_data = length(cases),
     num_path = length(pathogen_names),
     num_knots = length(knots),
@@ -80,12 +82,13 @@ fit.ps_influenza <- function (constructed_model, iter, warmup, chains) {
   return(out)
 }
 
-fit.rw_mp <- function (constructed_model, iter, warmup, chains) {
+#' @exportS3Method
+fit.rw_multiple <- function (constructed_model, iter, warmup, chains) {
 
   cases <- constructed_model$data$case_timeseries
   pathogen_names <- constructed_model$pathogen_names
 
-  fit_object <- rw_mp_stan(
+  fit_object <- rw_multiple_stan(
     num_data = length(cases),
     num_path = length(pathogen_names),
     Y = cases,
@@ -107,7 +110,8 @@ fit.rw_mp <- function (constructed_model, iter, warmup, chains) {
   return(out)
 }
 
-fit.ps_mp <- function (constructed_model, iter, warmup, chains) {
+#' @exportS3Method
+fit.ps_multiple <- function (constructed_model, iter, warmup, chains) {
 
   cases <- constructed_model$data$case_timeseries
   pathogen_names <- constructed_model$pathogen_names
@@ -119,7 +123,7 @@ fit.ps_mp <- function (constructed_model, iter, warmup, chains) {
     spline_degree = spline_degree
   )
 
-  fit_object <- ps_mp_stan(
+  fit_object <- ps_multiple_stan(
     num_data = length(cases),
     num_path = length(pathogen_names),
     num_knots = length(knots),
@@ -145,6 +149,7 @@ fit.ps_mp <- function (constructed_model, iter, warmup, chains) {
   return(out)
 }
 
+#' @exportS3Method
 fit.rw_single <- function (constructed_model, iter, warmup, chains) {
 
   cases <- constructed_model$data$case_timeseries
@@ -167,7 +172,7 @@ fit.rw_single <- function (constructed_model, iter, warmup, chains) {
   return(out)
 }
 
-
+#' @exportS3Method
 fit.ps_single <- function (constructed_model, iter, warmup, chains) {
 
   cases <- constructed_model$data$case_timeseries
