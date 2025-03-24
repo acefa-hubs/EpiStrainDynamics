@@ -30,7 +30,7 @@ influenza_data <- influenza_data[influenza_data$week < max_date &
 influenza_data <- influenza_data[order(influenza_data$week), ]
 influenza_data$time <- seq(1, nrow(influenza_data))
 
-rw_influenza_mod <- construct_model(
+rw_subtyped_mod <- construct_model(
   method = random_walk(),
   pathogen_structure = subtyped(
     case_timeseries = influenza_data$ili,
@@ -48,14 +48,14 @@ rw_influenza_mod <- construct_model(
   ),
   dow_effect = TRUE
 )
-rw_influenza_fit <- fit_model(
-  rw_influenza_mod,
+rw_subtyped_fit <- fit_model(
+  rw_subtyped_mod,
   iter = 2000,
   warmup = 1000,
   chains = 3
 )
 
-ps_influenza_mod <- construct_model(
+ps_subtyped_mod <- construct_model(
   method = p_spline(),
   pathogen_structure = subtyped(
     case_timeseries = influenza_data$ili,
@@ -73,13 +73,13 @@ ps_influenza_mod <- construct_model(
   ),
   dow_effect = TRUE
 )
-ps_influenza_fit <- fit_model(
-  ps_influenza_mod,
+ps_subtyped_fit <- fit_model(
+  ps_subtyped_mod,
   iter = 2000,
   warmup = 1000,
   chains = 3
 )
-# ps_influenza_gr <- ps_growth_rate(
+# ps_subtyped_gr <- ps_growth_rate(
 #   ps_influenza,
 #   influenza_data_list$time,
 #   time_labels = influenza_data_list$time
