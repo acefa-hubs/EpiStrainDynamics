@@ -4,13 +4,12 @@
 library(ggplot2)
 library(rstan)
 library(EpiStrainDynamics)
-# source('R/fit_model.R')
-source('R/get_pathogen_info.R')
+source('R/fit_model.R')
+source('R/construct_model.R')
 source('R/get_model_type.R')
 source('R/get_knots.R')
-source('R/growth_rate.R')
-source('R/predict_B_true.R')
-source('R/construct_model_data.R')
+# source('R/growth_rate.R')
+# source('R/predict_B_true.R')
 
 # Set some stan settings
 rstan::rstan_options(auto_write = TRUE)
@@ -31,96 +30,61 @@ influenza_data <- influenza_data[influenza_data$week < max_date &
 influenza_data <- influenza_data[order(influenza_data$week), ]
 influenza_data$time <- seq(1, nrow(influenza_data))
 
-#option 1
-influenza_data_list <- construct_model_data(
-  total_cases = influenza_data$ili,
-  time = influenza_data$time,
-  component_pathogens = list(
-    influenzaA = influenza_data$inf_A,
-    influenzaB = influenza_data$inf_B,
-    other = influenza_data$num_spec - influenza_data$inf_all
-  ),
-  influenzaA_subtypes = list(
-    influenzaA.H3N2 = influenza_data$inf_H3N2,
-    influenzaA.H1N1 = influenza_data$inf_H1N1
-  )
-)
-
-
-source('R/test-fit_model.R')
-option1_fit <- fit_model(
-  influenza_data_list,
-  options = model_options(
-    method = 'random-walk',
-    pathogen_structure = 'subtyped',
-    spline_degree = NULL,
-    days_per_knot = NULL,
-    dow_effect = TRUE,
-    smoothing_structure = 'single',
-    observation_noise = 'observation_noise_only',
-    iter = 1000,
-    warmup = 100,
-    chains = 2
-  )
-)
-
-#option 2
-source('R/test-fit_model-2.R')
-my_model <- construct_model(
-  method = random_walk(), # p_spline(spline_degree = 5, days_per_knot = 5, time_data = time)
+rw_influenza_mod <- construct_model(
+  method = random_walk(),
   pathogen_structure = subtyped(
-    total_case_data = influenza_data$ili,
-    influenzaA_data = influenza_data$inf_A,
-    other_component_pathogen_data = list(
+    case_timeseries = influenza_data$ili,
+    influenzaA_unsubtyped_timeseries = influenza_data$inf_A,
+    other_pathogen_timeseries = list(
       influenzaB = influenza_data$inf_B,
       other = influenza_data$num_spec - influenza_data$inf_all
     ),
-    influenzaA_subtype_data = list(
+    influenzaA_subtyped_timeseries = list(
       influenzaA.H3N2 = influenza_data$inf_H3N2,
       influenzaA.H1N1 = influenza_data$inf_H1N1
     ),
     smoothing_structure = 'independent',
     observation_noise = 'observation_noise_only'
   ),
-  dow_data = influenza_data$time
+  dow_effect = TRUE
 )
-option2_fit <- fit_model(
-  constructed_model,
+rw_influenza_fit <- fit_model(
+  rw_influenza_mod,
   iter = 2000,
   warmup = 1000,
   chains = 3
 )
 
-
-
-
-
-
-#### NOT YET CHANGED
-# fit
-rw_influenza <- fit_model(
-  influenza_data_list,
-  method = 'random_walk',
-  smoothing_structure = 'independent',
-  iter = 500,
-  warmup = 300,
+ps_influenza_mod <- construct_model(
+  method = p_spline(),
+  pathogen_structure = subtyped(
+    case_timeseries = influenza_data$ili,
+    influenzaA_unsubtyped_timeseries = influenza_data$inf_A,
+    influenzaA_subtyped_timeseries = list(
+      influenzaA.H3N2 = influenza_data$inf_H3N2,
+      influenzaA.H1N1 = influenza_data$inf_H1N1
+    ),
+    other_pathogen_timeseries = list(
+      influenzaB = influenza_data$inf_B,
+      other = influenza_data$num_spec - influenza_data$inf_all
+    ),
+    smoothing_structure = 'independent',
+    observation_noise = 'observation_noise_only'
+  ),
+  dow_effect = TRUE
+)
+ps_influenza_fit <- fit_model(
+  ps_influenza_mod,
+  iter = 2000,
+  warmup = 1000,
   chains = 3
 )
-ps_influenza <- fit_model(
-  influenza_data_list,
-  method = 'p-spline',
-  spline_degree = 3,
-  days_per_knot = 5,
-  smoothing_structure = 'independent',
-  iter = 500,
-  warmup = 300,
-  chains = 3
-)
-ps_influenza_gr <- ps_growth_rate(
-  ps_influenza,
-  influenza_data_list$time,
-  time_labels = influenza_data_list$time
-)
+# ps_influenza_gr <- ps_growth_rate(
+#   ps_influenza,
+#   influenza_data_list$time,
+#   time_labels = influenza_data_list$time
+# )
+
 
 # Example 2 "mp" models
 # Fitting the model 'mid-season', only include first 140 days
@@ -128,41 +92,52 @@ ps_influenza_gr <- ps_growth_rate(
 sim_data_raw <- read.csv('tests/test-workflow/example_data/simulated_data1.csv')
 sim_data <- sim_data_raw[sim_data_raw$t < 140, ]
 
-sim_data_list <- list(
-  cases = sim_data$y,
-  time = sim_data$t,
-  component_pathogens = list(
-    influenzaA.H3N2 = sim_data$H3N2,
-    influenzaA.H1N1 = sim_data$H1N1,
-    influenzaB = sim_data$B
-  )
+rw_multiple_mod <- construct_model(
+  method = random_walk(),
+  pathogen_structure = multiple(
+    case_timeseries = sim_data$y,
+    component_pathogen_timeseries = list(
+      influenzaA.H3N2 = sim_data$H3N2,
+      influenzaA.H1N1 = sim_data$H1N1,
+      influenzaB = sim_data$B
+    ),
+    smoothing_structure = 'independent',
+    observation_noise = 'observation_noise_only'
+  ),
+  dow_effect = TRUE
 )
-
-rw_mp <- fit_model(
-  sim_data_list,
-  method = 'random_walk',
-  smoothing_structure = 'independent',
-  iter = 500,
-  warmup = 300,
-  chains = 3
-)
-ps_mp <- fit_model(
-  sim_data_list,
-  method = 'p-spline',
-  spline_degree = 3,
-  days_per_knot = 5,
-  smoothing_structure = 'independent',
+rw_multiple_fit <- fit_model(
+  rw_multiple_mod,
   iter = 500,
   warmup = 300,
   chains = 3
 )
 
-ps_mp_gr <- ps_growth_rate(
-  ps_mp,
-  sim_data_list$time,
-  time_labels = sim_data_list$time
+ps_multiple_mod <- construct_model(
+  method = p_spline(spline_degree = 3, days_per_knot = 5),
+  pathogen_structure = multiple(
+    case_timeseries = sim_data$y,
+    component_pathogen_timeseries = list(
+      influenzaA.H3N2 = sim_data$H3N2,
+      influenzaA.H1N1 = sim_data$H1N1,
+      influenzaB = sim_data$B
+    ),
+    smoothing_structure = 'independent',
+    observation_noise = 'observation_noise_only'
+  ),
+  dow_effect = TRUE
 )
-
+ps_multiple_fit <- fit_model(
+  ps_multiple_mod,
+  iter = 500,
+  warmup = 300,
+  chains = 3
+)
+# ps_mp_gr <- ps_growth_rate(
+#   ps_mp,
+#   sim_data_list$time,
+#   time_labels = sim_data_list$time
+# )
 
 # Penalised-spline model, multiple-pathogens, fit up to day 140 of simulated
 # dataset to demonstrate utility during flu-season/pandemic
@@ -173,102 +148,36 @@ covid_data <- covid_data[covid_data$geography == "England", ]
 covid_data <- covid_data[order(covid_data$date), ]
 covid_data$time <- seq(1, nrow(covid_data))
 
-covid_data_list <- list(
-  cases = covid_data$metric_value,
-  time = covid_data$time
+rw_single_mod <- construct_model(
+  method = random_walk(),
+  pathogen_structure = single(
+    case_timeseries = covid_data$metric_value
+  ),
+  dow_effect = TRUE
 )
-
-# very very slow?
-rw_single <- fit_model(
-  covid_data_list,
-  method = 'random_walk',
-  smoothing_structure = 'independent',
-  iter = 500,
-  warmup = 300,
-  chains = 3
-)
-ps_single <- fit_model(
-  covid_data_list,
-  method = 'p-spline',
-  spline_degree = 3,
-  days_per_knot = 5,
-  smoothing_structure = 'independent',
+#THIS MODEL GETS STUCK
+rw_single_fit <- fit_model(
+  rw_single_mod,
   iter = 500,
   warmup = 300,
   chains = 3
 )
 
-ps_single_gr <- ps_single_growth_rate(
-  ps_single,
-  covid_data_list$time,
-  time_labels = covid_data_list$time
+ps_single_mod <- construct_model(
+  method = p_spline(),
+  pathogen_structure = single(
+    case_timeseries = covid_data$metric_value
+  ),
+  dow_effect = TRUE
 )
-
-# all examples with option2
-#
-# rw_single <- construct_model(
-#   method = random_walk(),
-#   pathogen_structure = single(
-#     total_case_data = covid_data$metric_value,
-#   ),
-#   dow_data = covid_data$time
-# )
-#
-# ps_single <- construct_model(
-#   method = p_spline(time_data = covid_data$time),
-#   pathogen_structure = single(
-#     total_case_data = covid_data$metric_value,
-#   ),
-#   dow_data = covid_data$time
-# )
-#
-#
-# rw_multiple <- construct_model(
-#   method = random_walk(),
-#   pathogen_structure = multiple(
-#     total_case_data = sim_data$y,
-#     component_pathogen_data = list(
-#       influenzaA.H3N2 = sim_data$H3N2,
-#       influenzaA.H1N1 = sim_data$H1N1,
-#       influenzaB = sim_data$B
-#     ),
-#     smoothing_structure = 'independent',
-#     observation_noise = 'observation_noise_only'
-#   ),
-#   dow_data = sim_data$t
-# )
-#
-# ps_multiple <- construct_model(
-#   method = p_spline(time_data = sim_data$t),
-#   pathogen_structure = multiple(
-#     total_case_data = sim_data$y,
-#     component_pathogen_data = list(
-#       influenzaA.H3N2 = sim_data$H3N2,
-#       influenzaA.H1N1 = sim_data$H1N1,
-#       influenzaB = sim_data$B
-#     ),
-#     smoothing_structure = 'independent',
-#     observation_noise = 'observation_noise_only'
-#   ),
-#   dow_data = sim_data$t
-# )
-#
-#
-# construct_model(
-#   method = random_walk(),
-#   pathogen_structure = subtyped(
-#     total_case_data = influenza_data$ili,
-#     influenzaA_data = influenza_data$inf_A,
-#     other_component_pathogen_data = list(
-#       influenzaB = influenza_data$inf_B,
-#       other = influenza_data$num_spec - influenza_data$inf_all
-#     ),
-#     influenzaA_subtype_data = list(
-#       influenzaA.H3N2 = influenza_data$inf_H3N2,
-#       influenzaA.H1N1 = influenza_data$inf_H1N1
-#     ),
-#     smoothing_structure = 'independent',
-#     observation_noise = 'observation_noise_only'
-#   ),
-#   dow_data = influenza_data$time
+ps_single_fit <- fit_model(
+  ps_single_mod,
+  iter = 500,
+  warmup = 300,
+  chains = 3
+)
+# ps_single_gr <- ps_single_growth_rate(
+#   ps_single,
+#   covid_data_list$time,
+#   time_labels = covid_data_list$time
 # )
