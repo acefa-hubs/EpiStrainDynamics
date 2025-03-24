@@ -12,20 +12,20 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 
-RcppExport SEXP _rcpp_module_boot_stan_fit4ps_influenza_mod();
-RcppExport SEXP _rcpp_module_boot_stan_fit4ps_mp_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4ps_multiple_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4ps_single_mod();
-RcppExport SEXP _rcpp_module_boot_stan_fit4rw_influenza_mod();
-RcppExport SEXP _rcpp_module_boot_stan_fit4rw_mp_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4ps_subtyped_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4rw_multiple_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4rw_single_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4rw_subtyped_mod();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rcpp_module_boot_stan_fit4ps_influenza_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4ps_influenza_mod, 0},
-    {"_rcpp_module_boot_stan_fit4ps_mp_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4ps_mp_mod, 0},
+    {"_rcpp_module_boot_stan_fit4ps_multiple_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4ps_multiple_mod, 0},
     {"_rcpp_module_boot_stan_fit4ps_single_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4ps_single_mod, 0},
-    {"_rcpp_module_boot_stan_fit4rw_influenza_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4rw_influenza_mod, 0},
-    {"_rcpp_module_boot_stan_fit4rw_mp_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4rw_mp_mod, 0},
+    {"_rcpp_module_boot_stan_fit4ps_subtyped_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4ps_subtyped_mod, 0},
+    {"_rcpp_module_boot_stan_fit4rw_multiple_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4rw_multiple_mod, 0},
     {"_rcpp_module_boot_stan_fit4rw_single_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4rw_single_mod, 0},
+    {"_rcpp_module_boot_stan_fit4rw_subtyped_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4rw_subtyped_mod, 0},
     {NULL, NULL, 0}
 };
 
