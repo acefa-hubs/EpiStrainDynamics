@@ -5,7 +5,7 @@ library(rstan)
 library(EpiStrainDynamics)
 
 # Load aus data
-df1 <- read.csv('example_data/aus_influenza_data.csv')
+df1 <- read.csv('tests/test-workflow/example_data/aus_influenza_data.csv')
 
 # Set limits on dates to consider
 min_date <- as.Date("2011-08-29")
@@ -20,10 +20,10 @@ df1 <- df1[order(df1$week),]
 df1$time <- seq(1, nrow(df1))
 
 # Load some simulated data
-dfS1 <- read.csv('example_data/simulated_data1.csv')
+dfS1 <- read.csv('tests/test-workflow/example_data/simulated_data1.csv')
 
 # Load some COVID data from the UK
-dfC1 <- read.csv('example_data/ukhsa-covid-data.csv')
+dfC1 <- read.csv('tests/test-workflow/example_data/ukhsa-covid-data.csv')
 dfC1 <- dfC1[dfC1$geography=="England",]
 
 dfC1 <- dfC1[order(dfC1$date),]
