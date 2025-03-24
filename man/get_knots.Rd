@@ -4,7 +4,7 @@
 \alias{get_knots}
 \title{Function for getting knot locations}
 \usage{
-get_knots(X, days_per_knot, spline_degree = 3)
+get_knots(X, days_per_knot = 3, spline_degree = 3)
 }
 \arguments{
 \item{X}{days}
