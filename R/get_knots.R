@@ -7,7 +7,7 @@
 #' @return location of knots
 #' @export
 #'
-get_knots <- function (X, days_per_knot, spline_degree = 3) {
+get_knots <- function (X, days_per_knot = 3, spline_degree = 3) {
 
   X <- as.numeric(X)
 
@@ -19,4 +19,5 @@ get_knots <- function (X, days_per_knot, spline_degree = 3) {
 
   knots <- seq(first_knot, final_knot, by = days_per_knot)
 
+  return(knots)
 }
