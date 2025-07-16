@@ -12,7 +12,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Biarch: true
 Depends: 
-    R (>= 3.4.0)
+    R (>= 3.5)
 Imports: 
     methods,
     Rcpp (>= 0.12.0),
@@ -31,3 +31,4 @@ SystemRequirements: GNU make
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+LazyData: true
