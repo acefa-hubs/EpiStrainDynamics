@@ -87,6 +87,56 @@ ps_subtyped_fit <- fit_model(
 
 
 # Example 2 "mp" models
+
+# knots <- get_knots(df$t, days_per_knot = 5, spline_degree = 3)
+#
+# ps_mp_data <- list(
+#   num_data = nrow(df),
+#   num_path = 11,
+#   num_knots = length(knots),
+#   knots = knots,
+#   spline_degree = 3,
+#   Y = df$cases,
+#   X = df$t,
+#   P = t(df[3:13]),
+#   # Might have to fix this line
+#   week_effect = 7,
+#   DOW = (df$t %% 7) + 1,
+#   cov_structure = 0,
+#   noise_structure = 0
+# )
+#
+# ps_mp_fit <- sampling(
+#   ps_mp_mod,
+#   iter = 5000,
+#   warmup = 1000,
+#   chains = 4,
+#   data = ps_mp_data
+# )
+
+ps_multiple_mod <- construct_model(
+  method = p_spline(spline_degree = 3, days_per_knot = 5),
+  pathogen_structure = multiple(
+    case_timeseries = sarscov2$cases,
+    component_pathogen_timeseries = list(
+      B.1.177 = sarscov2$B.1.177,
+      B.1.1.7 = sarscov2$B.1.1.7,
+      B.1.617.2 = sarscov2$B.1.617.2,
+      BA.1 = sarscov2$BA.1,
+      BA.2 = sarscov2$BA.2,
+      BA.2.75 = sarscov2$BA.2.75,
+      BA.4 = sarscov2$BA.4,
+      BA.5 = sarscov2$BA.5,
+      BQ.1 = sarscov2$BQ.1,
+      XBB = sarscov2$XBB,
+      Other = sarscov2$Other
+    ),
+    smoothing_structure = 'single',
+    observation_noise = 'observation_noise_only'
+  ),
+  dow_effect = TRUE
+)
+
 # Fitting the model 'mid-season', only include first 140 days
 # Load some simulated data
 sim_data_raw <- read.csv('tests/test-workflow/example_data/simulated_data1.csv')
