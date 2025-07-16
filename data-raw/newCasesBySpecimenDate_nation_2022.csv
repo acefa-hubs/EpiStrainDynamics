@@ -1,0 +1,1235 @@
+date,area_type,area_code,area_name,metric,metric_name,value
+2022-01-01,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,6224.0
+2022-01-01,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,5385.0
+2022-01-01,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,99303.0
+2022-01-01,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7363.0
+2022-01-02,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,148609.0
+2022-01-02,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,15692.0
+2022-01-02,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,9855.0
+2022-01-02,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,6912.0
+2022-01-03,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,7309.0
+2022-01-03,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,193617.0
+2022-01-03,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,9457.0
+2022-01-03,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,19518.0
+2022-01-04,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,234873.0
+2022-01-04,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,8470.0
+2022-01-04,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,19852.0
+2022-01-04,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,12452.0
+2022-01-05,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,8991.0
+2022-01-05,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,22566.0
+2022-01-05,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,6819.0
+2022-01-05,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,183798.0
+2022-01-06,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,13902.0
+2022-01-06,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,150786.0
+2022-01-06,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,4714.0
+2022-01-06,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,3578.0
+2022-01-07,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,9132.0
+2022-01-07,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,3367.0
+2022-01-07,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,105080.0
+2022-01-07,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2708.0
+2022-01-08,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2465.0
+2022-01-08,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,81221.0
+2022-01-08,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2637.0
+2022-01-08,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7292.0
+2022-01-09,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7691.0
+2022-01-09,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,83081.0
+2022-01-09,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2180.0
+2022-01-09,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2838.0
+2022-01-10,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,3596.0
+2022-01-10,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,9406.0
+2022-01-10,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,116343.0
+2022-01-10,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,3614.0
+2022-01-11,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,8301.0
+2022-01-11,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,3232.0
+2022-01-11,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,100979.0
+2022-01-11,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2733.0
+2022-01-12,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,90000.0
+2022-01-12,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7683.0
+2022-01-12,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,3130.0
+2022-01-12,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2406.0
+2022-01-13,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2890.0
+2022-01-13,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2100.0
+2022-01-13,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,84132.0
+2022-01-13,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7290.0
+2022-01-14,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2692.0
+2022-01-14,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,75174.0
+2022-01-14,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1945.0
+2022-01-14,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,6514.0
+2022-01-15,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,67821.0
+2022-01-15,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,5804.0
+2022-01-15,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1483.0
+2022-01-15,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2842.0
+2022-01-16,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,3620.0
+2022-01-16,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7095.0
+2022-01-16,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,85599.0
+2022-01-16,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1783.0
+2022-01-17,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,9173.0
+2022-01-17,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,114776.0
+2022-01-17,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,4607.0
+2022-01-17,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2958.0
+2022-01-18,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,8548.0
+2022-01-18,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,4398.0
+2022-01-18,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2603.0
+2022-01-18,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,103308.0
+2022-01-19,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7904.0
+2022-01-19,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,97335.0
+2022-01-19,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,4037.0
+2022-01-19,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2484.0
+2022-01-20,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2437.0
+2022-01-20,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7088.0
+2022-01-20,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,3848.0
+2022-01-20,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,86951.0
+2022-01-21,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,6659.0
+2022-01-21,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2351.0
+2022-01-21,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,3548.0
+2022-01-21,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,79172.0
+2022-01-22,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,3266.0
+2022-01-22,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1867.0
+2022-01-22,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,6117.0
+2022-01-22,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,70483.0
+2022-01-23,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7360.0
+2022-01-23,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,88558.0
+2022-01-23,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2047.0
+2022-01-23,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,4400.0
+2022-01-24,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,109233.0
+2022-01-24,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,5338.0
+2022-01-24,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,9493.0
+2022-01-24,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,3300.0
+2022-01-25,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,8454.0
+2022-01-25,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,4849.0
+2022-01-25,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,96955.0
+2022-01-25,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2944.0
+2022-01-26,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,4347.0
+2022-01-26,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,8184.0
+2022-01-26,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2926.0
+2022-01-26,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,93211.0
+2022-01-27,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,3905.0
+2022-01-27,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,82726.0
+2022-01-27,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2461.0
+2022-01-27,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7109.0
+2022-01-28,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,3607.0
+2022-01-28,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,6597.0
+2022-01-28,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2140.0
+2022-01-28,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,71682.0
+2022-01-29,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,3414.0
+2022-01-29,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1582.0
+2022-01-29,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,5492.0
+2022-01-29,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,63024.0
+2022-01-30,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,74980.0
+2022-01-30,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,6958.0
+2022-01-30,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,4220.0
+2022-01-30,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1544.0
+2022-01-31,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,8930.0
+2022-01-31,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2648.0
+2022-01-31,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,88502.0
+2022-01-31,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,4971.0
+2022-02-01,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2457.0
+2022-02-01,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,8413.0
+2022-02-01,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,78511.0
+2022-02-01,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,4568.0
+2022-02-02,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,4261.0
+2022-02-02,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,73908.0
+2022-02-02,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2276.0
+2022-02-02,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7973.0
+2022-02-03,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,3662.0
+2022-02-03,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1770.0
+2022-02-03,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,64032.0
+2022-02-03,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7180.0
+2022-02-04,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,3075.0
+2022-02-04,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1661.0
+2022-02-04,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,52556.0
+2022-02-04,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,5972.0
+2022-02-05,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,43233.0
+2022-02-05,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2689.0
+2022-02-05,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,5288.0
+2022-02-05,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1095.0
+2022-02-06,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,6064.0
+2022-02-06,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,50148.0
+2022-02-06,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,3193.0
+2022-02-06,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1147.0
+2022-02-07,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,62672.0
+2022-02-07,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7783.0
+2022-02-07,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1953.0
+2022-02-07,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,4075.0
+2022-02-08,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,3837.0
+2022-02-08,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,55437.0
+2022-02-08,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,8572.0
+2022-02-08,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1815.0
+2022-02-09,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,8218.0
+2022-02-09,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,3459.0
+2022-02-09,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1649.0
+2022-02-09,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,51013.0
+2022-02-10,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2813.0
+2022-02-10,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1380.0
+2022-02-10,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,41331.0
+2022-02-10,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,6769.0
+2022-02-11,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,34944.0
+2022-02-11,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,6107.0
+2022-02-11,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2437.0
+2022-02-11,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1071.0
+2022-02-12,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,792.0
+2022-02-12,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,29142.0
+2022-02-12,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2183.0
+2022-02-12,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,5412.0
+2022-02-13,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,6064.0
+2022-02-13,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,855.0
+2022-02-13,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,32326.0
+2022-02-13,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2510.0
+2022-02-14,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7806.0
+2022-02-14,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,42490.0
+2022-02-14,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2999.0
+2022-02-14,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1450.0
+2022-02-15,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2869.0
+2022-02-15,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,40145.0
+2022-02-15,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,8216.0
+2022-02-15,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1272.0
+2022-02-16,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1251.0
+2022-02-16,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7945.0
+2022-02-16,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,39445.0
+2022-02-16,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2931.0
+2022-02-17,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,34168.0
+2022-02-17,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7248.0
+2022-02-17,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,968.0
+2022-02-17,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2332.0
+2022-02-18,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,24923.0
+2022-02-18,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,5944.0
+2022-02-18,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,278.0
+2022-02-18,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2096.0
+2022-02-19,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,842.0
+2022-02-19,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,26429.0
+2022-02-19,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1894.0
+2022-02-19,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,5482.0
+2022-02-20,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,28411.0
+2022-02-20,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,559.0
+2022-02-20,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2436.0
+2022-02-20,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,6314.0
+2022-02-21,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2865.0
+2022-02-21,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,8146.0
+2022-02-21,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1087.0
+2022-02-21,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,33034.0
+2022-02-22,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,823.0
+2022-02-22,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7667.0
+2022-02-22,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,28019.0
+2022-02-22,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2679.0
+2022-02-23,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,858.0
+2022-02-23,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2371.0
+2022-02-23,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,26009.0
+2022-02-23,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7239.0
+2022-02-24,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,21882.0
+2022-02-24,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1887.0
+2022-02-24,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,6154.0
+2022-02-24,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,708.0
+2022-02-25,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,5978.0
+2022-02-25,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,617.0
+2022-02-25,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,19533.0
+2022-02-25,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1709.0
+2022-02-26,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,499.0
+2022-02-26,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,5383.0
+2022-02-26,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,17604.0
+2022-02-26,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1603.0
+2022-02-27,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,589.0
+2022-02-27,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2090.0
+2022-02-27,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,6516.0
+2022-02-27,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,22165.0
+2022-02-28,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,9265.0
+2022-02-28,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2520.0
+2022-02-28,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,999.0
+2022-02-28,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,31865.0
+2022-03-01,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,9450.0
+2022-03-01,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2498.0
+2022-03-01,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,31864.0
+2022-03-01,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,983.0
+2022-03-02,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,9367.0
+2022-03-02,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1055.0
+2022-03-02,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2396.0
+2022-03-02,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,33361.0
+2022-03-03,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1052.0
+2022-03-03,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2157.0
+2022-03-03,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,9019.0
+2022-03-03,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,31533.0
+2022-03-04,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1866.0
+2022-03-04,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,832.0
+2022-03-04,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,8105.0
+2022-03-04,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,30605.0
+2022-03-05,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7707.0
+2022-03-05,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,28509.0
+2022-03-05,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1756.0
+2022-03-05,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,787.0
+2022-03-06,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2209.0
+2022-03-06,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,10048.0
+2022-03-06,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,35914.0
+2022-03-06,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,855.0
+2022-03-07,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1494.0
+2022-03-07,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,13338.0
+2022-03-07,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,50982.0
+2022-03-07,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2706.0
+2022-03-08,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2690.0
+2022-03-08,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1492.0
+2022-03-08,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,52343.0
+2022-03-08,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,13587.0
+2022-03-09,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1569.0
+2022-03-09,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,13938.0
+2022-03-09,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,55491.0
+2022-03-09,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2533.0
+2022-03-10,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,54298.0
+2022-03-10,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1501.0
+2022-03-10,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,12499.0
+2022-03-10,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2212.0
+2022-03-11,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1960.0
+2022-03-11,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,11412.0
+2022-03-11,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,52270.0
+2022-03-11,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1388.0
+2022-03-12,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,10084.0
+2022-03-12,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1147.0
+2022-03-12,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1686.0
+2022-03-12,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,49161.0
+2022-03-13,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2050.0
+2022-03-13,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1284.0
+2022-03-13,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,12134.0
+2022-03-13,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,60271.0
+2022-03-14,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,15280.0
+2022-03-14,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2566.0
+2022-03-14,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2471.0
+2022-03-14,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,79517.0
+2022-03-15,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2396.0
+2022-03-15,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2404.0
+2022-03-15,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,74101.0
+2022-03-15,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,14807.0
+2022-03-16,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,73951.0
+2022-03-16,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2036.0
+2022-03-16,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2306.0
+2022-03-16,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,13458.0
+2022-03-17,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,67687.0
+2022-03-17,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1670.0
+2022-03-17,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2075.0
+2022-03-17,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,11421.0
+2022-03-18,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1704.0
+2022-03-18,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1810.0
+2022-03-18,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,61904.0
+2022-03-18,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,9867.0
+2022-03-19,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,55211.0
+2022-03-19,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1645.0
+2022-03-19,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1399.0
+2022-03-19,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,9162.0
+2022-03-20,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2173.0
+2022-03-20,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,66907.0
+2022-03-20,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1465.0
+2022-03-20,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,10509.0
+2022-03-21,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2835.0
+2022-03-21,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2898.0
+2022-03-21,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,13646.0
+2022-03-21,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,89907.0
+2022-03-22,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2502.0
+2022-03-22,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2404.0
+2022-03-22,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,12344.0
+2022-03-22,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,81845.0
+2022-03-23,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,77600.0
+2022-03-23,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,11771.0
+2022-03-23,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2489.0
+2022-03-23,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,2325.0
+2022-03-24,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,2063.0
+2022-03-24,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,10388.0
+2022-03-24,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,68604.0
+2022-03-24,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1850.0
+2022-03-25,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1923.0
+2022-03-25,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,60256.0
+2022-03-25,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,8819.0
+2022-03-25,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1432.0
+2022-03-26,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,51776.0
+2022-03-26,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1288.0
+2022-03-26,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7218.0
+2022-03-26,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1174.0
+2022-03-27,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,58000.0
+2022-03-27,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1338.0
+2022-03-27,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1173.0
+2022-03-27,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7825.0
+2022-03-28,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,78909.0
+2022-03-28,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,10261.0
+2022-03-28,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1957.0
+2022-03-28,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1730.0
+2022-03-29,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,9750.0
+2022-03-29,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,67441.0
+2022-03-29,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1462.0
+2022-03-29,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1473.0
+2022-03-30,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,62750.0
+2022-03-30,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1380.0
+2022-03-30,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,8144.0
+2022-03-30,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1369.0
+2022-03-31,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,1025.0
+2022-03-31,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1115.0
+2022-03-31,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,45879.0
+2022-03-31,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,6772.0
+2022-04-01,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,524.0
+2022-04-01,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,5611.0
+2022-04-01,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,985.0
+2022-04-01,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,40342.0
+2022-04-02,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,318.0
+2022-04-02,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,809.0
+2022-04-02,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,31609.0
+2022-04-02,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,4856.0
+2022-04-03,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,5320.0
+2022-04-03,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,256.0
+2022-04-03,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,35606.0
+2022-04-03,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,997.0
+2022-04-04,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,473.0
+2022-04-04,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,45140.0
+2022-04-04,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1321.0
+2022-04-04,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,6793.0
+2022-04-05,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,463.0
+2022-04-05,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,7014.0
+2022-04-05,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1231.0
+2022-04-05,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,40393.0
+2022-04-06,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,367.0
+2022-04-06,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,36891.0
+2022-04-06,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,6421.0
+2022-04-06,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,1071.0
+2022-04-07,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,949.0
+2022-04-07,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,341.0
+2022-04-07,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,5674.0
+2022-04-07,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,31745.0
+2022-04-08,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,678.0
+2022-04-08,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,27391.0
+2022-04-08,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,314.0
+2022-04-08,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,4605.0
+2022-04-09,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,588.0
+2022-04-09,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,4088.0
+2022-04-09,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,196.0
+2022-04-09,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,23013.0
+2022-04-10,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,207.0
+2022-04-10,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,25641.0
+2022-04-10,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,715.0
+2022-04-10,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,4389.0
+2022-04-11,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,30597.0
+2022-04-11,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,909.0
+2022-04-11,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,5546.0
+2022-04-11,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,319.0
+2022-04-12,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,277.0
+2022-04-12,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,808.0
+2022-04-12,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,27382.0
+2022-04-12,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,5304.0
+2022-04-13,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,784.0
+2022-04-13,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,25507.0
+2022-04-13,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,5140.0
+2022-04-13,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,254.0
+2022-04-14,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,21434.0
+2022-04-14,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,4320.0
+2022-04-14,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,233.0
+2022-04-14,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,652.0
+2022-04-15,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,3633.0
+2022-04-15,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,528.0
+2022-04-15,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,150.0
+2022-04-15,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,17306.0
+2022-04-16,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,140.0
+2022-04-16,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,3224.0
+2022-04-16,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,16091.0
+2022-04-16,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,470.0
+2022-04-17,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,413.0
+2022-04-17,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,3302.0
+2022-04-17,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,16262.0
+2022-04-17,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,167.0
+2022-04-18,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,184.0
+2022-04-18,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,20566.0
+2022-04-18,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,591.0
+2022-04-18,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,3882.0
+2022-04-19,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,719.0
+2022-04-19,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,20595.0
+2022-04-19,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,214.0
+2022-04-19,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,4244.0
+2022-04-20,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,682.0
+2022-04-20,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,163.0
+2022-04-20,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,16973.0
+2022-04-20,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,3639.0
+2022-04-21,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,3186.0
+2022-04-21,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,136.0
+2022-04-21,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,622.0
+2022-04-21,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,14520.0
+2022-04-22,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,154.0
+2022-04-22,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,475.0
+2022-04-22,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,12526.0
+2022-04-22,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2548.0
+2022-04-23,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,112.0
+2022-04-23,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,10573.0
+2022-04-23,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,385.0
+2022-04-23,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2140.0
+2022-04-24,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,11866.0
+2022-04-24,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,437.0
+2022-04-24,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,109.0
+2022-04-24,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2302.0
+2022-04-25,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,454.0
+2022-04-25,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,148.0
+2022-04-25,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,13404.0
+2022-04-25,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,3103.0
+2022-04-26,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,150.0
+2022-04-26,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,11293.0
+2022-04-26,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,371.0
+2022-04-26,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2746.0
+2022-04-27,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,10120.0
+2022-04-27,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,360.0
+2022-04-27,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,115.0
+2022-04-27,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2460.0
+2022-04-28,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,138.0
+2022-04-28,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,297.0
+2022-04-28,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,9056.0
+2022-04-28,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2117.0
+2022-04-29,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,92.0
+2022-04-29,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1647.0
+2022-04-29,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,281.0
+2022-04-29,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7992.0
+2022-04-30,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,73.0
+2022-04-30,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,203.0
+2022-04-30,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1215.0
+2022-04-30,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6863.0
+2022-05-01,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,76.0
+2022-05-01,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,997.0
+2022-05-01,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,243.0
+2022-05-01,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7718.0
+2022-05-02,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,10343.0
+2022-05-02,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,80.0
+2022-05-02,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,308.0
+2022-05-02,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1176.0
+2022-05-03,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,11155.0
+2022-05-03,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1636.0
+2022-05-03,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,154.0
+2022-05-03,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,373.0
+2022-05-04,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1422.0
+2022-05-04,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,9783.0
+2022-05-04,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,123.0
+2022-05-04,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,344.0
+2022-05-05,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1210.0
+2022-05-05,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,8592.0
+2022-05-05,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,306.0
+2022-05-05,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,113.0
+2022-05-06,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,261.0
+2022-05-06,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7518.0
+2022-05-06,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1047.0
+2022-05-06,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,128.0
+2022-05-07,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,69.0
+2022-05-07,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,253.0
+2022-05-07,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6354.0
+2022-05-07,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,841.0
+2022-05-08,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1018.0
+2022-05-08,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,321.0
+2022-05-08,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,59.0
+2022-05-08,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7664.0
+2022-05-09,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1355.0
+2022-05-09,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,99.0
+2022-05-09,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,8876.0
+2022-05-09,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,372.0
+2022-05-10,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,333.0
+2022-05-10,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,90.0
+2022-05-10,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1171.0
+2022-05-10,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,8154.0
+2022-05-11,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,289.0
+2022-05-11,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,78.0
+2022-05-11,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7265.0
+2022-05-11,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1093.0
+2022-05-12,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,990.0
+2022-05-12,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,62.0
+2022-05-12,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,214.0
+2022-05-12,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6376.0
+2022-05-13,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5794.0
+2022-05-13,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,213.0
+2022-05-13,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,868.0
+2022-05-13,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,67.0
+2022-05-14,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,46.0
+2022-05-14,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,740.0
+2022-05-14,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,195.0
+2022-05-14,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5139.0
+2022-05-15,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,922.0
+2022-05-15,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,40.0
+2022-05-15,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6730.0
+2022-05-15,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,281.0
+2022-05-16,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,67.0
+2022-05-16,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1111.0
+2022-05-16,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7883.0
+2022-05-16,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,356.0
+2022-05-17,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,318.0
+2022-05-17,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1062.0
+2022-05-17,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,73.0
+2022-05-17,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6833.0
+2022-05-18,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,68.0
+2022-05-18,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,266.0
+2022-05-18,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,912.0
+2022-05-18,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6392.0
+2022-05-19,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,794.0
+2022-05-19,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,51.0
+2022-05-19,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5785.0
+2022-05-19,nation,N92000002,Northern Ireland,newCasesBySpecimenDate,New cases by specimen date,190.0
+2022-05-20,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5049.0
+2022-05-20,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,745.0
+2022-05-20,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,27.0
+2022-05-21,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,747.0
+2022-05-21,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,29.0
+2022-05-21,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4243.0
+2022-05-22,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,30.0
+2022-05-22,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5151.0
+2022-05-22,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,816.0
+2022-05-23,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6248.0
+2022-05-23,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1013.0
+2022-05-23,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,52.0
+2022-05-24,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,54.0
+2022-05-24,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1032.0
+2022-05-24,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5593.0
+2022-05-25,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,55.0
+2022-05-25,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1049.0
+2022-05-25,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5189.0
+2022-05-26,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,899.0
+2022-05-26,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4819.0
+2022-05-26,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,35.0
+2022-05-27,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,45.0
+2022-05-27,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,870.0
+2022-05-27,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4494.0
+2022-05-28,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4153.0
+2022-05-28,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,808.0
+2022-05-28,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,27.0
+2022-05-29,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4687.0
+2022-05-29,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,959.0
+2022-05-29,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,34.0
+2022-05-30,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1154.0
+2022-05-30,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5928.0
+2022-05-30,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,33.0
+2022-05-31,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1329.0
+2022-05-31,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5734.0
+2022-05-31,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,30.0
+2022-06-01,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,54.0
+2022-06-01,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1246.0
+2022-06-01,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5711.0
+2022-06-02,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,27.0
+2022-06-02,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5081.0
+2022-06-02,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1101.0
+2022-06-03,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5581.0
+2022-06-03,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1003.0
+2022-06-03,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,51.0
+2022-06-04,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,35.0
+2022-06-04,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1179.0
+2022-06-04,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6278.0
+2022-06-05,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,37.0
+2022-06-05,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1428.0
+2022-06-05,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,8350.0
+2022-06-06,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1875.0
+2022-06-06,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,9798.0
+2022-06-06,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,74.0
+2022-06-07,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,70.0
+2022-06-07,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,9484.0
+2022-06-07,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1857.0
+2022-06-08,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,9952.0
+2022-06-08,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,66.0
+2022-06-08,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1766.0
+2022-06-09,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,49.0
+2022-06-09,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1681.0
+2022-06-09,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,9589.0
+2022-06-10,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,61.0
+2022-06-10,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1570.0
+2022-06-10,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,9153.0
+2022-06-11,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,56.0
+2022-06-11,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,8468.0
+2022-06-11,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1553.0
+2022-06-12,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1919.0
+2022-06-12,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,56.0
+2022-06-12,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,10718.0
+2022-06-13,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2213.0
+2022-06-13,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,12954.0
+2022-06-13,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,105.0
+2022-06-14,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,92.0
+2022-06-14,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2389.0
+2022-06-14,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,12660.0
+2022-06-15,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2357.0
+2022-06-15,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,12387.0
+2022-06-15,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,93.0
+2022-06-16,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,93.0
+2022-06-16,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2217.0
+2022-06-16,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,11915.0
+2022-06-17,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,11640.0
+2022-06-17,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,117.0
+2022-06-17,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2162.0
+2022-06-18,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1905.0
+2022-06-18,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,84.0
+2022-06-18,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,11634.0
+2022-06-19,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,79.0
+2022-06-19,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,14524.0
+2022-06-19,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2394.0
+2022-06-20,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,173.0
+2022-06-20,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,16918.0
+2022-06-20,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2851.0
+2022-06-21,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,17531.0
+2022-06-21,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,3188.0
+2022-06-21,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,177.0
+2022-06-22,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2945.0
+2022-06-22,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,164.0
+2022-06-22,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,17764.0
+2022-06-23,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,167.0
+2022-06-23,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,16698.0
+2022-06-23,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2725.0
+2022-06-24,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,15626.0
+2022-06-24,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2546.0
+2022-06-24,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,178.0
+2022-06-25,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,108.0
+2022-06-25,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2214.0
+2022-06-25,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,14478.0
+2022-06-26,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2604.0
+2022-06-26,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,135.0
+2022-06-26,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,18039.0
+2022-06-27,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,227.0
+2022-06-27,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,21896.0
+2022-06-27,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2981.0
+2022-06-28,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2965.0
+2022-06-28,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,21869.0
+2022-06-28,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,207.0
+2022-06-29,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,217.0
+2022-06-29,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2664.0
+2022-06-29,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,21720.0
+2022-06-30,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,210.0
+2022-06-30,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,21513.0
+2022-06-30,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2517.0
+2022-07-01,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,181.0
+2022-07-01,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,21067.0
+2022-07-01,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2402.0
+2022-07-02,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,19586.0
+2022-07-02,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,130.0
+2022-07-02,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2245.0
+2022-07-03,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2491.0
+2022-07-03,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,25172.0
+2022-07-03,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,117.0
+2022-07-04,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,295.0
+2022-07-04,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,3021.0
+2022-07-04,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,30388.0
+2022-07-05,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2995.0
+2022-07-05,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,28118.0
+2022-07-05,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,302.0
+2022-07-06,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,26741.0
+2022-07-06,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,217.0
+2022-07-06,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2740.0
+2022-07-07,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,24049.0
+2022-07-07,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2199.0
+2022-07-07,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,206.0
+2022-07-08,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,229.0
+2022-07-08,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,22173.0
+2022-07-08,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2209.0
+2022-07-09,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,168.0
+2022-07-09,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1724.0
+2022-07-09,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,19354.0
+2022-07-10,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,142.0
+2022-07-10,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1908.0
+2022-07-10,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,23046.0
+2022-07-11,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2349.0
+2022-07-11,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,279.0
+2022-07-11,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,27198.0
+2022-07-12,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,196.0
+2022-07-12,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2373.0
+2022-07-12,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,24377.0
+2022-07-13,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,21639.0
+2022-07-13,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,2037.0
+2022-07-13,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,180.0
+2022-07-14,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1641.0
+2022-07-14,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,19340.0
+2022-07-14,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,119.0
+2022-07-15,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,145.0
+2022-07-15,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,16626.0
+2022-07-15,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1588.0
+2022-07-16,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,13677.0
+2022-07-16,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,78.0
+2022-07-16,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1262.0
+2022-07-17,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1441.0
+2022-07-17,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,15702.0
+2022-07-17,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,93.0
+2022-07-18,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,148.0
+2022-07-18,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,16919.0
+2022-07-18,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1651.0
+2022-07-19,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1672.0
+2022-07-19,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,132.0
+2022-07-19,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,14866.0
+2022-07-20,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,137.0
+2022-07-20,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,14533.0
+2022-07-20,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1499.0
+2022-07-21,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,12791.0
+2022-07-21,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1258.0
+2022-07-21,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,109.0
+2022-07-22,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,11177.0
+2022-07-22,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1094.0
+2022-07-22,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,107.0
+2022-07-23,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,69.0
+2022-07-23,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,8909.0
+2022-07-23,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,956.0
+2022-07-24,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,72.0
+2022-07-24,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,10216.0
+2022-07-24,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,987.0
+2022-07-25,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1243.0
+2022-07-25,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,127.0
+2022-07-25,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,11929.0
+2022-07-26,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,10482.0
+2022-07-26,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,90.0
+2022-07-26,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1153.0
+2022-07-27,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,73.0
+2022-07-27,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,9435.0
+2022-07-27,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,1036.0
+2022-07-28,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,911.0
+2022-07-28,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,79.0
+2022-07-28,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,8339.0
+2022-07-29,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7585.0
+2022-07-29,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,841.0
+2022-07-29,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,82.0
+2022-07-30,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6612.0
+2022-07-30,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,645.0
+2022-07-30,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,68.0
+2022-07-31,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7672.0
+2022-07-31,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,46.0
+2022-07-31,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,708.0
+2022-08-01,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,8814.0
+2022-08-01,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,915.0
+2022-08-01,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,106.0
+2022-08-02,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,8165.0
+2022-08-02,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,912.0
+2022-08-02,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,93.0
+2022-08-03,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,873.0
+2022-08-03,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7419.0
+2022-08-03,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,61.0
+2022-08-04,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,72.0
+2022-08-04,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,700.0
+2022-08-04,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6524.0
+2022-08-05,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,626.0
+2022-08-05,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5859.0
+2022-08-05,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,63.0
+2022-08-06,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,60.0
+2022-08-06,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,508.0
+2022-08-06,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4852.0
+2022-08-07,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,48.0
+2022-08-07,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5897.0
+2022-08-07,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,602.0
+2022-08-08,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,755.0
+2022-08-08,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,87.0
+2022-08-08,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7226.0
+2022-08-09,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,777.0
+2022-08-09,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,70.0
+2022-08-09,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6462.0
+2022-08-10,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,75.0
+2022-08-10,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6003.0
+2022-08-10,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,670.0
+2022-08-11,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,81.0
+2022-08-11,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5446.0
+2022-08-11,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,666.0
+2022-08-12,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4781.0
+2022-08-12,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,73.0
+2022-08-12,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,485.0
+2022-08-13,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,55.0
+2022-08-13,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,462.0
+2022-08-13,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3978.0
+2022-08-14,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4781.0
+2022-08-14,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,539.0
+2022-08-14,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,43.0
+2022-08-15,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,97.0
+2022-08-15,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,721.0
+2022-08-15,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5606.0
+2022-08-16,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,93.0
+2022-08-16,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,621.0
+2022-08-16,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4845.0
+2022-08-17,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,42.0
+2022-08-17,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4421.0
+2022-08-17,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,569.0
+2022-08-18,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3989.0
+2022-08-18,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,43.0
+2022-08-18,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,532.0
+2022-08-19,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,464.0
+2022-08-19,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,56.0
+2022-08-19,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3492.0
+2022-08-20,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,29.0
+2022-08-20,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3059.0
+2022-08-20,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,414.0
+2022-08-21,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3547.0
+2022-08-21,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,45.0
+2022-08-21,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,493.0
+2022-08-22,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,591.0
+2022-08-22,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4575.0
+2022-08-22,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,58.0
+2022-08-23,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4076.0
+2022-08-23,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,52.0
+2022-08-23,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,650.0
+2022-08-24,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,591.0
+2022-08-24,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,50.0
+2022-08-24,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3913.0
+2022-08-25,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,488.0
+2022-08-25,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,42.0
+2022-08-25,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3266.0
+2022-08-26,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2997.0
+2022-08-26,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,31.0
+2022-08-26,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,423.0
+2022-08-27,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,472.0
+2022-08-27,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,34.0
+2022-08-27,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2606.0
+2022-08-28,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2882.0
+2022-08-28,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,527.0
+2022-08-28,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,30.0
+2022-08-29,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,695.0
+2022-08-29,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3936.0
+2022-08-29,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,31.0
+2022-08-30,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,693.0
+2022-08-30,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,60.0
+2022-08-30,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4473.0
+2022-08-31,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,64.0
+2022-08-31,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,577.0
+2022-08-31,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3975.0
+2022-09-01,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,537.0
+2022-09-01,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,53.0
+2022-09-01,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3760.0
+2022-09-02,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3239.0
+2022-09-02,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,524.0
+2022-09-02,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,45.0
+2022-09-03,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,398.0
+2022-09-03,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,48.0
+2022-09-03,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2971.0
+2022-09-04,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,475.0
+2022-09-04,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,54.0
+2022-09-04,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3759.0
+2022-09-05,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4385.0
+2022-09-05,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,47.0
+2022-09-05,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,693.0
+2022-09-06,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,598.0
+2022-09-06,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3940.0
+2022-09-06,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,40.0
+2022-09-07,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,26.0
+2022-09-07,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3749.0
+2022-09-07,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,460.0
+2022-09-08,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3250.0
+2022-09-08,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,454.0
+2022-09-08,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,43.0
+2022-09-09,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,401.0
+2022-09-09,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,49.0
+2022-09-09,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3103.0
+2022-09-10,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,31.0
+2022-09-10,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2861.0
+2022-09-10,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,376.0
+2022-09-11,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3890.0
+2022-09-11,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,429.0
+2022-09-11,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,28.0
+2022-09-12,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,61.0
+2022-09-12,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,489.0
+2022-09-12,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4758.0
+2022-09-13,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4601.0
+2022-09-13,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,485.0
+2022-09-13,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,62.0
+2022-09-14,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,478.0
+2022-09-14,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,42.0
+2022-09-14,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4453.0
+2022-09-15,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,392.0
+2022-09-15,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4200.0
+2022-09-15,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,42.0
+2022-09-16,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,366.0
+2022-09-16,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,39.0
+2022-09-16,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3729.0
+2022-09-17,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,28.0
+2022-09-17,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3188.0
+2022-09-17,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,305.0
+2022-09-18,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,38.0
+2022-09-18,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,358.0
+2022-09-18,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3943.0
+2022-09-19,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,410.0
+2022-09-19,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,54.0
+2022-09-19,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5702.0
+2022-09-20,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7200.0
+2022-09-20,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,92.0
+2022-09-20,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,536.0
+2022-09-21,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6940.0
+2022-09-21,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,531.0
+2022-09-21,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,82.0
+2022-09-22,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,445.0
+2022-09-22,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,76.0
+2022-09-22,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6294.0
+2022-09-23,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,401.0
+2022-09-23,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,78.0
+2022-09-23,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6006.0
+2022-09-24,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,71.0
+2022-09-24,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,339.0
+2022-09-24,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5309.0
+2022-09-25,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,436.0
+2022-09-25,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,67.0
+2022-09-25,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6737.0
+2022-09-26,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,91.0
+2022-09-26,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,485.0
+2022-09-26,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,8042.0
+2022-09-27,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7648.0
+2022-09-27,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,114.0
+2022-09-27,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,493.0
+2022-09-28,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,491.0
+2022-09-28,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,117.0
+2022-09-28,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7806.0
+2022-09-29,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,448.0
+2022-09-29,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,95.0
+2022-09-29,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7352.0
+2022-09-30,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,405.0
+2022-09-30,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,111.0
+2022-09-30,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7099.0
+2022-10-01,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6564.0
+2022-10-01,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,76.0
+2022-10-01,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,425.0
+2022-10-02,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,8623.0
+2022-10-02,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,485.0
+2022-10-02,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,96.0
+2022-10-03,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,10881.0
+2022-10-03,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,146.0
+2022-10-03,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,665.0
+2022-10-04,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,115.0
+2022-10-04,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,604.0
+2022-10-04,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,10246.0
+2022-10-05,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,109.0
+2022-10-05,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,9544.0
+2022-10-05,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,578.0
+2022-10-06,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,92.0
+2022-10-06,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,8819.0
+2022-10-06,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,478.0
+2022-10-07,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,124.0
+2022-10-07,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,493.0
+2022-10-07,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,8333.0
+2022-10-08,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6581.0
+2022-10-08,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,398.0
+2022-10-08,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,74.0
+2022-10-09,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,455.0
+2022-10-09,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,89.0
+2022-10-09,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,8014.0
+2022-10-10,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,139.0
+2022-10-10,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,523.0
+2022-10-10,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,9835.0
+2022-10-11,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,139.0
+2022-10-11,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,8781.0
+2022-10-11,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,541.0
+2022-10-12,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,8124.0
+2022-10-12,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,533.0
+2022-10-12,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,112.0
+2022-10-13,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,114.0
+2022-10-13,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7563.0
+2022-10-13,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,457.0
+2022-10-14,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7343.0
+2022-10-14,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,133.0
+2022-10-14,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,494.0
+2022-10-15,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,339.0
+2022-10-15,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6005.0
+2022-10-15,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,98.0
+2022-10-16,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,74.0
+2022-10-16,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7257.0
+2022-10-16,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,449.0
+2022-10-17,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,576.0
+2022-10-17,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,9304.0
+2022-10-17,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,125.0
+2022-10-18,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,94.0
+2022-10-18,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,474.0
+2022-10-18,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7667.0
+2022-10-19,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7042.0
+2022-10-19,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,446.0
+2022-10-19,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,110.0
+2022-10-20,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,96.0
+2022-10-20,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6075.0
+2022-10-20,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,405.0
+2022-10-21,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,453.0
+2022-10-21,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5759.0
+2022-10-21,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,85.0
+2022-10-22,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,381.0
+2022-10-22,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4527.0
+2022-10-22,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,60.0
+2022-10-23,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,54.0
+2022-10-23,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,458.0
+2022-10-23,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5011.0
+2022-10-24,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,100.0
+2022-10-24,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6147.0
+2022-10-24,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,560.0
+2022-10-25,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5181.0
+2022-10-25,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,408.0
+2022-10-25,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,76.0
+2022-10-26,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,83.0
+2022-10-26,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4924.0
+2022-10-26,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,442.0
+2022-10-27,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,80.0
+2022-10-27,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,403.0
+2022-10-27,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4372.0
+2022-10-28,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3916.0
+2022-10-28,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,406.0
+2022-10-28,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,79.0
+2022-10-29,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,307.0
+2022-10-29,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,49.0
+2022-10-29,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3227.0
+2022-10-30,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,379.0
+2022-10-30,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3827.0
+2022-10-30,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,65.0
+2022-10-31,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,434.0
+2022-10-31,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4633.0
+2022-10-31,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,62.0
+2022-11-01,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4091.0
+2022-11-01,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,52.0
+2022-11-01,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,406.0
+2022-11-02,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,59.0
+2022-11-02,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,356.0
+2022-11-02,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3599.0
+2022-11-03,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,52.0
+2022-11-03,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3261.0
+2022-11-03,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,365.0
+2022-11-04,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,38.0
+2022-11-04,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2760.0
+2022-11-04,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,309.0
+2022-11-05,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,29.0
+2022-11-05,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,262.0
+2022-11-05,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2374.0
+2022-11-06,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,46.0
+2022-11-06,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,304.0
+2022-11-06,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2917.0
+2022-11-07,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3879.0
+2022-11-07,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,394.0
+2022-11-07,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,48.0
+2022-11-08,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3380.0
+2022-11-08,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,53.0
+2022-11-08,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,396.0
+2022-11-09,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,351.0
+2022-11-09,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,40.0
+2022-11-09,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3185.0
+2022-11-10,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,358.0
+2022-11-10,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,41.0
+2022-11-10,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2806.0
+2022-11-11,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,40.0
+2022-11-11,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2562.0
+2022-11-11,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,291.0
+2022-11-12,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,231.0
+2022-11-12,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2172.0
+2022-11-12,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,30.0
+2022-11-13,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,27.0
+2022-11-13,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2647.0
+2022-11-13,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,238.0
+2022-11-14,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,372.0
+2022-11-14,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3494.0
+2022-11-14,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,57.0
+2022-11-15,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,46.0
+2022-11-15,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,328.0
+2022-11-15,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3160.0
+2022-11-16,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,291.0
+2022-11-16,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,36.0
+2022-11-16,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2933.0
+2022-11-17,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2703.0
+2022-11-17,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,282.0
+2022-11-17,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,52.0
+2022-11-18,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,232.0
+2022-11-18,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2501.0
+2022-11-18,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,40.0
+2022-11-19,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,197.0
+2022-11-19,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,27.0
+2022-11-19,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2207.0
+2022-11-20,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,243.0
+2022-11-20,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,34.0
+2022-11-20,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2613.0
+2022-11-21,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3549.0
+2022-11-21,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,337.0
+2022-11-21,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,52.0
+2022-11-22,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,298.0
+2022-11-22,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3451.0
+2022-11-22,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,56.0
+2022-11-23,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3240.0
+2022-11-23,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,47.0
+2022-11-23,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,329.0
+2022-11-24,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3007.0
+2022-11-24,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,45.0
+2022-11-24,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,277.0
+2022-11-25,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,34.0
+2022-11-25,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,230.0
+2022-11-25,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2638.0
+2022-11-26,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,199.0
+2022-11-26,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,48.0
+2022-11-26,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2304.0
+2022-11-27,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3152.0
+2022-11-27,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,28.0
+2022-11-27,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,268.0
+2022-11-28,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,331.0
+2022-11-28,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4237.0
+2022-11-28,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,71.0
+2022-11-29,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,325.0
+2022-11-29,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,89.0
+2022-11-29,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3972.0
+2022-11-30,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,89.0
+2022-11-30,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3608.0
+2022-11-30,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,283.0
+2022-12-01,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,229.0
+2022-12-01,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3214.0
+2022-12-01,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,62.0
+2022-12-02,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,269.0
+2022-12-02,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3275.0
+2022-12-02,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,52.0
+2022-12-03,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,214.0
+2022-12-03,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,2481.0
+2022-12-03,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,53.0
+2022-12-04,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,319.0
+2022-12-04,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,58.0
+2022-12-04,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3409.0
+2022-12-05,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,124.0
+2022-12-05,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,351.0
+2022-12-05,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4850.0
+2022-12-06,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,103.0
+2022-12-06,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,377.0
+2022-12-06,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4761.0
+2022-12-07,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4640.0
+2022-12-07,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,135.0
+2022-12-07,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,420.0
+2022-12-08,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,102.0
+2022-12-08,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4092.0
+2022-12-08,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,343.0
+2022-12-09,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,102.0
+2022-12-09,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3824.0
+2022-12-09,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,290.0
+2022-12-10,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,229.0
+2022-12-10,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3286.0
+2022-12-10,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,55.0
+2022-12-11,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,316.0
+2022-12-11,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,92.0
+2022-12-11,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4223.0
+2022-12-12,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,435.0
+2022-12-12,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6356.0
+2022-12-12,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,195.0
+2022-12-13,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6483.0
+2022-12-13,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,166.0
+2022-12-13,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,462.0
+2022-12-14,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5962.0
+2022-12-14,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,163.0
+2022-12-14,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,408.0
+2022-12-15,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,141.0
+2022-12-15,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,404.0
+2022-12-15,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5549.0
+2022-12-16,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,185.0
+2022-12-16,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,374.0
+2022-12-16,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5525.0
+2022-12-17,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4273.0
+2022-12-17,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,352.0
+2022-12-17,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,118.0
+2022-12-18,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,130.0
+2022-12-18,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,430.0
+2022-12-18,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5212.0
+2022-12-19,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,8240.0
+2022-12-19,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,599.0
+2022-12-19,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,234.0
+2022-12-20,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,207.0
+2022-12-20,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,588.0
+2022-12-20,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7836.0
+2022-12-21,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,570.0
+2022-12-21,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,190.0
+2022-12-21,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7042.0
+2022-12-22,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6241.0
+2022-12-22,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,457.0
+2022-12-22,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,179.0
+2022-12-23,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,404.0
+2022-12-23,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,112.0
+2022-12-23,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5225.0
+2022-12-24,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,69.0
+2022-12-24,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,286.0
+2022-12-24,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3777.0
+2022-12-25,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3382.0
+2022-12-25,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,280.0
+2022-12-25,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,32.0
+2022-12-26,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,350.0
+2022-12-26,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,4499.0
+2022-12-26,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,101.0
+2022-12-27,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,475.0
+2022-12-27,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5977.0
+2022-12-27,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,153.0
+2022-12-28,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,634.0
+2022-12-28,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,7609.0
+2022-12-28,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,176.0
+2022-12-29,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,569.0
+2022-12-29,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,196.0
+2022-12-29,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,6953.0
+2022-12-30,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,149.0
+2022-12-30,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,5524.0
+2022-12-30,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,453.0
+2022-12-31,nation,W92000004,Wales,newCasesBySpecimenDate,New cases by specimen date,89.0
+2022-12-31,nation,S92000003,Scotland,newCasesBySpecimenDate,New cases by specimen date,307.0
+2022-12-31,nation,E92000001,England,newCasesBySpecimenDate,New cases by specimen date,3891.0
