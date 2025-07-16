@@ -1,7 +1,7 @@
 # EpiStrainDynamics
 
 This repository contains code corresponding to the R package `EpiStrainDynamics`. 
-For code corresponding to the analyses in the preprint: _Inferring temporal trends of multiple pathogens, variants, subtypes or serotypes from routine surveillance data_, see branch [`preprint`](https://github.com/acefa-hubs/EpiStrainDynamics/tree/preprint). 
+For code corresponding to the analyses in the paper: _Inferring temporal trends of multiple pathogens, variants, subtypes or serotypes from routine surveillance data_, see branch [`preprint`](https://github.com/acefa-hubs/EpiStrainDynamics/tree/preprint). 
 
 Estimating the temporal trends in infectious disease activity is crucial for monitoring disease spread and the impact of interventions. 
 Surveillance indicators routinely collected to monitor these trends are often a composite of multiple pathogens. 
