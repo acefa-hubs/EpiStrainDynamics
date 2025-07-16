@@ -13,7 +13,7 @@ We demonstrate its application to three different surveillance systems covering 
 This methodology is applicable to a wide range of pathogens and surveillance systems.
 
 ## Citation
-Preprint here
+Oliver Eales, Saras M Windecker, James M McCaw, Freya M Shearer, Inferring temporal trends of multiple pathogens, variants, subtypes or serotypes from routine surveillance data, American Journal of Epidemiology, 2025;, kwaf119, https://doi.org/10.1093/aje/kwaf119
 
 ## Contribution
 This is a work in progress. 
