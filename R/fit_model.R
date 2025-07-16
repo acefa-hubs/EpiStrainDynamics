@@ -1,3 +1,13 @@
+#' Fit model
+#'
+#' @param constructed_model prepared model object from construct_model()
+#' @param iter number of iterations
+#' @param warmup number of warmup iterations
+#' @param chains number of chains
+#'
+#' @returns fit model
+#' @export
+#'
 fit_model <- function (constructed_model,
                        iter = 2000,
                        warmup = 1000,
@@ -11,7 +21,15 @@ fit_model <- function (constructed_model,
   return(out)
 }
 
-
+#' Method fit
+#'
+#' @param constructed_model prepared model object from construct_model()
+#' @param iter number of iterations
+#' @param warmup number of warmup iterations
+#' @param chains number of chains
+#'
+#' @returns fit model
+#'
 fit <- function (constructed_model, iter, warmup, chains) UseMethod("fit")
 
 # fit stan model
