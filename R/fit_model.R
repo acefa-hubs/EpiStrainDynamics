@@ -54,7 +54,7 @@ fit.rw_subtyped <- function (constructed_model, iter, warmup, chains) {
     chains = chains)
 
   out <- list(fit = fit_object,
-              constructed_model)
+              constructed_model = constructed_model)
 
   class(out) <- 'EpiStrainDynamics.fit'
 
@@ -93,7 +93,7 @@ fit.ps_subtyped <- function (constructed_model, iter, warmup, chains) {
     chains = chains)
 
   out <- list(fit = fit_object,
-              constructed_model)
+              constructed_model = constructed_model)
 
   class(out) <- 'EpiStrainDynamics.fit'
 
@@ -121,7 +121,7 @@ fit.rw_multiple <- function (constructed_model, iter, warmup, chains) {
   )
 
   out <- list(fit = fit_object,
-              constructed_model)
+              constructed_model = constructed_model)
 
   class(out) <- 'EpiStrainDynamics.fit'
 
@@ -160,7 +160,7 @@ fit.ps_multiple <- function (constructed_model, iter, warmup, chains) {
   )
 
   out <- list(fit = fit_object,
-              constructed_model)
+              constructed_model = constructed_model)
 
   class(out) <- 'EpiStrainDynamics.fit'
 
@@ -183,7 +183,7 @@ fit.rw_single <- function (constructed_model, iter, warmup, chains) {
   )
 
   out <- list(fit = fit_object,
-              constructed_model)
+              constructed_model = constructed_model)
 
   class(out) <- 'EpiStrainDynamics.fit'
 
@@ -217,7 +217,7 @@ fit.ps_single <- function (constructed_model, iter, warmup, chains) {
   )
 
   out <- list(fit = fit_object,
-              constructed_model)
+              constructed_model = constructed_model)
 
   class(out) <- 'EpiStrainDynamics.fit'
 
