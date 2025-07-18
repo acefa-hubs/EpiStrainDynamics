@@ -4,10 +4,6 @@
 library(ggplot2)
 library(rstan)
 library(EpiStrainDynamics)
-source('R/fit_model.R')
-source('R/construct_model.R')
-source('R/get_model_type.R')
-source('R/get_knots.R')
 # source('R/growth_rate.R')
 # source('R/predict_B_true.R')
 
@@ -54,6 +50,11 @@ rw_subtyped_fit <- fit_model(
   warmup = 1000,
   chains = 3
 )
+# rw_subtyped_gr <- rw_growth_rate(
+#   rw_subtyped_fit,
+#   influenza_data$time,
+#   time_labels = influenza_data$time
+# )
 
 ps_subtyped_mod <- construct_model(
   method = p_spline(),
@@ -148,20 +149,20 @@ covid_data <- covid_data[covid_data$geography == "England", ]
 covid_data <- covid_data[order(covid_data$date), ]
 covid_data$time <- seq(1, nrow(covid_data))
 
-rw_single_mod <- construct_model(
-  method = random_walk(),
-  pathogen_structure = single(
-    case_timeseries = covid_data$metric_value
-  ),
-  dow_effect = TRUE
-)
+# rw_single_mod <- construct_model(
+#   method = random_walk(),
+#   pathogen_structure = single(
+#     case_timeseries = covid_data$metric_value
+#   ),
+#   dow_effect = TRUE
+# )
 #THIS MODEL GETS STUCK
-rw_single_fit <- fit_model(
-  rw_single_mod,
-  iter = 500,
-  warmup = 300,
-  chains = 3
-)
+# rw_single_fit <- fit_model(
+#   rw_single_mod,
+#   iter = 500,
+#   warmup = 300,
+#   chains = 3
+# )
 
 ps_single_mod <- construct_model(
   method = p_spline(),
