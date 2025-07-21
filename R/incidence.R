@@ -1,9 +1,12 @@
 ## Functions operating on random walk stan model fits
 
 # Returns data.frame() of modeled incidence
-rw_single_incidence <- function(rw_fit, num_days, time_labels){
+rw_single_incidence <- function(fitted_model){
 
-  post <- rstan::extract(rw_fit)
+  fit <- fitted_model$fit
+  post <- rstan::extract(fit)
+  time_labels <- fitted_model$constructed_model$data$time
+  num_days <- length(time_labels)
 
   df <- data.frame()
 
@@ -24,13 +27,14 @@ rw_single_incidence <- function(rw_fit, num_days, time_labels){
 }
 
 # Returns data.frame() of modeled incidence
-rw_incidence <- function(rw_fit, num_days, time_labels, num_path=4,
-                         pathogen_names=c("Influenza A H3N2",
-                                          "Influenza A H1N1",
-                                          "Influenza B",
-                                          "Unknown")){
+rw_incidence <- function(fitted_model){
 
-  post <- rstan::extract(rw_fit)
+  fit <- fitted_model$fit
+  post <- rstan::extract(fit)
+  time_labels <- fitted_model$constructed_model$data$time
+  num_days <- length(time_labels)
+  pathogen_names <- fitted_model$constructed_model$pathogen_names
+  num_path <- length(pathogen_names)
 
   df <- data.frame()
 
@@ -74,13 +78,16 @@ rw_incidence <- function(rw_fit, num_days, time_labels, num_path=4,
 
 
 # Returns data.frame() of modeled incidence
-ps_single_incidence <- function(ps_fit,
-                                X,
-                                num_days = length(X), time_labels,
-                                days_per_knot = 5, spline_degree = 3){
+ps_single_incidence <- function(fitted_model){
 
+  fit <- fitted_model$fit
+  days_per_knot <- fitted_model$constructed_model$model_params$days_per_knot
+  spline_degree <- fitted_model$constructed_model$model_params$spline_degree
+  time <- fitted_model$constructed_model$data$time
+  time_labels <- fitted_model$constructed_model$data$time
+  num_days <- length(time)
 
-  X <- as.numeric(X)
+  X <- as.numeric(time)
 
   knots <- get_knots(X, days_per_knot = days_per_knot, spline_degree = spline_degree)
   num_knots <- length(knots)
@@ -93,7 +100,7 @@ ps_single_incidence <- function(ps_fit,
   B_true <- t(predict(B_true, X))
 
 
-  post <- rstan::extract(ps_fit)
+  post <- rstan::extract(fit)
 
   a <- array(data=NA, dim=c(nrow(post$a), num_days))
 
@@ -125,14 +132,18 @@ ps_single_incidence <- function(ps_fit,
 
 
 # Returns modelled incidence including day of the week effect
-ps_single_incidence_dow <- function(ps_fit,
-                                    X,
-                                    num_days = length(X), time_labels,
-                                    week_effect, DOW,
-                                    days_per_knot = 5, spline_degree = 3){
+ps_single_incidence_dow <- function(fitted_model){
 
+  fit <- fitted_model$fit
+  days_per_knot <- fitted_model$constructed_model$model_params$days_per_knot
+  spline_degree <- fitted_model$constructed_model$model_params$spline_degree
+  DOW <- fitted_model$constructed_model$model_params$DOW
+  week_effect <- fitted_model$constructed_model$model_params$week_effect
+  time <- fitted_model$constructed_model$data$time
+  time_labels <- fitted_model$constructed_model$data$time
+  num_days <- length(time)
 
-  X <- as.numeric(X)
+  X <- as.numeric(time)
 
   knots <- get_knots(X, days_per_knot = days_per_knot, spline_degree = spline_degree)
   num_knots <- length(knots)
@@ -145,7 +156,7 @@ ps_single_incidence_dow <- function(ps_fit,
   B_true <- t(predict(B_true, X))
 
 
-  post <- rstan::extract(ps_fit)
+  post <- rstan::extract(fit)
 
   a <- array(data=NA, dim=c(nrow(post$a), num_days))
 
@@ -177,14 +188,18 @@ ps_single_incidence_dow <- function(ps_fit,
 
 
 # Returns data.frame() of modeled incidence
-ps_incidence <- function(ps_fit,
-                         X,
-                         num_days = length(X), time_labels,
-                         days_per_knot = 5, spline_degree = 3,
-                         num_path=4, pathogen_names=c("Influenza A H3N2", "Influenza A H1N1", "Influenza B", "Unknown")){
+ps_incidence <- function(fitted_model) {
 
+  fit <- fitted_model$fit
+  days_per_knot <- fitted_model$constructed_model$model_params$days_per_knot
+  spline_degree <- fitted_model$constructed_model$model_params$spline_degree
+  pathogen_names <- fitted_model$constructed_model$pathogen_names
+  num_path <- length(pathogen_names)
+  time <- fitted_model$constructed_model$data$time
+  time_labels <- fitted_model$constructed_model$data$time
+  num_days <- length(time)
 
-  X <- as.numeric(X)
+  X <- as.numeric(time)
 
   knots <- get_knots(X, days_per_knot = days_per_knot, spline_degree = spline_degree)
   num_knots <- length(knots)
@@ -197,7 +212,7 @@ ps_incidence <- function(ps_fit,
   B_true <- t(predict(B_true, X))
 
 
-  post <- rstan::extract(ps_fit)
+  post <- rstan::extract(fit)
 
   a <- array(data=NA, dim=c(nrow(post$a), num_path, num_days))
 
@@ -249,14 +264,20 @@ ps_incidence <- function(ps_fit,
 
 
 
-ps_incidence_dow <- function(ps_fit,
-                             X,
-                             num_days = length(X), time_labels, DOW, week_effect,
-                             days_per_knot = 5, spline_degree = 3,
-                             num_path=4, pathogen_names=c("Influenza A H3N2", "Influenza A H1N1", "Influenza B", "Unknown")){
+ps_incidence_dow <- function(fitted_model) {
 
+  fit <- fitted_model$fit
+  days_per_knot <- fitted_model$constructed_model$model_params$days_per_knot
+  spline_degree <- fitted_model$constructed_model$model_params$spline_degree
+  pathogen_names <- fitted_model$constructed_model$pathogen_names
+  DOW <- fitted_model$constructed_model$model_params$DOW
+  week_effect <- fitted_model$constructed_model$model_params$week_effect
+  num_path <- length(pathogen_names)
+  time <- fitted_model$constructed_model$data$time
+  time_labels <- fitted_model$constructed_model$data$time
+  num_days <- length(time)
 
-  X <- as.numeric(X)
+  X <- as.numeric(time)
 
   knots <- get_knots(X, days_per_knot = days_per_knot, spline_degree = spline_degree)
   num_knots <- length(knots)
@@ -269,7 +290,7 @@ ps_incidence_dow <- function(ps_fit,
   B_true <- t(predict(B_true, X))
 
 
-  post <- rstan::extract(ps_fit)
+  post <- rstan::extract(fit)
 
   a <- array(data=NA, dim=c(nrow(post$a), num_path, num_days))
 
@@ -318,9 +339,4 @@ ps_incidence_dow <- function(ps_fit,
 
 
 }
-
-
-
-
-
 
