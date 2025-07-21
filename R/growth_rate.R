@@ -31,12 +31,12 @@ rw_single_growth_rate <- function (fit_list,
 }
 
 # Returns data.frame() of modeled growth rates
-rw_growth_rate <- function (fit_list,
-                            num_days,
-                            time_labels) {
+rw_growth_rate <- function (fit_list) {
 
   fit <- fit_list$fit
-  pathogen_names <- fit_list$pathogen_names
+  time_labels <- fit_list$constructed_model$data$time
+  num_days <- length(time_labels)
+  pathogen_names <- fit_list$constructed_model$pathogen_names
   num_path <- length(pathogen_names)
 
   post <- rstan::extract(fit)
