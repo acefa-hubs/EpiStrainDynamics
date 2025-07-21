@@ -50,11 +50,9 @@ rw_subtyped_fit <- fit_model(
   warmup = 1000,
   chains = 3
 )
-# rw_subtyped_gr <- rw_growth_rate(
-#   rw_subtyped_fit,
-#   influenza_data$time,
-#   time_labels = influenza_data$time
-# )
+rw_subtyped_gr <- rw_growth_rate(
+  rw_subtyped_fit
+)
 
 ps_subtyped_mod <- construct_model(
   method = p_spline(),
