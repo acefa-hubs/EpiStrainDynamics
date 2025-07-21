@@ -5,10 +5,21 @@
 #' @returns growth rate calculation
 #' @export
 #'
-growth_rate <- function (fitted_model) UseMethod("fit")
+calculate_growth_rate <- function (fitted_model) {
+  gr <- growth_rate(fitted_model)
+  return(gr)
+}
+
+#' Calculate growth rate
+#'
+#' @param fitted_model fitted model output created with `fit_model`
+#'
+#' @returns growth rate calculation
+#'
+growth_rate <- function (fitted_model) UseMethod("growth_rate")
 
 #' @exportS3Method
-growth_rate.rw_subtyped <- function (fitted_model) {
+growth_rate.rw <- function (fitted_model) {
 
   class(out) <- 'EpiStrainDynamics.fit'
 
@@ -16,23 +27,7 @@ growth_rate.rw_subtyped <- function (fitted_model) {
 }
 
 #' @exportS3Method
-growth_rate.ps_subtyped <- function (fitted_model) {
-
-  class(out) <- 'EpiStrainDynamics.fit'
-
-  return(out)
-}
-
-#' @exportS3Method
-growth_rate.rw_multiple <- function (fitted_model) {
-
-  class(out) <- 'EpiStrainDynamics.fit'
-
-  return(out)
-}
-
-#' @exportS3Method
-growth_rate.ps_multiple <- function (fitted_model) {
+growth_rate.ps <- function (fitted_model) {
 
   class(out) <- 'EpiStrainDynamics.fit'
 
@@ -67,23 +62,35 @@ growth_rate.ps_single <- function (fitted_model) {
     a[k,] <- as.array(post$a[k,]) %*% B_true
   }
 
-  df <- data.frame()
+  ## multiple ex
+  # single_path_gr_internal <- function (obj) {do.call(rbind, lapply(2:num_days, gr_internal, obj, time_labels))}
+  #
+  # apply(a, 2, single_path_gr_internal)
 
-  df <- do.call(rbind, lapply(2:num_days, gr_internal, a, time_labels))
+
+  df <- do.call(rbind, lapply(2:num_days, gr_internal, obj, time_labels))
+
 
   df
 
-  class(out) <- 'EpiStrainDynamics.fit'
-
-  return(out)
 }
 
+#' Internal growth rate function
+#'
+#' @param iter loop id
+#' @param obj posterior samples
+#' @param time_labels time values
+#'
+#' @returns row processed for given iter
 gr_internal <- function (iter, obj, time_labels) {
-  quan <- quantile(obj[,iter] - obj[,(iter-1)], c(0.5,0.025, 0.25, 0.75, 0.975))
-  prop <- length(obj[,iter][ (obj[,iter] - obj[,(iter-1)])>0])/length(obj[,iter] - obj[,(iter-1)])
+
+  quan <- quantile(obj[, iter] - obj[, (iter - 1)],
+                   c(0.5, 0.025, 0.25, 0.75, 0.975))
+  prop <- length(obj[, iter][(obj[, iter] - obj[, (iter - 1)]) > 0]) /
+    length(obj[, iter] - obj[, (iter - 1)])
   row <- data.frame(time = time_labels[iter],
                     t_step = iter,
-                    y=quan[[1]],
+                    y = quan[[1]],
                     lb_50 = quan[[3]],
                     ub_50 = quan[[4]],
                     lb_95 = quan[[2]],
