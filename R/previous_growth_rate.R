@@ -1,17 +1,17 @@
 
 # Returns data.frame() of modeled growth rates
-rw_single_growth_rate <- function (fit_list,
+rw_single_growth_rate <- function (fitted_model,
                                    num_days,
                                    time_labels) {
 
-  fit <- fit_list$fit
+  fit <- fitted_model$fit
   post <- rstan::extract(fit)
 
   df <- data.frame()
 
   for(i in 2:num_days){
 
-    quan<- quantile(post$a[,i] - post$a[,(i-1)], c(0.5,0.025, 0.25, 0.75, 0.975))
+    quan <- quantile(post$a[,i] - post$a[,(i-1)], c(0.5,0.025, 0.25, 0.75, 0.975))
     prop <- length(post$a[,i][(post$a[,i] - post$a[,(i-1)])>0])/length(post$a[,i] - post$a[,(i-1)])
     row <- data.frame(time = time_labels[i],
                       t_step = i,
@@ -31,12 +31,12 @@ rw_single_growth_rate <- function (fit_list,
 }
 
 # Returns data.frame() of modeled growth rates
-rw_growth_rate <- function (fit_list,
+rw_growth_rate <- function (fitted_model,
                             num_days,
                             time_labels) {
 
-  fit <- fit_list$fit
-  pathogen_names <- fit_list$pathogen_names
+  fit <- fitted_model$fit
+  pathogen_names <- fitted_model$pathogen_names
   num_path <- length(pathogen_names)
 
   post <- rstan::extract(fit)
@@ -89,13 +89,13 @@ rw_growth_rate <- function (fit_list,
 
 
 # Returns data.frame() of modeled growth rates
-ps_single_growth_rate <- function(fit_list){
+ps_single_growth_rate <- function(fitted_model){
 
-  fit <- fit_list$fit
-  days_per_knot <- fit_list$constructed_model$model_params$days_per_knot
-  spline_degree <- fit_list$constructed_model$model_params$spline_degree
-  time <- fit_list$constructed_model$data$time
-  time_labels <- fit_list$constructed_model$data$time
+  fit <- fitted_model$fit
+  days_per_knot <- fitted_model$constructed_model$model_params$days_per_knot
+  spline_degree <- fitted_model$constructed_model$model_params$spline_degree
+  time <- fitted_model$constructed_model$data$time
+  time_labels <- fitted_model$constructed_model$data$time
 
   B_true <- predict_B_true(time, days_per_knot, spline_degree)
 
@@ -131,16 +131,15 @@ ps_single_growth_rate <- function(fit_list){
 
 
 # Returns data.frame() of modeled growth rates
-ps_growth_rate <- function (fit_list,
-                            time,
-                            time_labels) {
+ps_growth_rate <- function (fitted_model) {
 
-  fit <- fit_list$fit
-  days_per_knot <- fit_list$days_per_knot
-  spline_degree <- fit_list$spline_degree
-
-  pathogen_names <- fit_list$pathogen_names
+  fit <- fitted_model$fit
+  days_per_knot <- fitted_model$constructed_model$model_params$days_per_knot
+  spline_degree <- fitted_model$constructed_model$model_params$spline_degree
+  pathogen_names <- fitted_model$constructed_model$pathogen_names
   num_path <- length(pathogen_names)
+  time <- fitted_model$constructed_model$data$time
+  time_labels <- fitted_model$constructed_model$data$time
 
   B_true <- predict_B_true(time, days_per_knot, spline_degree)
 
