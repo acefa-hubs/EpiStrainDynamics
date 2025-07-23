@@ -10,7 +10,7 @@
 #'
 construct_model <- function (method,
                              pathogen_structure,
-                             dow_effect = NULL) {
+                             dow_effect = FALSE) {
 
   model_type <- get_model_type(
     method$method,
@@ -20,11 +20,11 @@ construct_model <- function (method,
   time <- seq(1, length(pathogen_structure$data$case_timeseries))
 
   # Set up day-of-week effects
-  if (!is.null(dow_effect)) {
+  if (dow_effect) {
     week_effect <- 7
     DOW <- (time %% 7) + 1
   }
-  if (is.null(dow_effect)) {
+  if (!dow_effect) {
     week_effect <- 1
     DOW <- (time %% 1) + 1
   }
