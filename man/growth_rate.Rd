@@ -2,16 +2,30 @@
 % Please edit documentation in R/growth_rate.R
 \name{growth_rate}
 \alias{growth_rate}
-\title{Calculate growth rate}
+\alias{growth_rate.ps}
+\alias{growth_rate.rw}
+\alias{growth_rate.ps_single}
+\alias{growth_rate.rw_single}
+\title{Generic Method for Growth Rate Analysis}
 \usage{
-growth_rate(fitted_model)
+growth_rate(fitted_model, ...)
+
+\method{growth_rate}{ps}(fitted_model, ...)
+
+\method{growth_rate}{rw}(fitted_model, ...)
+
+\method{growth_rate}{ps_single}(fitted_model, ...)
+
+\method{growth_rate}{rw_single}(fitted_model, ...)
 }
 \arguments{
-\item{fitted_model}{fitted model output created with \code{fit_model}}
+\item{fitted_model}{Fitted model object with appropriate class}
+
+\item{...}{Additional arguments passed to methods}
 }
 \value{
-growth rate calculation
+Data frame with growth rate analysis results
 }
 \description{
-Calculate growth rate
+S3 generic for computing growth rates from fitted models
 }
