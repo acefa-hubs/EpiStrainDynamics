@@ -1,259 +1,110 @@
-# Rt functions
-# Modeled Rt estimates from incidence curve
-rw_Rt <- function(fit,
-                  num_days, time_labels,
-                  tau_max=7,
-                  gi_dist,
-                  num_path=4, pathogen_names=c("Influenza A H3N2", "Influenza A H1N1", "Influenza B", "Unknown")){
-
-  post <- rstan::extract(fit)
-
-  df <- data.frame()
-
-  g_a <- sum(gi_dist(seq(0,tau_max-1,1)))
-
-  for(i in tau_max:num_days){
-
-    R_list_T <- matrix(0, nrow=length(post$a[,1,1]),ncol=1) #
-    for(j in 1:num_path){
-
-      R_list <- matrix(0, nrow=length(post$a[,1,1]),ncol=1)
-
-      for(k in 0:(tau_max-1)){
-        R_list <- R_list + exp(post$a[,j,i-k])*gi_dist(k)
-
-        R_list_T <- R_list_T + exp(post$a[,j,i-k])*gi_dist(k)#
-      }
-      R_list <- exp(post$a[,j,i])/(R_list/g_a)
-
-      quan<- quantile(R_list, c(0.5,0.025, 0.25, 0.75, 0.975))
-      prop <- length(R_list[R_list>1]) / length(R_list)
-      row <- data.frame(time = time_labels[i],
-                        t_step = i,
-                        y=quan[[1]],
-                        lb_50 = quan[[3]],
-                        ub_50 = quan[[4]],
-                        lb_95 = quan[[2]],
-                        ub_95 = quan[[5]],
-                        pathogen = pathogen_names[j],
-                        prop = prop)
-      df <- rbind(df, row)
-
-    }
-
-
-    R_list_T <- rowSums(exp(post$a[ , ,i])) /(R_list_T/g_a)
-    quan<- quantile(R_list_T, c(0.5,0.025, 0.25, 0.75, 0.975))
-    prop <- length(R_list_T[R_list_T>1]) / length(R_list_T)
-    row <- data.frame(time = time_labels[i],
-                      t_step = i,
-                      y=quan[[1]],
-                      lb_50 = quan[[3]],
-                      ub_50 = quan[[4]],
-                      lb_95 = quan[[2]],
-                      ub_95 = quan[[5]],
-                      pathogen = "Total",
-                      prop = prop)
-    df <- rbind(df, row)
-
-  }
-
-  df
-
-
+#' Generic Method for Rt Analysis
+#'
+#' S3 generic for computing reproduction numbers from fitted models
+#'
+#' @param fitted_model Fitted model object with appropriate class
+#' @param tau_max Integer maximum generation interval in days (default: 7)
+#' @param gi_dist Function that returns generation interval probability for given day
+#' @param ... Additional arguments passed to methods
+#' @return Data frame with Rt analysis results
+#' @export
+Rt <- function(fitted_model, tau_max = 7, gi_dist, ...) {
+  UseMethod("Rt")
 }
 
-
-
-# Modeled Rt estimates from incidence curve
-rw_single_Rt <- function(fit,
-                         num_days, time_labels,
-                         tau_max=7,
-                         gi_dist){
-
-  post <- rstan::extract(fit)
-
-  df <- data.frame()
-
-  g_a <- sum(gi_dist(seq(0,tau_max-1,1)))
-
-  for(i in tau_max:num_days){
-
-    R_list <- matrix(0, nrow=length(post$a[,1]),ncol=1)
-
-    for(k in 0:(tau_max-1)){
-      R_list <- R_list + exp(post$a[,i-k])*gi_dist(k)
-    }
-    R_list <- exp(post$a[,i])/(R_list/g_a)
-
-    quan<- quantile(R_list, c(0.5,0.025, 0.25, 0.75, 0.975))
-    prop <- length(R_list[R_list>1]) / length(R_list)
-    row <- data.frame(time = time_labels[i],
-                      t_step = i,
-                      y=quan[[1]],
-                      lb_50 = quan[[3]],
-                      ub_50 = quan[[4]],
-                      lb_95 = quan[[2]],
-                      ub_95 = quan[[5]],
-                      prop = prop)
-    df <- rbind(df, row)
-
-  }
-
-  df
-
+#' @rdname Rt
+#' @export
+Rt.ps <- function(fitted_model, tau_max = 7, gi_dist, ...) {
+  g_a <- sum(gi_dist(seq(0, tau_max - 1, 1)))
+  compute_multi_pathogen(fitted_model, tau_max, 'Rt',
+                         threshold = 1, use_splines = TRUE,
+                         tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
 }
 
-
-# Returns data.frame() of modeled growth rates
-ps_single_Rt <- function(fit,
-                         X,
-                         num_days = length(X), time_labels,
-                         tau_max = 7,
-                         gi_dist,
-                         days_per_knot = 5, spline_degree = 3){
-
-
-  X <- as.numeric(X)
-
-  knots <- get_knots(X, days_per_knot = days_per_knot, spline_degree = spline_degree)
-  num_knots <- length(knots)
-
-
-  num_basis <- num_knots + spline_degree - 1
-  num_data <- length(X)
-
-  B_true <- splines::bs(seq(knots[1], knots[length(knots)], 1), knots = knots[2:(length(knots)-1)], degree=spline_degree, intercept = TRUE)
-  B_true <- t(predict(B_true, X))
-
-
-  post <- rstan::extract(fit)
-
-  a <- array(data=NA, dim=c(nrow(post$a), num_days))
-
-  for(k in 1:nrow(post$a)){
-    a[k,] <- as.array(post$a[k,]) %*% B_true
-  }
-
-  df <- data.frame()
-
-  g_a <- sum(gi_dist(seq(0,tau_max-1,1)))
-
-  for(i in tau_max:num_days){
-
-    R_list <- matrix(0, nrow=length(a[,1]),ncol=1)
-
-    for(k in 0:(tau_max-1)){
-      R_list <- R_list + exp(a[,i-k])*gi_dist(k)
-    }
-    R_list <- exp(a[,i])/(R_list/g_a)
-
-    quan<- quantile(R_list, c(0.5,0.025, 0.25, 0.75, 0.975))
-    prop <- length(R_list[R_list>1]) / length(R_list)
-    row <- data.frame(time = time_labels[i],
-                      t_step = i,
-                      y=quan[[1]],
-                      lb_50 = quan[[3]],
-                      ub_50 = quan[[4]],
-                      lb_95 = quan[[2]],
-                      ub_95 = quan[[5]],
-                      prop = prop)
-    df <- rbind(df, row)
-
-  }
-
-  df
-
-
-
+#' @rdname Rt
+#' @export
+Rt.rw <- function(fitted_model, tau_max = 7, gi_dist, ...) {
+  g_a <- sum(gi_dist(seq(0, tau_max - 1, 1)))
+  compute_multi_pathogen(fitted_model, tau_max, 'Rt',
+                         threshold = 1, use_splines = FALSE,
+                         tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
 }
 
-
-# Returns data.frame() of modeled growth rates
-ps_Rt <- function(fit,
-                  X,
-                  num_days = length(X), time_labels,
-                  tau_max = 7,
-                  gi_dist,
-                  days_per_knot = 5, spline_degree = 3,
-                  num_path=4, pathogen_names=c("Influenza A H3N2", "Influenza A H1N1", "Influenza B", "Unknown")){
-
-
-  X <- as.numeric(X)
-
-  knots <- get_knots(X, days_per_knot = days_per_knot, spline_degree = spline_degree)
-  num_knots <- length(knots)
-
-
-  num_basis <- num_knots + spline_degree - 1
-  num_data <- length(X)
-
-  B_true <- splines::bs(seq(knots[1], knots[length(knots)], 1), knots = knots[2:(length(knots)-1)], degree=spline_degree, intercept = TRUE)
-  B_true <- t(predict(B_true, X))
-
-
-  post <- rstan::extract(fit)
-
-  a <- array(data=NA, dim=c(nrow(post$a), num_path, num_days))
-
-  for(j in 1:num_path){
-    for(k in 1:nrow(post$a)){
-      a[k,j,] <- as.array(post$a[k,j,]) %*% B_true
-    }
-  }
-
-  df <- data.frame()
-
-  g_a <- sum(gi_dist(seq(0,tau_max-1,1)))
-
-  for(i in tau_max:num_days){
-
-    R_list_T <- matrix(0, nrow=length(a[,1,1]),ncol=1) #
-    for(j in 1:num_path){
-
-      R_list <- matrix(0, nrow=length(a[,1,1]),ncol=1)
-
-      for(k in 0:(tau_max-1)){
-        R_list <- R_list + exp(a[,j,i-k])*gi_dist(k)
-
-        R_list_T <- R_list_T + exp(a[,j,i-k])*gi_dist(k)#
-      }
-      R_list <- exp(a[,j,i])/(R_list/g_a)
-
-      quan<- quantile(R_list, c(0.5,0.025, 0.25, 0.75, 0.975))
-      prop <- length(R_list[R_list>1]) / length(R_list)
-      row <- data.frame(time = time_labels[i],
-                        t_step = i,
-                        y=quan[[1]],
-                        lb_50 = quan[[3]],
-                        ub_50 = quan[[4]],
-                        lb_95 = quan[[2]],
-                        ub_95 = quan[[5]],
-                        pathogen = pathogen_names[j],
-                        prop = prop)
-      df <- rbind(df, row)
-
-    }
-
-    R_list_T <- rowSums(exp(a[ , ,i])) /(R_list_T/g_a)
-    quan<- quantile(R_list_T, c(0.5,0.025, 0.25, 0.75, 0.975))
-    prop <- length(R_list_T[R_list_T>1]) / length(R_list_T)
-    row <- data.frame(time = time_labels[i],
-                      t_step = i,
-                      y=quan[[1]],
-                      lb_50 = quan[[3]],
-                      ub_50 = quan[[4]],
-                      lb_95 = quan[[2]],
-                      ub_95 = quan[[5]],
-                      pathogen = "Total",
-                      prop = prop)
-    df <- rbind(df, row)
-
-  }
-
-  df
-
-
-
+#' @rdname Rt
+#' @export
+Rt.ps_single <- function(fitted_model, tau_max = 7, gi_dist, ...) {
+  g_a <- sum(gi_dist(seq(0, tau_max - 1, 1)))
+  compute_single_pathogen(fitted_model, tau_max, 'Rt',
+                          threshold = 1, use_splines = TRUE,
+                          tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
 }
 
+#' @rdname Rt
+#' @export
+Rt.rw_single <- function(fitted_model, tau_max = 7, gi_dist, ...) {
+  g_a <- sum(gi_dist(seq(0, tau_max - 1, 1)))
+  compute_single_pathogen(fitted_model, tau_max, 'Rt',
+                          threshold = 1, use_splines = FALSE,
+                          tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
+}
+
+# =====================
+# CALCULATION FUNCTIONS
+# =====================
+
+#' Calculate Rt for Single Pathogen Model
+#'
+#' Computes reproduction number for single pathogen models
+#'
+#' @param a Array of log-incidence posterior samples [samples, time]
+#' @param time_idx Integer time index
+#' @param pathogen_idx NULL (unused but required for interface consistency)
+#' @param post Posterior samples object (unused but required for interface consistency)
+#' @param components Model components (unused but required for interface consistency)
+#' @param tau_max Integer maximum generation interval (days)
+#' @param gi_dist Function returning generation interval probability for given day
+#' @param g_a Numeric normalization constant (sum of generation interval)
+#' @return Vector of Rt posterior samples
+calc_rt_single <- function(a, time_idx, pathogen_idx, post, components,
+                           tau_max, gi_dist, g_a) {
+  R_denom <- calc_rt_denominator(a, time_idx, tau_max, gi_dist, FALSE)
+  exp(a[, time_idx]) / (R_denom / g_a)
+}
+
+#' Calculate Rt for Individual Pathogen
+#'
+#' Computes reproduction number for a specific pathogen using generation interval convolution
+#'
+#' @param a Array of log-incidence posterior samples [samples, pathogens, time]
+#' @param time_idx Integer time index
+#' @param pathogen_idx Integer pathogen index
+#' @param post Posterior samples object (unused but required for interface consistency)
+#' @param components Model components (unused but required for interface consistency)
+#' @param tau_max Integer maximum generation interval (days)
+#' @param gi_dist Function returning generation interval probability for given day
+#' @param g_a Numeric normalization constant (sum of generation interval)
+#' @return Vector of Rt posterior samples
+calc_rt_individual <- function(a, time_idx, pathogen_idx, post, components,
+                               tau_max, gi_dist, g_a) {
+  R_denom <- calc_rt_denominator(a, time_idx, tau_max, gi_dist, TRUE, pathogen_idx)
+  exp(a[, pathogen_idx, time_idx]) / (R_denom / g_a)
+}
+
+#' Calculate Total Rt Across All Pathogens
+#'
+#' Computes total reproduction number across all pathogens
+#'
+#' @param a Array of log-incidence posterior samples [samples, pathogens, time]
+#' @param time_idx Integer time index
+#' @param pathogen_idx NULL (unused but required for interface consistency)
+#' @param post Posterior samples object (unused but required for interface consistency)
+#' @param components Model components (unused but required for interface consistency)
+#' @param tau_max Integer maximum generation interval (days)
+#' @param gi_dist Function returning generation interval probability for given day
+#' @param g_a Numeric normalization constant (sum of generation interval)
+#' @return Vector of total Rt posterior samples
+calc_rt_total <- function(a, time_idx, pathogen_idx, post, components,
+                          tau_max, gi_dist, g_a) {
+  R_denom <- calc_rt_denominator(a, time_idx, tau_max, gi_dist, TRUE, NULL)
+  rowSums(exp(a[, , time_idx])) / (R_denom / g_a)
+}
