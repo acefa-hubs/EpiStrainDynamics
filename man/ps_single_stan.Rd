@@ -34,10 +34,10 @@ effect shared by all days (essentially no DOW), 7 = each day a unique effect}
 
 \item{DOW}{integer of day of the week}
 
-\item{...}{Arguments passed to \code{rstan::sampling} (e.g. iter, chains).}
+\item{...}{Arguments passed to `rstan::sampling` (e.g. iter, chains).}
 }
 \value{
-An object of class \code{stanfit} returned by \code{rstan::sampling}
+An object of class `stanfit` returned by `rstan::sampling`
 }
 \description{
 PS single

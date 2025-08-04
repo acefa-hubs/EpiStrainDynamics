@@ -4,10 +4,12 @@
 \alias{single}
 \title{Single pathogen structure}
 \usage{
-single(case_timeseries)
+single(case_timeseries, pathogen_name)
 }
 \arguments{
 \item{case_timeseries}{total case data}
+
+\item{pathogen_name}{name of pathogen}
 }
 \value{
 formatted list with pathogen structure and data
