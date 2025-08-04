@@ -13,6 +13,7 @@ Biarch: true
 Depends: 
     R (>= 3.5)
 Imports: 
+    dplyr,
     methods,
     purrr,
     Rcpp (>= 0.12.0),
