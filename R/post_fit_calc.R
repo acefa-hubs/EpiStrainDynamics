@@ -193,6 +193,7 @@ calc_rt_denominator <- function(a, i, tau_max, gi_dist, is_multi_pathogen = FALS
 #' @param ... Additional arguments passed to calculation functions (e.g., tau_max, gi_dist for Rt)
 #' @return Data frame with results for individual pathogens and totals
 #' @importFrom rstan extract
+#' @importFrom dplyr bind_rows arrange
 #' @examples
 #' \dontrun{
 #' results <- compute_multi_pathogen(fitted_model, 1, "incidence")
