@@ -18,9 +18,9 @@ multiple(
 timeseries of case counts}
 
 \item{smoothing_structure}{either 'shared' (all pathogens have the same;
-tau\link{1}), 'independent' (each pathogen has completely independent smoothing
-structure; tau\link{number of pathogens}), or 'correlated' (smoothing structure is
-correlated among pathogens Sigma\link{number of pathogens, number of pathogens})}
+tau[1]), 'independent' (each pathogen has completely independent smoothing
+structure; tau[number of pathogens]), or 'correlated' (smoothing structure is
+correlated among pathogens Sigma[number of pathogens, number of pathogens])}
 
 \item{observation_noise}{either 'observation_noise_only' (only includes
 observation noise - the same between pathogens) or pathogen_specific_noise'
