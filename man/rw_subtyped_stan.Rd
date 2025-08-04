@@ -40,10 +40,10 @@ num_path, 2 is Sigma with two dimensions: num_path, num_path.}
 \item{noise_structure}{0 only includes observation noise (same between
 pathogens), 1 includes noise in individual pathogens as well}
 
-\item{...}{Arguments passed to \code{rstan::sampling} (e.g. iter, chains).}
+\item{...}{Arguments passed to `rstan::sampling` (e.g. iter, chains).}
 }
 \value{
-An object of class \code{stanfit} returned by \code{rstan::sampling}
+An object of class `stanfit` returned by `rstan::sampling`
 }
 \description{
 RW Subtyped

@@ -4,7 +4,7 @@
 \alias{construct_model}
 \title{Construct model}
 \usage{
-construct_model(method, pathogen_structure, dow_effect = NULL)
+construct_model(method, pathogen_structure, dow_effect = FALSE)
 }
 \arguments{
 \item{method}{either random_walk() or p_spline()}
@@ -15,7 +15,7 @@ construct_model(method, pathogen_structure, dow_effect = NULL)
 }
 \value{
 a list containing the data, the model parameters, and pathogen
-names
+ names
 }
 \description{
 Construct model
