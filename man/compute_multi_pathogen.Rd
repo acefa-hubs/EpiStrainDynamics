@@ -8,6 +8,7 @@ compute_multi_pathogen(
   fitted_model,
   start_idx,
   measure,
+  dow,
   threshold = 0,
   use_splines = FALSE,
   ...
@@ -19,6 +20,8 @@ compute_multi_pathogen(
 \item{start_idx}{Integer starting time index for analysis}
 
 \item{measure}{Character string specifying metric ("incidence", "growth_rate", "Rt")}
+
+\item{dow}{Logical whether day-of-week effect to be calculated}
 
 \item{threshold}{Numeric threshold for proportion calculations (default: 0)}
 

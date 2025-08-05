@@ -10,6 +10,7 @@ calc_wrapper(
   pathogen_idx_col,
   calc_fn,
   a,
+  dow,
   post,
   components,
   extra_args,
@@ -26,6 +27,8 @@ calc_wrapper(
 \item{calc_fn}{Calculation function to apply}
 
 \item{a}{Array of posterior samples}
+
+\item{dow}{Logical whether to incorporate day-of-week effect}
 
 \item{post}{Posterior samples object}
 
