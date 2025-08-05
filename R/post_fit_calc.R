@@ -188,6 +188,7 @@ calc_rt_denominator <- function(a, i, tau_max, gi_dist, is_multi_pathogen = FALS
 #' @param fitted_model Fitted model object
 #' @param start_idx Integer starting time index for analysis
 #' @param measure Character string specifying metric ("incidence", "growth_rate", "Rt")
+#' @param dow Logical whether day-of-week effect to be calculated
 #' @param threshold Numeric threshold for proportion calculations (default: 0)
 #' @param use_splines Logical indicating whether to use spline transformation
 #' @param ... Additional arguments passed to calculation functions (e.g., tau_max, gi_dist for Rt)
@@ -198,7 +199,7 @@ calc_rt_denominator <- function(a, i, tau_max, gi_dist, is_multi_pathogen = FALS
 #' \dontrun{
 #' results <- compute_multi_pathogen(fitted_model, 1, "incidence")
 #' }
-compute_multi_pathogen <- function(fitted_model, start_idx, measure,
+compute_multi_pathogen <- function(fitted_model, start_idx, measure, dow,
                                    threshold = 0, use_splines = FALSE,
                                    ...) {
 
@@ -235,7 +236,7 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
   pathogen_results <- calc_wrapper(pathogen_grid, pathogen_grid$time_idx,
                                    pathogen_grid$pathogen_idx,
                                    calc_individual_pathogen_fn,
-                                   a, post, components, extra_args, threshold)
+                                   a, dow, post, components, extra_args, threshold)
 
   calc_total_pathogens_fn <- switch(
     measure,
@@ -247,7 +248,7 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
   total_results <- calc_wrapper(time_grid, time_grid$time_idx,
                                 pathogen_idx_col = rep(list(NULL), nrow(time_grid)),
                                 calc_total_pathogens_fn,
-                                a, post, components, extra_args, threshold)
+                                a, dow, post, components, extra_args, threshold)
   total_results$pathogen <- "Total"
 
   dplyr::bind_rows(pathogen_results, total_results) |>
@@ -261,6 +262,7 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
 #' @param fitted_model Fitted model object
 #' @param start_idx Integer starting time index for analysis
 #' @param measure Character string specifying metric ("incidence", "growth_rate", "Rt")
+#' @param dow Logical whether day-of-week effect to be calculated
 #' @param threshold Numeric threshold for proportion calculations (default: 0)
 #' @param use_splines Logical indicating whether to use spline transformation
 #' @param ... Additional arguments passed to calculation functions (e.g., tau_max, gi_dist for Rt)
@@ -270,7 +272,7 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
 #' \dontrun{
 #' results <- compute_single_pathogen(fitted_model, 1, "growth_rate")
 #' }
-compute_single_pathogen <- function(fitted_model, start_idx, measure,
+compute_single_pathogen <- function(fitted_model, start_idx, measure, dow,
                                     threshold = 0, use_splines = FALSE,
                                     ...) {
 
@@ -300,7 +302,7 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
   results <- calc_wrapper(time_grid, time_grid$time_idx,
                           pathogen_idx_col = rep(list(NULL), nrow(time_grid)),
                           calc_single_pathogen_fn,
-                          a, post, components, extra_args, threshold)
+                          a, dow, post, components, extra_args, threshold)
 
   return(results)
 }
@@ -314,14 +316,15 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
 #' @param pathogen_idx_col Vector of pathogen indices (or list of NULLs)
 #' @param calc_fn Calculation function to apply
 #' @param a Array of posterior samples
+#' @param dow Logical whether to incorporate day-of-week effect
 #' @param post Posterior samples object
 #' @param components Model components from extract_model_components()
 #' @param extra_args List of additional arguments for calc_fn
 #' @param threshold Numeric threshold for summary statistics
 #' @return Data frame with expanded summary statistics
 #' @importFrom purrr map2
-calc_wrapper <- function (df, time_idx_col, pathogen_idx_col,
-                          calc_fn, a, post, components, extra_args, threshold) {
+calc_wrapper <- function (df, time_idx_col, pathogen_idx_col, calc_fn,
+                          a, dow, post, components, extra_args, threshold) {
 
   # Calculate statistics for each time/pathogen combination
   stats_list <- purrr::map2(time_idx_col, pathogen_idx_col,
@@ -330,6 +333,7 @@ calc_wrapper <- function (df, time_idx_col, pathogen_idx_col,
                                 calc_fn, c(list(a = a,
                                                 time_idx = t_idx,
                                                 pathogen_idx = p_idx,
+                                                dow = dow,
                                                 post = post,
                                                 components = components),
                                            extra_args))

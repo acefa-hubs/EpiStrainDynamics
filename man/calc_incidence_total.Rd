@@ -4,7 +4,7 @@
 \alias{calc_incidence_total}
 \title{Calculate Total Incidence Across All Pathogens (with DOW adjustment)}
 \usage{
-calc_incidence_total(a, time_idx, pathogen_idx, post, components)
+calc_incidence_total(a, time_idx, pathogen_idx, dow_effect, post, components)
 }
 \arguments{
 \item{a}{Array of log-incidence posterior samples [samples, pathogens, time]}
@@ -12,6 +12,8 @@ calc_incidence_total(a, time_idx, pathogen_idx, post, components)
 \item{time_idx}{Integer time index}
 
 \item{pathogen_idx}{NULL (unused but required for interface consistency)}
+
+\item{dow_effect}{Logical whether day-of-week effect to be calculated}
 
 \item{post}{Posterior samples object containing day_of_week_simplex if DOW effects used}
 

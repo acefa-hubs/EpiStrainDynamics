@@ -4,7 +4,14 @@
 \alias{calc_incidence_individual}
 \title{Calculate Incidence for Individual Pathogen (with DOW adjustment)}
 \usage{
-calc_incidence_individual(a, time_idx, pathogen_idx, post, components)
+calc_incidence_individual(
+  a,
+  time_idx,
+  pathogen_idx,
+  dow_effect,
+  post,
+  components
+)
 }
 \arguments{
 \item{a}{Array of log-incidence posterior samples [samples, pathogens, time]}
@@ -12,6 +19,8 @@ calc_incidence_individual(a, time_idx, pathogen_idx, post, components)
 \item{time_idx}{Integer time index}
 
 \item{pathogen_idx}{Integer pathogen index}
+
+\item{dow_effect}{Logical whether day-of-week effect to be calculated}
 
 \item{post}{Posterior samples object containing day_of_week_simplex if DOW effects used}
 

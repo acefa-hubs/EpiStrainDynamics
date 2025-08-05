@@ -2,12 +2,26 @@
 % Please edit documentation in R/incidence.R
 \name{incidence}
 \alias{incidence}
+\alias{incidence.ps}
+\alias{incidence.rw}
+\alias{incidence.ps_single}
+\alias{incidence.rw_single}
 \title{Generic Method for Incidence Analysis}
 \usage{
-incidence(fitted_model, ...)
+incidence(fitted_model, dow, ...)
+
+\method{incidence}{ps}(fitted_model, dow, ...)
+
+\method{incidence}{rw}(fitted_model, dow, ...)
+
+\method{incidence}{ps_single}(fitted_model, dow, ...)
+
+\method{incidence}{rw_single}(fitted_model, dow, ...)
 }
 \arguments{
 \item{fitted_model}{Fitted model object with appropriate class}
+
+\item{dow}{Logical whether or not to include day-of-week in incidence calc}
 
 \item{...}{Additional arguments passed to methods}
 }
