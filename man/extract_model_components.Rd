@@ -10,8 +10,8 @@ extract_model_components(fitted_model)
 \item{fitted_model}{Fitted model object containing fit, constructed_model, etc.}
 }
 \value{
-List containing extracted components: fit, pathogen_names, num_path, time,
-  time_labels, num_days, days_per_knot, spline_degree, DOW, week_effect, dow_effect
+List containing extracted components: fit, pathogen_names, num_path,
+  time, num_days, days_per_knot, spline_degree, DOW, week_effect, dow_effect
 }
 \description{
 Extracts commonly used components from a fitted model object for analysis functions

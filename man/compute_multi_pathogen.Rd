@@ -8,7 +8,6 @@ compute_multi_pathogen(
   fitted_model,
   start_idx,
   measure,
-  dow,
   threshold = 0,
   use_splines = FALSE,
   ...
@@ -21,13 +20,12 @@ compute_multi_pathogen(
 
 \item{measure}{Character string specifying metric ("incidence", "growth_rate", "Rt")}
 
-\item{dow}{Logical whether day-of-week effect to be calculated}
-
 \item{threshold}{Numeric threshold for proportion calculations (default: 0)}
 
 \item{use_splines}{Logical indicating whether to use spline transformation}
 
-\item{...}{Additional arguments passed to calculation functions (e.g., tau_max, gi_dist for Rt)}
+\item{...}{Additional arguments passed to calculation functions
+(e.g., tau_max, gi_dist for Rt, and dow for incidence)}
 }
 \value{
 Data frame with results for individual pathogens and totals

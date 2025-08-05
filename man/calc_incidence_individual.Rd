@@ -8,9 +8,9 @@ calc_incidence_individual(
   a,
   time_idx,
   pathogen_idx,
-  dow_effect,
   post,
-  components
+  components,
+  dow_effect
 )
 }
 \arguments{
@@ -20,11 +20,11 @@ calc_incidence_individual(
 
 \item{pathogen_idx}{Integer pathogen index}
 
-\item{dow_effect}{Logical whether day-of-week effect to be calculated}
-
 \item{post}{Posterior samples object containing day_of_week_simplex if DOW effects used}
 
 \item{components}{Model components containing DOW information}
+
+\item{dow_effect}{Logical whether day-of-week effect to be calculated}
 }
 \value{
 Vector of incidence posterior samples
