@@ -17,29 +17,29 @@ incidence <- function(fitted_model, dow, ...) {
 #' @rdname incidence
 #' @export
 incidence.ps <- function(fitted_model, dow, ...) {
-  compute_multi_pathogen(fitted_model, 1, 'incidence', dow,
-                         threshold = 0, use_splines = TRUE)
+  compute_multi_pathogen(fitted_model, 1, 'incidence',
+                         threshold = 0, use_splines = TRUE, dow)
 }
 
 #' @rdname incidence
 #' @export
 incidence.rw <- function(fitted_model, dow, ...) {
-  compute_multi_pathogen(fitted_model, 1, 'incidence', dow,
-                         threshold = 0, use_splines = FALSE)
+  compute_multi_pathogen(fitted_model, 1, 'incidence',
+                         threshold = 0, use_splines = FALSE, dow)
 }
 
 #' @rdname incidence
 #' @export
 incidence.ps_single <- function(fitted_model, dow, ...) {
-  compute_single_pathogen(fitted_model, 1, 'incidence', dow,
-                          threshold = 0, use_splines = TRUE)
+  compute_single_pathogen(fitted_model, 1, 'incidence',
+                          threshold = 0, use_splines = TRUE, dow)
 }
 
 #' @rdname incidence
 #' @export
 incidence.rw_single <- function(fitted_model, dow, ...) {
-  compute_single_pathogen(fitted_model, 1, 'incidence', dow,
-                          threshold = 0, use_splines = FALSE)
+  compute_single_pathogen(fitted_model, 1, 'incidence',
+                          threshold = 0, use_splines = FALSE, dow)
 }
 
 # =====================
@@ -53,12 +53,12 @@ incidence.rw_single <- function(fitted_model, dow, ...) {
 #' @param a Array of log-incidence posterior samples [samples, time]
 #' @param time_idx Integer time index
 #' @param pathogen_idx NULL (unused but required for interface consistency)
-#' @param dow_effect Logical whether day-of-week effect to be calculated
 #' @param post Posterior samples object containing day_of_week_simplex if DOW effects used
 #' @param components Model components containing DOW information
+#' @param dow_effect Logical whether day-of-week effect to be calculated
 #' @return Vector of incidence posterior samples
 calc_incidence_single <- function(a, time_idx, pathogen_idx,
-                                  dow_effect, post, components) {
+                                  post, components, dow_effect) {
   incidence <- exp(a[, time_idx])
 
   # Apply DOW effect if required
@@ -76,12 +76,12 @@ calc_incidence_single <- function(a, time_idx, pathogen_idx,
 #' @param a Array of log-incidence posterior samples [samples, pathogens, time]
 #' @param time_idx Integer time index
 #' @param pathogen_idx Integer pathogen index
-#' @param dow_effect Logical whether day-of-week effect to be calculated
 #' @param post Posterior samples object containing day_of_week_simplex if DOW effects used
 #' @param components Model components containing DOW information
+#' @param dow_effect Logical whether day-of-week effect to be calculated
 #' @return Vector of incidence posterior samples
 calc_incidence_individual <- function(a, time_idx, pathogen_idx,
-                                      dow_effect, post, components) {
+                                      post, components, dow_effect) {
   incidence <- exp(a[, pathogen_idx, time_idx])
 
   # Apply DOW effect if required
@@ -100,12 +100,12 @@ calc_incidence_individual <- function(a, time_idx, pathogen_idx,
 #' @param a Array of log-incidence posterior samples [samples, pathogens, time]
 #' @param time_idx Integer time index
 #' @param pathogen_idx NULL (unused but required for interface consistency)
-#' @param dow_effect Logical whether day-of-week effect to be calculated
 #' @param post Posterior samples object containing day_of_week_simplex if DOW effects used
 #' @param components Model components containing DOW information
+#' @param dow_effect Logical whether day-of-week effect to be calculated
 #' @return Vector of total incidence posterior samples
 calc_incidence_total <- function(a, time_idx, pathogen_idx,
-                                 dow_effect, post, components) {
+                                 post, components, dow_effect) {
   incidence <- rowSums(exp(a[, , time_idx]))
 
   # Apply DOW effect if required
