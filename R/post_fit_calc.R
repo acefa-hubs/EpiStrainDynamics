@@ -31,15 +31,14 @@ calc_stats <- function(values, threshold = 0) {
 #' Extracts commonly used components from a fitted model object for analysis functions
 #'
 #' @param fitted_model Fitted model object containing fit, constructed_model, etc.
-#' @return List containing extracted components: fit, pathogen_names, num_path, time,
-#'   time_labels, num_days, days_per_knot, spline_degree, DOW, week_effect, dow_effect
+#' @return List containing extracted components: fit, pathogen_names, num_path,
+#'   time, num_days, days_per_knot, spline_degree, DOW, week_effect, dow_effect
 extract_model_components <- function(fitted_model) {
   list(
     fit = fitted_model$fit,
     pathogen_names = fitted_model$constructed_model$pathogen_names %||% NULL,
     num_path = length(fitted_model$constructed_model$pathogen_names %||% 1),
     time = fitted_model$constructed_model$data$time,
-    time_labels = fitted_model$constructed_model$data$time,
     num_days = length(fitted_model$constructed_model$data$time),
     days_per_knot = fitted_model$constructed_model$model_params$days_per_knot %||% NULL,
     spline_degree = fitted_model$constructed_model$model_params$spline_degree %||% NULL,
@@ -49,28 +48,12 @@ extract_model_components <- function(fitted_model) {
   )
 }
 
-#' Create Time Grid for Analysis
-#'
-#' Creates a data frame with time indices, labels, and steps for analysis functions
-#'
-#' @param start_idx Integer starting index for analysis
-#' @param num_days Integer total number of days in dataset
-#' @param time_labels Vector of time labels corresponding to each day
-#' @return Data frame with columns: time_idx, time, t_step
-create_time_grid <- function(start_idx, num_days, time_labels) {
-  data.frame(
-    time_idx = start_idx:num_days,
-    time = time_labels[start_idx:num_days],
-    t_step = start_idx:num_days
-  )
-}
-
 #' Expand Time Grid for Multiple Pathogens
 #'
 #' Expands a time grid to include all pathogen-time combinations (sequential
 #' pairing, not Cartesian product)
 #'
-#' @param time_grid Data frame from create_time_grid()
+#' @param time_grid Data frame from with time_idx columns
 #' @param pathogen_names Character vector of pathogen names
 #' @return Data frame with columns: pathogen, pathogen_idx, time_idx, time, t_step
 expand_pathogen_grid <- function(time_grid, pathogen_names) {
@@ -80,9 +63,7 @@ expand_pathogen_grid <- function(time_grid, pathogen_names) {
   data.frame(
     pathogen = rep(pathogen_names, each = num_days),
     pathogen_idx = rep(seq_along(pathogen_names), each = num_days),
-    time_idx = rep(time_grid$time_idx, times = num_path),
-    time = rep(time_grid$time, times = num_path),
-    t_step = rep(time_grid$t_step, times = num_path)
+    time_idx = rep(time_grid$time_idx, times = num_path)
   )
 }
 
@@ -153,7 +134,8 @@ transform_posterior_multi <- function(post, B_true, num_path, num_days) {
 #' @param is_multi_pathogen Logical indicating if this is a multi-pathogen model
 #' @param pathogen_idx Integer pathogen index (NULL for total across pathogens)
 #' @return Matrix of denominator values for Rt calculation
-calc_rt_denominator <- function(a, i, tau_max, gi_dist, is_multi_pathogen = FALSE, pathogen_idx = NULL) {
+calc_rt_denominator <- function(a, i, tau_max, gi_dist,
+                                is_multi_pathogen = FALSE, pathogen_idx = NULL) {
 
   if (is_multi_pathogen && !is.null(pathogen_idx)) {
     # Multiple pathogen case - specific pathogen
@@ -188,10 +170,10 @@ calc_rt_denominator <- function(a, i, tau_max, gi_dist, is_multi_pathogen = FALS
 #' @param fitted_model Fitted model object
 #' @param start_idx Integer starting time index for analysis
 #' @param measure Character string specifying metric ("incidence", "growth_rate", "Rt")
-#' @param dow Logical whether day-of-week effect to be calculated
 #' @param threshold Numeric threshold for proportion calculations (default: 0)
 #' @param use_splines Logical indicating whether to use spline transformation
-#' @param ... Additional arguments passed to calculation functions (e.g., tau_max, gi_dist for Rt)
+#' @param ... Additional arguments passed to calculation functions
+#'  (e.g., tau_max, gi_dist for Rt, and dow for incidence)
 #' @return Data frame with results for individual pathogens and totals
 #' @importFrom rstan extract
 #' @importFrom dplyr bind_rows arrange
@@ -199,7 +181,7 @@ calc_rt_denominator <- function(a, i, tau_max, gi_dist, is_multi_pathogen = FALS
 #' \dontrun{
 #' results <- compute_multi_pathogen(fitted_model, 1, "incidence")
 #' }
-compute_multi_pathogen <- function(fitted_model, start_idx, measure, dow,
+compute_multi_pathogen <- function(fitted_model, start_idx, measure,
                                    threshold = 0, use_splines = FALSE,
                                    ...) {
 
@@ -220,7 +202,7 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure, dow,
     }
   }
 
-  time_grid <- create_time_grid(start_idx, components$num_days, components$time_labels)
+  time_grid <- data.frame(time_idx = start_idx:components$num_days)
   extra_args <- list(...)
 
   # Individual pathogen results
@@ -236,7 +218,7 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure, dow,
   pathogen_results <- calc_wrapper(pathogen_grid, pathogen_grid$time_idx,
                                    pathogen_grid$pathogen_idx,
                                    calc_individual_pathogen_fn,
-                                   a, dow, post, components, extra_args, threshold)
+                                   a, post, components, extra_args, threshold)
 
   calc_total_pathogens_fn <- switch(
     measure,
@@ -248,11 +230,11 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure, dow,
   total_results <- calc_wrapper(time_grid, time_grid$time_idx,
                                 pathogen_idx_col = rep(list(NULL), nrow(time_grid)),
                                 calc_total_pathogens_fn,
-                                a, dow, post, components, extra_args, threshold)
+                                a, post, components, extra_args, threshold)
   total_results$pathogen <- "Total"
 
   dplyr::bind_rows(pathogen_results, total_results) |>
-    dplyr::arrange(pathogen != "Total", pathogen, t_step)
+    dplyr::arrange(pathogen != "Total", pathogen)
 }
 
 #' Generic Computation Engine for Single Pathogen Analysis
@@ -262,7 +244,6 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure, dow,
 #' @param fitted_model Fitted model object
 #' @param start_idx Integer starting time index for analysis
 #' @param measure Character string specifying metric ("incidence", "growth_rate", "Rt")
-#' @param dow Logical whether day-of-week effect to be calculated
 #' @param threshold Numeric threshold for proportion calculations (default: 0)
 #' @param use_splines Logical indicating whether to use spline transformation
 #' @param ... Additional arguments passed to calculation functions (e.g., tau_max, gi_dist for Rt)
@@ -272,7 +253,7 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure, dow,
 #' \dontrun{
 #' results <- compute_single_pathogen(fitted_model, 1, "growth_rate")
 #' }
-compute_single_pathogen <- function(fitted_model, start_idx, measure, dow,
+compute_single_pathogen <- function(fitted_model, start_idx, measure,
                                     threshold = 0, use_splines = FALSE,
                                     ...) {
 
@@ -290,7 +271,7 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure, dow,
   extra_args <- list(...)
 
   # Create results
-  time_grid <- create_time_grid(start_idx, components$num_days, components$time_labels)
+  time_grid <- data.frame(time_idx = start_idx:components$num_days)
 
   calc_single_pathogen_fn <- switch(
     measure,
@@ -302,7 +283,7 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure, dow,
   results <- calc_wrapper(time_grid, time_grid$time_idx,
                           pathogen_idx_col = rep(list(NULL), nrow(time_grid)),
                           calc_single_pathogen_fn,
-                          a, dow, post, components, extra_args, threshold)
+                          a, post, components, extra_args, threshold)
 
   return(results)
 }
@@ -316,7 +297,6 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure, dow,
 #' @param pathogen_idx_col Vector of pathogen indices (or list of NULLs)
 #' @param calc_fn Calculation function to apply
 #' @param a Array of posterior samples
-#' @param dow Logical whether to incorporate day-of-week effect
 #' @param post Posterior samples object
 #' @param components Model components from extract_model_components()
 #' @param extra_args List of additional arguments for calc_fn
@@ -324,7 +304,7 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure, dow,
 #' @return Data frame with expanded summary statistics
 #' @importFrom purrr map2
 calc_wrapper <- function (df, time_idx_col, pathogen_idx_col, calc_fn,
-                          a, dow, post, components, extra_args, threshold) {
+                          a, post, components, extra_args, threshold) {
 
   # Calculate statistics for each time/pathogen combination
   stats_list <- purrr::map2(time_idx_col, pathogen_idx_col,
@@ -333,7 +313,6 @@ calc_wrapper <- function (df, time_idx_col, pathogen_idx_col, calc_fn,
                                 calc_fn, c(list(a = a,
                                                 time_idx = t_idx,
                                                 pathogen_idx = p_idx,
-                                                dow = dow,
                                                 post = post,
                                                 components = components),
                                            extra_args))

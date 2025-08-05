@@ -7,7 +7,7 @@
 expand_pathogen_grid(time_grid, pathogen_names)
 }
 \arguments{
-\item{time_grid}{Data frame from create_time_grid()}
+\item{time_grid}{Data frame from with time_idx columns}
 
 \item{pathogen_names}{Character vector of pathogen names}
 }
