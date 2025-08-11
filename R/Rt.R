@@ -16,36 +16,44 @@ Rt <- function(fitted_model, tau_max = 7, gi_dist, ...) {
 #' @export
 Rt.ps <- function(fitted_model, tau_max = 7, gi_dist, ...) {
   g_a <- sum(gi_dist(seq(0, tau_max - 1, 1)))
-  compute_multi_pathogen(fitted_model, tau_max, 'Rt',
-                         threshold = 1, use_splines = TRUE,
-                         tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
+  out <- compute_multi_pathogen(fitted_model, tau_max, 'Rt',
+                                threshold = 1, use_splines = TRUE,
+                                tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
+  class(out) <- c('Rt', class(out))
+  out
 }
 
 #' @rdname Rt
 #' @export
 Rt.rw <- function(fitted_model, tau_max = 7, gi_dist, ...) {
   g_a <- sum(gi_dist(seq(0, tau_max - 1, 1)))
-  compute_multi_pathogen(fitted_model, tau_max, 'Rt',
-                         threshold = 1, use_splines = FALSE,
-                         tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
+  out <- compute_multi_pathogen(fitted_model, tau_max, 'Rt',
+                                threshold = 1, use_splines = FALSE,
+                                tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
+  class(out) <- c('Rt', class(out))
+  out
 }
 
 #' @rdname Rt
 #' @export
 Rt.ps_single <- function(fitted_model, tau_max = 7, gi_dist, ...) {
   g_a <- sum(gi_dist(seq(0, tau_max - 1, 1)))
-  compute_single_pathogen(fitted_model, tau_max, 'Rt',
-                          threshold = 1, use_splines = TRUE,
-                          tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
+  out <- compute_single_pathogen(fitted_model, tau_max, 'Rt',
+                                 threshold = 1, use_splines = TRUE,
+                                 tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
+  class(out) <- c('Rt', class(out))
+  out
 }
 
 #' @rdname Rt
 #' @export
 Rt.rw_single <- function(fitted_model, tau_max = 7, gi_dist, ...) {
   g_a <- sum(gi_dist(seq(0, tau_max - 1, 1)))
-  compute_single_pathogen(fitted_model, tau_max, 'Rt',
-                          threshold = 1, use_splines = FALSE,
-                          tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
+  out <- compute_single_pathogen(fitted_model, tau_max, 'Rt',
+                                 threshold = 1, use_splines = FALSE,
+                                 tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
+  class(out) <- c('Rt', class(out))
+  out
 }
 
 # =====================
