@@ -1,5 +1,5 @@
 Package: EpiStrainDynamics
-Title: What the Package Does (One Line, Title Case)
+Title: Infer temporal trends of multiple pathogens
 Version: 0.0.0.9000
 Authors@R: 
     c(person("Saras", "Windecker", email = "saras.windecker@gmail.com", 
