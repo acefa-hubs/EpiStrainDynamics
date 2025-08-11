@@ -6,6 +6,7 @@
 #' @param ... Additional arguments passed to methods
 #' @importFrom viridis viridis
 #' @importFrom stats setNames
+#' @import ggplot2
 #' @return Data frame with proportion analysis results
 #' @export
 plot <- function(df, ...) {
@@ -27,8 +28,8 @@ plot.incidence <- function(df) {
     setNames(viridis::viridis(length(other_levels)), other_levels)
   )
 
-  input_data <- cbind(df$constructed_model$data$time,
-                      df$constructed_model$data$case_timeseries)
+  input_data <- data.frame(time = df$constructed_model$data$time,
+                           case_timeseries = df$constructed_model$data$case_timeseries)
   ggplot(measure_df) +
     geom_line(aes(x = time, y = y, color = pathogen)) +
     geom_ribbon(aes(x = time, y = y,
