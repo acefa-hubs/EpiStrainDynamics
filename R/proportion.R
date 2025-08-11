@@ -1,83 +1,78 @@
-# Get proportion from model fit
-
-proportion <- function (fit,
-                        X = NULL,
-                        method = c('rw', 'ps'),
-                        num_days = length(X),
-                        time_labels,
-                        days_per_knot = 5,
-                        spline_degree = 3,
-                        num_path = 4,
-                        comb_num = list(c(1,2,3), c(1,2), c(3), c(1), c(2)),
-                        comb_den = list(c(1,2,3,4), c(1,2,3,4), c(1,2,3,4), c(1,2), c(1,2) ),
-                        comb_names = c("Influenza", "Influenza A", "Influenza B", "H3N2", "H1N1")) {
-
-  if (method == 'ps') {
-
-    X <- as.numeric(X)
-
-    knots <- get_knots(X, days_per_knot = days_per_knot,
-                       spline_degree = spline_degree)
-    num_knots <- length(knots)
-
-    num_basis <- num_knots + spline_degree - 1
-    num_data <- length(X)
-
-    B_true <- splines::bs(seq(knots[1], knots[length(knots)], 1),
-                          knots = knots[2:(length(knots)-1)],
-                          degree = spline_degree, intercept = TRUE)
-    B_true <- t(predict(B_true, X))
-
-  }
-
-  post <- rstan::extract(fit)
-
-  df <- data.frame()
-
-  if (method == 'rw') {
-    a <- post$a
-  }
-
-  if (method == 'ps') {
-    a <- array(data = NA, dim = c(nrow(post$a), num_path, num_days))
-
-    for(j in 1:num_path){
-      for(k in 1:nrow(post$a)){
-        a[k,j,] <- as.array(post$a[k,j,]) %*% B_true
-      }
-    }
-  }
-
-  for (i in 1:num_days) {
-
-    total <- matrix(data = 0, nrow = 1, ncol = nrow(a))
-
-    for (j in 1:length(comb_num)) {
-
-      num_index <- comb_num[[j]]
-      den_index <- comb_den[[j]]
-
-      if (length(num_index) > 1) {
-        num <- rowSums(exp(a[,num_index,i]))
-      } else {
-        num <- exp(a[,num_index,i])
-      }
-
-      den <- rowSums(exp(a[,den_index,i]))
-
-      quan <- quantile(num/den, c(0.5,0.025, 0.25, 0.75, 0.975))
-      row <- data.frame(time = time_labels[i],
-                        t_step = i,
-                        y = quan[[1]],
-                        lb_50 = quan[[3]],
-                        ub_50 = quan[[4]],
-                        lb_95 = quan[[2]],
-                        ub_95 = quan[[5]],
-                        pathogen = comb_names[j])
-      df <- rbind(df, row)
-    }
-  }
-
-  df
+#' Generic Method for proportion Analysis
+#'
+#' S3 generic for computing proportions from fitted models
+#'
+#' @param fitted_model Fitted model object with appropriate class
+#' @param numerator_combination Named pathogens or subtypes to be included in proportion numerator
+#' @param denominator_combination Named pathogens or sutypes to be included in proportion denominator
+#' @param ... Additional arguments passed to methods
+#' @return Data frame with proportion analysis results
+#' @export
+proportion <- function(fitted_model, numerator_combination, denominator_combination, ...) {
+  UseMethod("proportion")
 }
 
+#' @rdname proportion
+#' @export
+proportion.ps <- function(fitted_model, numerator_combination, denominator_combination, ...) {
+
+  numerator_idx <- match(numerator_combination, fitted_model$constructed_model$pathogen_names)
+  denominator_idx <- match(denominator_combination, fitted_model$constructed_model$pathogen_names)
+
+  compute_proportions(fitted_model, numerator_idx,
+                      threshold = 0, use_splines = TRUE,
+                      denominator_idx = denominator_idx)
+}
+
+#' @rdname proportion
+#' @export
+proportion.rw <- function(fitted_model, numerator_combination, denominator_combination, ...) {
+
+  numerator_idx <- match(numerator_combination, fitted_model$constructed_model$pathogen_names)
+  denominator_idx <- match(denominator_combination, fitted_model$constructed_model$pathogen_names)
+
+  compute_proportions(fitted_model, numerator_idx,
+                      threshold = 0, use_splines = FALSE,
+                      denominator_idx = denominator_idx)
+}
+
+#' @rdname proportion
+#' @export
+proportion.ps_single <- function(fitted_model, ...) {
+  stop('Proportions only calculated for multi pathogens models.')
+}
+
+#' @rdname proportion
+#' @export
+proportion.rw_single <- function(fitted_model, ...) {
+  stop('Proportions only calculated for multi pathogens models.')
+}
+
+# =====================
+# CALCULATION FUNCTION
+# =====================
+
+#' Calculate proportion for Individual Pathogen
+#'
+#' Computes log-difference in incidence for a specific pathogen
+#'
+#' @param a Array of log-incidence posterior samples [samples, pathogens, time]
+#' @param time_idx Integer time index
+#' @param pathogen_idx Integer pathogen index
+#' @param post Posterior samples object (unused but required for interface consistency)
+#' @param components Model components (unused but required for interface consistency)
+#' @param denominator_idx Integer index of the pathogen/s used in denominator of proportion
+#' @return Vector of proportion posterior samples
+calc_proportion <- function(a, time_idx, pathogen_idx, post, components,
+                            denominator_idx) {
+
+  if (length(pathogen_idx) > 1) {
+    num <- rowSums(exp(a[, pathogen_idx, time_idx]))
+  } else {
+    num <- exp(a[, pathogen_idx, time_idx])
+  }
+
+  den <- rowSums(exp(a[, denominator_idx, time_idx]))
+
+  num/den
+}
