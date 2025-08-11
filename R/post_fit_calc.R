@@ -32,12 +32,13 @@ calc_stats <- function(values, threshold = 0) {
 #'
 #' @param fitted_model Fitted model object containing fit, constructed_model, etc.
 #' @return List containing extracted components: fit, pathogen_names, num_path,
-#'   time, num_days, days_per_knot, spline_degree, DOW, week_effect, dow_effect
+#'   time_seq, time, num_days, days_per_knot, spline_degree, DOW, week_effect, dow_effect
 extract_model_components <- function(fitted_model) {
   list(
     fit = fitted_model$fit,
     pathogen_names = fitted_model$constructed_model$pathogen_names %||% NULL,
     num_path = length(fitted_model$constructed_model$pathogen_names %||% 1),
+    time_seq = fitted_model$constructed_model$data$time_seq,
     time = fitted_model$constructed_model$data$time,
     num_days = length(fitted_model$constructed_model$data$time),
     days_per_knot = fitted_model$constructed_model$model_params$days_per_knot %||% NULL,
@@ -55,7 +56,7 @@ extract_model_components <- function(fitted_model) {
 #'
 #' @param time_grid Data frame from with time_idx columns
 #' @param pathogen_names Character vector of pathogen names
-#' @return Data frame with columns: pathogen, pathogen_idx, time_idx, time, t_step
+#' @return Data frame with columns: pathogen, pathogen_idx, time_idx
 expand_pathogen_grid <- function(time_grid, pathogen_names) {
   num_days <- nrow(time_grid)
   num_path <- length(pathogen_names)
@@ -71,14 +72,14 @@ expand_pathogen_grid <- function(time_grid, pathogen_names) {
 #'
 #' Creates B-spline basis matrix for transforming spline coefficients to time series
 #'
-#' @param time Numeric vector of time points
+#' @param time_seq Numeric vector of time points
 #' @param days_per_knot Integer number of days between knots
 #' @param spline_degree Integer degree of B-splines
 #' @return Matrix B_true for transforming spline coefficients
 #' @importFrom splines bs
 #' @importFrom stats predict
-predict_B_true <- function(time, days_per_knot, spline_degree) {
-  X <- as.numeric(time)
+predict_B_true <- function(time_seq, days_per_knot, spline_degree) {
+  X <- as.numeric(time_seq)
   knots <- get_knots(X, days_per_knot = days_per_knot, spline_degree = spline_degree)
 
   B_true <- splines::bs(seq(knots[1], knots[length(knots)], 1),
@@ -190,19 +191,16 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
 
   # Transform data if using splines
   if (use_splines) {
-    B_true <- predict_B_true(components$time, components$days_per_knot, components$spline_degree)
-    a <- transform_posterior_multi(post, B_true, components$num_path, components$num_days)
+    B_true <- predict_B_true(components$time_seq, components$days_per_knot,
+                             components$spline_degree)
+    a <- transform_posterior_multi(post, B_true, components$num_path,
+                                   components$num_days)
   } else {
     a <- post$a
-    # Ensure a is 3D array for multi-pathogen case
-    if (length(dim(a)) == 2) {
-      # If a is 2D, we need to reshape it to 3D
-      # Assuming the structure is [samples, path*time] and needs to be [samples, path, time]
-      a <- array(a, dim = c(nrow(a), components$num_path, components$num_days))
-    }
   }
 
-  time_grid <- data.frame(time_idx = start_idx:components$num_days)
+  selection_index <- start_idx:components$num_days
+  time_grid <- data.frame(time_idx = selection_index)
   extra_args <- list(...)
 
   # Individual pathogen results
@@ -233,8 +231,13 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
                                 a, post, components, extra_args, threshold)
   total_results$pathogen <- "Total"
 
-  dplyr::bind_rows(pathogen_results, total_results) |>
-    dplyr::arrange(pathogen != "Total", pathogen)
+  measure_out <- dplyr::bind_rows(pathogen_results, total_results) |>
+    dplyr::arrange(pathogen != "Total", pathogen) |>
+    cbind(time = components$time[selection_index])
+
+  out <- list(measure = measure_out,
+              fit = fitted_model$fit,
+              constructed_model = fitted_model$constructed_model)
 }
 
 #' Generic Computation Engine for Single Pathogen Analysis
@@ -262,7 +265,7 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
 
   # Transform data if using splines
   if (use_splines) {
-    B_true <- predict_B_true(components$time, components$days_per_knot, components$spline_degree)
+    B_true <- predict_B_true(components$time_seq, components$days_per_knot, components$spline_degree)
     a <- transform_posterior_single(post, B_true, components$num_days)
   } else {
     a <- post$a
@@ -271,7 +274,8 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
   extra_args <- list(...)
 
   # Create results
-  time_grid <- data.frame(time_idx = start_idx:components$num_days)
+  selection_index <- start_idx:components$num_days
+  time_grid <- data.frame(time_idx = selection_index)
 
   calc_single_pathogen_fn <- switch(
     measure,
@@ -285,7 +289,59 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
                           calc_single_pathogen_fn,
                           a, post, components, extra_args, threshold)
 
-  return(results)
+  measure <- cbind(results,
+                   time = components$time[selection_index])
+
+  out <- list(measure = measure,
+              fit = fitted_model$fit,
+              constructed_model = fitted_model$constructed_model)
+}
+
+#' Proportion analysis for multiple pathogens
+#'
+#' High-level function to coordinates proportion analysis for multi pathogen models
+#'
+#' @param fitted_model Fitted model object
+#' @param start_idx Integer starting time index for analysis
+#' @param measure Character string specifying metric ("incidence", "growth_rate", "Rt")
+#' @param threshold Numeric threshold for proportion calculations (default: 0)
+#' @param use_splines Logical indicating whether to use spline transformation
+#' @param ... Additional arguments passed to calculation functions (e.g., tau_max, gi_dist for Rt)
+#' @return Data frame with analysis results
+#' @importFrom rstan extract
+#' @examples
+#' \dontrun{
+#' results <- compute_single_pathogen(fitted_model, 1, "growth_rate")
+#' }
+compute_proportions <- function(fitted_model, numerator_idx,
+                                threshold = 0, use_splines = FALSE,
+                                ...) {
+
+  components <- extract_model_components(fitted_model)
+  post <- rstan::extract(components$fit)
+
+  # Transform data if using splines
+  if (use_splines) {
+    B_true <- predict_B_true(components$time_seq, components$days_per_knot, components$spline_degree)
+    a <- transform_posterior_multi(post, B_true, components$num_path, components$num_days)
+  } else {
+    a <- post$a
+  }
+
+  extra_args <- list(...)
+
+  # Create results
+  time_grid <- data.frame(time_idx = 1:components$num_days)
+
+  results <- calc_wrapper(time_grid, time_grid$time_idx,
+                          pathogen_idx_col = rep(list(numerator_idx), nrow(time_grid)),
+                          calc_proportion,
+                          a, post, components, extra_args, threshold)
+  measure <- cbind(results, components$time)
+
+  out <- list(measure = measure,
+              fit = fitted_model$fit,
+              constructed_model = fitted_model$constructed_model)
 }
 
 #' Unified Calculation Wrapper
