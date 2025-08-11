@@ -1,0 +1,78 @@
+---
+title: "ExampleAnalysis-rw_subtyped"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Example_analysis-rw_subtyped}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(EpiStrainDynamics)
+
+# Set some stan settings
+rstan::rstan_options(auto_write = TRUE)
+options(mc.cores = 4)
+```
+
+```{r}
+pathogen_structure <- subtyped(
+    case_timeseries = influenza$ili,
+    time = influenza$week,
+    influenzaA_unsubtyped_timeseries = influenza$inf_A,
+    influenzaA_subtyped_timeseries = list(
+      influenzaA.H3N2 = influenza$inf_H3N2,
+      influenzaA.H1N1 = influenza$inf_H1N1
+    ),
+    other_pathogen_timeseries = list(
+      influenzaB = influenza$inf_B,
+      other = influenza$num_spec - influenza$inf_all
+    ),
+    smoothing_structure = 'independent',
+    observation_noise = 'observation_noise_only'
+)
+mod <- construct_model(
+  method = random_walk(),
+  pathogen_structure = pathogen_structure,
+  dow_effect = TRUE
+)
+```
+
+
+```{r, cache = TRUE}
+fit <- fit_model(
+  mod,
+  iter = 2000,
+  warmup = 1000,
+  chains = 3
+)
+```
+
+```{r}
+gr <- growth_rate(fit)
+plot(gr)
+```
+
+```{r}
+gammaDist <- function(b, n, a) (b**n) * (a**(n-1)) * exp(-b*a) / gamma(n)
+gi_dist <- function(x) gammaDist(b=1, n=1, x)
+rt <- Rt(fit, gi_dist = gi_dist)
+plot(rt)
+```
+
+```{r}
+inc_no_dow <- incidence(fit, dow = FALSE)
+plot(inc_no_dow)
+```
+
+```{r}
+inc_dow <- incidence(fit, dow = TRUE)
+plot(inc_dow)
+```
