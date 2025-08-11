@@ -18,3 +18,6 @@ Oliver Eales, Saras M Windecker, James M McCaw, Freya M Shearer, Inferring tempo
 ## Contribution
 This is a work in progress. 
 If you see any mistakes in the package (branch `main`) or in the code associated with the analyses for the preprint (branch `preprint`), let us know by logging a bug on the [issues](https://github.com/acefa-hubs/EpiStrainDynamics/issues) page. 
+
+## Code of Conduct
+Please note that the EpiStrainDynamics project is released with a [Contributor Code of Conduct](https://acefa-hubs.github.io/EpiStrainDynamics/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.

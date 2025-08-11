@@ -2,12 +2,22 @@ Package: EpiStrainDynamics
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
-    person("Saras", "Windecker", , "saras.windecker@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "https://orcid.org/0000-0002-4870-8353"))
-Description: What the package does (one paragraph).
-License: MIT + file LICENSE
+    c(person("Saras", "Windecker", email = "saras.windecker@gmail.com", 
+        role = c("aut", "cre", "cph"),
+        comment = c(ORCID = "0000-0002-4870-8353")),
+      person("Oliver", "Eales", role = "aut",
+        comment = c(ORCID = "0000-0002-8086-4495")),
+      person("James", "McCaw", role = "ctb",
+        comment = c(ORCID = "0000-0002-2452-3098")),
+      person("Freya", "Shearer", role = "ctb",
+        comment = c(ORCID = "0000-0001-9600-3473"))
+    )
+Description: EpiStrainDynamics is a statistical framework developed for inferring temporal trends of multiple pathogens from routinely collected surveillance data.
+BugReports: https://github.com/acefa-hubs/EpiStrainDynamics/issues
+License: Apache License 2.0
+URL: https://acefa-hubs.github.io/EpiStrainDynamics/, https://github.com/acefa-hubs/EpiStrainDynamics
 Encoding: UTF-8
-Language: es
+Language: en
 RoxygenNote: 7.3.2
 Biarch: true
 Depends: 
@@ -38,4 +48,3 @@ Suggests:
 Config/testthat/edition: 3
 LazyData: true
 VignetteBuilder: knitr
-URL: https://acefa-hubs.github.io/EpiStrainDynamics/
