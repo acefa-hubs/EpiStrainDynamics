@@ -6,13 +6,16 @@
 \usage{
 multiple(
   case_timeseries,
+  time,
   component_pathogen_timeseries,
   smoothing_structure = c("shared", "independent", "correlated"),
   observation_noise = c("observation_noise_only", "pathogen_specific_noise")
 )
 }
 \arguments{
-\item{case_timeseries}{total case data}
+\item{case_timeseries}{vector of total case data}
+
+\item{time}{vector of labelled time data}
 
 \item{component_pathogen_timeseries}{named list of each pathogen that has
 timeseries of case counts}
