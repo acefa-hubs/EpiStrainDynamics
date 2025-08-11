@@ -17,16 +17,16 @@ construct_model <- function (method,
     pathogen_structure$pathogen_structure
   )
 
-  time <- seq(1, length(pathogen_structure$data$case_timeseries))
+  time_seq <- seq(1, length(pathogen_structure$data$case_timeseries))
 
   # Set up day-of-week effects
   if (dow_effect) {
     week_effect <- 7
-    DOW <- (time %% 7) + 1
+    DOW <- (time_seq %% 7) + 1
   }
   if (!dow_effect) {
     week_effect <- 1
-    DOW <- (time %% 1) + 1
+    DOW <- (time_seq %% 1) + 1
   }
 
   model_params <- append(
@@ -44,7 +44,7 @@ construct_model <- function (method,
   }
 
   data <- append(
-    list(time = time),
+    list(time_seq = time_seq),
     pathogen_structure$data
   )
 
@@ -61,18 +61,23 @@ construct_model <- function (method,
 
 #' Single pathogen structure
 #'
-#' @param case_timeseries total case data
+#' @param case_timeseries vector of total case data
+#' @param time vector of labelled time data
 #' @param pathogen_name name of pathogen
 #'
 #' @returns formatted list with pathogen structure and data
 #' @export
 #'
-single <- function (case_timeseries, pathogen_name) {
+single <- function (case_timeseries,
+                    time,
+                    pathogen_name) {
+
   model_inputs <- list(
     pathogen_structure = 'single',
     pathogen_names = pathogen_name,
     data = list(
-      case_timeseries = case_timeseries
+      case_timeseries = case_timeseries,
+      time = time
     )
   )
 
@@ -82,7 +87,8 @@ single <- function (case_timeseries, pathogen_name) {
 
 #' Multiple pathogen structure
 #'
-#' @param case_timeseries total case data
+#' @param case_timeseries vector of total case data
+#' @param time vector of labelled time data
 #' @param component_pathogen_timeseries named list of each pathogen that has
 #'   timeseries of case counts
 #' @param smoothing_structure either 'shared' (all pathogens have the same;
@@ -96,6 +102,7 @@ single <- function (case_timeseries, pathogen_name) {
 #' @export
 #'
 multiple <- function (case_timeseries,
+                      time,
                       component_pathogen_timeseries,
                       smoothing_structure = c(
                         'shared',
@@ -127,6 +134,7 @@ multiple <- function (case_timeseries,
     pathogen_names = pathogen_names,
     data = list(
       case_timeseries = case_timeseries,
+      time = time,
       component_pathogens = component_pathogens
     ),
     model_params = list(
@@ -141,7 +149,8 @@ multiple <- function (case_timeseries,
 
 #' Subtyped pathogen structure
 #'
-#' @param case_timeseries total case data
+#' @param case_timeseries vector of total case data
+#' @param time vector of labelled time data
 #' @param influenzaA_unsubtyped_timeseries case timeseries data for unsubtyped
 #'   influenzaA
 #' @param influenzaA_subtyped_timeseries case timeseries data for subtyped
@@ -161,6 +170,7 @@ multiple <- function (case_timeseries,
 #' @export
 #'
 subtyped <- function (case_timeseries,
+                      time,
                       influenzaA_unsubtyped_timeseries,
                       influenzaA_subtyped_timeseries,
                       other_pathogen_timeseries,
@@ -207,6 +217,7 @@ subtyped <- function (case_timeseries,
     pathogen_names = pathogen_names,
     data = list(
       case_timeseries = case_timeseries,
+      time = time,
       component_pathogens = component_pathogens,
       influenzaA_subtyped = influenzaA_subtyped
     ),
