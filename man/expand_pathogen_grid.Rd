@@ -12,7 +12,7 @@ expand_pathogen_grid(time_grid, pathogen_names)
 \item{pathogen_names}{Character vector of pathogen names}
 }
 \value{
-Data frame with columns: pathogen, pathogen_idx, time_idx, time, t_step
+Data frame with columns: pathogen, pathogen_idx, time_idx
 }
 \description{
 Expands a time grid to include all pathogen-time combinations (sequential

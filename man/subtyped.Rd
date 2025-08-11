@@ -6,6 +6,7 @@
 \usage{
 subtyped(
   case_timeseries,
+  time,
   influenzaA_unsubtyped_timeseries,
   influenzaA_subtyped_timeseries,
   other_pathogen_timeseries,
@@ -14,7 +15,9 @@ subtyped(
 )
 }
 \arguments{
-\item{case_timeseries}{total case data}
+\item{case_timeseries}{vector of total case data}
+
+\item{time}{vector of labelled time data}
 
 \item{influenzaA_unsubtyped_timeseries}{case timeseries data for unsubtyped
 influenzaA}
