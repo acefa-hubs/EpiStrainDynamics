@@ -6,3 +6,4 @@
 *.Rproj
 inst/doc
 docs
+vignettes/ExampleAnalysis-rw_subtyped_cache/
