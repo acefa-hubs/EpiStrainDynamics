@@ -9,7 +9,7 @@ df1c <- read.csv('data-raw/newCasesBySpecimenDate_nation_2022.csv')
 df1 <- rbind(df1a, df1b, df1c)
 df1 <- df1[df1$date >= min_date & df1$date <= max_date, ]
 
-#Combine the data for each nation into one time series
+# Combine the data for each nation into one time series
 df <- data.frame()
 for (i in 1:length(unique(df1$date))) {
   tmp_df <- df1[df1$date %in% unique(df1$date)[i], ]
