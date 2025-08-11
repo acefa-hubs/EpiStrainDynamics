@@ -11,7 +11,7 @@ extract_model_components(fitted_model)
 }
 \value{
 List containing extracted components: fit, pathogen_names, num_path,
-  time, num_days, days_per_knot, spline_degree, DOW, week_effect, dow_effect
+  time_seq, time, num_days, days_per_knot, spline_degree, DOW, week_effect, dow_effect
 }
 \description{
 Extracts commonly used components from a fitted model object for analysis functions

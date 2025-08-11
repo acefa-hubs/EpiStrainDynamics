@@ -4,10 +4,10 @@
 \alias{predict_B_true}
 \title{Predict B-spline Basis Matrix}
 \usage{
-predict_B_true(time, days_per_knot, spline_degree)
+predict_B_true(time_seq, days_per_knot, spline_degree)
 }
 \arguments{
-\item{time}{Numeric vector of time points}
+\item{time_seq}{Numeric vector of time points}
 
 \item{days_per_knot}{Integer number of days between knots}
 
