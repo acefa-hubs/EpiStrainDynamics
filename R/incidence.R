@@ -17,29 +17,37 @@ incidence <- function(fitted_model, dow, ...) {
 #' @rdname incidence
 #' @export
 incidence.ps <- function(fitted_model, dow, ...) {
-  compute_multi_pathogen(fitted_model, 1, 'incidence',
-                         threshold = 0, use_splines = TRUE, dow)
+  out <- compute_multi_pathogen(fitted_model, 1, 'incidence',
+                                threshold = 0, use_splines = TRUE, dow)
+  class(out) <- c('incidence', class(out))
+  out
 }
 
 #' @rdname incidence
 #' @export
 incidence.rw <- function(fitted_model, dow, ...) {
-  compute_multi_pathogen(fitted_model, 1, 'incidence',
-                         threshold = 0, use_splines = FALSE, dow)
+  out <- compute_multi_pathogen(fitted_model, 1, 'incidence',
+                                threshold = 0, use_splines = FALSE, dow)
+  class(out) <- c('incidence', class(out))
+  out
 }
 
 #' @rdname incidence
 #' @export
 incidence.ps_single <- function(fitted_model, dow, ...) {
-  compute_single_pathogen(fitted_model, 1, 'incidence',
-                          threshold = 0, use_splines = TRUE, dow)
+  out <- compute_single_pathogen(fitted_model, 1, 'incidence',
+                                 threshold = 0, use_splines = TRUE, dow)
+  class(out) <- c('incidence', class(out))
+  out
 }
 
 #' @rdname incidence
 #' @export
 incidence.rw_single <- function(fitted_model, dow, ...) {
-  compute_single_pathogen(fitted_model, 1, 'incidence',
-                          threshold = 0, use_splines = FALSE, dow)
+  out <- compute_single_pathogen(fitted_model, 1, 'incidence',
+                                 threshold = 0, use_splines = FALSE, dow)
+  class(out) <- c('incidence', class(out))
+  out
 }
 
 # =====================
