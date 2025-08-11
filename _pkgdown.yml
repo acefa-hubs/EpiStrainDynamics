@@ -1,4 +1,5 @@
 url: https://acefa-hubs.github.io/EpiStrainDynamics/
 template:
   bootstrap: 5
-
+  light-switch: true
+  bootswatch: flatly
