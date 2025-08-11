@@ -13,29 +13,37 @@ growth_rate <- function(fitted_model, ...) {
 #' @rdname growth_rate
 #' @export
 growth_rate.ps <- function(fitted_model, ...) {
-  compute_multi_pathogen(fitted_model, 2, 'growth_rate',
-                         threshold = 0, use_splines = TRUE)
+  out <- compute_multi_pathogen(fitted_model, 2, 'growth_rate',
+                                threshold = 0, use_splines = TRUE)
+  class(out) <- c('growth_rate', class(out))
+  out
 }
 
 #' @rdname growth_rate
 #' @export
 growth_rate.rw <- function(fitted_model, ...) {
-  compute_multi_pathogen(fitted_model, 2, 'growth_rate',
-                         threshold = 0, use_splines = FALSE)
+  out <- compute_multi_pathogen(fitted_model, 2, 'growth_rate',
+                                threshold = 0, use_splines = FALSE)
+  class(out) <- c('growth_rate', class(out))
+  out
 }
 
 #' @rdname growth_rate
 #' @export
 growth_rate.ps_single <- function(fitted_model, ...) {
-  compute_single_pathogen(fitted_model, 2, 'growth_rate',
-                          threshold = 0, use_splines = TRUE)
+  out <- compute_single_pathogen(fitted_model, 2, 'growth_rate',
+                                 threshold = 0, use_splines = TRUE)
+  class(out) <- c('growth_rate', class(out))
+  out
 }
 
 #' @rdname growth_rate
 #' @export
 growth_rate.rw_single <- function(fitted_model, ...) {
-  compute_single_pathogen(fitted_model, 2, 'growth_rate',
-                          threshold = 0, use_splines = FALSE)
+  out <- compute_single_pathogen(fitted_model, 2, 'growth_rate',
+                                 threshold = 0, use_splines = FALSE)
+  class(out) <- c('growth_rate', class(out))
+  out
 }
 
 # =====================
