@@ -51,8 +51,8 @@
 #' @format ## `influenza`
 #' A data frame with 830 rows and 15 columns:
 #' \describe{
-#'   \item{week}{Date, between 2 January 2012 to week starting 25 December 2023}
 #'   \item{ili}{Integer, daily total number of cases of influenza-like illness}
+#'   \item{week}{Date, between 1 January 2012 to week starting 1 March 2020}
 #'   \item{inf_A}{Integer, daily number of cases of unsubtyped influenza A}
 #'   \item{inf_B}{Integer, daily number of cases of influenza B}
 #'   \item{inf_all}{Integer, daily number of cases of }
