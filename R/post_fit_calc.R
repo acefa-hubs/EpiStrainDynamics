@@ -302,8 +302,7 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
 #' High-level function to coordinates proportion analysis for multi pathogen models
 #'
 #' @param fitted_model Fitted model object
-#' @param start_idx Integer starting time index for analysis
-#' @param measure Character string specifying metric ("incidence", "growth_rate", "Rt")
+#' @param numerator_idx Integer with index of pathogens to place in numerator
 #' @param threshold Numeric threshold for proportion calculations (default: 0)
 #' @param use_splines Logical indicating whether to use spline transformation
 #' @param ... Additional arguments passed to calculation functions (e.g., tau_max, gi_dist for Rt)
