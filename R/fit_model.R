@@ -66,10 +66,10 @@ fit.ps_subtyped <- function (constructed_model, iter, warmup, chains) {
 
   cases <- constructed_model$data$case_timeseries
   pathogen_names <- constructed_model$pathogen_names
-  time <- constructed_model$data$time
+  time_seq <- constructed_model$data$time_seq
   spline_degree <- constructed_model$model_params$spline_degree
   knots <- get_knots(
-    time,
+    time_seq,
     days_per_knot = constructed_model$model_params$days_per_knot,
     spline_degree = spline_degree
   )
@@ -81,7 +81,7 @@ fit.ps_subtyped <- function (constructed_model, iter, warmup, chains) {
     knots = knots,
     spline_degree = spline_degree,
     Y = cases,
-    X = time,
+    X = time_seq,
     P1 = constructed_model$data$component_pathogens,
     P2 = constructed_model$data$influenzaA_subtyped,
     week_effect = constructed_model$model_params$week_effect,
@@ -133,10 +133,10 @@ fit.ps_multiple <- function (constructed_model, iter, warmup, chains) {
 
   cases <- constructed_model$data$case_timeseries
   pathogen_names <- constructed_model$pathogen_names
-  time <- constructed_model$data$time
+  time_seq <- constructed_model$data$time_seq
   spline_degree <- constructed_model$model_params$spline_degree
   knots <- get_knots(
-    time,
+    time_seq,
     days_per_knot = constructed_model$model_params$days_per_knot,
     spline_degree = spline_degree
   )
@@ -148,7 +148,7 @@ fit.ps_multiple <- function (constructed_model, iter, warmup, chains) {
     knots = knots,
     spline_degree = spline_degree,
     Y = cases,
-    X = time,
+    X = time_seq,
     P = constructed_model$data$component_pathogens,
     week_effect = constructed_model$model_params$week_effect,
     DOW = constructed_model$model_params$DOW,
@@ -194,10 +194,10 @@ fit.rw_single <- function (constructed_model, iter, warmup, chains) {
 fit.ps_single <- function (constructed_model, iter, warmup, chains) {
 
   cases <- constructed_model$data$case_timeseries
-  time <- constructed_model$data$time
+  time_seq <- constructed_model$data$time_seq
   spline_degree <- constructed_model$model_params$spline_degree
   knots <- get_knots(
-    time,
+    time_seq,
     days_per_knot = constructed_model$model_params$days_per_knot,
     spline_degree = spline_degree
   )
@@ -208,7 +208,7 @@ fit.ps_single <- function (constructed_model, iter, warmup, chains) {
     knots = knots,
     spline_degree = spline_degree,
     Y = cases,
-    X = time,
+    X = time_seq,
     week_effect = constructed_model$model_params$week_effect,
     DOW = constructed_model$model_params$DOW,
     iter = iter,
