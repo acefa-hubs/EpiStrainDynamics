@@ -15,15 +15,13 @@ compute_proportions(
 \arguments{
 \item{fitted_model}{Fitted model object}
 
+\item{numerator_idx}{Integer with index of pathogens to place in numerator}
+
 \item{threshold}{Numeric threshold for proportion calculations (default: 0)}
 
 \item{use_splines}{Logical indicating whether to use spline transformation}
 
 \item{...}{Additional arguments passed to calculation functions (e.g., tau_max, gi_dist for Rt)}
-
-\item{start_idx}{Integer starting time index for analysis}
-
-\item{measure}{Character string specifying metric ("incidence", "growth_rate", "Rt")}
 }
 \value{
 Data frame with analysis results
