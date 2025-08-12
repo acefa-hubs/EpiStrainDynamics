@@ -84,7 +84,8 @@ plot.growth_rate <- function(df) {
     scale_colour_manual(
       values = colors,
       aesthetics = c("colour", "fill")) +
-    geom_hline(yintercept = 0, linetype = "dashed")
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    ylab("Growth rate")
 
   # Get the y-axis range from the built plot
   y_range <- ggplot_build(p)$layout$panel_params[[1]]$y.range
@@ -113,7 +114,18 @@ plot.growth_rate <- function(df) {
 #' @export
 plot.Rt <- function(df) {
 
-  ggplot(df$measure) +
+  measure_df <- df$measure
+
+  total_pathogens <- "Total"
+  all_levels <- unique(measure_df$pathogen)
+  other_levels <- setdiff(all_levels, total_pathogens)
+
+  colors <- c(
+    setNames("black", total_pathogens),
+    setNames(viridis::viridis(length(other_levels)), other_levels)
+  )
+
+  ggplot(measure_df) +
     geom_line(aes(x = time, y = y, color = pathogen)) +
     geom_ribbon(aes(x = time, y = y,
                     ymin = lb_50, ymax = ub_50,
@@ -124,11 +136,10 @@ plot.Rt <- function(df) {
                     fill = pathogen),
                 alpha = 0.2) +
     theme_bw(base_size = 14) +
+    scale_colour_manual(
+      values = colors,
+      aesthetics = c("colour", "fill")) +
     geom_hline(yintercept = 1, linetype = "dashed") +
-    scale_fill_brewer("Sub-type", palette = "Dark2") +
-    scale_color_brewer("Sub-type", palette = "Dark2") +
-    scale_fill_manual(values = c('Total' = 'black')) +
-    scale_color_manual(values = c('Total' = 'black')) +
     ylab("Effective reproduction number")
 
 }
