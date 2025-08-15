@@ -45,3 +45,9 @@ reference:
       - starts_with("transform_")
       - expand_pathogen_grid
       - predict_B_true
+authors:
+  footer:
+    roles: [cre, aut]
+    text: "Developed by"
+  sidebar:
+    roles: [cre, aut, ctb]
