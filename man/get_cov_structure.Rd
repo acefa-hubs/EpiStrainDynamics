@@ -20,7 +20,3 @@ numeric value for covariance structure needed by stan models
 \description{
 Get covariate structure from assigned smoothing structure
 }
-\examples{
-get_cov_structure('single')
-
-}

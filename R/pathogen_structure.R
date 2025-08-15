@@ -257,9 +257,6 @@ subtyped <- function (case_timeseries,
 #'
 #' @returns numeric value for covariance structure needed by stan models
 #'
-#' @examples
-#' get_cov_structure('single')
-#'
 get_cov_structure <- function (smoothing_structure = c(
                                  'shared',
                                  'independent',
@@ -279,9 +276,6 @@ get_cov_structure <- function (smoothing_structure = c(
 #'   (includes noise in individual pathogens as well)
 #'
 #' @returns numeric value for noise structure needed by stan models
-#'
-#' @examples
-#' get_noise_structure('observation_noise_only')
 #'
 get_noise_structure <- function (observation_noise = c(
                                    'observation_noise_only',

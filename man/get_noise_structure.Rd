@@ -19,7 +19,3 @@ numeric value for noise structure needed by stan models
 \description{
 Get noise structure from specified observation noise
 }
-\examples{
-get_noise_structure('observation_noise_only')
-
-}
