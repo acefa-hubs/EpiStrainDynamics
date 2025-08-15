@@ -2,7 +2,7 @@
 % Please edit documentation in R/fit_model.R
 \name{fit_model}
 \alias{fit_model}
-\title{Fit model}
+\title{Method fit model}
 \usage{
 fit_model(constructed_model, iter = 2000, warmup = 1000, chains = 3)
 }
@@ -19,5 +19,5 @@ fit_model(constructed_model, iter = 2000, warmup = 1000, chains = 3)
 fit model
 }
 \description{
-Fit model
+Method fit model
 }

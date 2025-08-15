@@ -1,4 +1,4 @@
-#' Fit model
+#' Method fit model
 #'
 #' @param constructed_model prepared model object from construct_model()
 #' @param iter number of iterations
@@ -16,25 +16,12 @@ fit_model <- function (constructed_model,
   # if(!'EpiStrainDynamics.options' %in% class(options))
   #   stop("`options` must be created with model_options()")
 
-  out <- fit(constructed_model, iter, warmup, chains)
-
-  return(out)
+  UseMethod("fit_model")
 }
-
-#' Method fit
-#'
-#' @param constructed_model prepared model object from construct_model()
-#' @param iter number of iterations
-#' @param warmup number of warmup iterations
-#' @param chains number of chains
-#'
-#' @returns fit model
-#'
-fit <- function (constructed_model, iter, warmup, chains) UseMethod("fit")
 
 # fit stan model
 #' @exportS3Method
-fit.rw_subtyped <- function (constructed_model, iter, warmup, chains) {
+fit_model.rw_subtyped <- function (constructed_model, iter, warmup, chains) {
 
   cases <- constructed_model$data$case_timeseries
   pathogen_names <- constructed_model$pathogen_names
@@ -62,7 +49,7 @@ fit.rw_subtyped <- function (constructed_model, iter, warmup, chains) {
 }
 
 #' @exportS3Method
-fit.ps_subtyped <- function (constructed_model, iter, warmup, chains) {
+fit_model.ps_subtyped <- function (constructed_model, iter, warmup, chains) {
 
   cases <- constructed_model$data$case_timeseries
   pathogen_names <- constructed_model$pathogen_names
@@ -101,7 +88,7 @@ fit.ps_subtyped <- function (constructed_model, iter, warmup, chains) {
 }
 
 #' @exportS3Method
-fit.rw_multiple <- function (constructed_model, iter, warmup, chains) {
+fit_model.rw_multiple <- function (constructed_model, iter, warmup, chains) {
 
   cases <- constructed_model$data$case_timeseries
   pathogen_names <- constructed_model$pathogen_names
@@ -129,7 +116,7 @@ fit.rw_multiple <- function (constructed_model, iter, warmup, chains) {
 }
 
 #' @exportS3Method
-fit.ps_multiple <- function (constructed_model, iter, warmup, chains) {
+fit_model.ps_multiple <- function (constructed_model, iter, warmup, chains) {
 
   cases <- constructed_model$data$case_timeseries
   pathogen_names <- constructed_model$pathogen_names
@@ -168,7 +155,7 @@ fit.ps_multiple <- function (constructed_model, iter, warmup, chains) {
 }
 
 #' @exportS3Method
-fit.rw_single <- function (constructed_model, iter, warmup, chains) {
+fit_model.rw_single <- function (constructed_model, iter, warmup, chains) {
 
   cases <- constructed_model$data$case_timeseries
 
@@ -191,7 +178,7 @@ fit.rw_single <- function (constructed_model, iter, warmup, chains) {
 }
 
 #' @exportS3Method
-fit.ps_single <- function (constructed_model, iter, warmup, chains) {
+fit_model.ps_single <- function (constructed_model, iter, warmup, chains) {
 
   cases <- constructed_model$data$case_timeseries
   time_seq <- constructed_model$data$time_seq
