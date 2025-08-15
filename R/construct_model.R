@@ -49,9 +49,15 @@ construct_model <- function (method,
     pathogen_structure$model_params)
 
   if (method$method == 'p-spline') {
+    knots <- get_knots(
+      time_seq,
+      days_per_knot = method$model_params$days_per_knot,
+      spline_degree = method$model_params$spline_degree
+    )
     model_params <- append(
       model_params,
-      method$model_params
+      method$model_params,
+      knots
     )
   }
 
@@ -97,4 +103,25 @@ get_model_type <- function (method, pathogens) {
   return(model_type)
 }
 
+#' Function for getting knot locations
+#'
+#' @param X days
+#' @param days_per_knot days per knot
+#' @param spline_degree spline degree
+#'
+#' @return location of knots
+#'
+get_knots <- function (X, days_per_knot = 3, spline_degree = 3) {
 
+  X <- as.numeric(X)
+
+  num_knots <- ceiling((max(X) - min(X)) / days_per_knot)
+
+  first_knot <- min(X) - spline_degree * days_per_knot
+  final_knot <- first_knot + days_per_knot * num_knots +
+    2 * spline_degree * days_per_knot
+
+  knots <- seq(first_knot, final_knot, by = days_per_knot)
+
+  return(knots)
+}

@@ -13,8 +13,8 @@ fit_model <- function (constructed_model,
                        warmup = 1000,
                        chains = 3) {
 
-  # if(!'EpiStrainDynamics.options' %in% class(options))
-  #   stop("`options` must be created with model_options()")
+
+  # valid_class_inherits(constructed_model, 'EpiStrainDynamics.')
 
   UseMethod("fit_model")
 }
@@ -55,11 +55,7 @@ fit_model.ps_subtyped <- function (constructed_model, iter, warmup, chains) {
   pathogen_names <- constructed_model$pathogen_names
   time_seq <- constructed_model$data$time_seq
   spline_degree <- constructed_model$model_params$spline_degree
-  knots <- get_knots(
-    time_seq,
-    days_per_knot = constructed_model$model_params$days_per_knot,
-    spline_degree = spline_degree
-  )
+  knots <- constructed_model$model_params$knots
 
   fit_object <- ps_subtyped_stan(
     num_data = length(cases),
@@ -122,11 +118,7 @@ fit_model.ps_multiple <- function (constructed_model, iter, warmup, chains) {
   pathogen_names <- constructed_model$pathogen_names
   time_seq <- constructed_model$data$time_seq
   spline_degree <- constructed_model$model_params$spline_degree
-  knots <- get_knots(
-    time_seq,
-    days_per_knot = constructed_model$model_params$days_per_knot,
-    spline_degree = spline_degree
-  )
+  knots <- constructed_model$model_params$knots
 
   fit_object <- ps_multiple_stan(
     num_data = length(cases),
@@ -183,11 +175,7 @@ fit_model.ps_single <- function (constructed_model, iter, warmup, chains) {
   cases <- constructed_model$data$case_timeseries
   time_seq <- constructed_model$data$time_seq
   spline_degree <- constructed_model$model_params$spline_degree
-  knots <- get_knots(
-    time_seq,
-    days_per_knot = constructed_model$model_params$days_per_knot,
-    spline_degree = spline_degree
-  )
+  knots <- constructed_model$model_params$knots
 
   fit_object <- ps_single_stan(
     num_data = length(cases),
