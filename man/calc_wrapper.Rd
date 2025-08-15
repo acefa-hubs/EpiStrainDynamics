@@ -29,7 +29,7 @@ calc_wrapper(
 
 \item{post}{Posterior samples object}
 
-\item{components}{Model components from extract_model_components()}
+\item{components}{Model components from get_model_components()}
 
 \item{extra_args}{List of additional arguments for calc_fn}
 
