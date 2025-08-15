@@ -26,19 +26,21 @@ fit_model.rw_subtyped <- function (constructed_model, iter, warmup, chains) {
   cases <- constructed_model$data$case_timeseries
   pathogen_names <- constructed_model$pathogen_names
 
-  fit_object <- rw_subtyped_stan(
-    num_data = length(cases),
-    num_path = length(pathogen_names),
-    Y = cases,
-    P1 = constructed_model$data$component_pathogens,
-    P2 = constructed_model$data$influenzaA_subtyped,
-    week_effect = constructed_model$model_params$week_effect,
-    DOW = constructed_model$model_params$DOW,
-    cov_structure = constructed_model$model_params$cov_structure,
-    noise_structure = constructed_model$model_params$noise_structure,
-    iter = iter,
-    warmup = warmup,
-    chains = chains)
+  standata <- list(num_data = length(cases),
+                   num_path = length(pathogen_names),
+                   Y = cases,
+                   P1 = constructed_model$data$component_pathogens,
+                   P2 = constructed_model$data$influenzaA_subtyped,
+                   week_effect = constructed_model$model_params$week_effect,
+                   DOW = constructed_model$model_params$DOW,
+                   cov_structure = constructed_model$model_params$cov_structure,
+                   noise_structure = constructed_model$model_params$noise_structure)
+
+  fit_object <- rstan::sampling(stanmodels$rw_subtyped,
+                                data = standata,
+                                iter = iter,
+                                warmup = warmup,
+                                chains = chains)
 
   out <- list(fit = fit_object,
               constructed_model = constructed_model)
@@ -57,23 +59,25 @@ fit_model.ps_subtyped <- function (constructed_model, iter, warmup, chains) {
   spline_degree <- constructed_model$model_params$spline_degree
   knots <- constructed_model$model_params$knots
 
-  fit_object <- ps_subtyped_stan(
-    num_data = length(cases),
-    num_path = length(pathogen_names),
-    num_knots = length(knots),
-    knots = knots,
-    spline_degree = spline_degree,
-    Y = cases,
-    X = time_seq,
-    P1 = constructed_model$data$component_pathogens,
-    P2 = constructed_model$data$influenzaA_subtyped,
-    week_effect = constructed_model$model_params$week_effect,
-    DOW = constructed_model$model_params$DOW,
-    cov_structure = constructed_model$model_params$cov_structure,
-    noise_structure = constructed_model$model_params$noise_structure,
-    iter = iter,
-    warmup = warmup,
-    chains = chains)
+  standata <- list(num_data = length(cases),
+                   num_knots = length(knots),
+                   num_path = length(pathogen_names),
+                   knots = knots,
+                   spline_degree = spline_degree,
+                   Y = cases,
+                   P1 = constructed_model$data$component_pathogens,
+                   P2 = constructed_model$data$influenzaA_subtyped,
+                   X = time_seq,
+                   week_effect = constructed_model$model_params$week_effect,
+                   DOW = constructed_model$model_params$DOW,
+                   cov_structure = constructed_model$model_params$cov_structure,
+                   noise_structure = constructed_model$model_params$noise_structure)
+
+  fit_object <- rstan::sampling(stanmodels$ps_subtyped,
+                                data = standata,
+                                iter = iter,
+                                warmup = warmup,
+                                chains = chains)
 
   out <- list(fit = fit_object,
               constructed_model = constructed_model)
@@ -89,19 +93,20 @@ fit_model.rw_multiple <- function (constructed_model, iter, warmup, chains) {
   cases <- constructed_model$data$case_timeseries
   pathogen_names <- constructed_model$pathogen_names
 
-  fit_object <- rw_multiple_stan(
-    num_data = length(cases),
-    num_path = length(pathogen_names),
-    Y = cases,
-    P = constructed_model$data$component_pathogens,
-    week_effect = constructed_model$model_params$week_effect,
-    DOW = constructed_model$model_params$DOW,
-    cov_structure = constructed_model$model_params$cov_structure,
-    noise_structure = constructed_model$model_params$noise_structure,
-    iter = iter,
-    warmup = warmup,
-    chains = chains
-  )
+  standata <- list(num_data = length(cases),
+                   num_path = length(pathogen_names),
+                   Y = cases,
+                   P = constructed_model$data$component_pathogens,
+                   week_effect = constructed_model$model_params$week_effect,
+                   DOW = constructed_model$model_params$DOW,
+                   cov_structure = constructed_model$model_params$cov_structure,
+                   noise_structure = constructed_model$model_params$noise_structure)
+
+  fit_object <- rstan::sampling(stanmodels$rw_multiple,
+                                data = standata,
+                                iter = iter,
+                                warmup = warmup,
+                                chains = chains)
 
   out <- list(fit = fit_object,
               constructed_model = constructed_model)
@@ -120,23 +125,24 @@ fit_model.ps_multiple <- function (constructed_model, iter, warmup, chains) {
   spline_degree <- constructed_model$model_params$spline_degree
   knots <- constructed_model$model_params$knots
 
-  fit_object <- ps_multiple_stan(
-    num_data = length(cases),
-    num_path = length(pathogen_names),
-    num_knots = length(knots),
-    knots = knots,
-    spline_degree = spline_degree,
-    Y = cases,
-    X = time_seq,
-    P = constructed_model$data$component_pathogens,
-    week_effect = constructed_model$model_params$week_effect,
-    DOW = constructed_model$model_params$DOW,
-    cov_structure = constructed_model$model_params$cov_structure,
-    noise_structure = constructed_model$model_params$noise_structure,
-    iter = iter,
-    warmup = warmup,
-    chains = chains
-  )
+  standata <- list(num_data = length(cases),
+                   num_knots = length(knots),
+                   num_path = length(pathogen_names),
+                   knots = knots,
+                   spline_degree = spline_degree,
+                   Y = cases,
+                   P = constructed_model$data$component_pathogens,
+                   X = time_seq,
+                   week_effect = constructed_model$model_params$week_effect,
+                   DOW = constructed_model$model_params$DOW,
+                   cov_structure = constructed_model$model_params$cov_structure,
+                   noise_structure = constructed_model$model_params$noise_structure)
+
+  fit_object <- rstan::sampling(stanmodels$ps_multiple,
+                                data = standata,
+                                iter = iter,
+                                warmup = warmup,
+                                chains = chains)
 
   out <- list(fit = fit_object,
               constructed_model = constructed_model)
@@ -151,15 +157,16 @@ fit_model.rw_single <- function (constructed_model, iter, warmup, chains) {
 
   cases <- constructed_model$data$case_timeseries
 
-  fit_object <- rw_single_stan(
-    num_data = length(cases),
-    Y = cases,
-    week_effect = constructed_model$model_params$week_effect,
-    DOW = constructed_model$model_params$DOW,
-    iter = iter,
-    warmup = warmup,
-    chains = chains
-  )
+  standata <- list(num_data = length(cases),
+                   Y = cases,
+                   week_effect = constructed_model$model_params$week_effect,
+                   DOW = constructed_model$model_params$DOW)
+
+  fit_object <- rstan::sampling(stanmodels$rw_single,
+                                data = standata,
+                                iter = iter,
+                                warmup = warmup,
+                                chains = chains)
 
   out <- list(fit = fit_object,
               constructed_model = constructed_model)
@@ -177,19 +184,20 @@ fit_model.ps_single <- function (constructed_model, iter, warmup, chains) {
   spline_degree <- constructed_model$model_params$spline_degree
   knots <- constructed_model$model_params$knots
 
-  fit_object <- ps_single_stan(
-    num_data = length(cases),
-    num_knots = length(knots),
-    knots = knots,
-    spline_degree = spline_degree,
-    Y = cases,
-    X = time_seq,
-    week_effect = constructed_model$model_params$week_effect,
-    DOW = constructed_model$model_params$DOW,
-    iter = iter,
-    warmup = warmup,
-    chains = chains
-  )
+  standata <- list(num_data = length(cases),
+                   num_knots = length(knots),
+                   knots = knots,
+                   spline_degree = spline_degree,
+                   Y = cases,
+                   X = time_seq,
+                   week_effect = constructed_model$model_params$week_effect,
+                   DOW = constructed_model$model_params$DOW)
+
+  fit_object <- rstan::sampling(stanmodels$ps_single,
+                                data = standata,
+                                iter = iter,
+                                warmup = warmup,
+                                chains = chains)
 
   out <- list(fit = fit_object,
               constructed_model = constructed_model)
