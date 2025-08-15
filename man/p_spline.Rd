@@ -2,21 +2,21 @@
 % Please edit documentation in R/method.R
 \name{p_spline}
 \alias{p_spline}
-\title{Specify p-spline method}
+\title{Specify p_spline method}
 \usage{
 p_spline(spline_degree = 3, days_per_knot = 3)
 }
 \arguments{
 \item{spline_degree}{polynomial degree of the individual spline segments
-used to construct the overall curve}
+used to construct the overall curve (must be a positive whole number)}
 
-\item{days_per_knot}{number of days for each knot}
+\item{days_per_knot}{number of days for each knot (must be a positive whole number)}
 }
 \value{
 list with method and model parameters
 }
 \description{
-Specify p-spline method
+Specify p_spline method
 }
 \examples{
 p_spline(spline_degree = 2, days_per_knot = 5)
