@@ -20,3 +20,10 @@ a list containing the data, the model parameters, and pathogen
 \description{
 Construct model
 }
+\examples{
+\dontrun{
+mod <- construct_model(method = random_walk(),
+        pathogen_structure = single(case_timeseries, time),
+        dow_effect = TRUE)
+}
+}
