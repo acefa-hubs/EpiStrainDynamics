@@ -5,7 +5,7 @@
 \alias{EpiStrainDynamics}
 \title{The 'EpiStrainDynamics' package.}
 \description{
-A DESCRIPTION OF THE PACKAGE
+A statistical framework developed for inferring temporal trends of multiple pathogens from routinely collected surveillance data.
 }
 \references{
 Stan Development Team (NA). RStan: the R interface to Stan. R package version 2.32.3. https://mc-stan.org

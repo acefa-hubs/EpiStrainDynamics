@@ -1,6 +1,6 @@
 #' The 'EpiStrainDynamics' package.
 #'
-#' @description A DESCRIPTION OF THE PACKAGE
+#' @description A statistical framework developed for inferring temporal trends of multiple pathogens from routinely collected surveillance data.
 #'
 #' @name EpiStrainDynamics-package
 #' @aliases EpiStrainDynamics
