@@ -3,3 +3,45 @@ template:
   bootstrap: 5
   light-switch: true
   bootswatch: flatly
+reference:
+  - title: Data
+    desc: Dataset incorporated in the package for demonstration.
+    contents:
+      - influenza
+      - sarscov2
+  - title: Construct model functions
+    desc: Functions for constructing model object.
+    contents:
+      - construct_model
+      - multiple
+      - subtyped
+      - single
+      - p_spline
+      - random_walk
+  - title: Stan model functions
+    desc: Called by the fit_model for the relevant model type
+    contents:
+      - fit_model
+      - ps_single_stan
+      - ps_multiple_stan
+      - ps_subtyped_stan
+      - rw_single_stan
+      - rw_multiple_stan
+      - rw_subtyped_stan
+  - title: Post-modelling metrics calculations
+    desc: Functions to calculate and plot metrics from fitted models.
+    contents:
+      - Rt
+      - growth_rate
+      - incidence
+      - proportion
+      - plot
+  - title: internal
+    contents:
+      - EpiStranDynamics-package
+      - starts_with("calc_")
+      - starts_with("compute_")
+      - starts_with("get_")
+      - starts_with("transform_")
+      - expand_pathogen_grid
+      - predict_B_true
