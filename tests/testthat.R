@@ -9,4 +9,4 @@
 library(testthat)
 library(EpiStrainDynamics)
 
-# test_check("EpiStrainDynamics")
+test_check("EpiStrainDynamics")
