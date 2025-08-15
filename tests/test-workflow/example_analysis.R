@@ -239,7 +239,9 @@ covid_data$time <- seq(1, nrow(covid_data))
 ps_single_mod <- construct_model(
   method = p_spline(),
   pathogen_structure = single(
-    case_timeseries = covid_data$metric_value
+    case_timeseries = covid_data$metric_value,
+    pathogen_name = 'covid',
+    time = covid_data$time
   )#,
   # dow_effect = FALSE
 )
@@ -249,6 +251,9 @@ ps_single_fit <- fit_model(
   warmup = 300,
   chains = 3
 )
+ps_single_rt_new <- Rt(ps_single_fit, gi_dist = ps_gi_dist)
+
+
 ps_single_mod_dow <- construct_model(
   method = p_spline(),
   pathogen_structure = single(
