@@ -43,6 +43,7 @@ reference:
       - starts_with("compute_")
       - starts_with("get_")
       - starts_with("transform_")
+      - starts_with("validate_")
       - expand_pathogen_grid
       - predict_B_true
 authors:
