@@ -33,7 +33,7 @@ calc_stats <- function(values, threshold = 0) {
 #' @param fitted_model Fitted model object containing fit, constructed_model, etc.
 #' @return List containing extracted components: fit, pathogen_names, num_path,
 #'   time_seq, time, num_days, days_per_knot, spline_degree, DOW, week_effect, dow_effect
-extract_model_components <- function(fitted_model) {
+get_model_components <- function(fitted_model) {
   list(
     fit = fitted_model$fit,
     pathogen_names = fitted_model$constructed_model$pathogen_names %||% NULL,
@@ -124,42 +124,6 @@ transform_posterior_multi <- function(post, B_true, num_path, num_days) {
   a
 }
 
-#' Calculate Rt Denominator for Convolution
-#'
-#' Computes the denominator term for Rt calculations using generation interval convolution
-#'
-#' @param a Array of log-incidence posterior samples
-#' @param i Integer time index for calculation
-#' @param tau_max Integer maximum generation interval (days)
-#' @param gi_dist Function returning generation interval probability for given day
-#' @param is_multi_pathogen Logical indicating if this is a multi-pathogen model
-#' @param pathogen_idx Integer pathogen index (NULL for total across pathogens)
-#' @return Matrix of denominator values for Rt calculation
-calc_rt_denominator <- function(a, i, tau_max, gi_dist,
-                                is_multi_pathogen = FALSE, pathogen_idx = NULL) {
-
-  if (is_multi_pathogen && !is.null(pathogen_idx)) {
-    # Multiple pathogen case - specific pathogen
-    R_list <- matrix(0, nrow = dim(a)[1], ncol = 1)
-    for(k in 0:(tau_max-1)) {
-      R_list <- R_list + exp(a[, pathogen_idx, i-k]) * gi_dist(k)
-    }
-  } else if (is_multi_pathogen && is.null(pathogen_idx)) {
-    # Multiple pathogen case - total across pathogens
-    R_list <- matrix(0, nrow = dim(a)[1], ncol = 1)
-    for(k in 0:(tau_max-1)) {
-      R_list <- R_list + rowSums(exp(a[, , i-k])) * gi_dist(k)
-    }
-  } else {
-    # Single pathogen case
-    R_list <- matrix(0, nrow = length(a[,1]), ncol = 1)
-    for(k in 0:(tau_max-1)) {
-      R_list <- R_list + exp(a[, i-k]) * gi_dist(k)
-    }
-  }
-  R_list
-}
-
 # =============================================================================
 # COMPUTATION ENGINE
 # =============================================================================
@@ -186,7 +150,7 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
                                    threshold = 0, use_splines = FALSE,
                                    ...) {
 
-  components <- extract_model_components(fitted_model)
+  components <- get_model_components(fitted_model)
   post <- rstan::extract(components$fit)
 
   # Transform data if using splines
@@ -260,7 +224,7 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
                                     threshold = 0, use_splines = FALSE,
                                     ...) {
 
-  components <- extract_model_components(fitted_model)
+  components <- get_model_components(fitted_model)
   post <- rstan::extract(components$fit)
 
   # Transform data if using splines
@@ -316,7 +280,7 @@ compute_proportions <- function(fitted_model, numerator_idx,
                                 threshold = 0, use_splines = FALSE,
                                 ...) {
 
-  components <- extract_model_components(fitted_model)
+  components <- get_model_components(fitted_model)
   post <- rstan::extract(components$fit)
 
   # Transform data if using splines
@@ -341,6 +305,8 @@ compute_proportions <- function(fitted_model, numerator_idx,
   out <- list(measure = measure,
               fit = fitted_model$fit,
               constructed_model = fitted_model$constructed_model)
+
+  return(out)
 }
 
 #' Unified Calculation Wrapper
@@ -353,7 +319,7 @@ compute_proportions <- function(fitted_model, numerator_idx,
 #' @param calc_fn Calculation function to apply
 #' @param a Array of posterior samples
 #' @param post Posterior samples object
-#' @param components Model components from extract_model_components()
+#' @param components Model components from get_model_components()
 #' @param extra_args List of additional arguments for calc_fn
 #' @param threshold Numeric threshold for summary statistics
 #' @return Data frame with expanded summary statistics

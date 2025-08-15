@@ -75,7 +75,12 @@ Rt.rw_single <- function(fitted_model, tau_max = 7, gi_dist, ...) {
 #' @return Vector of Rt posterior samples
 calc_rt_single <- function(a, time_idx, pathogen_idx, post, components,
                            tau_max, gi_dist, g_a) {
-  R_denom <- calc_rt_denominator(a, time_idx, tau_max, gi_dist, FALSE)
+
+  R_denom <- matrix(0, nrow = length(a[, 1]), ncol = 1)
+  for(k in 0:(tau_max - 1)) {
+    R_denom <- R_denom + exp(a[, time_idx - k]) * gi_dist(k)
+  }
+
   exp(a[, time_idx]) / (R_denom / g_a)
 }
 
@@ -94,7 +99,11 @@ calc_rt_single <- function(a, time_idx, pathogen_idx, post, components,
 #' @return Vector of Rt posterior samples
 calc_rt_individual <- function(a, time_idx, pathogen_idx, post, components,
                                tau_max, gi_dist, g_a) {
-  R_denom <- calc_rt_denominator(a, time_idx, tau_max, gi_dist, TRUE, pathogen_idx)
+
+  R_denom <- matrix(0, nrow = dim(a)[1], ncol = 1)
+  for(k in 0:(tau_max - 1)) {
+    R_denom <- R_denom + exp(a[, pathogen_idx, time_idx - k]) * gi_dist(k)
+  }
   exp(a[, pathogen_idx, time_idx]) / (R_denom / g_a)
 }
 
@@ -113,6 +122,10 @@ calc_rt_individual <- function(a, time_idx, pathogen_idx, post, components,
 #' @return Vector of total Rt posterior samples
 calc_rt_total <- function(a, time_idx, pathogen_idx, post, components,
                           tau_max, gi_dist, g_a) {
-  R_denom <- calc_rt_denominator(a, time_idx, tau_max, gi_dist, TRUE, NULL)
+
+  R_denom <- matrix(0, nrow = dim(a)[1], ncol = 1)
+  for(k in 0:(tau_max - 1)) {
+    R_denom <- R_denom + rowSums(exp(a[, , time_idx - k])) * gi_dist(k)
+  }
   rowSums(exp(a[, , time_idx])) / (R_denom / g_a)
 }
