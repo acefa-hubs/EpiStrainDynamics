@@ -13,11 +13,11 @@ random_walk <- function () {
   return(model_inputs)
 }
 
-#' Specify p-spline method
+#' Specify p_spline method
 #'
 #' @param spline_degree polynomial degree of the individual spline segments
-#'   used to construct the overall curve
-#' @param days_per_knot number of days for each knot
+#'   used to construct the overall curve (must be a positive whole number)
+#' @param days_per_knot number of days for each knot (must be a positive whole number)
 #'
 #' @returns list with method and model parameters
 #' @export
@@ -27,14 +27,17 @@ random_walk <- function () {
 p_spline <- function (spline_degree = 3,
                       days_per_knot = 3) {
 
+  # Validate input parameters
+  validate_positive_whole_number(spline_degree, "spline_degree")
+  validate_positive_whole_number(days_per_knot, "days_per_knot")
+
   model_inputs <- list(
     method = 'p-spline',
     model_params = list(
-      spline_degree = spline_degree,
-      days_per_knot = days_per_knot
+      spline_degree = as.integer(spline_degree),
+      days_per_knot = as.integer(days_per_knot)
     )
   )
-
   class(model_inputs) <- 'EpiStrainDynamics.method'
   return(model_inputs)
 }
