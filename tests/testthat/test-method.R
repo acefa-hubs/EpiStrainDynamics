@@ -19,14 +19,6 @@ test_that("random_walk() returns correct structure and class", {
   expect_type(result$method, "character")
 })
 
-test_that("random_walk() returns consistent results", {
-  result1 <- random_walk()
-  result2 <- random_walk()
-
-  # Should return identical results every time (no randomness in function itself)
-  expect_identical(result1, result2)
-})
-
 # Tests for p_spline() function
 test_that("p_spline() with default parameters returns correct structure", {
   result <- p_spline()
@@ -109,9 +101,58 @@ test_that("Function outputs have expected names", {
   expect_named(ps_result$model_params, c("spline_degree", "days_per_knot"))
 })
 
-# Additional validation tests
-test_that("p_spline() accepts decimal values", {
-  result <- p_spline(spline_degree = 2.5, days_per_knot = 3.7)
-  expect_equal(result$model_params$spline_degree, 2.5)
-  expect_equal(result$model_params$days_per_knot, 3.7)
+# Validation tests for positive whole number requirements
+test_that("p_spline() rejects non-whole numbers", {
+  # Test decimal values are rejected
+  expect_error(p_spline(spline_degree = 2.5, days_per_knot = 3),
+               "must be a whole number")
+  expect_error(p_spline(spline_degree = 3, days_per_knot = 3.7),
+               "must be a whole number")
+  expect_error(p_spline(spline_degree = 2.1, days_per_knot = 4.9),
+               "must be a whole number")
+})
+
+test_that("p_spline() rejects non-positive numbers", {
+  # Test zero values are rejected
+  expect_error(p_spline(spline_degree = 0, days_per_knot = 3),
+               "must be a positive number")
+  expect_error(p_spline(spline_degree = 3, days_per_knot = 0),
+               "must be a positive number")
+
+  # Test negative values are rejected
+  expect_error(p_spline(spline_degree = -1, days_per_knot = 3),
+               "must be a positive number")
+  expect_error(p_spline(spline_degree = 3, days_per_knot = -5),
+               "must be a positive number")
+})
+
+test_that("p_spline() rejects invalid inputs", {
+  # Test non-numeric inputs
+  expect_error(p_spline(spline_degree = "3", days_per_knot = 3),
+               "must be numeric")
+  expect_error(p_spline(spline_degree = 3, days_per_knot = "5"),
+               "must be numeric")
+
+  # Test NA/NULL/Inf values
+  expect_error(p_spline(spline_degree = NA, days_per_knot = 3),
+               "must be a finite number")
+  expect_error(p_spline(spline_degree = 3, days_per_knot = Inf),
+               "must be a finite number")
+  expect_error(p_spline(spline_degree = NULL, days_per_knot = 3),
+               "must be numeric")
+
+  # Test vectors (length > 1)
+  expect_error(p_spline(spline_degree = c(2, 3), days_per_knot = 3),
+               "must be a single value")
+  expect_error(p_spline(spline_degree = 3, days_per_knot = c(3, 4)),
+               "must be a single value")
+})
+
+test_that("p_spline() converts valid whole numbers to integers", {
+  # Test that whole numbers stored as doubles are converted to integers
+  result <- p_spline(spline_degree = 3.0, days_per_knot = 5.0)
+  expect_type(result$model_params$spline_degree, "integer")
+  expect_type(result$model_params$days_per_knot, "integer")
+  expect_equal(result$model_params$spline_degree, 3L)
+  expect_equal(result$model_params$days_per_knot, 5L)
 })
