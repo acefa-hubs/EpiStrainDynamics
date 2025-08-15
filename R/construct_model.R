@@ -9,19 +9,24 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' mod <- construct_model(method = random_walk(),
-#'         pathogen_structure = single(case_timeseries, time),
-#'         dow_effect = TRUE)
-#' }
+#' mod <- construct_model(
+#'   method = random_walk(),
+#'   pathogen_structure = single(
+#'     case_timeseries = sarscov2$cases,
+#'     time = sarscov2$date,
+#'     pathogen_name = 'SARS-COV-2'
+#'   ),
+#'   dow_effect = TRUE
+#' )
 construct_model <- function (method,
                              pathogen_structure,
                              dow_effect = FALSE) {
 
-  validate_class_inherits(method, 'EpiStrainDynamics.method')
   validate_class_inherits(
-    pathogen_structure,
-    'EpiStrainDynamics.pathogen_structure'
+    method, 'EpiStrainDynamics.method'
+  )
+  validate_class_inherits(
+    pathogen_structure, 'EpiStrainDynamics.pathogen_structure'
   )
 
   model_type <- get_model_type(
@@ -32,14 +37,9 @@ construct_model <- function (method,
   time_seq <- seq(1, length(pathogen_structure$data$case_timeseries))
 
   # Set up day-of-week effects
-  if (dow_effect) {
-    week_effect <- 7
-    DOW <- (time_seq %% 7) + 1
-  }
-  if (!dow_effect) {
-    week_effect <- 1
-    DOW <- (time_seq %% 1) + 1
-  }
+  if (dow_effect) week_effect <- 7
+  if (!dow_effect) week_effect <- 1
+  DOW <- (time_seq %% week_effect) + 1
 
   model_params <- append(
     list(
@@ -54,10 +54,10 @@ construct_model <- function (method,
       days_per_knot = method$model_params$days_per_knot,
       spline_degree = method$model_params$spline_degree
     )
-    model_params <- append(
+    model_params <- c(
       model_params,
       method$model_params,
-      knots
+      list(knots = knots)
     )
   }
 
