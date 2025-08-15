@@ -1,3 +1,45 @@
+#' Validate that input is a positive whole number
+#'
+#' @param value The value to validate
+#' @param arg_name Name of the argument being validated (for error messages)
+#'
+#' @return NULL (invisibly) if validation passes, otherwise stops with error
+#'
+validate_positive_whole_number <- function(value, arg_name) {
+
+  # Check that value is numeric
+  if (!is.numeric(value)) {
+    stop(paste("Argument", paste0("'", arg_name, "'"), "must be numeric"),
+         call. = FALSE)
+  }
+
+  # Check that value is a single value (length = 1)
+  if (length(value) != 1) {
+    stop(paste("Argument", paste0("'", arg_name, "'"), "must be a single value"),
+         call. = FALSE)
+  }
+
+  # Check that value is finite (not NA, NULL, Inf, -Inf, NaN)
+  if (!is.finite(value)) {
+    stop(paste("Argument", paste0("'", arg_name, "'"), "must be a finite number"),
+         call. = FALSE)
+  }
+
+  # Check that value is a whole number
+  if (value != as.integer(value)) {
+    stop(paste("Argument", paste0("'", arg_name, "'"), "must be a whole number"),
+         call. = FALSE)
+  }
+
+  # Check that value is positive
+  if (value <= 0) {
+    stop(paste("Argument", paste0("'", arg_name, "'"), "must be a positive number"),
+         call. = FALSE)
+  }
+
+  invisible(NULL)
+}
+
 #' Validate class of argument is correct
 #'
 #' @param obj argument to check
