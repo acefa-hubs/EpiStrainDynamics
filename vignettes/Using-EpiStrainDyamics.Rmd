@@ -7,14 +7,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r, include = FALSE, results='hide', message=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-```
-
-```{r setup, results='hide', message=FALSE}
 library(EpiStrainDynamics)
 
 # Set some stan settings
@@ -180,7 +177,10 @@ plot(inc_dow)
 
 Calculate proportions of different combinations of cases attributable to different pathogens/subtypes using `proportion()`, where the pathogens/subtypes are specified by their names in the named lists provided to `construct_model()`:
 ```{r}
-proportion(fit, numerator_combination = c('H3N2', 'H1N1', 'influenzaB'),
-           denominator_combination = c('H3N2', 'H1N1', 'influenzaB', 'other'))
+prop <- proportion(
+  fit, 
+  numerator_combination = c('H3N2', 'H1N1', 'influenzaB'),
+  denominator_combination = c('H3N2', 'H1N1', 'influenzaB', 'other')
+)
+head(prop)
 ```
-
