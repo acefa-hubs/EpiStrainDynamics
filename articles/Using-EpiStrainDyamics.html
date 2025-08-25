@@ -72,12 +72,6 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://acefa-hubs.github.io/EpiStrainDynamics/">EpiStrainDynamics</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Set some stan settings</span></span>
-<span><span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/rstan_options.html" class="external-link">rstan_options</a></span><span class="op">(</span>auto_write <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>mc.cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <p>EpiStrainDynamics extends an existing statistical modelling framework
 capable of inferring the trends of up to two pathogens. The modeling
 framework has been extended here to handle any number of pathogens; fit
@@ -228,7 +222,7 @@ each individual pathogen. Model parameterisation decisions specified
 when constructing the model in step 1 mean the correct stan model will
 be applied at this stage by simply calling <code><a href="../reference/fit_model.html">fit_model()</a></code> onto
 the constructed model object.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_model.html">fit_model</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod</span>,</span>
 <span>  iter <span class="op">=</span> <span class="fl">2000</span>,</span>
@@ -240,24 +234,24 @@ the constructed model object.</p>
 <h2 id="step-3-calculate-and-visualise-epidemiological-quantities">Step 3: Calculate and visualise epidemiological quantities<a class="anchor" aria-label="anchor" href="#step-3-calculate-and-visualise-epidemiological-quantities"></a>
 </h2>
 <p>Calculate epidemic growth rate with <code><a href="../reference/growth_rate.html">growth_rate()</a></code>:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/growth_rate.html">growth_rate</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">gr</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Using-EpiStrainDyamics_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p>Calculate effective reproduction number over time with
 <code><a href="../reference/Rt.html">Rt()</a></code> (requiring specification of a generation interval
 distribution):</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Rt.html">Rt</a></span><span class="op">(</span><span class="va">fit</span>, gi_dist <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">4</span><span class="op">*</span><span class="va">x</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span><span class="op">*</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">rt</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Using-EpiStrainDyamics_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <p>Calculate incidence with or without a day of week effect with
 <code><a href="../reference/incidence.html">incidence()</a></code>:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">inc_no_dow</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/incidence.html">incidence</a></span><span class="op">(</span><span class="va">fit</span>, dow <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">inc_no_dow</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Using-EpiStrainDyamics_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">inc_dow</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/incidence.html">incidence</a></span><span class="op">(</span><span class="va">fit</span>, dow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">inc_dow</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Using-EpiStrainDyamics_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
@@ -265,9 +259,13 @@ distribution):</p>
 to different pathogens/subtypes using <code><a href="../reference/proportion.html">proportion()</a></code>, where
 the pathogens/subtypes are specified by their names in the named lists
 provided to <code><a href="../reference/construct_model.html">construct_model()</a></code>:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/proportion.html">proportion</a></span><span class="op">(</span><span class="va">fit</span>, numerator_combination <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'H3N2'</span>, <span class="st">'H1N1'</span>, <span class="st">'influenzaB'</span><span class="op">)</span>,</span>
-<span>           denominator_combination <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'H3N2'</span>, <span class="st">'H1N1'</span>, <span class="st">'influenzaB'</span>, <span class="st">'other'</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/proportion.html">proportion</a></span><span class="op">(</span></span>
+<span>  <span class="va">fit</span>, </span>
+<span>  numerator_combination <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'H3N2'</span>, <span class="st">'H1N1'</span>, <span class="st">'influenzaB'</span><span class="op">)</span>,</span>
+<span>  denominator_combination <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'H3N2'</span>, <span class="st">'H1N1'</span>, <span class="st">'influenzaB'</span>, <span class="st">'other'</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">prop</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $measure</span></span>
 <span><span class="co">#&gt;              y      lb_50      ub_50      lb_95      ub_95 prop components$time</span></span>
 <span><span class="co">#&gt; 1   0.03636600 0.03103151 0.04225316 0.02303204 0.05554270    1      2012-01-02</span></span>
@@ -5347,7 +5345,7 @@ provided to <code><a href="../reference/construct_model.html">construct_model()<
 <span><span class="co">#&gt; a_new[4,426]                 3.62       3.75       3.98   751 1.00</span></span>
 <span><span class="co">#&gt; lp__                   -163752.34 -163738.09 -163711.44   806 1.00</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Samples were drawn using NUTS(diag_e) at Mon Aug 25 10:14:49 2025.</span></span>
+<span><span class="co">#&gt; Samples were drawn using NUTS(diag_e) at Mon Aug 25 11:50:30 2025.</span></span>
 <span><span class="co">#&gt; For each parameter, n_eff is a crude measure of effective sample size,</span></span>
 <span><span class="co">#&gt; and Rhat is the potential scale reduction factor on split chains (at </span></span>
 <span><span class="co">#&gt; convergence, Rhat=1).</span></span>
