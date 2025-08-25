@@ -21,9 +21,13 @@ a list containing the data, the model parameters, and pathogen
 Construct model
 }
 \examples{
-\dontrun{
-mod <- construct_model(method = random_walk(),
-        pathogen_structure = single(case_timeseries, time),
-        dow_effect = TRUE)
-}
+mod <- construct_model(
+  method = random_walk(),
+  pathogen_structure = single(
+    case_timeseries = sarscov2$cases,
+    time = sarscov2$date,
+    pathogen_name = 'SARS-COV-2'
+  ),
+  dow_effect = TRUE
+)
 }

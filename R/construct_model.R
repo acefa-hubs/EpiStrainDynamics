@@ -18,42 +18,48 @@
 #'   ),
 #'   dow_effect = TRUE
 #' )
-construct_model <- function (method,
-                             pathogen_structure,
-                             dow_effect = FALSE) {
+construct_model <- function(method,
+                            pathogen_structure,
+                            dow_effect = FALSE) {
 
+  # Input validation
   validate_class_inherits(
     method, 'EpiStrainDynamics.method'
   )
   validate_class_inherits(
     pathogen_structure, 'EpiStrainDynamics.pathogen_structure'
   )
+  if (!is.logical(dow_effect) || length(dow_effect) != 1) {
+    stop("Argument 'dow_effect' must be a single logical value (TRUE or FALSE)",
+         call. = FALSE)
+  }
 
-  model_type <- get_model_type(
-    method$method,
-    pathogen_structure$pathogen_structure
-  )
+  # Extract model type
+  model_type <- get_model_type(method$method,
+                               pathogen_structure$pathogen_structure)
 
-  time_seq <- seq(1, length(pathogen_structure$data$case_timeseries))
+  # Create time sequence
+  time_seq <- seq_len(length(pathogen_structure$data$case_timeseries))
 
   # Set up day-of-week effects
-  if (dow_effect) week_effect <- 7
-  if (!dow_effect) week_effect <- 1
-  DOW <- (time_seq %% week_effect) + 1
+  week_effect <- if (dow_effect) 7L else 1L
+  DOW <- (time_seq - 1L) %% week_effect + 1L
 
-  model_params <- append(
-    list(
-      week_effect = week_effect,
-      DOW = DOW
-    ),
-    pathogen_structure$model_params)
+  # Initialize model parameters list
+  dow_terms <- list(
+    week_effect = week_effect,
+    DOW = DOW
+  )
+  model_params <- c(dow_terms, pathogen_structure$model_params)
 
+  # Add method-specific parameters
   if (method$method == 'p-spline') {
     knots <- get_knots(
       time_seq,
       days_per_knot = method$model_params$days_per_knot,
       spline_degree = method$model_params$spline_degree
     )
+
     model_params <- c(
       model_params,
       method$model_params,
@@ -61,11 +67,13 @@ construct_model <- function (method,
     )
   }
 
-  data <- append(
+  # Prepare data list
+  data <- c(
     list(time_seq = time_seq),
     pathogen_structure$data
   )
 
+  # Construct final model input list
   model_input <- list(
     data = data,
     model_params = model_params,
@@ -73,53 +81,75 @@ construct_model <- function (method,
     dow_effect = dow_effect
   )
 
-  class(model_input) <- c(model_type, class(model_input))
+  class(model_input) <- c(model_type, "EpiStrainDynamics.model", class(model_input))
   return(model_input)
 }
 
 #' Extract model type from method and pathogen structure
 #'
-#' @param method method function, either random_walk() or p_spline()
-#' @param pathogens pathogen structure, either single, multiple, or subtyped
+#' @param method_name Character string: method name ('random-walk' or 'p-spline')
+#' @param pathogen_type Character string: pathogen structure type
 #'
-#' @returns model type
+#' @returns Character string: model type
 #'
-get_model_type <- function (method, pathogens) {
+get_model_type <- function(method_name, pathogen_type) {
 
-  is_ps_single <- method == 'p-spline' & pathogens == 'single'
-  is_rw_single <- method == 'random-walk' & pathogens == 'single'
-  is_ps_multiple <- method == 'p-spline' & pathogens == 'multiple'
-  is_rw_multiple <- method == 'random-walk' & pathogens == 'multiple'
-  is_ps_subtyped <- method == 'p-spline' & pathogens == 'subtyped'
-  is_rw_subtyped <- method == 'random-walk' & pathogens == 'subtyped'
+  # Input validation
+  valid_methods <- c('random-walk', 'p-spline')
+  valid_pathogens <- c('single', 'multiple', 'subtyped')
 
-  if (is_ps_single) model_type <- 'ps_single'
-  if (is_rw_single) model_type <- 'rw_single'
-  if (is_ps_multiple) model_type <- 'ps_multiple'
-  if (is_rw_multiple) model_type <- 'rw_multiple'
-  if (is_ps_subtyped) model_type <- 'ps_subtyped'
-  if (is_rw_subtyped) model_type <- 'rw_subtyped'
+  if (!method_name %in% valid_methods) {
+    stop(paste("Unknown method:", method_name,
+               ". Valid methods are:", paste(valid_methods, collapse = ", ")),
+         call. = FALSE)
+  }
+
+  if (!pathogen_type %in% valid_pathogens) {
+    stop(paste("Unknown pathogen structure:", pathogen_type,
+               ". Valid structures are:", paste(valid_pathogens, collapse = ", ")),
+         call. = FALSE)
+  }
+
+  # Lookup model type
+  method_abbrev <- switch(method_name,
+                          'p-spline' = 'ps',
+                          'random-walk' = 'rw')
+
+  model_type <- paste(method_abbrev, pathogen_type, sep = '_')
 
   return(model_type)
 }
 
 #' Function for getting knot locations
 #'
-#' @param X days
-#' @param days_per_knot days per knot
-#' @param spline_degree spline degree
+#' @param X Numeric vector of time points
+#' @param days_per_knot Number of days between knots (must be positive)
+#' @param spline_degree Polynomial degree of spline (must be positive)
 #'
-#' @return location of knots
+#' @return Numeric vector of knot locations
 #'
-get_knots <- function (X, days_per_knot = 3, spline_degree = 3) {
+get_knots <- function(X, days_per_knot = 3, spline_degree = 3) {
+
+  # Input validation
+  if (!is.numeric(X) || length(X) == 0) {
+    stop("Argument 'X' must be a non-empty numeric vector", call. = FALSE)
+  }
+
+  validate_positive_whole_number(days_per_knot, "days_per_knot")
+  validate_positive_whole_number(spline_degree, "spline_degree")
 
   X <- as.numeric(X)
+  min_X <- min(X, na.rm = TRUE)
+  max_X <- max(X, na.rm = TRUE)
 
-  num_knots <- ceiling((max(X) - min(X)) / days_per_knot)
+  if (is.na(min_X) || is.na(max_X)) {
+    stop("All values in 'X' are missing", call. = FALSE)
+  }
 
-  first_knot <- min(X) - spline_degree * days_per_knot
-  final_knot <- first_knot + days_per_knot * num_knots +
-    2 * spline_degree * days_per_knot
+  # Calculate knot parameters
+  num_knots <- ceiling((max_X - min_X) / days_per_knot)
+  first_knot <- min_X - spline_degree * days_per_knot
+  final_knot <- first_knot + days_per_knot * (num_knots + 2L * spline_degree)
 
   knots <- seq(first_knot, final_knot, by = days_per_knot)
 
