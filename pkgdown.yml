@@ -2,8 +2,8 @@ pandoc: 3.1.11
 pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
-  ExampleAnalysis-ps_subtyped: ExampleAnalysis-ps_subtyped.html
-last_built: 2025-08-25T08:41Z
+  Using-EpiStrainDyamics: Using-EpiStrainDyamics.html
+last_built: 2025-08-25T10:09Z
 urls:
   reference: https://acefa-hubs.github.io/EpiStrainDynamics/reference
   article: https://acefa-hubs.github.io/EpiStrainDynamics/articles
