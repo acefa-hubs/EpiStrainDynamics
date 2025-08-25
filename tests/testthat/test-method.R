@@ -135,7 +135,7 @@ test_that("p_spline() rejects invalid inputs", {
 
   # Test NA/NULL/Inf values
   expect_error(p_spline(spline_degree = NA, days_per_knot = 3),
-               "must be a finite number")
+               "must be numeric")
   expect_error(p_spline(spline_degree = 3, days_per_knot = Inf),
                "must be a finite number")
   expect_error(p_spline(spline_degree = NULL, days_per_knot = 3),
