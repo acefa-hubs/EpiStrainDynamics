@@ -18,8 +18,7 @@
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/ConstructModels.html">ConstructModels</a></li>
-    <li><a class="dropdown-item" href="../articles/ExampleAnalysis-ps_subtyped.html">ExampleAnalysis-ps_subtyped</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/ExampleAnalysis-ps_subtyped.html">ExampleAnalysis-ps_subtyped</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -39,7 +38,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Function for getting knot locations</h1>
-      <small class="dont-index">Source: <a href="https://github.com/acefa-hubs/EpiStrainDynamics/blob/main/R/get_knots.R" class="external-link"><code>R/get_knots.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/acefa-hubs/EpiStrainDynamics/blob/main/R/construct_model.R" class="external-link"><code>R/construct_model.R</code></a></small>
       <div class="d-none name"><code>get_knots.Rd</code></div>
     </div>
 
@@ -57,20 +56,20 @@
 
 
 <dl><dt id="arg-x">X<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>days</p></dd>
+<dd><p>Numeric vector of time points</p></dd>
 
 
 <dt id="arg-days-per-knot">days_per_knot<a class="anchor" aria-label="anchor" href="#arg-days-per-knot"></a></dt>
-<dd><p>days per knot</p></dd>
+<dd><p>Number of days between knots (must be positive)</p></dd>
 
 
 <dt id="arg-spline-degree">spline_degree<a class="anchor" aria-label="anchor" href="#arg-spline-degree"></a></dt>
-<dd><p>spline degree</p></dd>
+<dd><p>Polynomial degree of spline (must be positive)</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>location of knots</p>
+    <p>Numeric vector of knot locations</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

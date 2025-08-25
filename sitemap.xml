@@ -3,7 +3,6 @@
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/CODE_OF_CONDUCT.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/CONTRIBUTING.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/LICENSE.html</loc></url>
-<url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/articles/ConstructModels.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/articles/ExampleAnalysis-ps_subtyped.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/articles/index.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/authors.html</loc></url>
@@ -43,17 +42,15 @@
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/plot.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/predict_B_true.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/proportion.html</loc></url>
-<url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/ps_multiple_stan.html</loc></url>
-<url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/ps_single_stan.html</loc></url>
-<url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/ps_subtyped_stan.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/random_walk.html</loc></url>
-<url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/rw_multiple_stan.html</loc></url>
-<url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/rw_single_stan.html</loc></url>
-<url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/rw_subtyped_stan.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/sarscov2.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/single.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/subtyped.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/transform_posterior_multi.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/transform_posterior_single.html</loc></url>
+<url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/validate_class_inherits.html</loc></url>
+<url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/validate_list_vector_lengths.html</loc></url>
+<url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/validate_matching_lengths.html</loc></url>
+<url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/validate_positive_whole_number.html</loc></url>
 </urlset>
 
