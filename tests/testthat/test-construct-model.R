@@ -20,15 +20,13 @@ test_that("construct_model() works with random_walk() and single()", {
 
   # Test data structure
   expect_named(result$data, c("time_seq", "case_timeseries", "time"))
-  expect_equal(result$data$time_seq, 1:5)
-  expect_equal(result$data$case_timeseries, test_data$case_timeseries)
-  expect_equal(result$data$time, test_data$time)
+  expect_equal(result$data$time_seq, 1:nrow(sarscov2))
+  expect_equal(result$data$case_timeseries, sarscov2$cases)
+  expect_equal(result$data$time, sarscov2$date)
   expect_equal(result$pathogen_names, "TestPathogen")
 })
 
 test_that("construct_model() works with p_spline() and multiple()", {
-  test_data <- create_test_case_data(n_obs = 8)
-  component_pathogens <- create_test_component_pathogens(c("alpha", "beta", "gamma"), n_obs = 8)
 
   method <- p_spline(spline_degree = 2, days_per_knot = 4)
   pathogen <- multiple(
@@ -62,7 +60,7 @@ test_that("construct_model() works with p_spline() and multiple()", {
   expect_equal(result$model_params$noise_structure, 0)  # observation_noise_only
 
   # Test pathogen names
-  expect_equal(result$pathogen_names, c("alpha", "beta", "gamma"))
+  expect_equal(result$pathogen_names, c("alpha", "delta", "omicron"))
 
   # Test day-of-week effect
   expect_equal(result$model_params$week_effect, 7L)
@@ -77,11 +75,12 @@ test_that("construct_model() works with subtyped pathogen structure", {
     time = influenza$week,
     influenzaA_unsubtyped_timeseries = influenza$inf_A,
     influenzaA_subtyped_timeseries = list(
-      influenzaA.H3N2 = influenza$inf_H3N2,
-      influenzaA.H1N1 = influenza$inf_H1N1
+      H3N2 = influenza$inf_H3N2,
+      H1N1 = influenza$inf_H1N1
     ),
     other_pathogen_timeseries = list(
-      influenzaB = influenza$inf_B
+      influenzaB = influenza$inf_B,
+      other = influenza$num_spec - influenza$inf_all
     ),
     smoothing_structure = "correlated",
     observation_noise = "pathogen_specific_noise"
@@ -98,7 +97,7 @@ test_that("construct_model() works with subtyped pathogen structure", {
   expect_equal(result$model_params$noise_structure, 1)  # pathogen_specific_noise
 
   # Test pathogen names (from subtyped and other pathogens)
-  expect_equal(result$pathogen_names, c("H1N1", "H3N2", "influenzaB", "other"))
+  expect_equal(result$pathogen_names, c("H3N2", "H1N1", "influenzaB", "other"))
 
   # Test data structure includes subtyped data
   expect_true("component_pathogens" %in% names(result$data))
@@ -117,13 +116,13 @@ test_that("construct_model() handles day-of-week effects with real functions", {
   # Test with dow_effect = TRUE
   result_dow <- construct_model(method, pathogen, dow_effect = TRUE)
   expect_equal(result_dow$model_params$week_effect, 7L)
-  expect_equal(result_dow$model_params$DOW, ((1:10 - 1L) %% 7L) + 1L)
+  expect_equal(result_dow$model_params$DOW, ((1:nrow(sarscov2) - 1L) %% 7L) + 1L)
   expect_true(result_dow$dow_effect)
 
   # Test with dow_effect = FALSE
   result_no_dow <- construct_model(method, pathogen, dow_effect = FALSE)
   expect_equal(result_no_dow$model_params$week_effect, 1L)
-  expect_equal(result_no_dow$model_params$DOW, rep(1L, 10))
+  expect_equal(result_no_dow$model_params$DOW, rep(1L, nrow(sarscov2)))
   expect_false(result_no_dow$dow_effect)
 })
 
@@ -169,8 +168,8 @@ test_that("construct_model() preserves all pathogen structure data", {
   result <- construct_model(method, pathogen, dow_effect = FALSE)
 
   # Test that all original data is preserved
-  expect_equal(result$data$case_timeseries, test_data$case_timeseries)
-  expect_equal(result$data$time, test_data$time)
+  expect_equal(result$data$case_timeseries, sarscov2$cases)
+  expect_equal(result$data$time, sarscov2$date)
   expect_true("component_pathogens" %in% names(result$data))
 
   # Test that pathogen model params are preserved
@@ -178,7 +177,7 @@ test_that("construct_model() preserves all pathogen structure data", {
   expect_equal(result$model_params$noise_structure, 1)  # pathogen_specific_noise
 
   # Test pathogen names
-  expect_equal(result$pathogen_names, c("strain1", "strain2"))
+  expect_equal(result$pathogen_names, c("alpha", "delta", "omicron"))
 })
 
 test_that("p_spline validation is applied in real integration", {
@@ -328,7 +327,7 @@ test_that("Full integration: random walk with single pathogen", {
   result <- construct_model(method, pathogen, dow_effect = TRUE)
 
   expect_s3_class(result, c("rw_single", "EpiStrainDynamics.model", "list"))
-  expect_equal(length(result$data$time_seq), 7)
+  expect_equal(length(result$data$time_seq), nrow(sarscov2))
   expect_equal(result$model_params$week_effect, 7L)
   expect_false("knots" %in% names(result$model_params))
   expect_equal(result$pathogen_names, "SARS-CoV-2")
@@ -358,7 +357,7 @@ test_that("Full integration: p-spline with multiple pathogens", {
   expect_equal(result$model_params$week_effect, 1L)
   expect_equal(result$model_params$cov_structure, 2)  # correlated
   expect_equal(result$model_params$noise_structure, 1)  # pathogen_specific_noise
-  expect_equal(result$pathogen_names, c("Alpha", "Delta", "Omicron"))
+  expect_equal(result$pathogen_names, c("alpha", "delta", "omicron"))
 })
 
 test_that("Full integration: p-spline with subtyped pathogens", {
@@ -369,11 +368,12 @@ test_that("Full integration: p-spline with subtyped pathogens", {
     time = influenza$week,
     influenzaA_unsubtyped_timeseries = influenza$inf_A,
     influenzaA_subtyped_timeseries = list(
-      influenzaA.H3N2 = influenza$inf_H3N2,
-      influenzaA.H1N1 = influenza$inf_H1N1
+      H3N2 = influenza$inf_H3N2,
+      H1N1 = influenza$inf_H1N1
     ),
     other_pathogen_timeseries = list(
-      influenzaB = influenza$inf_B
+      influenzaB = influenza$inf_B,
+      other = influenza$num_spec - influenza$inf_all
     ),
     smoothing_structure = "independent",
     observation_noise = "observation_noise_only"
@@ -388,10 +388,10 @@ test_that("Full integration: p-spline with subtyped pathogens", {
   expect_equal(result$model_params$week_effect, 7L)
   expect_equal(result$model_params$cov_structure, 1)  # independent
   expect_equal(result$model_params$noise_structure, 0)  # observation_noise_only
-  expect_equal(result$pathogen_names, c("H1N1pdm09", "H3N2", "InfluenzaB", "Other"))
+  expect_equal(result$pathogen_names, c("H3N2", "H1N1", "influenzaB", "other"))
 
   # Test subtyped-specific data structure
   expect_true("influenzaA_subtyped" %in% names(result$data))
   expect_equal(nrow(result$data$influenzaA_subtyped), 2)  # 2 subtypes
-  expect_equal(ncol(result$data$influenzaA_subtyped), 10)  # 10 time points
+  expect_equal(ncol(result$data$influenzaA_subtyped), nrow(influenza))  # 10 time points
 })
