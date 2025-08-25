@@ -7,14 +7,14 @@
 get_knots(X, days_per_knot = 3, spline_degree = 3)
 }
 \arguments{
-\item{X}{days}
+\item{X}{Numeric vector of time points}
 
-\item{days_per_knot}{days per knot}
+\item{days_per_knot}{Number of days between knots (must be positive)}
 
-\item{spline_degree}{spline degree}
+\item{spline_degree}{Polynomial degree of spline (must be positive)}
 }
 \value{
-location of knots
+Numeric vector of knot locations
 }
 \description{
 Function for getting knot locations

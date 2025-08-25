@@ -4,15 +4,15 @@
 \alias{get_model_type}
 \title{Extract model type from method and pathogen structure}
 \usage{
-get_model_type(method, pathogens)
+get_model_type(method_name, pathogen_type)
 }
 \arguments{
-\item{method}{method function, either random_walk() or p_spline()}
+\item{method_name}{Character string: method name ('random-walk' or 'p-spline')}
 
-\item{pathogens}{pathogen structure, either single, multiple, or subtyped}
+\item{pathogen_type}{Character string: pathogen structure type}
 }
 \value{
-model type
+Character string: model type
 }
 \description{
 Extract model type from method and pathogen structure
