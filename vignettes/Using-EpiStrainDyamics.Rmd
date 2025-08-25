@@ -1,8 +1,8 @@
 ---
-title: "ExampleAnalysis-ps_subtyped"
+title: "Using EpiStainDynamics"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ExampleAnalysis-ps_subtyped}
+  %\VignetteIndexEntry{Using-EpiStrainDynamics}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -144,7 +144,7 @@ mod <- construct_model(
 
 The model estimates the expected value of the time series (eg, a smoothed trend in the daily number of cases accounting for noise) for each individual pathogen. Model parameterisation decisions specified when constructing the model in step 1 mean the correct stan model will be applied at this stage by simply calling `fit_model()` onto the constructed model object. 
 
-```{r, cache = TRUE}
+```{r, cache = TRUE, results = 'hide'}
 fit <- fit_model(
   mod,
   iter = 2000,
