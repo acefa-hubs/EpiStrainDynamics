@@ -18,16 +18,9 @@ reference:
       - subtyped
       - p_spline
       - random_walk
-  - title: Stan model functions
-    desc: Called by fit_model for the relevant model type
+  - title: Fit stan model
     contents:
       - fit_model
-      - ps_single_stan
-      - ps_multiple_stan
-      - ps_subtyped_stan
-      - rw_single_stan
-      - rw_multiple_stan
-      - rw_subtyped_stan
   - title: Post-modelling metrics calculations
     desc: Functions to calculate and plot metrics from fitted models.
     contents:
