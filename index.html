@@ -66,14 +66,13 @@
 <p>This repository contains code corresponding to the R package <code>EpiStrainDynamics</code>. For code corresponding to the analyses in the paper: <em>Inferring temporal trends of multiple pathogens, variants, subtypes or serotypes from routine surveillance data</em>, see branch <a href="https://github.com/acefa-hubs/EpiStrainDynamics/tree/paper_analysis" class="external-link"><code>paper_analysis</code></a>.</p>
 <p>Estimating the temporal trends in infectious disease activity is crucial for monitoring disease spread and the impact of interventions. Surveillance indicators routinely collected to monitor these trends are often a composite of multiple pathogens. For example, ‘influenza-like illness’ — routinely monitored as a proxy for influenza infections — is a symptom definition that could be caused by a wide range of pathogens, including multiple subtypes of influenza, SARS-CoV-2, and RSV. Inferred trends from such composite time series may not reflect the trends of any one of the component pathogens, each of which can exhibit distinct dynamics. Although many surveillance systems routinely test a subset of individuals contributing to a surveillance indicator — providing information on the relative contribution of the component pathogens — trends may be obscured by time-varying testing rates or substantial noise in the observation process.</p>
 <p>EpiStrainDynamics extends an existing statistical modelling framework capable of inferring the trends of up to two pathogens. The modeling framework has been extended here to handle any number of pathogens; fit to time series data of counts (eg, daily number of cases); incorporate influenza testing data in which the subtype for influenza A samples may be undetermined; account for day-of-the-week effects in daily data; include options for fitting penalized splines or random walks; support additional (optional) correlation structures in the parameters describing the smoothness of the penalized splines (or random walks); and account for additional (optional) sources of noise in the observation process.</p>
-</div>
-<div class="section level1">
-<h1 id="step-1-construct-model">Step 1: Construct model<a class="anchor" aria-label="anchor" href="#step-1-construct-model"></a>
-</h1>
-<p>Modelling specifications are provided using the <code>construct_model</code> function. The correct stan model is then applied based on the specifications provided. <code><a href="reference/construct_model.html">construct_model()</a></code> takes three arguments: <code>method</code>, <code>pathogen_structure</code>, and <code>dow_effect</code>.</p>
 <div class="section level2">
-<h2 id="method">Method<a class="anchor" aria-label="anchor" href="#method"></a>
+<h2 id="step-1-construct-model">Step 1: Construct model<a class="anchor" aria-label="anchor" href="#step-1-construct-model"></a>
 </h2>
+<p>Modelling specifications are provided using the <code>construct_model</code> function. The correct stan model is then applied based on the specifications provided. <code><a href="reference/construct_model.html">construct_model()</a></code> takes three arguments: <code>method</code>, <code>pathogen_structure</code>, and <code>dow_effect</code>.</p>
+<div class="section level3">
+<h3 id="method">Method<a class="anchor" aria-label="anchor" href="#method"></a>
+</h3>
 <p>EpiStrainDynamics has pre-compiled stan models that fit either with bayesian penalised splines or random walks. These are specified using the <code>method</code> argument of <code><a href="reference/construct_model.html">construct_model()</a></code> as functions, either with <code><a href="reference/random_walk.html">random_walk()</a></code> or <code><a href="reference/p_spline.html">p_spline()</a></code>. The penalised spline model has two further options to specify: <code>spline_degree</code> is the polynomial degree of the individual spline segments used to construct the overall curve (must be a positive whole number) and <code>days_per_knot</code>, which is the number of days for each knot (must also be a positive whole number).</p>
 <p>So we may specify:</p>
 <pre><code><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
@@ -87,9 +86,9 @@
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre>
 </div>
-<div class="section level2">
-<h2 id="pathogen-structure">Pathogen structure<a class="anchor" aria-label="anchor" href="#pathogen-structure"></a>
-</h2>
+<div class="section level3">
+<h3 id="pathogen-structure">Pathogen structure<a class="anchor" aria-label="anchor" href="#pathogen-structure"></a>
+</h3>
 <p>There are three main types of pathogen structure available to model: <code><a href="reference/single.html">single()</a></code>, <code><a href="reference/multiple.html">multiple()</a></code>, and <code><a href="reference/subtyped.html">subtyped()</a></code>.</p>
 <p>The <code><a href="reference/single.html">single()</a></code> pathogen structure is the simplest and models a single pathogen timeseries. A vector is the case timeseries is provided to the argument <code>case_timeseries</code>, a vector of date or time labels is provided to <code>time</code>, and optionally a pathogen name can be assigned with <code>pathogen_name</code>. It can be specified as follows, illustrated using data provided with the package <code>sarscov2</code>:</p>
 <pre><code><span><span class="fu"><a href="reference/single.html">single</a></span><span class="op">(</span></span>
@@ -134,9 +133,9 @@
 <span>   observation_noise <span class="op">=</span> <span class="st">'pathogen_specific_noise'</span>  <span class="co"># observation noise</span></span>
 <span> <span class="op">)</span></span></code></pre>
 </div>
-<div class="section level2">
-<h2 id="day-of-week-effect">Day of week effect<a class="anchor" aria-label="anchor" href="#day-of-week-effect"></a>
-</h2>
+<div class="section level3">
+<h3 id="day-of-week-effect">Day of week effect<a class="anchor" aria-label="anchor" href="#day-of-week-effect"></a>
+</h3>
 <p>Day of week effect is specified as a logical (<code>TRUE</code> or <code>FALSE</code>) to the <code>dow_effect</code> argument. In plotting the day of week effect can be selectively removed.</p>
 <pre><code><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
 <span>  method <span class="op">=</span> <span class="fu"><a href="reference/random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -145,14 +144,14 @@
 <span><span class="op">)</span></span></code></pre>
 </div>
 </div>
-<div class="section level1">
-<h1 id="step-2-fit-model">Step 2: fit model<a class="anchor" aria-label="anchor" href="#step-2-fit-model"></a>
-</h1>
+<div class="section level2">
+<h2 id="step-2-fit-model">Step 2: fit model<a class="anchor" aria-label="anchor" href="#step-2-fit-model"></a>
+</h2>
 <p>The model estimates the expected value of the time series (eg, a smoothed trend in the daily number of cases accounting for noise) for each individual pathogen. Model parameterisation decisions specified when constructing the model in step 1 mean the correct stan model will be applied at this stage by simply calling <code><a href="reference/fit_model.html">fit_model()</a></code> onto the constructed model object.</p>
 </div>
-<div class="section level1">
-<h1 id="step-3-calculate-and-visualise-epidemiological-quantities">Step 3: Calculate and visualise epidemiological quantities<a class="anchor" aria-label="anchor" href="#step-3-calculate-and-visualise-epidemiological-quantities"></a>
-</h1>
+<div class="section level2">
+<h2 id="step-3-calculate-and-visualise-epidemiological-quantities">Step 3: Calculate and visualise epidemiological quantities<a class="anchor" aria-label="anchor" href="#step-3-calculate-and-visualise-epidemiological-quantities"></a>
+</h2>
 <p>Calculate epidemic growth rate with <code>growth_rate(fit)</code>, effective reproduction number over time with <code>Rt(fit, gi_dist = X)</code> (requiring specification of a generation interval distribution X), incidence with or without a day of week effect with <code>incidence(fit, dow_effect = TRUE)</code>, and proportions of different combinations of cases attributable to different pathogens/subtypes using <code><a href="reference/proportion.html">proportion()</a></code>, where the pathogens/subtypes are specified by their names in the named lists provided to <code><a href="reference/construct_model.html">construct_model()</a></code>:</p>
 <pre><code><span><span class="va">prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/proportion.html">proportion</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit</span>,</span>
@@ -160,6 +159,7 @@
 <span>  denominator_combination <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'H3N2'</span>, <span class="st">'H1N1'</span>, <span class="st">'influenzaB'</span>, <span class="st">'other'</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre>
 <p>These quantities can be visualised using <code><a href="reference/plot.html">plot()</a></code>. For a more detailed discussion, check out the <a href="https://acefa-hubs.github.io/EpiStrainDynamics/articles/Using-EpiStrainDyamics.html">vignette</a>.</p>
+</div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
@@ -176,7 +176,6 @@
 <p>Please note that the EpiStrainDynamics project is released with a <a href="https://acefa-hubs.github.io/EpiStrainDynamics/CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
 </div>
 </div>
-
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">

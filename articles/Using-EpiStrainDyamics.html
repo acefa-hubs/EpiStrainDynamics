@@ -207,7 +207,7 @@ model:</p>
 <code>FALSE</code>) to the <code>dow_effect</code> argument. In plotting
 the day of week effect can be selectively removed.</p>
 <pre><code><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
-<span>  method <span class="op">=</span> <span class="fu"><a href="../reference/random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>, </span>
+<span>  method <span class="op">=</span> <span class="va">...</span>, </span>
 <span>  pathogen_structure <span class="op">=</span> <span class="va">...</span>,</span>
 <span>  dow_effect <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre>
@@ -248,18 +248,14 @@ distribution):</p>
 <p>Calculate incidence with or without a day of week effect with
 <code><a href="../reference/incidence.html">incidence()</a></code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">inc_no_dow</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/incidence.html">incidence</a></span><span class="op">(</span><span class="va">fit</span>, dow <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">inc_no_dow</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Using-EpiStrainDyamics_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">inc_dow</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/incidence.html">incidence</a></span><span class="op">(</span><span class="va">fit</span>, dow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">inc_dow</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Using-EpiStrainDyamics_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="Using-EpiStrainDyamics_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>Calculate proportions of different combinations of cases attributable
 to different pathogens/subtypes using <code><a href="../reference/proportion.html">proportion()</a></code>, where
 the pathogens/subtypes are specified by their names in the named lists
 provided to <code><a href="../reference/construct_model.html">construct_model()</a></code>:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/proportion.html">proportion</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit</span>, </span>
 <span>  numerator_combination <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'H3N2'</span>, <span class="st">'H1N1'</span>, <span class="st">'influenzaB'</span><span class="op">)</span>,</span>
@@ -5345,7 +5341,7 @@ provided to <code><a href="../reference/construct_model.html">construct_model()<
 <span><span class="co">#&gt; a_new[4,426]                 3.62       3.75       3.98   751 1.00</span></span>
 <span><span class="co">#&gt; lp__                   -163752.34 -163738.09 -163711.44   806 1.00</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Samples were drawn using NUTS(diag_e) at Mon Aug 25 13:37:54 2025.</span></span>
+<span><span class="co">#&gt; Samples were drawn using NUTS(diag_e) at Tue Aug 26 03:00:56 2025.</span></span>
 <span><span class="co">#&gt; For each parameter, n_eff is a crude measure of effective sample size,</span></span>
 <span><span class="co">#&gt; and Rhat is the potential scale reduction factor on split chains (at </span></span>
 <span><span class="co">#&gt; convergence, Rhat=1).</span></span>
