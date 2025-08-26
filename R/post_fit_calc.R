@@ -252,6 +252,7 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
                           pathogen_idx_col = rep(list(NULL), nrow(time_grid)),
                           calc_single_pathogen_fn,
                           a, post, components, extra_args, threshold)
+  results$pathogen <- components$pathogen_names
 
   measure <- cbind(results,
                    time = components$time[selection_index])
