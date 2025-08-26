@@ -17,11 +17,11 @@ Although many surveillance systems routinely test a subset of individuals contri
 EpiStrainDynamics extends an existing statistical modelling framework capable of inferring the trends of up to two pathogens. 
 The modeling framework has been extended here to handle any number of pathogens; fit to time series data of counts (eg, daily number of cases); incorporate influenza testing data in which the subtype for influenza A samples may be undetermined; account for day-of-the-week effects in daily data; include options for fitting penalized splines or random walks; support additional (optional) correlation structures in the parameters describing the smoothness of the penalized splines (or random walks); and account for additional (optional) sources of noise in the observation process. 
 
-# Step 1: Construct model
+## Step 1: Construct model
 
 Modelling specifications are provided using the `construct_model` function. The correct stan model is then applied based on the specifications provided. `construct_model()` takes three arguments: `method`, `pathogen_structure`, and `dow_effect`. 
 
-## Method
+### Method
 
 EpiStrainDynamics has pre-compiled stan models that fit either with bayesian penalised splines or random walks. These are specified using the `method` argument of `construct_model()` as functions, either with `random_walk()` or `p_spline()`. The penalised spline model has two further options to specify: `spline_degree` is the polynomial degree of the individual spline segments used to construct the overall curve (must be a positive whole number) and `days_per_knot`, which is the number of days for each knot (must also be a positive whole number). 
 
@@ -39,7 +39,7 @@ mod <- construct_model(
 )
 ```
 
-## Pathogen structure
+### Pathogen structure
 
 There are three main types of pathogen structure available to model: `single()`, `multiple()`, and `subtyped()`. 
 
@@ -101,7 +101,7 @@ subtyped(
  )
 ```
 
-## Day of week effect
+### Day of week effect
 
 Day of week effect is specified as a logical (`TRUE` or `FALSE`) to the `dow_effect` argument. In plotting the day of week effect can be selectively removed. 
 
@@ -113,12 +113,12 @@ mod <- construct_model(
 )
 ```
 
-# Step 2: fit model
+## Step 2: fit model
 
 The model estimates the expected value of the time series (eg, a smoothed trend in the daily number of cases accounting for noise) for each individual pathogen. 
 Model parameterisation decisions specified when constructing the model in step 1 mean the correct stan model will be applied at this stage by simply calling `fit_model()` onto the constructed model object. 
 
-# Step 3: Calculate and visualise epidemiological quantities
+## Step 3: Calculate and visualise epidemiological quantities
 
 Calculate epidemic growth rate with `growth_rate(fit)`, effective reproduction number over time with `Rt(fit, gi_dist = X)` (requiring specification of a generation interval distribution X), incidence with or without a day of week effect with `incidence(fit, dow_effect = TRUE)`, and proportions of different combinations of cases attributable to different pathogens/subtypes using `proportion()`, where the pathogens/subtypes are specified by their names in the named lists provided to `construct_model()`:
 ```
