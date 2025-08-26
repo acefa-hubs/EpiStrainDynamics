@@ -108,7 +108,7 @@ Day of week effect is specified as a logical (`TRUE` or `FALSE`) to the `dow_eff
 
 ```
 mod <- construct_model(
-  method = random_walk(), 
+  method = ..., 
   pathogen_structure = ...,
   dow_effect = TRUE
 )
@@ -165,10 +165,6 @@ plot(rt)
 ```
 
 Calculate incidence with or without a day of week effect with `incidence()`:
-```{r}
-inc_no_dow <- incidence(fit, dow = FALSE)
-plot(inc_no_dow)
-```
 
 ```{r}
 inc_dow <- incidence(fit, dow = TRUE)
