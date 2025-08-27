@@ -137,7 +137,9 @@ mod <- construct_model(
 )
 ```
 
-# Step 2: fit model
+The constructed model object is a named list containing input data, accessed with `$data`, parameter values (such as smoothing structure, observation noise, and penalised spline parameters, if appropriate), accessed with `model_params`, names of provided pathogens, accessed with `pathogen_names`, and record of whether day of week effect has been selected, accessed with `dow_effect`.
+
+# Step 2: Fit model
 
 The model estimates the expected value of the time series (eg, a smoothed trend in the daily number of cases accounting for noise) for each individual pathogen. Model parameterisation decisions specified when constructing the model in step 1 mean the correct stan model will be applied at this stage by simply calling `fit_model()` onto the constructed model object. 
 
@@ -150,11 +152,16 @@ fit <- fit_model(
 )
 ```
 
-# Step 3: Calculate and visualise epidemiological quantities
+The output of this function is a list with the stan fit object, accessed with `$fit`, and the elements of the constructed model object from the previous step, accessed with `$constructed_model`. 
+
+# Step 3: Calculate and explore epidemiological quantities
+
+The package provides helper functions to calculate a number of useful epidemiological quantities. The output of these methods functions  are a named list containing a data frame of the outcome quantity (`$measure`), the fit object (`$fit`), and the constructed model object (`$constructed_model`). `measure` is a data frame containing the median of the epidemiological quantity (`y`), the 50% credible interval of the quantity (`lb_50` & `ub_50`), the 95% credible interval (`lb_95` & `ub_95`), the proportion greater than a defined threshold value (`prop`), the pathogen name (`pathogen`), and the time label (`time`). 
 
 Calculate epidemic growth rate with `growth_rate()`:
 ```{r}
 gr <- growth_rate(fit)
+head(gr$measure)
 plot(gr)
 ```
 
@@ -165,7 +172,6 @@ plot(rt)
 ```
 
 Calculate incidence with or without a day of week effect with `incidence()`:
-
 ```{r}
 inc_dow <- incidence(fit, dow = TRUE)
 plot(inc_dow)
