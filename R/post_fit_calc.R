@@ -293,12 +293,17 @@ compute_proportions <- function(numerator_idx, fitted_model,
   # Create results
   time_grid <- data.frame(time_idx = 1:components$num_days)
 
+  pathogen_idx_col <- rep(list(numerator_idx), nrow(time_grid))
   results <- calc_wrapper(time_grid, time_grid$time_idx,
-                          pathogen_idx_col = rep(list(numerator_idx), nrow(time_grid)),
+                          pathogen_idx_col = pathogen_idx_col,
                           calc_proportion,
                           a, post, components, extra_args, threshold)
+
+  pathogen_name <- do.call(rbind, pathogen_idx_col)
+
   measure <- cbind(results,
-                   time = components$time) # add pathogen names
+                   time = components$time,
+                   pathogen = pathogen_name)
 
   return(measure)
 }
@@ -334,14 +339,11 @@ calc_wrapper <- function (df, time_idx_col, pathogen_idx_col, calc_fn,
                               calc_stats(values, threshold = threshold)
                             })
 
-  # Convert list of data frames to single data frame
+  # Convert list of dataframes to single data frame
   stats_df <- do.call(rbind, stats_list)
-  pathogen_cols <- do.call(rbind, pathogen_idx_col)
 
   # Combine with original data frame (excluding time_idx column)
-  result_df <- cbind(df[, !names(df) %in% "time_idx", drop = FALSE],
-                     stats_df[ , !names(stats_df) %in% 'prop'],
-                     pathogen = pathogen_cols)
+  result_df <- cbind(df[, !names(df) %in% "time_idx", drop = FALSE], stats_df)
 
   return(result_df)
 }
