@@ -177,12 +177,16 @@ inc_dow <- incidence(fit, dow = TRUE)
 plot(inc_dow)
 ```
 
-Calculate proportions of different combinations of cases attributable to different pathogens/subtypes using `proportion()`, where the pathogens/subtypes are specified by their names in the named lists provided to `construct_model()`:
-```{r}
+Calculate proportions of different combinations of cases attributable to different pathogens/subtypes using `proportion()`. By default, the function will return a dataframe with proportions of each pathogen or subtype out of all pathogens/subtypes. Alternatively, one can specify a selection of pathogens/subtypes by their names in the named lists provided to `construct_model()`:
+```
 prop <- proportion(
-  fit, 
-  numerator_combination = c('H3N2', 'H1N1', 'influenzaB'),
-  denominator_combination = c('H3N2', 'H1N1', 'influenzaB', 'other')
+  fit,
+  numerator_combination = c('alpha', 'delta', 'omicron'),
+  denominator_combination = c('alpha', 'delta', 'omicron', 'other')
 )
-head(prop)
+```
+
+```{r}
+prop <- proportion(fit)
+plot(prop)
 ```
