@@ -8,9 +8,19 @@
 \alias{proportion.rw_single}
 \title{Generic Method for proportion Analysis}
 \usage{
-proportion(fitted_model, numerator_combination, denominator_combination, ...)
+proportion(
+  fitted_model,
+  numerator_combination = NULL,
+  denominator_combination = NULL,
+  ...
+)
 
-\method{proportion}{ps}(fitted_model, numerator_combination, denominator_combination, ...)
+\method{proportion}{ps}(
+  fitted_model,
+  numerator_combination = NULL,
+  denominator_combination = NULL,
+  ...
+)
 
 \method{proportion}{rw}(fitted_model, numerator_combination, denominator_combination, ...)
 

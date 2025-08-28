@@ -266,18 +266,14 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
 #'
 #' High-level function to coordinates proportion analysis for multi pathogen models
 #'
-#' @param fitted_model Fitted model object
 #' @param numerator_idx Integer with index of pathogens to place in numerator
+#' @param fitted_model Fitted model object
 #' @param threshold Numeric threshold for proportion calculations (default: 0)
 #' @param use_splines Logical indicating whether to use spline transformation
 #' @param ... Additional arguments passed to calculation functions (e.g., tau_max, gi_dist for Rt)
 #' @return Data frame with analysis results
 #' @importFrom rstan extract
-#' @examples
-#' \dontrun{
-#' results <- compute_single_pathogen(fitted_model, 1, "growth_rate")
-#' }
-compute_proportions <- function(fitted_model, numerator_idx,
+compute_proportions <- function(numerator_idx, fitted_model,
                                 threshold = 0, use_splines = FALSE,
                                 ...) {
 
@@ -301,13 +297,10 @@ compute_proportions <- function(fitted_model, numerator_idx,
                           pathogen_idx_col = rep(list(numerator_idx), nrow(time_grid)),
                           calc_proportion,
                           a, post, components, extra_args, threshold)
-  measure <- cbind(results, components$time)
+  measure <- cbind(results,
+                   time = components$time) # add pathogen names
 
-  out <- list(measure = measure,
-              fit = fitted_model$fit,
-              constructed_model = fitted_model$constructed_model)
-
-  return(out)
+  return(measure)
 }
 
 #' Unified Calculation Wrapper
@@ -343,9 +336,12 @@ calc_wrapper <- function (df, time_idx_col, pathogen_idx_col, calc_fn,
 
   # Convert list of data frames to single data frame
   stats_df <- do.call(rbind, stats_list)
+  pathogen_cols <- do.call(rbind, pathogen_idx_col)
 
   # Combine with original data frame (excluding time_idx column)
-  result_df <- cbind(df[, !names(df) %in% "time_idx", drop = FALSE], stats_df)
+  result_df <- cbind(df[, !names(df) %in% "time_idx", drop = FALSE],
+                     stats_df[ , !names(stats_df) %in% 'prop'],
+                     pathogen = pathogen_cols)
 
   return(result_df)
 }
