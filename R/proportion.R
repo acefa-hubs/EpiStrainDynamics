@@ -8,20 +8,47 @@
 #' @param ... Additional arguments passed to methods
 #' @return Data frame with proportion analysis results
 #' @export
-proportion <- function(fitted_model, numerator_combination, denominator_combination, ...) {
+proportion <- function(fitted_model,
+                       numerator_combination = NULL,
+                       denominator_combination = NULL, ...) {
   UseMethod("proportion")
 }
 
 #' @rdname proportion
 #' @export
-proportion.ps <- function(fitted_model, numerator_combination, denominator_combination, ...) {
+proportion.ps <- function(fitted_model,
+                          numerator_combination = NULL,
+                          denominator_combination = NULL, ...) {
 
-  numerator_idx <- match(numerator_combination, fitted_model$constructed_model$pathogen_names)
-  denominator_idx <- match(denominator_combination, fitted_model$constructed_model$pathogen_names)
+  if (is.null(numerator_combination)) {
+    numerator_idx_all <- length(unique(fitted_model$constructed_model$pathogen_names))
+    measure <- do.call(rbind, lapply(1:numerator_idx_all,
+                                     compute_proportions, fitted_model,
+                                     threshold = 0, use_splines = TRUE,
+                                     denominator_idx = 1:numerator_idx_all))
+  }
+  else {
+    numerator_idx <- match(numerator_combination, fitted_model$constructed_model$pathogen_names)
+    denominator_idx <- match(denominator_combination, fitted_model$constructed_model$pathogen_names)
 
-  compute_proportions(fitted_model, numerator_idx,
-                      threshold = 0, use_splines = TRUE,
-                      denominator_idx = denominator_idx)
+    measure <- compute_proportions(numerator_idx, fitted_model,
+                                   threshold = 0, use_splines = TRUE,
+                                   denominator_idx = denominator_idx)
+  }
+
+  match_pathogen_name <- function(x) unique(fitted_model$constructed_model$pathogen_names)[x]
+
+  measure <- measure |>
+    dplyr::mutate(dplyr::across(dplyr::matches("pathogen"), match_pathogen_name)) |>
+    dplyr::rowwise() |>
+    dplyr::mutate(pathogen = paste(dplyr::c_across(dplyr::matches('pathogen')), collapse = ', ')) |>
+    ungroup()
+
+  list(measure = measure,
+       fit = fitted_model$fit,
+       constructed_model = fitted_model$constructed_model
+  )
+
 }
 
 #' @rdname proportion

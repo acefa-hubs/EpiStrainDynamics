@@ -143,3 +143,31 @@ plot.Rt <- function(df) {
     ylab("Effective reproduction number")
 
 }
+
+#' @rdname plot
+#' @export
+plot.proportion <- function(df) {
+
+  measure_df <- df$measure
+
+  combos <- unique(measure_df$pathogen)
+  colors <- setNames(viridis::viridis(length(combos)), combos)
+
+  ggplot(measure_df) +
+    geom_line(aes(x = time, y = y, color = pathogen)) +
+    geom_ribbon(aes(x = time, y = y,
+                    ymin = lb_50, ymax = ub_50,
+                    fill = pathogen),
+                alpha = 0.2) +
+    geom_ribbon(aes(x = time, y = y,
+                    ymin = lb_95, ymax = ub_95,
+                    fill = pathogen),
+                alpha = 0.2) +
+    theme_bw(base_size = 14) +
+    scale_colour_manual(
+      values = colors,
+      aesthetics = c("colour", "fill")) +
+    geom_hline(yintercept = 1, linetype = "dashed") +
+    ylab("Modelled proportion of cases")
+
+}
