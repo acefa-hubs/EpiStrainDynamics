@@ -5,17 +5,17 @@
 \title{Proportion analysis for multiple pathogens}
 \usage{
 compute_proportions(
-  fitted_model,
   numerator_idx,
+  fitted_model,
   threshold = 0,
   use_splines = FALSE,
   ...
 )
 }
 \arguments{
-\item{fitted_model}{Fitted model object}
-
 \item{numerator_idx}{Integer with index of pathogens to place in numerator}
+
+\item{fitted_model}{Fitted model object}
 
 \item{threshold}{Numeric threshold for proportion calculations (default: 0)}
 
@@ -28,9 +28,4 @@ Data frame with analysis results
 }
 \description{
 High-level function to coordinates proportion analysis for multi pathogen models
-}
-\examples{
-\dontrun{
-results <- compute_single_pathogen(fitted_model, 1, "growth_rate")
-}
 }

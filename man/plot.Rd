@@ -5,6 +5,7 @@
 \alias{plot.incidence}
 \alias{plot.growth_rate}
 \alias{plot.Rt}
+\alias{plot.proportion}
 \title{Generic Method for plotting}
 \usage{
 plot(df, ...)
@@ -14,6 +15,8 @@ plot(df, ...)
 \method{plot}{growth_rate}(df)
 
 \method{plot}{Rt}(df)
+
+\method{plot}{proportion}(df)
 }
 \arguments{
 \item{df}{Fitted model object with appropriate class}
