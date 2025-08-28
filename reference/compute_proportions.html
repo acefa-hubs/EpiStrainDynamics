@@ -49,8 +49,8 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">compute_proportions</span><span class="op">(</span></span>
-<span>  <span class="va">fitted_model</span>,</span>
 <span>  <span class="va">numerator_idx</span>,</span>
+<span>  <span class="va">fitted_model</span>,</span>
 <span>  threshold <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  use_splines <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -61,12 +61,12 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-fitted-model">fitted_model<a class="anchor" aria-label="anchor" href="#arg-fitted-model"></a></dt>
-<dd><p>Fitted model object</p></dd>
-
-
-<dt id="arg-numerator-idx">numerator_idx<a class="anchor" aria-label="anchor" href="#arg-numerator-idx"></a></dt>
+<dl><dt id="arg-numerator-idx">numerator_idx<a class="anchor" aria-label="anchor" href="#arg-numerator-idx"></a></dt>
 <dd><p>Integer with index of pathogens to place in numerator</p></dd>
+
+
+<dt id="arg-fitted-model">fitted_model<a class="anchor" aria-label="anchor" href="#arg-fitted-model"></a></dt>
+<dd><p>Fitted model object</p></dd>
 
 
 <dt id="arg-threshold">threshold<a class="anchor" aria-label="anchor" href="#arg-threshold"></a></dt>
@@ -86,13 +86,6 @@
     <p>Data frame with analysis results</p>
     </div>
 
-    <div class="section level2">
-    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="compute_single_pathogen.html">compute_single_pathogen</a></span><span class="op">(</span><span class="va">fitted_model</span>, <span class="fl">1</span>, <span class="st">"growth_rate"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
-</code></pre></div>
-    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
