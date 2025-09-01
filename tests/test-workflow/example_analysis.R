@@ -1,12 +1,10 @@
 # example analysis with new fit_model function
 
 # Loading required packages
-library(ggplot2)
-library(rstan)
 library(EpiStrainDynamics)
-source('../for_comparison/previous_growth_rate.R')
-source('../for_comparison/Rt_old.R')
-source('../for_comparison/incidence_old.R')
+# source('../for_comparison/previous_growth_rate.R')
+# source('../for_comparison/Rt_old.R')
+# source('../for_comparison/incidence_old.R')
 
 gammaDist <- function(b, n, a) (b**n) * (a**(n-1)) * exp(-b*a) / gamma(n)
 rw_gi_dist <- function(x) gammaDist(b=1, n=1, x)
@@ -167,29 +165,18 @@ rw_multiple_gr <- rw_multiple_gr[,colnames(rw_multiple_gr_orig)]
 
 rw_multiple_incidence <- rw_incidence(rw_subtyped_fit)
 
-# sarscov2 <-
+
 ps_multiple_mod <- construct_model(
   method = p_spline(spline_degree = 3, days_per_knot = 5),
   pathogen_structure = multiple(
-    case_timeseries = sim_data$y,
-    component_pathogen_timeseries = list(
-      influenzaA.H3N2 = sim_data$H3N2,
-      influenzaA.H1N1 = sim_data$H1N1,
-      influenzaB = sim_data$B
-    ),
-    smoothing_structure = 'independent',
-    observation_noise = 'observation_noise_only'
-  ),
-  dow_effect = TRUE
-)
-ps_multiple_mod <- construct_model(
-  method = p_spline(spline_degree = 3, days_per_knot = 5),
-  pathogen_structure = multiple(
-    case_timeseries = sim_data$y,
-    component_pathogen_timeseries = list(
-      influenzaA.H3N2 = sim_data$H3N2,
-      influenzaA.H1N1 = sim_data$H1N1,
-      influenzaB = sim_data$B
+    case_timeseries = sarscov2$cases,        # timeseries of case data
+    time = sarscov2$date,                    # date or time variable labels
+
+    component_pathogen_timeseries = list(    # named list of component pathogens
+      alpha = sarscov2$alpha,
+      delta = sarscov2$delta,
+      omicron = sarscov2$omicron,
+      other = sarscov2$other
     ),
     smoothing_structure = 'independent',
     observation_noise = 'observation_noise_only'
@@ -202,6 +189,8 @@ ps_multiple_fit <- fit_model(
   warmup = 300,
   chains = 3
 )
+psm_gr <- growth_rate(ps_multiple_fit)
+
 ps_multiple_gr_orig <- ps_growth_rate_orig(ps_multiple_fit) |>
   dplyr::arrange(pathogen)
 ps_multiple_gr <- ps_growth_rate(ps_multiple_fit) |>
@@ -239,20 +228,18 @@ covid_data$time <- seq(1, nrow(covid_data))
 ps_single_mod <- construct_model(
   method = p_spline(),
   pathogen_structure = single(
-    case_timeseries = covid_data$metric_value,
-    pathogen_name = 'covid',
-    time = covid_data$time
-  )#,
-  # dow_effect = FALSE
+    case_timeseries = sarscov2$cases,
+    time = sarscov2$date
+  )
 )
 ps_single_fit <- fit_model(
   ps_single_mod,
-  iter = 500,
-  warmup = 300,
+  iter = 2000,
+  warmup = 1000,
   chains = 3
 )
-ps_single_rt_new <- Rt(ps_single_fit, gi_dist = ps_gi_dist)
-
+ps_single_rt <- Rt(ps_single_fit, gi_dist = ps_gi_dist)
+ps_single_gr <- growth_rate(ps_single_fit)
 
 ps_single_mod_dow <- construct_model(
   method = p_spline(),
