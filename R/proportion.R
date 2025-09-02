@@ -11,6 +11,7 @@
 proportion <- function(fitted_model,
                        numerator_combination = NULL,
                        denominator_combination = NULL, ...) {
+  validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')
   UseMethod("proportion")
 }
 
@@ -22,18 +23,34 @@ proportion.ps <- function(fitted_model,
 
   if (is.null(numerator_combination)) {
     numerator_idx_all <- length(unique(fitted_model$constructed_model$pathogen_names))
-    measure <- do.call(rbind, lapply(1:numerator_idx_all,
-                                     compute_proportions, fitted_model,
-                                     threshold = 0, use_splines = TRUE,
-                                     denominator_idx = 1:numerator_idx_all))
+
+    measure <- do.call(
+      rbind, lapply(1:numerator_idx_all,
+                    function(x) {
+                      compute_single_pathogen(
+                        fitted_model, 1, 'proportion',
+                        use_splines = TRUE,
+                        numerator_idx = x,
+                        denominator_idx = 1:numerator_idx_all
+                      )
+                    }
+      ))
   }
+
   else {
     numerator_idx <- match(numerator_combination, fitted_model$constructed_model$pathogen_names)
-    denominator_idx <- match(denominator_combination, fitted_model$constructed_model$pathogen_names)
 
-    measure <- compute_proportions(numerator_idx, fitted_model,
-                                   threshold = 0, use_splines = TRUE,
-                                   denominator_idx = denominator_idx)
+    if (denominator_combination == 'all') {
+      denominator_idx <- 1:length(unique(fitted_model$constructed_model$pathogen_names))
+    }
+    else {
+      denominator_idx <- match(denominator_combination, fitted_model$constructed_model$pathogen_names)
+    }
+
+    measure <- compute_single_pathogen(fitted_model, 1, 'proportion',
+                                       use_splines = TRUE,
+                                       numerator_idx = numerator_idx,
+                                       denominator_idx = denominator_idx)
   }
 
   match_pathogen_name <- function(x) unique(fitted_model$constructed_model$pathogen_names)[x]
@@ -61,18 +78,34 @@ proportion.rw <- function(fitted_model,
 
   if (is.null(numerator_combination)) {
     numerator_idx_all <- length(unique(fitted_model$constructed_model$pathogen_names))
-    measure <- do.call(rbind, lapply(1:numerator_idx_all,
-                                     compute_proportions, fitted_model,
-                                     threshold = 0, use_splines = FALSE,
-                                     denominator_idx = 1:numerator_idx_all))
+
+    measure <- do.call(
+      rbind, lapply(1:numerator_idx_all,
+                    function(x) {
+                      compute_single_pathogen(
+                        fitted_model, 1, 'proportion',
+                        use_splines = FALSE,
+                        numerator_idx = x,
+                        denominator_idx = 1:numerator_idx_all
+                      )
+                    }
+      ))
   }
+
   else {
     numerator_idx <- match(numerator_combination, fitted_model$constructed_model$pathogen_names)
-    denominator_idx <- match(denominator_combination, fitted_model$constructed_model$pathogen_names)
 
-    measure <- compute_proportions(numerator_idx, fitted_model,
-                                   threshold = 0, use_splines = FALSE,
-                                   denominator_idx = denominator_idx)
+    if (denominator_combination == 'all') {
+      denominator_idx <- 1:length(unique(fitted_model$constructed_model$pathogen_names))
+    }
+    else {
+      denominator_idx <- match(denominator_combination, fitted_model$constructed_model$pathogen_names)
+    }
+
+    measure <- compute_single_pathogen(fitted_model, 1, 'proportion',
+                                       use_splines = FALSE,
+                                       numerator_idx = numerator_idx,
+                                       denominator_idx = denominator_idx)
   }
 
   match_pathogen_name <- function(x) unique(fitted_model$constructed_model$pathogen_names)[x]
@@ -87,7 +120,6 @@ proportion.rw <- function(fitted_model,
               fit = fitted_model$fit,
               constructed_model = fitted_model$constructed_model
   )
-
   class(out) <- c('proportion', class(out))
   out
 }
@@ -95,13 +127,13 @@ proportion.rw <- function(fitted_model,
 #' @rdname proportion
 #' @export
 proportion.ps_single <- function(fitted_model, ...) {
-  stop('Proportions only calculated for multi pathogens models.')
+  stop('Proportions only calculated for models with multiple or subtyped pathogen structure.')
 }
 
 #' @rdname proportion
 #' @export
 proportion.rw_single <- function(fitted_model, ...) {
-  stop('Proportions only calculated for multi pathogens models.')
+  stop('Proportions only calculated for models with multiple or subtyped pathogen structure.')
 }
 
 # =====================
@@ -117,10 +149,11 @@ proportion.rw_single <- function(fitted_model, ...) {
 #' @param pathogen_idx Integer pathogen index
 #' @param post Posterior samples object (unused but required for interface consistency)
 #' @param components Model components (unused but required for interface consistency)
+#' @param numerator_idx Integer index of the pathogen/s used in numerator of proportion
 #' @param denominator_idx Integer index of the pathogen/s used in denominator of proportion
 #' @return Vector of proportion posterior samples
 calc_proportion <- function(a, time_idx, pathogen_idx, post, components,
-                            denominator_idx) {
+                            numerator_idx, denominator_idx) {
 
   if (length(pathogen_idx) > 1) {
     num <- rowSums(exp(a[, pathogen_idx, time_idx]))

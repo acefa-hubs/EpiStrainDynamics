@@ -22,7 +22,12 @@ proportion(
   ...
 )
 
-\method{proportion}{rw}(fitted_model, numerator_combination, denominator_combination, ...)
+\method{proportion}{rw}(
+  fitted_model,
+  numerator_combination = NULL,
+  denominator_combination = NULL,
+  ...
+)
 
 \method{proportion}{ps_single}(fitted_model, ...)
 
