@@ -9,6 +9,7 @@
 #' @return Data frame with Rt analysis results
 #' @export
 Rt <- function(fitted_model, tau_max = 7, gi_dist, ...) {
+  validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')
   UseMethod("Rt")
 }
 

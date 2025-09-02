@@ -8,6 +8,7 @@
 #' @return Data frame with incidence analysis results
 #' @export
 incidence <- function(fitted_model, dow, ...) {
+  validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')
   if (dow & !fitted_model$constructed_model$dow_effect) {
     stop("dow effects can't be incorporated into incidence as it was not specified in the model")
   }
