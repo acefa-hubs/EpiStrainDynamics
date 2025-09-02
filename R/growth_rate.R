@@ -7,6 +7,7 @@
 #' @return Data frame with growth rate analysis results
 #' @export
 growth_rate <- function(fitted_model, ...) {
+  validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')
   UseMethod("growth_rate")
 }
 

@@ -13,8 +13,7 @@ fit_model <- function (constructed_model,
                        warmup = 1000,
                        chains = 3) {
 
-
-  # valid_class_inherits(constructed_model, 'EpiStrainDynamics.')
+  validate_class_inherits(constructed_model, 'EpiStrainDynamics.model')
 
   UseMethod("fit_model")
 }
