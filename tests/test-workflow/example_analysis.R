@@ -139,14 +139,18 @@ sim_data <- sim_data_raw[sim_data_raw$t < 140, ]
 rw_multiple_mod <- construct_model(
   method = random_walk(),
   pathogen_structure = multiple(
-    case_timeseries = sim_data$y,
-    component_pathogen_timeseries = list(
-      influenzaA.H3N2 = sim_data$H3N2,
-      influenzaA.H1N1 = sim_data$H1N1,
-      influenzaB = sim_data$B
+    case_timeseries = sarscov2$cases,        # timeseries of case data
+    time = sarscov2$date,                    # date or time variable labels
+
+    component_pathogen_timeseries = list(    # named list of component pathogens
+      alpha = sarscov2$alpha,
+      delta = sarscov2$delta,
+      omicron = sarscov2$omicron,
+      other = sarscov2$other
     ),
-    smoothing_structure = 'independent',
-    observation_noise = 'observation_noise_only'
+
+    smoothing_structure = 'independent',             # correlation structures
+    observation_noise = 'observation_noise_only'     # observation noise
   ),
   dow_effect = TRUE
 )
@@ -156,6 +160,9 @@ rw_multiple_fit <- fit_model(
   warmup = 300,
   chains = 3
 )
+prop <- proportion(rw_multiple_fit)
+plot(prop)
+
 rw_multiple_gr_orig <- rw_growth_rate_orig(rw_multiple_fit) |>
   dplyr::arrange(pathogen)
 rw_multiple_gr <- growth_rate(rw_multiple_fit) |>
@@ -189,6 +196,8 @@ ps_multiple_fit <- fit_model(
   warmup = 300,
   chains = 3
 )
+prop <- proportion(ps_multiple_fit)
+
 psm_gr <- growth_rate(ps_multiple_fit)
 
 ps_multiple_gr_orig <- ps_growth_rate_orig(ps_multiple_fit) |>
@@ -238,6 +247,8 @@ ps_single_fit <- fit_model(
   warmup = 1000,
   chains = 3
 )
+prop_s <- proportion(ps_single_fit)
+
 ps_single_rt <- Rt(ps_single_fit, gi_dist = ps_gi_dist)
 ps_single_gr <- growth_rate(ps_single_fit)
 
