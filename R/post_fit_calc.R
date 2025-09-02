@@ -221,61 +221,7 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
 #' results <- compute_single_pathogen(fitted_model, 1, "growth_rate")
 #' }
 compute_single_pathogen <- function(fitted_model, start_idx, measure,
-                                    threshold = 0, use_splines = FALSE,
-                                    ...) {
-
-  components <- get_model_components(fitted_model)
-  post <- rstan::extract(components$fit)
-
-  # Transform data if using splines
-  if (use_splines) {
-    B_true <- predict_B_true(components$time_seq, components$days_per_knot, components$spline_degree)
-    a <- transform_posterior_single(post, B_true, components$num_days)
-  } else {
-    a <- post$a
-  }
-
-  extra_args <- list(...)
-
-  # Create results
-  selection_index <- start_idx:components$num_days
-  time_grid <- data.frame(time_idx = selection_index)
-
-  calc_single_pathogen_fn <- switch(
-    measure,
-    "incidence" = calc_incidence_single,
-    "growth_rate" = calc_growth_single,
-    "Rt" = calc_rt_single,
-    stop("Unknown metric: ", measure)
-  )
-  results <- calc_wrapper(time_grid, time_grid$time_idx,
-                          pathogen_idx_col = rep(list(NULL), nrow(time_grid)),
-                          calc_single_pathogen_fn,
-                          a, post, components, extra_args, threshold)
-  results$pathogen <- components$pathogen_names
-
-  measure <- cbind(results,
-                   time = components$time[selection_index])
-
-  out <- list(measure = measure,
-              fit = fitted_model$fit,
-              constructed_model = fitted_model$constructed_model)
-}
-
-#' Proportion analysis for multiple pathogens
-#'
-#' High-level function to coordinates proportion analysis for multi pathogen models
-#'
-#' @param numerator_idx Integer with index of pathogens to place in numerator
-#' @param fitted_model Fitted model object
-#' @param threshold Numeric threshold for proportion calculations (default: 0)
-#' @param use_splines Logical indicating whether to use spline transformation
-#' @param ... Additional arguments passed to calculation functions (e.g., tau_max, gi_dist for Rt)
-#' @return Data frame with analysis results
-#' @importFrom rstan extract
-compute_proportions <- function(numerator_idx, fitted_model,
-                                threshold = 0, use_splines = FALSE,
-                                ...) {
+                                    threshold = 0, use_splines = FALSE, ...) {
 
   components <- get_model_components(fitted_model)
   post <- rstan::extract(components$fit)
@@ -291,21 +237,41 @@ compute_proportions <- function(numerator_idx, fitted_model,
   extra_args <- list(...)
 
   # Create results
-  time_grid <- data.frame(time_idx = 1:components$num_days)
+  selection_index <- start_idx:components$num_days
+  time_grid <- data.frame(time_idx = selection_index)
 
-  pathogen_idx_col <- rep(list(numerator_idx), nrow(time_grid))
+  calc_single_pathogen_fn <- switch(
+    measure,
+    "incidence" = calc_incidence_single,
+    "growth_rate" = calc_growth_single,
+    "Rt" = calc_rt_single,
+    "proportion" = calc_proportion,
+    stop("Unknown metric: ", measure)
+  )
+
+  rep <- extra_args$numerator_idx # if not proportion calc then this will be NULL
+  pathogen_idx_col <- rep(list(rep), nrow(time_grid))
+
   results <- calc_wrapper(time_grid, time_grid$time_idx,
                           pathogen_idx_col = pathogen_idx_col,
-                          calc_proportion,
+                          calc_single_pathogen_fn,
                           a, post, components, extra_args, threshold)
 
-  pathogen_name <- do.call(rbind, pathogen_idx_col)
-
   measure <- cbind(results,
-                   time = components$time,
-                   pathogen = pathogen_name)
+                   time = components$time[selection_index])
 
-  return(measure)
+  if (is.null(rep)) {
+    measure$pathogen <- components$pathogen_names
+    out <- list(measure = measure,
+                fit = fitted_model$fit,
+                constructed_model = fitted_model$constructed_model)
+    return(out)
+  }
+  else { # for proportion calculation, which will have names
+    measure$pathogen <- do.call(rbind, pathogen_idx_col)
+    return(measure)
+  }
+
 }
 
 #' Unified Calculation Wrapper
