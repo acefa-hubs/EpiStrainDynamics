@@ -4,7 +4,15 @@
 \alias{calc_proportion}
 \title{Calculate proportion for Individual Pathogen}
 \usage{
-calc_proportion(a, time_idx, pathogen_idx, post, components, denominator_idx)
+calc_proportion(
+  a,
+  time_idx,
+  pathogen_idx,
+  post,
+  components,
+  numerator_idx,
+  denominator_idx
+)
 }
 \arguments{
 \item{a}{Array of log-incidence posterior samples [samples, pathogens, time]}
@@ -16,6 +24,8 @@ calc_proportion(a, time_idx, pathogen_idx, post, components, denominator_idx)
 \item{post}{Posterior samples object (unused but required for interface consistency)}
 
 \item{components}{Model components (unused but required for interface consistency)}
+
+\item{numerator_idx}{Integer index of the pathogen/s used in numerator of proportion}
 
 \item{denominator_idx}{Integer index of the pathogen/s used in denominator of proportion}
 }
