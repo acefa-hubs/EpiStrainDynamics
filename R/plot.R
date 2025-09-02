@@ -51,7 +51,9 @@ plot.incidence <- function(df) {
       values = colors,
       aesthetics = c("colour", "fill")
     ) +
-    ylab("Modelled influenza cases")
+    ylab("Modelled influenza cases") +
+    theme(legend.title = element_blank(),
+          axis.title.x = element_blank())
 
 }
 
@@ -85,7 +87,9 @@ plot.growth_rate <- function(df) {
       values = colors,
       aesthetics = c("colour", "fill")) +
     geom_hline(yintercept = 0, linetype = "dashed") +
-    ylab("Growth rate")
+    ylab("Growth rate") +
+    theme(legend.title = element_blank(),
+          axis.title.x = element_blank())
 
   # Get the y-axis range from the built plot
   y_range <- ggplot_build(p)$layout$panel_params[[1]]$y.range
@@ -140,7 +144,9 @@ plot.Rt <- function(df) {
       values = colors,
       aesthetics = c("colour", "fill")) +
     geom_hline(yintercept = 1, linetype = "dashed") +
-    ylab("Effective reproduction number")
+    ylab("Effective reproduction number") +
+    theme(legend.title = element_blank(),
+          axis.title.x = element_blank())
 
 }
 
@@ -168,6 +174,8 @@ plot.proportion <- function(df) {
       values = colors,
       aesthetics = c("colour", "fill")) +
     geom_hline(yintercept = 1, linetype = "dashed") +
-    ylab("Modelled proportion of cases")
+    ylab("Modelled proportion of cases") +
+    theme(legend.title = element_blank(),
+          axis.title.x = element_blank())
 
 }
