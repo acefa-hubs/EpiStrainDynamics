@@ -10,9 +10,10 @@ Authors@R:
       person("James", "McCaw", role = "ctb",
         comment = c(ORCID = "0000-0002-2452-3098")),
       person("Freya", "Shearer", role = "ctb",
-        comment = c(ORCID = "0000-0001-9600-3473"))
+        comment = c(ORCID = "0000-0001-9600-3473")),
+      person("Milad", "Kharratzadeh", role = "ctb")
     )
-Description: EpiStrainDynamics is a statistical framework developed for inferring temporal trends of multiple pathogens from routinely collected surveillance data.
+Description: 'EpiStrainDynamics' is a statistical framework developed for inferring temporal trends of multiple pathogens from routinely collected surveillance data.
 BugReports: https://github.com/acefa-hubs/EpiStrainDynamics/issues
 License: Apache License 2.0
 URL: https://acefa-hubs.github.io/EpiStrainDynamics/, https://github.com/acefa-hubs/EpiStrainDynamics
