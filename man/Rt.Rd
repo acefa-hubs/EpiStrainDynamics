@@ -49,7 +49,7 @@ S3 generic for computing reproduction numbers from fitted models
 
   fit <- fit_model(mod)
 
-  rt <- Rt(mod, tau_max = 7, gi_dist = function(x) 4*x*exp(-2*x))
+  rt <- Rt(fit, tau_max = 7, gi_dist = function(x) 4*x*exp(-2*x))
 }
 
 }
