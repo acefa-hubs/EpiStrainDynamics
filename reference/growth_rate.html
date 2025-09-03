@@ -68,18 +68,38 @@
 
 
 <dl><dt id="arg-fitted-model">fitted_model<a class="anchor" aria-label="anchor" href="#arg-fitted-model"></a></dt>
-<dd><p>Fitted model object with appropriate class</p></dd>
+<dd><p>Fitted model object with class `EpiStrainDynamics.fit`</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional arguments passed to methods</p></dd>
+<dd><p>Additional arguments passed to metrics calculation</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Data frame with growth rate analysis results</p>
+    <p>named list of class `EpiStrainDynamics.metric` containing a dataframe
+ of the calculated metric outcome (`$measure`), the fit object (`$fit`), and the
+ constructed model object (`$constructed_model`). The `measure` data frame
+ contains the median of the epidemiological quantity (`y`), the 50<!-- % credible -->
+ interval of the quantity (`lb_50` &amp; `ub_50`), the 95<!-- % credible interval -->
+ (`lb_95` &amp; `ub_95`), the proportion greater than a defined threshold value
+ (`prop`), the pathogen name (`pathogen`), and the time label (`time`).</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span>  <span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="construct_model.html">construct_model</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    method <span class="op">=</span> <span class="fu"><a href="random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    pathogen_structure <span class="op">=</span> <span class="fu"><a href="single.html">single</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      case_timeseries <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span>,</span></span>
+<span class="r-in"><span>      time <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">date</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu">growth_rate</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

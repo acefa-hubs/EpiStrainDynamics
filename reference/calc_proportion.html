@@ -48,7 +48,15 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_proportion</span><span class="op">(</span><span class="va">a</span>, <span class="va">time_idx</span>, <span class="va">pathogen_idx</span>, <span class="va">post</span>, <span class="va">components</span>, <span class="va">denominator_idx</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_proportion</span><span class="op">(</span></span>
+<span>  <span class="va">a</span>,</span>
+<span>  <span class="va">time_idx</span>,</span>
+<span>  <span class="va">pathogen_idx</span>,</span>
+<span>  <span class="va">post</span>,</span>
+<span>  <span class="va">components</span>,</span>
+<span>  <span class="va">numerator_idx</span>,</span>
+<span>  <span class="va">denominator_idx</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -73,6 +81,10 @@
 
 <dt id="arg-components">components<a class="anchor" aria-label="anchor" href="#arg-components"></a></dt>
 <dd><p>Model components (unused but required for interface consistency)</p></dd>
+
+
+<dt id="arg-numerator-idx">numerator_idx<a class="anchor" aria-label="anchor" href="#arg-numerator-idx"></a></dt>
+<dd><p>Integer index of the pathogen/s used in numerator of proportion</p></dd>
 
 
 <dt id="arg-denominator-idx">denominator_idx<a class="anchor" aria-label="anchor" href="#arg-denominator-idx"></a></dt>

@@ -23,7 +23,6 @@
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/calc_stats.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/calc_wrapper.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/compute_multi_pathogen.html</loc></url>
-<url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/compute_proportions.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/compute_single_pathogen.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/construct_model.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/expand_pathogen_grid.html</loc></url>
@@ -37,6 +36,8 @@
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/incidence.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/index.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/influenza.html</loc></url>
+<url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/match_arg_case_insensitive.html</loc></url>
+<url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/match_args_case_insensitive.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/multiple.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/p_spline.html</loc></url>
 <url><loc>https://acefa-hubs.github.io/EpiStrainDynamics/reference/plot.html</loc></url>

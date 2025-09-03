@@ -56,11 +56,11 @@
 
 
 <dl><dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>either random_walk() or p_spline()</p></dd>
+<dd><p>either `random_walk()` or `p_spline()`</p></dd>
 
 
 <dt id="arg-pathogen-structure">pathogen_structure<a class="anchor" aria-label="anchor" href="#arg-pathogen-structure"></a></dt>
-<dd><p>either single(), multiple(), or subtyped()</p></dd>
+<dd><p>either `single()`, `multiple()`, or `subtyped()`</p></dd>
 
 
 <dt id="arg-dow-effect">dow_effect<a class="anchor" aria-label="anchor" href="#arg-dow-effect"></a></dt>
@@ -70,20 +70,39 @@
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>a list containing the data, the model parameters, and pathogen
- names</p>
+ names of class `EpiStrainDynamics.model`</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">construct_model</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  method <span class="op">=</span> <span class="fu"><a href="random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  pathogen_structure <span class="op">=</span> <span class="fu"><a href="single.html">single</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    case_timeseries <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span>,</span></span>
-<span class="r-in"><span>    time <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">date</span>,</span></span>
-<span class="r-in"><span>    pathogen_name <span class="op">=</span> <span class="st">'SARS-COV-2'</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span>,</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Basic usage</span></span></span>
+<span class="r-in"><span><span class="va">method_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pathogen_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="single.html">single</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  case_timeseries <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span>,</span></span>
+<span class="r-in"><span>  time <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">date</span>,</span></span>
+<span class="r-in"><span>  pathogen_name <span class="op">=</span> <span class="st">"SARS-CoV-2"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">construct_model</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  method <span class="op">=</span> <span class="va">method_obj</span>,</span></span>
+<span class="r-in"><span>  pathogen_structure <span class="op">=</span> <span class="va">pathogen_obj</span>,</span></span>
 <span class="r-in"><span>  dow_effect <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Alternatively, call the methods and pathogen structure inside the function</span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">construct_model</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  method <span class="op">=</span> <span class="fu"><a href="p_spline.html">p_spline</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  pathogen_structure <span class="op">=</span> <span class="fu"><a href="multiple.html">multiple</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    case_timeseries <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span>,</span></span>
+<span class="r-in"><span>    time <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">date</span>,</span></span>
+<span class="r-in"><span>    component_pathogen_timeseries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      alpha <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">alpha</span>,</span></span>
+<span class="r-in"><span>      delta <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">delta</span>,</span></span>
+<span class="r-in"><span>      omicron <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">omicron</span>,</span></span>
+<span class="r-in"><span>      other <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">other</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  dow_effect <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

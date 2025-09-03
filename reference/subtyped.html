@@ -86,27 +86,29 @@ influenzaA</p></dd>
 
 
 <dt id="arg-smoothing-structure">smoothing_structure<a class="anchor" aria-label="anchor" href="#arg-smoothing-structure"></a></dt>
-<dd><p>either 'shared' (all pathogens have the same;
-tau[1]), 'independent' (each pathogen has completely independent smoothing
-structure; tau[number of pathogens]), or 'correlated' (smoothing structure is
-correlated among pathogens Sigma[number of pathogens, number of pathogens])</p></dd>
+<dd><p>either `shared` (all pathogens have the same
+smoothing structure; tau[1]), `independent` (each pathogen has completely
+independent smoothing structure; tau[number of pathogens]), or `correlated`
+(smoothing structure is correlated among pathogens Sigma[number of
+pathogens, number of pathogens]). Case-insensitive.</p></dd>
 
 
 <dt id="arg-observation-noise">observation_noise<a class="anchor" aria-label="anchor" href="#arg-observation-noise"></a></dt>
-<dd><p>either 'observation_noise_only' (only includes
-observation noise - the same between pathogens) or pathogen_specific_noise'
-(includes noise in individual pathogens as well)</p></dd>
+<dd><p>either `observation_noise_only` (only includes
+observation noise - the same between pathogens) or `pathogen_specific_noise`
+(includes noise in individual pathogens as well). Case-insensitive.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>named list including pathogen_structure, pathogen_names, data,
-  and model_params</p>
+  and model_params of class `EpiStrainDynamics.pathogen_structure`</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">subtyped</span><span class="op">(</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Both integer and numeric inputs work consistently</span></span></span>
+<span class="r-in"><span><span class="fu">subtyped</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  case_timeseries <span class="op">=</span> <span class="va">influenza</span><span class="op">$</span><span class="va">ili</span>,</span></span>
 <span class="r-in"><span>  time <span class="op">=</span> <span class="va">influenza</span><span class="op">$</span><span class="va">week</span>,</span></span>
 <span class="r-in"><span>  influenzaA_unsubtyped_timeseries <span class="op">=</span> <span class="va">influenza</span><span class="op">$</span><span class="va">inf_A</span>,</span></span>
@@ -544,6 +546,15 @@ observation noise - the same between pathogens) or pathogen_specific_noise'
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EpiStrainDynamics.pathogen_structure"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2] "list"                                </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># NOTE: smoothing_structure and observation_noise are case insensitive, so</span></span></span>
+<span class="r-in"><span><span class="co"># these will work</span></span></span>
+<span class="r-in"><span><span class="co"># subtyped(</span></span></span>
+<span class="r-in"><span><span class="co">#    ...</span></span></span>
+<span class="r-in"><span><span class="co">#    smoothing_structure = 'Independent',</span></span></span>
+<span class="r-in"><span><span class="co">#    observation_noise = 'OBSERVATION_NOISE_ONLY'</span></span></span>
+<span class="r-in"><span><span class="co"># )</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

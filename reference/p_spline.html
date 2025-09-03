@@ -66,12 +66,14 @@ used to construct the overall curve (must be a positive whole number)</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>list with method and model parameters</p>
+    <p>list with method and model parameters of class
+  `EpiStrainDynamics.method`</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">p_spline</span><span class="op">(</span>spline_degree <span class="op">=</span> <span class="fl">2</span>, days_per_knot <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Valid usage</span></span></span>
+<span class="r-in"><span><span class="fu">p_spline</span><span class="op">(</span>spline_degree <span class="op">=</span> <span class="fl">2L</span>, days_per_knot <span class="op">=</span> <span class="fl">5L</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $method</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "p-spline"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -85,6 +87,39 @@ used to construct the overall curve (must be a positive whole number)</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EpiStrainDynamics.method"</span>
+<span class="r-in"><span><span class="fu">p_spline</span><span class="op">(</span>spline_degree <span class="op">=</span> <span class="fl">3</span>, days_per_knot <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $method</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "p-spline"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $model_params</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $model_params$spline_degree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $model_params$days_per_knot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EpiStrainDynamics.method"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># These will produce validation errors (as intended):</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># Non-positive values</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">p_spline</span><span class="op">(</span>spline_degree <span class="op">=</span> <span class="fl">0</span>, days_per_knot <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error : Argument 'spline_degree' must be a positive number</span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">p_spline</span><span class="op">(</span>spline_degree <span class="op">=</span> <span class="fl">3</span>, days_per_knot <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error : Argument 'days_per_knot' must be a positive number</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Non-whole numbers</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">p_spline</span><span class="op">(</span>spline_degree <span class="op">=</span> <span class="fl">2.5</span>, days_per_knot <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error : Argument 'spline_degree' must be a whole number</span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">p_spline</span><span class="op">(</span>spline_degree <span class="op">=</span> <span class="fl">3</span>, days_per_knot <span class="op">=</span> <span class="fl">4.2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error : Argument 'days_per_knot' must be a whole number</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Non-numeric values</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">p_spline</span><span class="op">(</span>spline_degree <span class="op">=</span> <span class="st">"invalid"</span>, days_per_knot <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error : Argument 'spline_degree' must be numeric</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
