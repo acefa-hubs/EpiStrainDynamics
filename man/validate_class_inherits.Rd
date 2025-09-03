@@ -2,15 +2,22 @@
 % Please edit documentation in R/validation-utils.R
 \name{validate_class_inherits}
 \alias{validate_class_inherits}
-\title{Validate class of argument is correct}
+\title{Validate object class inheritance}
 \usage{
-validate_class_inherits(obj, class_name)
+validate_class_inherits(obj, class_names, require_all = TRUE)
 }
 \arguments{
-\item{obj}{argument to check}
+\item{obj}{The object to validate}
 
-\item{class_name}{class name the object should be}
+\item{class_names}{Character vector of one or more class names to check}
+
+\item{require_all}{Logical; if TRUE (default), object must inherit from ALL
+specified classes. If FALSE, object must inherit from at least ONE class.}
+}
+\value{
+Invisible NULL if validation passes, otherwise throws an error
 }
 \description{
-Validate class of argument is correct
+Validates that an object inherits from one or more specified classes.
+For multiple classes, the object must inherit from ALL specified classes.
 }
