@@ -19,13 +19,31 @@ growth_rate(fitted_model, ...)
 \method{growth_rate}{rw_single}(fitted_model, ...)
 }
 \arguments{
-\item{fitted_model}{Fitted model object with appropriate class}
+\item{fitted_model}{Fitted model object with class `EpiStrainDynamics.fit`}
 
-\item{...}{Additional arguments passed to methods}
+\item{...}{Additional arguments passed to metrics calculation}
 }
 \value{
-Data frame with growth rate analysis results
+named list of class `EpiStrainDynamics.metric` containing a dataframe
+ of the calculated metric outcome (`$measure`), the fit object (`$fit`), and the
+ constructed model object (`$constructed_model`). The `measure` data frame
+ contains the median of the epidemiological quantity (`y`), the 50% credible
+ interval of the quantity (`lb_50` & `ub_50`), the 95% credible interval
+ (`lb_95` & `ub_95`), the proportion greater than a defined threshold value
+ (`prop`), the pathogen name (`pathogen`), and the time label (`time`).
 }
 \description{
 S3 generic for computing growth rates from fitted models
+}
+\examples{
+\dontrun{
+  mod <- construct_model(
+    method = random_walk(),
+    pathogen_structure = single(
+      case_timeseries = sarscov2$cases,
+      time = sarscov2$date))
+
+  fit <- fit_model(mod)
+  gr <- growth_rate(mod)
+}
 }
