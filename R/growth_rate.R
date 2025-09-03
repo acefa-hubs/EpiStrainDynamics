@@ -22,7 +22,7 @@
 #'       time = sarscov2$date))
 #'
 #'   fit <- fit_model(mod)
-#'   gr <- growth_rate(mod)
+#'   gr <- growth_rate(fit)
 #' }
 growth_rate <- function(fitted_model, ...) {
   validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')

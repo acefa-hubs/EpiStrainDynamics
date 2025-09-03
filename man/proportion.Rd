@@ -66,16 +66,16 @@ S3 generic for computing proportions from fitted models
   )
 
   fit <- fit_model(mod)
-  prop <- proportion(mod)
+  prop <- proportion(fit)
 
   # or a unique combination, compared to all pathogens
-  prop2 <- proportion(mod,
+  prop2 <- proportion(fit,
     numerator_combination = c('alpha', 'delta', 'omicron'),
     denominator_combination = 'all'
   )
 
   # or a user-specified combination in both numerator and denominator
-  prop3 <- proportion(mod,
+  prop3 <- proportion(fit,
     numerator_combination = 'alpha',
     denominator_combination = c('alpha', 'delta', 'omicron')
   )

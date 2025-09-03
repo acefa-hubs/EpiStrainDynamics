@@ -46,6 +46,6 @@ S3 generic for computing incidence from fitted models
       time = sarscov2$date))
 
   fit <- fit_model(mod)
-  inc <- incidence(mod, dow = TRUE)
+  inc <- incidence(fit, dow = TRUE)
 }
 }
