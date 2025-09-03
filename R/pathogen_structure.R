@@ -2,18 +2,30 @@
 #'
 #' @param case_timeseries vector of total case data
 #' @param time vector of labelled time data
-#' @param pathogen_name name of pathogen
+#' @param pathogen_name optionally provided name of pathogen. This value is
+#'   preserved exactly as provided (case-sensitive). Default name is `default`.
 #'
-#' @returns formatted list with pathogen structure and data
+#' @returns formatted list with pathogen structure and data of class
+#'   `EpiStrainDynamics.pathogen_structure`.
 #' @export
 #'
 #' @examples
 #' single(
 #'   case_timeseries = sarscov2$cases,
 #'   time = sarscov2$date,
-#'   pathogen_name = 'SARS-COV-2'
+#'   pathogen_name = 'SARS-COV-2' # preserved as provided
 #' )
 #'
+#' single(
+#'   case_timeseries = sarscov2$cases,
+#'   time = sarscov2$date,
+#'   pathogen_name = 'sarscov2' # preserved as provided
+#' )
+#'
+#' single(
+#'   case_timeseries = sarscov2$cases,
+#'   time = sarscov2$date
+#' )
 single <- function (case_timeseries,
                     time,
                     pathogen_name = 'default') {
@@ -33,7 +45,8 @@ single <- function (case_timeseries,
     )
   )
 
-  class(model_inputs) <- 'EpiStrainDynamics.pathogen_structure'
+  class(model_inputs) <- c('EpiStrainDynamics.pathogen_structure',
+                           class(model_inputs))
   model_inputs
 }
 
@@ -43,16 +56,17 @@ single <- function (case_timeseries,
 #' @param time vector of labelled time data
 #' @param component_pathogen_timeseries named list of each pathogen that has
 #'   timeseries of case counts
-#' @param smoothing_structure either 'shared' (all pathogens have the same
-#'   smoothing structure; tau[1]), 'independent' (each pathogen has completely
-#'   independent smoothing structure; tau[number of pathogens]), or 'correlated'
+#' @param smoothing_structure either `shared` (all pathogens have the same
+#'   smoothing structure; tau[1]), `independent` (each pathogen has completely
+#'   independent smoothing structure; tau[number of pathogens]), or `correlated`
 #'   (smoothing structure is correlated among pathogens Sigma[number of
-#'   pathogens, number of pathogens])
-#' @param observation_noise either 'observation_noise_only' (only includes
-#'   observation noise - the same between pathogens) or pathogen_specific_noise'
-#'   (includes noise in individual pathogens as well)
+#'   pathogens, number of pathogens]). Case-insensitive.
+#' @param observation_noise either `observation_noise_only` (only includes
+#'   observation noise - the same between pathogens) or `pathogen_specific_noise`
+#'   (includes noise in individual pathogens as well). Case-insensitive.
+#'
 #' @returns named list including pathogen_structure, pathogen_names, data,
-#'   and model_params
+#'   and model_params of class `EpiStrainDynamics.pathogen_structure`
 #' @export
 #'
 #' @examples
@@ -80,19 +94,11 @@ multiple <- function (case_timeseries,
                         'observation_noise_only',
                         'pathogen_specific_noise')) {
 
-  smoothing_structure <- rlang::arg_match(
-    arg = smoothing_structure
-  )
-  observation_noise <- rlang::arg_match(
-    arg = observation_noise
-  )
-
   # Input validation
   validate_matching_lengths(
     case_timeseries = case_timeseries,
     time = time
   )
-
   validate_list_vector_lengths(
     component_pathogen_timeseries,
     "component_pathogen_timeseries",
@@ -103,12 +109,10 @@ multiple <- function (case_timeseries,
   noise_structure <- get_noise_structure(observation_noise)
 
   pathogen_names <- names(component_pathogen_timeseries)
-
   component_pathogens <- t(matrix(
     data = do.call(c, component_pathogen_timeseries),
     ncol = length(component_pathogen_timeseries)
   ))
-
   model_inputs <- list(
     pathogen_structure = 'multiple',
     pathogen_names = pathogen_names,
@@ -122,8 +126,8 @@ multiple <- function (case_timeseries,
       noise_structure = noise_structure
     )
   )
-
-  class(model_inputs) <- 'EpiStrainDynamics.pathogen_structure'
+  class(model_inputs) <- c('EpiStrainDynamics.pathogen_structure',
+                           class(model_inputs))
   model_inputs
 }
 
@@ -136,21 +140,21 @@ multiple <- function (case_timeseries,
 #' @param influenzaA_subtyped_timeseries case timeseries data for subtyped
 #'   influenzaA
 #' @param other_pathogen_timeseries other pathogen case timeseries
-#' @param smoothing_structure either 'shared' (all pathogens have the same;
-#'   tau[1]), 'independent' (each pathogen has completely independent smoothing
-#'   structure; tau[number of pathogens]), or 'correlated' (smoothing structure is
-#'   correlated among pathogens Sigma[number of pathogens, number of pathogens])
-#' @param observation_noise either 'observation_noise_only' (only includes
-#'   observation noise - the same between pathogens) or pathogen_specific_noise'
-#'   (includes noise in individual pathogens as well)
-#'
-#' @importFrom rlang arg_match
+#' @param smoothing_structure either `shared` (all pathogens have the same
+#'   smoothing structure; tau[1]), `independent` (each pathogen has completely
+#'   independent smoothing structure; tau[number of pathogens]), or `correlated`
+#'   (smoothing structure is correlated among pathogens Sigma[number of
+#'   pathogens, number of pathogens]). Case-insensitive.
+#' @param observation_noise either `observation_noise_only` (only includes
+#'   observation noise - the same between pathogens) or `pathogen_specific_noise`
+#'   (includes noise in individual pathogens as well). Case-insensitive.
 #'
 #' @returns named list including pathogen_structure, pathogen_names, data,
-#'   and model_params
+#'   and model_params of class `EpiStrainDynamics.pathogen_structure`
 #' @export
 #'
 #' @examples
+#' # Both integer and numeric inputs work consistently
 #' subtyped(
 #'   case_timeseries = influenza$ili,
 #'   time = influenza$week,
@@ -167,6 +171,14 @@ multiple <- function (case_timeseries,
 #'   observation_noise = 'observation_noise_only'
 #' )
 #'
+#' # NOTE: smoothing_structure and observation_noise are case insensitive, so
+#' # these will work
+#' # subtyped(
+#' #    ...
+#' #    smoothing_structure = 'Independent',
+#' #    observation_noise = 'OBSERVATION_NOISE_ONLY'
+#' # )
+#'
 subtyped <- function (case_timeseries,
                       time,
                       influenzaA_unsubtyped_timeseries,
@@ -180,12 +192,13 @@ subtyped <- function (case_timeseries,
                         'observation_noise_only',
                         'pathogen_specific_noise')) {
 
-  smoothing_structure <- rlang::arg_match(
-    arg = smoothing_structure
-  )
-  observation_noise <- rlang::arg_match(
-    arg = observation_noise
-  )
+  # Ensure consistent numeric handling for all numeric inputs
+  case_timeseries <- as.numeric(case_timeseries)
+  influenzaA_unsubtyped_timeseries <- as.numeric(influenzaA_unsubtyped_timeseries)
+
+  # Handle list inputs consistently
+  influenzaA_subtyped_timeseries <- lapply(influenzaA_subtyped_timeseries, as.numeric)
+  other_pathogen_timeseries <- lapply(other_pathogen_timeseries, as.numeric)
 
   # Input validation
   validate_matching_lengths(
@@ -220,12 +233,14 @@ subtyped <- function (case_timeseries,
     other_pathogen_timeseries
   )
 
+  # Ensure consistent matrix creation
   component_pathogens <- t(matrix(
-    data = do.call(c, component_pathogens_list),
+    data = as.numeric(do.call(c, component_pathogens_list)),
     ncol = length(component_pathogens_list)
   ))
+
   influenzaA_subtyped <- t(matrix(
-    data = do.call(c, influenzaA_subtyped_timeseries),
+    data = as.numeric(do.call(c, influenzaA_subtyped_timeseries)),
     ncol = length(influenzaA_subtyped_timeseries)
   ))
 
@@ -244,27 +259,40 @@ subtyped <- function (case_timeseries,
     )
   )
 
-  class(model_inputs) <- 'EpiStrainDynamics.pathogen_structure'
+  class(model_inputs) <- c('EpiStrainDynamics.pathogen_structure',
+                           class(model_inputs))
   model_inputs
 }
 
-#' Get covariate structure from assigned smoothing structure
+#' Get covariance structure from assigned smoothing structure
 #'
 #' @param smoothing_structure either 'shared' (all pathogens have the same;
 #'   tau[1]), 'independent' (each pathogen has completely independent smoothing
 #'   structure; tau[number of pathogens]), or 'correlated' (smoothing structure is
-#'   correlated among pathogens Sigma[number of pathogens, number of pathogens])
+#'   correlated among pathogens Sigma[number of pathogens, number of pathogens]).
+#'   Case-insensitive.
 #'
 #' @returns numeric value for covariance structure needed by stan models
 #'
-get_cov_structure <- function (smoothing_structure = c(
-                                 'shared',
-                                 'independent',
-                                 'correlated')) {
+get_cov_structure <- function(smoothing_structure = c('shared',
+                                                      'independent',
+                                                      'correlated')) {
 
-  if (smoothing_structure == 'shared') cov_structure <- 0
-  if (smoothing_structure == 'independent') cov_structure <- 1
-  if (smoothing_structure == 'correlated') cov_structure <- 2
+  # Handle case insensitivity
+  smoothing_structure <- match_arg_case_insensitive(
+    arg = smoothing_structure,
+    choices = c('shared', 'independent', 'correlated'),
+    arg_name = "smoothing_structure"
+  )
+
+  # Convert to numeric codes
+  cov_structure <- switch(smoothing_structure,
+                          'shared' = 0,
+                          'independent' = 1,
+                          'correlated' = 2,
+                          stop("Invalid smoothing_structure: ",
+                               smoothing_structure, call. = FALSE)
+  )
 
   return(cov_structure)
 }
@@ -272,17 +300,28 @@ get_cov_structure <- function (smoothing_structure = c(
 #' Get noise structure from specified observation noise
 #'
 #' @param observation_noise either 'observation_noise_only' (only includes
-#'   observation noise - the same between pathogens) or pathogen_specific_noise'
-#'   (includes noise in individual pathogens as well)
+#'   observation noise - the same between pathogens) or 'pathogen_specific_noise'
+#'   (includes noise in individual pathogens as well). Case-insensitive.
 #'
 #' @returns numeric value for noise structure needed by stan models
 #'
-get_noise_structure <- function (observation_noise = c(
-                                   'observation_noise_only',
-                                   'pathogen_specific_noise')) {
+get_noise_structure <- function(observation_noise = c('observation_noise_only',
+                                                      'pathogen_specific_noise')) {
 
-  if (observation_noise == 'observation_noise_only') noise_structure <- 0
-  if (observation_noise == 'pathogen_specific_noise') noise_structure <- 1
+  # Handle case insensitivity
+  observation_noise <- match_arg_case_insensitive(
+    arg = observation_noise,
+    choices = c('observation_noise_only', 'pathogen_specific_noise'),
+    arg_name = "observation_noise"
+  )
+
+  # Convert to numeric codes
+  noise_structure <- switch(observation_noise,
+                            'observation_noise_only' = 0,
+                            'pathogen_specific_noise' = 1,
+                            stop("Invalid observation_noise: ",
+                                 observation_noise, call. = FALSE)
+  )
 
   return(noise_structure)
 }
