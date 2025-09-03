@@ -8,3 +8,5 @@
 ^\.github$
 ^CODE_OF_CONDUCT\.md$
 .covrignore
+^codemeta\.json$
+paper.md
