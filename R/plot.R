@@ -1,15 +1,30 @@
-#' Generic Method for plotting
+#' Generic Method for plotting metrics calculation outputs
 #'
 #' S3 generic for plotting
 #'
-#' @param df Fitted model object with appropriate class
-#' @param ... Additional arguments passed to methods
+#' @param df Metrics calculation output of class `EpiStrainDynamics.metric`
+#'  from either `incidence()`, `growth_rate()`, `Rt()`, or `proportion()`.
+#' @param ... Additional arguments passed to plot
 #' @importFrom viridis viridis
 #' @importFrom stats setNames
 #' @import ggplot2
-#' @return Data frame with proportion analysis results
+#' @return ggplot2 plot output
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#'   mod <- construct_model(
+#'     method = random_walk(),
+#'     pathogen_structure = single(
+#'       case_timeseries = sarscov2$cases,
+#'       time = sarscov2$date))
+#'
+#'   fit <- fit_model(mod)
+#'   gr <- growth_rate(mod)
+#'   plot(gr)
+#' }
 plot <- function(df, ...) {
+  validate_class_inherits(df, 'EpiStrainDynamics.metric')
   UseMethod("plot")
 }
 

@@ -6,7 +6,7 @@
 \alias{plot.growth_rate}
 \alias{plot.Rt}
 \alias{plot.proportion}
-\title{Generic Method for plotting}
+\title{Generic Method for plotting metrics calculation outputs}
 \usage{
 plot(df, ...)
 
@@ -19,13 +19,27 @@ plot(df, ...)
 \method{plot}{proportion}(df)
 }
 \arguments{
-\item{df}{Fitted model object with appropriate class}
+\item{df}{Metrics calculation output of class `EpiStrainDynamics.metric`
+from either `incidence()`, `growth_rate()`, `Rt()`, or `proportion()`.}
 
-\item{...}{Additional arguments passed to methods}
+\item{...}{Additional arguments passed to plot}
 }
 \value{
-Data frame with proportion analysis results
+ggplot2 plot output
 }
 \description{
 S3 generic for plotting
+}
+\examples{
+\dontrun{
+  mod <- construct_model(
+    method = random_walk(),
+    pathogen_structure = single(
+      case_timeseries = sarscov2$cases,
+      time = sarscov2$date))
+
+  fit <- fit_model(mod)
+  gr <- growth_rate(mod)
+  plot(gr)
+}
 }

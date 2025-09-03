@@ -2,11 +2,29 @@
 #'
 #' S3 generic for computing incidence from fitted models
 #'
-#' @param fitted_model Fitted model object with appropriate class
+#' @param fitted_model Fitted model object with class `EpiStrainDynamics.fit`
 #' @param dow Logical whether or not to include day-of-week in incidence calc
-#' @param ... Additional arguments passed to methods
-#' @return Data frame with incidence analysis results
+#' @param ... Additional arguments passed to metrics calculation
+#' @return named list of class `EpiStrainDynamics.metric` containing a dataframe
+#'  of the calculated metric outcome (`$measure`), the fit object (`$fit`), and the
+#'  constructed model object (`$constructed_model`). The `measure` data frame
+#'  contains the median of the epidemiological quantity (`y`), the 50% credible
+#'  interval of the quantity (`lb_50` & `ub_50`), the 95% credible interval
+#'  (`lb_95` & `ub_95`), the proportion greater than a defined threshold value
+#'  (`prop`), the pathogen name (`pathogen`), and the time label (`time`).
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#'   mod <- construct_model(
+#'     method = random_walk(),
+#'     pathogen_structure = single(
+#'       case_timeseries = sarscov2$cases,
+#'       time = sarscov2$date))
+#'
+#'   fit <- fit_model(mod)
+#'   inc <- incidence(mod, dow = TRUE)
+#' }
 incidence <- function(fitted_model, dow, ...) {
   validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')
   if (dow & !fitted_model$constructed_model$dow_effect) {
@@ -20,7 +38,7 @@ incidence <- function(fitted_model, dow, ...) {
 incidence.ps <- function(fitted_model, dow, ...) {
   out <- compute_multi_pathogen(fitted_model, 1, 'incidence',
                                 threshold = 0, use_splines = TRUE, dow)
-  class(out) <- c('incidence', class(out))
+  class(out) <- c('incidence', 'EpiStrainDynamics.metric', class(out))
   out
 }
 
@@ -29,7 +47,7 @@ incidence.ps <- function(fitted_model, dow, ...) {
 incidence.rw <- function(fitted_model, dow, ...) {
   out <- compute_multi_pathogen(fitted_model, 1, 'incidence',
                                 threshold = 0, use_splines = FALSE, dow)
-  class(out) <- c('incidence', class(out))
+  class(out) <- c('incidence', 'EpiStrainDynamics.metric', class(out))
   out
 }
 
@@ -38,7 +56,7 @@ incidence.rw <- function(fitted_model, dow, ...) {
 incidence.ps_single <- function(fitted_model, dow, ...) {
   out <- compute_single_pathogen(fitted_model, 1, 'incidence',
                                  threshold = 0, use_splines = TRUE, dow)
-  class(out) <- c('incidence', class(out))
+  class(out) <- c('incidence', 'EpiStrainDynamics.metric', class(out))
   out
 }
 
@@ -47,7 +65,7 @@ incidence.ps_single <- function(fitted_model, dow, ...) {
 incidence.rw_single <- function(fitted_model, dow, ...) {
   out <- compute_single_pathogen(fitted_model, 1, 'incidence',
                                  threshold = 0, use_splines = FALSE, dow)
-  class(out) <- c('incidence', class(out))
+  class(out) <- c('incidence', 'EpiStrainDynamics.metric', class(out))
   out
 }
 
