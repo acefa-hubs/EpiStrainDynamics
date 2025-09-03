@@ -13,11 +13,28 @@ used to construct the overall curve (must be a positive whole number)}
 \item{days_per_knot}{number of days for each knot (must be a positive whole number)}
 }
 \value{
-list with method and model parameters
+list with method and model parameters of class
+  `EpiStrainDynamics.method`
 }
 \description{
 Specify p_spline method
 }
 \examples{
-p_spline(spline_degree = 2, days_per_knot = 5)
+# Valid usage
+p_spline(spline_degree = 2L, days_per_knot = 5L)
+p_spline(spline_degree = 3, days_per_knot = 7)
+
+# These will produce validation errors (as intended):
+\donttest{
+# Non-positive values
+try(p_spline(spline_degree = 0, days_per_knot = 5))
+try(p_spline(spline_degree = 3, days_per_knot = -1))
+
+# Non-whole numbers
+try(p_spline(spline_degree = 2.5, days_per_knot = 5))
+try(p_spline(spline_degree = 3, days_per_knot = 4.2))
+
+# Non-numeric values
+try(p_spline(spline_degree = "invalid", days_per_knot = 5))
+}
 }

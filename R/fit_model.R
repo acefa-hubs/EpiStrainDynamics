@@ -1,12 +1,31 @@
-#' Method fit model
+#' Generic Method for fitting model
 #'
-#' @param constructed_model prepared model object from construct_model()
-#' @param iter number of iterations
-#' @param warmup number of warmup iterations
-#' @param chains number of chains
+#' S3 generic for fitted models from constructed model object
 #'
-#' @returns fit model
+#' @param constructed_model prepared model object of class
+#'  `EpiStrainDynamics.model`
+#' @param iter number of iterations, defaults to 2000
+#' @param warmup number of warmup iterations, defaults to 1000
+#' @param chains number of chains, defaults to 3
+#'
+#' @returns fit model of class `EpiStrainDynamics.fit`
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#'   mod <- construct_model(
+#'     method = random_walk(),
+#'     pathogen_structure = single(
+#'       case_timeseries = sarscov2$cases,
+#'       time = sarscov2$date))
+#'
+#'   fit <- fit_model(mod)
+#'
+#'   # or specify additional mcmc parameters
+#'   fit <- fit_model(
+#'     mod, iter = 3000, warmup = 2000, chains = 4
+#'   )
+#' }
 #'
 fit_model <- function (constructed_model,
                        iter = 2000,
@@ -14,7 +33,6 @@ fit_model <- function (constructed_model,
                        chains = 3) {
 
   validate_class_inherits(constructed_model, 'EpiStrainDynamics.model')
-
   UseMethod("fit_model")
 }
 

@@ -2,22 +2,40 @@
 % Please edit documentation in R/fit_model.R
 \name{fit_model}
 \alias{fit_model}
-\title{Method fit model}
+\title{Generic Method for fitting model}
 \usage{
 fit_model(constructed_model, iter = 2000, warmup = 1000, chains = 3)
 }
 \arguments{
-\item{constructed_model}{prepared model object from construct_model()}
+\item{constructed_model}{prepared model object of class
+`EpiStrainDynamics.model`}
 
-\item{iter}{number of iterations}
+\item{iter}{number of iterations, defaults to 2000}
 
-\item{warmup}{number of warmup iterations}
+\item{warmup}{number of warmup iterations, defaults to 1000}
 
-\item{chains}{number of chains}
+\item{chains}{number of chains, defaults to 3}
 }
 \value{
-fit model
+fit model of class `EpiStrainDynamics.fit`
 }
 \description{
-Method fit model
+S3 generic for fitted models from constructed model object
+}
+\examples{
+\dontrun{
+  mod <- construct_model(
+    method = random_walk(),
+    pathogen_structure = single(
+      case_timeseries = sarscov2$cases,
+      time = sarscov2$date))
+
+  fit <- fit_model(mod)
+
+  # or specify additional mcmc parameters
+  fit <- fit_model(
+    mod, iter = 3000, warmup = 2000, chains = 4
+  )
+}
+
 }

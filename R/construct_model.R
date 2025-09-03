@@ -1,23 +1,42 @@
 #' Construct model
 #'
-#' @param method either random_walk() or p_spline()
-#' @param pathogen_structure either single(), multiple(), or subtyped()
+#' @param method either `random_walk()` or `p_spline()`
+#' @param pathogen_structure either `single()`, `multiple()`, or `subtyped()`
 #' @param dow_effect logical whether to incorporate a day of week model
 #'
 #' @returns a list containing the data, the model parameters, and pathogen
-#'  names
+#'  names of class `EpiStrainDynamics.model`
 #' @export
 #'
 #' @examples
+#' # Basic usage
+#' method_obj <- random_walk()
+#' pathogen_obj <- single(
+#'   case_timeseries = sarscov2$cases,
+#'   time = sarscov2$date,
+#'   pathogen_name = "SARS-CoV-2"
+#' )
+#'
 #' mod <- construct_model(
-#'   method = random_walk(),
-#'   pathogen_structure = single(
-#'     case_timeseries = sarscov2$cases,
-#'     time = sarscov2$date,
-#'     pathogen_name = 'SARS-COV-2'
-#'   ),
+#'   method = method_obj,
+#'   pathogen_structure = pathogen_obj,
 #'   dow_effect = TRUE
 #' )
+#'
+#' # Alternatively, call the methods and pathogen structure inside the function
+#' mod <- construct_model(
+#'   method = p_spline(),
+#'   pathogen_structure = multiple(
+#'     case_timeseries = sarscov2$cases,
+#'     time = sarscov2$date,
+#'     component_pathogen_timeseries = list(
+#'       alpha = sarscov2$alpha,
+#'       delta = sarscov2$delta,
+#'       omicron = sarscov2$omicron,
+#'       other = sarscov2$other)),
+#'   dow_effect = FALSE
+#' )
+#'
 construct_model <- function(method,
                             pathogen_structure,
                             dow_effect = FALSE) {

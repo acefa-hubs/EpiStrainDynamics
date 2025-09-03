@@ -11,10 +11,12 @@ single(case_timeseries, time, pathogen_name = "default")
 
 \item{time}{vector of labelled time data}
 
-\item{pathogen_name}{name of pathogen}
+\item{pathogen_name}{optionally provided name of pathogen. This value is
+preserved exactly as provided (case-sensitive). Default name is `default`.}
 }
 \value{
-formatted list with pathogen structure and data
+formatted list with pathogen structure and data of class
+  `EpiStrainDynamics.pathogen_structure`.
 }
 \description{
 Single pathogen structure
@@ -23,7 +25,17 @@ Single pathogen structure
 single(
   case_timeseries = sarscov2$cases,
   time = sarscov2$date,
-  pathogen_name = 'SARS-COV-2'
+  pathogen_name = 'SARS-COV-2' # preserved as provided
 )
 
+single(
+  case_timeseries = sarscov2$cases,
+  time = sarscov2$date,
+  pathogen_name = 'sarscov2' # preserved as provided
+)
+
+single(
+  case_timeseries = sarscov2$cases,
+  time = sarscov2$date
+)
 }
