@@ -2,10 +2,28 @@
 #'
 #' S3 generic for computing growth rates from fitted models
 #'
-#' @param fitted_model Fitted model object with appropriate class
-#' @param ... Additional arguments passed to methods
-#' @return Data frame with growth rate analysis results
+#' @param fitted_model Fitted model object with class `EpiStrainDynamics.fit`
+#' @param ... Additional arguments passed to metrics calculation
+#' @return named list of class `EpiStrainDynamics.metric` containing a dataframe
+#'  of the calculated metric outcome (`$measure`), the fit object (`$fit`), and the
+#'  constructed model object (`$constructed_model`). The `measure` data frame
+#'  contains the median of the epidemiological quantity (`y`), the 50% credible
+#'  interval of the quantity (`lb_50` & `ub_50`), the 95% credible interval
+#'  (`lb_95` & `ub_95`), the proportion greater than a defined threshold value
+#'  (`prop`), the pathogen name (`pathogen`), and the time label (`time`).
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#'   mod <- construct_model(
+#'     method = random_walk(),
+#'     pathogen_structure = single(
+#'       case_timeseries = sarscov2$cases,
+#'       time = sarscov2$date))
+#'
+#'   fit <- fit_model(mod)
+#'   gr <- growth_rate(mod)
+#' }
 growth_rate <- function(fitted_model, ...) {
   validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')
   UseMethod("growth_rate")
@@ -16,7 +34,7 @@ growth_rate <- function(fitted_model, ...) {
 growth_rate.ps <- function(fitted_model, ...) {
   out <- compute_multi_pathogen(fitted_model, 2, 'growth_rate',
                                 threshold = 0, use_splines = TRUE)
-  class(out) <- c('growth_rate', class(out))
+  class(out) <- c('growth_rate', 'EpiStrainDynamics.metric', class(out))
   out
 }
 
@@ -25,7 +43,7 @@ growth_rate.ps <- function(fitted_model, ...) {
 growth_rate.rw <- function(fitted_model, ...) {
   out <- compute_multi_pathogen(fitted_model, 2, 'growth_rate',
                                 threshold = 0, use_splines = FALSE)
-  class(out) <- c('growth_rate', class(out))
+  class(out) <- c('growth_rate', 'EpiStrainDynamics.metric', class(out))
   out
 }
 
@@ -34,7 +52,7 @@ growth_rate.rw <- function(fitted_model, ...) {
 growth_rate.ps_single <- function(fitted_model, ...) {
   out <- compute_single_pathogen(fitted_model, 2, 'growth_rate',
                                  threshold = 0, use_splines = TRUE)
-  class(out) <- c('growth_rate', class(out))
+  class(out) <- c('growth_rate', 'EpiStrainDynamics.metric', class(out))
   out
 }
 
@@ -43,7 +61,7 @@ growth_rate.ps_single <- function(fitted_model, ...) {
 growth_rate.rw_single <- function(fitted_model, ...) {
   out <- compute_single_pathogen(fitted_model, 2, 'growth_rate',
                                  threshold = 0, use_splines = FALSE)
-  class(out) <- c('growth_rate', class(out))
+  class(out) <- c('growth_rate', 'EpiStrainDynamics.metric', class(out))
   out
 }
 

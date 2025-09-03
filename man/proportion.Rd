@@ -4,8 +4,6 @@
 \alias{proportion}
 \alias{proportion.ps}
 \alias{proportion.rw}
-\alias{proportion.ps_single}
-\alias{proportion.rw_single}
 \title{Generic Method for proportion Analysis}
 \usage{
 proportion(
@@ -28,23 +26,58 @@ proportion(
   denominator_combination = NULL,
   ...
 )
-
-\method{proportion}{ps_single}(fitted_model, ...)
-
-\method{proportion}{rw_single}(fitted_model, ...)
 }
 \arguments{
-\item{fitted_model}{Fitted model object with appropriate class}
+\item{fitted_model}{Fitted model object with class `EpiStrainDynamics.fit`
+with `multiple` or `subtyped` pathogen structure.}
 
-\item{numerator_combination}{Named pathogens or subtypes to be included in proportion numerator}
+\item{numerator_combination}{Named pathogens or subtypes to be included in
+proportion numerator.}
 
-\item{denominator_combination}{Named pathogens or sutypes to be included in proportion denominator}
+\item{denominator_combination}{Named pathogens or subtypes to be included in
+proportion denominator, or 'all'.}
 
-\item{...}{Additional arguments passed to methods}
+\item{...}{Additional arguments passed to metrics calculation}
 }
 \value{
-Data frame with proportion analysis results
+named list of class `EpiStrainDynamics.metric` containing a dataframe
+ of the calculated metric outcome (`$measure`), the fit object (`$fit`), and the
+ constructed model object (`$constructed_model`). The `measure` data frame
+ contains the median of the epidemiological quantity (`y`), the 50% credible
+ interval of the quantity (`lb_50` & `ub_50`), the 95% credible interval
+ (`lb_95` & `ub_95`), the proportion greater than a defined threshold value
+ (`prop`), the pathogen name (`pathogen`), and the time label (`time`).
 }
 \description{
 S3 generic for computing proportions from fitted models
+}
+\examples{
+\dontrun{
+  mod <- construct_model(
+    method = p_spline(),
+    pathogen_structure = multiple(
+      case_timeseries = sarscov2$cases,
+      time = sarscov2$date,
+      component_pathogen_timeseries = list(
+        alpha = sarscov2$alpha,
+        delta = sarscov2$delta,
+        omicron = sarscov2$omicron,
+        other = sarscov2$other))
+  )
+
+  fit <- fit_model(mod)
+  prop <- proportion(mod)
+
+  # or a unique combination, compared to all pathogens
+  prop2 <- proportion(mod,
+    numerator_combination = c('alpha', 'delta', 'omicron'),
+    denominator_combination = 'all'
+  )
+
+  # or a user-specified combination in both numerator and denominator
+  prop3 <- proportion(mod,
+    numerator_combination = 'alpha',
+    denominator_combination = c('alpha', 'delta', 'omicron')
+  )
+}
 }
