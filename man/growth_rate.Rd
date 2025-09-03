@@ -44,6 +44,6 @@ S3 generic for computing growth rates from fitted models
       time = sarscov2$date))
 
   fit <- fit_model(mod)
-  gr <- growth_rate(mod)
+  gr <- growth_rate(fit)
 }
 }

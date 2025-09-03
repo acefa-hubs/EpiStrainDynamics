@@ -23,7 +23,7 @@
 #'       time = sarscov2$date))
 #'
 #'   fit <- fit_model(mod)
-#'   inc <- incidence(mod, dow = TRUE)
+#'   inc <- incidence(fit, dow = TRUE)
 #' }
 incidence <- function(fitted_model, dow, ...) {
   validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')

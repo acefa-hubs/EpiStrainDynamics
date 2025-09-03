@@ -25,7 +25,7 @@
 #'
 #'   fit <- fit_model(mod)
 #'
-#'   rt <- Rt(mod, tau_max = 7, gi_dist = function(x) 4*x*exp(-2*x))
+#'   rt <- Rt(fit, tau_max = 7, gi_dist = function(x) 4*x*exp(-2*x))
 #' }
 #'
 Rt <- function(fitted_model, tau_max = 7, gi_dist, ...) {
