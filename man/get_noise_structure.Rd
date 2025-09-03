@@ -10,8 +10,8 @@ get_noise_structure(
 }
 \arguments{
 \item{observation_noise}{either 'observation_noise_only' (only includes
-observation noise - the same between pathogens) or pathogen_specific_noise'
-(includes noise in individual pathogens as well)}
+observation noise - the same between pathogens) or 'pathogen_specific_noise'
+(includes noise in individual pathogens as well). Case-insensitive.}
 }
 \value{
 numeric value for noise structure needed by stan models

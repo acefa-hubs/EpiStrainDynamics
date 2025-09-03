@@ -20,19 +20,19 @@ multiple(
 \item{component_pathogen_timeseries}{named list of each pathogen that has
 timeseries of case counts}
 
-\item{smoothing_structure}{either 'shared' (all pathogens have the same
-smoothing structure; tau[1]), 'independent' (each pathogen has completely
-independent smoothing structure; tau[number of pathogens]), or 'correlated'
+\item{smoothing_structure}{either `shared` (all pathogens have the same
+smoothing structure; tau[1]), `independent` (each pathogen has completely
+independent smoothing structure; tau[number of pathogens]), or `correlated`
 (smoothing structure is correlated among pathogens Sigma[number of
-pathogens, number of pathogens])}
+pathogens, number of pathogens]). Case-insensitive.}
 
-\item{observation_noise}{either 'observation_noise_only' (only includes
-observation noise - the same between pathogens) or pathogen_specific_noise'
-(includes noise in individual pathogens as well)}
+\item{observation_noise}{either `observation_noise_only` (only includes
+observation noise - the same between pathogens) or `pathogen_specific_noise`
+(includes noise in individual pathogens as well). Case-insensitive.}
 }
 \value{
 named list including pathogen_structure, pathogen_names, data,
-  and model_params
+  and model_params of class `EpiStrainDynamics.pathogen_structure`
 }
 \description{
 Multiple pathogen structure

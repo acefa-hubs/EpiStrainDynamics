@@ -7,7 +7,8 @@
 random_walk()
 }
 \value{
-list with method identified as random walk
+list with method identified as random walk of class
+  `EpiStrainDynamics.method`
 }
 \description{
 Specify random walk method

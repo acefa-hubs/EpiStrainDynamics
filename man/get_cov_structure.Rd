@@ -2,7 +2,7 @@
 % Please edit documentation in R/pathogen_structure.R
 \name{get_cov_structure}
 \alias{get_cov_structure}
-\title{Get covariate structure from assigned smoothing structure}
+\title{Get covariance structure from assigned smoothing structure}
 \usage{
 get_cov_structure(
   smoothing_structure = c("shared", "independent", "correlated")
@@ -12,11 +12,12 @@ get_cov_structure(
 \item{smoothing_structure}{either 'shared' (all pathogens have the same;
 tau[1]), 'independent' (each pathogen has completely independent smoothing
 structure; tau[number of pathogens]), or 'correlated' (smoothing structure is
-correlated among pathogens Sigma[number of pathogens, number of pathogens])}
+correlated among pathogens Sigma[number of pathogens, number of pathogens]).
+Case-insensitive.}
 }
 \value{
 numeric value for covariance structure needed by stan models
 }
 \description{
-Get covariate structure from assigned smoothing structure
+Get covariance structure from assigned smoothing structure
 }
