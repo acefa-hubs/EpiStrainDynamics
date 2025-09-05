@@ -38,3 +38,8 @@ try(p_spline(spline_degree = 3, days_per_knot = 4.2))
 try(p_spline(spline_degree = "invalid", days_per_knot = 5))
 }
 }
+\seealso{
+Other method: 
+\code{\link{random_walk}()}
+}
+\concept{method}

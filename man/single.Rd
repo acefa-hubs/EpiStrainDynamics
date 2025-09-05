@@ -39,3 +39,9 @@ single(
   time = sarscov2$date
 )
 }
+\seealso{
+Other pathogen_structure: 
+\code{\link{multiple}()},
+\code{\link{subtyped}()}
+}
+\concept{pathogen_structure}
