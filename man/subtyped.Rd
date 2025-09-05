@@ -71,3 +71,9 @@ subtyped(
 # )
 
 }
+\seealso{
+Other pathogen_structure: 
+\code{\link{multiple}()},
+\code{\link{single}()}
+}
+\concept{pathogen_structure}

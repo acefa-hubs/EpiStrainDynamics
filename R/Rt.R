@@ -13,6 +13,7 @@
 #'  interval of the quantity (`lb_50` & `ub_50`), the 95% credible interval
 #'  (`lb_95` & `ub_95`), the proportion greater than a defined threshold value
 #'  (`prop`), the pathogen name (`pathogen`), and the time label (`time`).
+#' @family metrics
 #' @export
 #'
 #' @examples

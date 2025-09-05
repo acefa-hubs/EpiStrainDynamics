@@ -49,3 +49,10 @@ S3 generic for computing incidence from fitted models
   inc <- incidence(fit, dow = TRUE)
 }
 }
+\seealso{
+Other metrics: 
+\code{\link{Rt}()},
+\code{\link{growth_rate}()},
+\code{\link{proportion}()}
+}
+\concept{metrics}

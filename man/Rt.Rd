@@ -53,3 +53,10 @@ S3 generic for computing reproduction numbers from fitted models
 }
 
 }
+\seealso{
+Other metrics: 
+\code{\link{growth_rate}()},
+\code{\link{incidence}()},
+\code{\link{proportion}()}
+}
+\concept{metrics}

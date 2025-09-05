@@ -52,3 +52,9 @@ multiple(
 )
 
 }
+\seealso{
+Other pathogen_structure: 
+\code{\link{single}()},
+\code{\link{subtyped}()}
+}
+\concept{pathogen_structure}

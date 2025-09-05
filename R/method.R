@@ -2,6 +2,7 @@
 #'
 #' @returns list with method identified as random walk of class
 #'   `EpiStrainDynamics.method`
+#' @family method
 #' @export
 #'
 #' @examples random_walk()
@@ -22,6 +23,7 @@ random_walk <- function () {
 #'
 #' @returns list with method and model parameters of class
 #'   `EpiStrainDynamics.method`
+#' @family method
 #' @export
 #'
 #' @examples

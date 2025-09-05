@@ -81,3 +81,10 @@ S3 generic for computing proportions from fitted models
   )
 }
 }
+\seealso{
+Other metrics: 
+\code{\link{Rt}()},
+\code{\link{growth_rate}()},
+\code{\link{incidence}()}
+}
+\concept{metrics}
