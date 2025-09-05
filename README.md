@@ -1,4 +1,4 @@
-# EpiStrainDynamics <a href="https://acefa-hubs.github.io/EpiStrainDynamics/"><img src="man/figures/logo.png" align="right" height="41" alt="EpiStrainDynamics website" /></a>
+# EpiStrainDynamics 
 [![codecov](https://codecov.io/gh/acefa-hubs/EpiStrainDynamics/graph/badge.svg)](https://app.codecov.io/gh/acefa-hubs/EpiStrainDynamics)
 [![](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Project Status: Active - The project has reached a stable, usable
@@ -165,3 +165,8 @@ If you see any mistakes in the package (branch `main`) or in the code associated
 
 ## Code of Conduct
 Please note that the `EpiStrainDynamics` project is released with a [Contributor Code of Conduct](https://acefa-hubs.github.io/EpiStrainDynamics/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
+
+## Support
+This project was supported by the Australia-Aotearoa Consortium for Epidemic Forecasting and Analytics.
+
+<a href="https://acefa-hubs.github.io/"><img src="man/figures/ACEFA.png" align = "center" height="150" alt="EpiStrainDynamics website" /></a>
