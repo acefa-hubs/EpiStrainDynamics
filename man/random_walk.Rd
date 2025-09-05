@@ -16,3 +16,8 @@ Specify random walk method
 \examples{
 random_walk()
 }
+\seealso{
+Other method: 
+\code{\link{p_spline}()}
+}
+\concept{method}

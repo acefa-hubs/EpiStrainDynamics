@@ -47,3 +47,10 @@ S3 generic for computing growth rates from fitted models
   gr <- growth_rate(fit)
 }
 }
+\seealso{
+Other metrics: 
+\code{\link{Rt}()},
+\code{\link{incidence}()},
+\code{\link{proportion}()}
+}
+\concept{metrics}

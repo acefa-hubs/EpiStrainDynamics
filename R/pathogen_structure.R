@@ -7,6 +7,7 @@
 #'
 #' @returns formatted list with pathogen structure and data of class
 #'   `EpiStrainDynamics.pathogen_structure`.
+#' @family pathogen_structure
 #' @export
 #'
 #' @examples
@@ -67,6 +68,7 @@ single <- function (case_timeseries,
 #'
 #' @returns named list including pathogen_structure, pathogen_names, data,
 #'   and model_params of class `EpiStrainDynamics.pathogen_structure`
+#' @family pathogen_structure
 #' @export
 #'
 #' @examples
@@ -151,6 +153,7 @@ multiple <- function (case_timeseries,
 #'
 #' @returns named list including pathogen_structure, pathogen_names, data,
 #'   and model_params of class `EpiStrainDynamics.pathogen_structure`
+#' @family pathogen_structure
 #' @export
 #'
 #' @examples
