@@ -175,7 +175,9 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
     "incidence" = calc_incidence_individual,
     "growth_rate" = calc_growth_individual,
     "Rt" = calc_rt_individual,
-    stop("Unknown metric: ", measure)
+    {
+      cli::cli_abort("Invalid option provided: '{measure}'.")
+    }
   )
   pathogen_results <- calc_wrapper(pathogen_grid, pathogen_grid$time_idx,
                                    pathogen_grid$pathogen_idx,
@@ -187,7 +189,9 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
     "incidence" = calc_incidence_total,
     "growth_rate" = calc_growth_total,
     "Rt" = calc_rt_total,
-    stop("Unknown metric: ", measure)
+    {
+      cli::cli_abort("Invalid option provided: '{measure}'.")
+    }
   )
   total_results <- calc_wrapper(time_grid, time_grid$time_idx,
                                 pathogen_idx_col = rep(list(NULL), nrow(time_grid)),
@@ -246,7 +250,9 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
     "growth_rate" = calc_growth_single,
     "Rt" = calc_rt_single,
     "proportion" = calc_proportion,
-    stop("Unknown metric: ", measure)
+    {
+      cli::cli_abort("Invalid option provided: '{measure}'.")
+    }
   )
 
   rep <- extra_args$numerator_idx # if not proportion calc then this will be NULL
