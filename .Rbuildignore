@@ -10,3 +10,4 @@
 .covrignore
 ^codemeta\.json$
 paper.md
+^README\.Rmd$
