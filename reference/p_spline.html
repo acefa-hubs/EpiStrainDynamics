@@ -18,7 +18,7 @@
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Using-EpiStrainDyamics.html">Using EpiStainDynamics</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Using-EpiStrainDynamics.html">Using EpiStainDynamics</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -69,6 +69,11 @@ used to construct the overall curve (must be a positive whole number)</p></dd>
     <p>list with method and model parameters of class
   `EpiStrainDynamics.method`</p>
     </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p>Other method:
+<code><a href="random_walk.html">random_walk</a>()</code></p></div>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -106,19 +111,24 @@ used to construct the overall curve (must be a positive whole number)</p></dd>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co"># Non-positive values</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">p_spline</span><span class="op">(</span>spline_degree <span class="op">=</span> <span class="fl">0</span>, days_per_knot <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error : Argument 'spline_degree' must be a positive number</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in validate_positive_whole_number(spline_degree, "spline_degree") : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Argument spline_degree must be a positive number</span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">p_spline</span><span class="op">(</span>spline_degree <span class="op">=</span> <span class="fl">3</span>, days_per_knot <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error : Argument 'days_per_knot' must be a positive number</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in validate_positive_whole_number(days_per_knot, "days_per_knot") : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Argument days_per_knot must be a positive number</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Non-whole numbers</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">p_spline</span><span class="op">(</span>spline_degree <span class="op">=</span> <span class="fl">2.5</span>, days_per_knot <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error : Argument 'spline_degree' must be a whole number</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in validate_positive_whole_number(spline_degree, "spline_degree") : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Argument spline_degree must be a whole number</span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">p_spline</span><span class="op">(</span>spline_degree <span class="op">=</span> <span class="fl">3</span>, days_per_knot <span class="op">=</span> <span class="fl">4.2</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error : Argument 'days_per_knot' must be a whole number</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in validate_positive_whole_number(days_per_knot, "days_per_knot") : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Argument days_per_knot must be a whole number</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Non-numeric values</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">p_spline</span><span class="op">(</span>spline_degree <span class="op">=</span> <span class="st">"invalid"</span>, days_per_knot <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error : Argument 'spline_degree' must be numeric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in validate_positive_whole_number(spline_degree, "spline_degree") : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Argument spline_degree must be numeric</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
