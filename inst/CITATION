@@ -4,7 +4,7 @@ bibentry(
   key      = "EpiStrainDynamics",
   bibtype  = "Manual",
   title    = "Infer temporal trends of multiple pathogens",
-  author   = c(person("Saras", "Windecker"), person("Oliver", "Eales")),
+  author   = c(person("Saras", "Windecker"), person("James", "McCaw"), person("Freya", "Shearer"), person("Oliver", "Eales")),
   note     = "R package",
   year     = "2025",
   url      = "https://github.com/acefa-hubs/EpiStrainDynamics"
