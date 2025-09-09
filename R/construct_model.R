@@ -49,8 +49,9 @@ construct_model <- function(method,
     pathogen_structure, 'EpiStrainDynamics.pathogen_structure'
   )
   if (!is.logical(dow_effect) || length(dow_effect) != 1) {
-    stop("Argument 'dow_effect' must be a single logical value (TRUE or FALSE)",
-         call. = FALSE)
+    cli::cli_abort(
+      "You provided {.var {dow_effect}} but `dow_effect` must be a single logical value (TRUE or FALSE)"
+    )
   }
 
   # Extract model type
@@ -118,15 +119,19 @@ get_model_type <- function(method_name, pathogen_type) {
   valid_pathogens <- c('single', 'multiple', 'subtyped')
 
   if (!method_name %in% valid_methods) {
-    stop(paste("Unknown method:", method_name,
-               ". Valid methods are:", paste(valid_methods, collapse = ", ")),
-         call. = FALSE)
+    valid_methods_pasted <- paste(valid_methods, collapse = ", ")
+    cli::cli_abort(
+      "Unknown `method`: {.var {method_name}}.
+      Valid methods include {.var {valid_methods_pasted}}"
+    )
   }
 
   if (!pathogen_type %in% valid_pathogens) {
-    stop(paste("Unknown pathogen structure:", pathogen_type,
-               ". Valid structures are:", paste(valid_pathogens, collapse = ", ")),
-         call. = FALSE)
+    valid_pathogens_pasted <- paste(valid_pathogens, collapse = ", ")
+    cli::cli_abort(
+      "Unknown `pathogen_type`: {.var {pathogen_type}}.
+      Valid pathogen types include {.var {valid_pathogens_pasted}}"
+    )
   }
 
   # Lookup model type
@@ -151,7 +156,9 @@ get_knots <- function(X, days_per_knot = 3, spline_degree = 3) {
 
   # Input validation
   if (!is.numeric(X) || length(X) == 0) {
-    stop("Argument 'X' must be a non-empty numeric vector", call. = FALSE)
+    cli::cli_abort(
+      "Argument `X` must be a non-empty numeric vector"
+    )
   }
 
   validate_positive_whole_number(days_per_knot, "days_per_knot")
@@ -162,7 +169,9 @@ get_knots <- function(X, days_per_knot = 3, spline_degree = 3) {
   max_X <- max(X, na.rm = TRUE)
 
   if (is.na(min_X) || is.na(max_X)) {
-    stop("All values in 'X' are missing", call. = FALSE)
+    cli::cli_abort(
+      "All values in `X` are missing"
+    )
   }
 
   # Calculate knot parameters
