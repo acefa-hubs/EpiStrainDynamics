@@ -159,15 +159,15 @@ test_that("get_model_type() returns correct model types", {
 test_that("get_model_type() validates inputs and provides helpful errors", {
   # Test invalid methods
   expect_error(get_model_type("invalid-method", "single"),
-               "Unknown method: invalid-method.*Valid methods are: random-walk, p-spline")
+               "Unknown `method`: `invalid-method`. Valid methods include `random-walk, p-spline`")
   expect_error(get_model_type("random_walk", "single"),
-               "Unknown method: random_walk.*Valid methods are: random-walk, p-spline")
+               "Unknown `method`: `random_walk`. Valid methods include `random-walk, p-spline`")
 
   # Test invalid structures
   expect_error(get_model_type("random-walk", "invalid-structure"),
-               "Unknown pathogen structure: invalid-structure.*Valid structures are: single, multiple, subtyped")
+               "Unknown `pathogen_type`: `invalid-structure`. Valid pathogen types include `single, multiple, subtyped`")
   expect_error(get_model_type("p-spline", ""),
-               "Unknown pathogen structure:.*Valid structures are: single, multiple, subtyped")
+               "Unknown `pathogen_type`: ``. Valid pathogen types include `single, multiple, subtyped`")
 })
 
 # Tests for get_knots() - simplified validation tests
@@ -281,3 +281,4 @@ test_that("Custom model construction with specific parameters", {
   expect_equal(result$model_params$noise_structure, 1)  # pathogen_specific_noise
   expect_equal(result$pathogen_names, c('alpha', 'delta', 'omicron'))
 })
+

@@ -33,17 +33,14 @@ match_arg_case_insensitive <- function(arg, choices, several.ok = FALSE, arg_nam
   # Handle multiple matches
   if (length(matched_indices) > 1L && !several.ok) {
     arg_display <- if (is.null(arg_name)) "argument" else paste0("'", arg_name, "'")
-    stop(paste0(arg_display, " must be of length 1"), call. = FALSE)
+    cli::cli_abort("{arg_display} must be of length 1.")
   }
 
   # Handle no matches
   if (any(is.na(matched_indices))) {
     arg_display <- if (is.null(arg_name)) "argument" else paste0("'", arg_name, "'")
     invalid_args <- arg[is.na(matched_indices)]
-    stop(paste0(arg_display, " should be one of: ",
-                paste(paste0("'", choices, "'"), collapse = ", "),
-                ". Got: ", paste(paste0("'", invalid_args, "'"), collapse = ", ")),
-         call. = FALSE)
+    cli::cli_abort("{arg_display} should be one of: {.var {choices}}. Got {.var {invalid_args}}.")
   }
 
   # Return the matched choice(s) in original case
@@ -67,14 +64,12 @@ match_args_case_insensitive <- function(arg_list, choices_list, several.ok = FAL
 
   # Validate inputs
   if (!is.list(arg_list) || !is.list(choices_list)) {
-    stop("Both arg_list and choices_list must be lists", call. = FALSE)
+    cli::cli_abort("Both `arg_list` and `choices_list` must be lists")
   }
 
   if (!all(names(arg_list) %in% names(choices_list))) {
     missing_choices <- setdiff(names(arg_list), names(choices_list))
-    stop(paste0("Missing choices for arguments: ",
-                paste(paste0("'", missing_choices, "'"), collapse = ", ")),
-         call. = FALSE)
+    cli::cli_abort("Missing choices for arguments: {missing_choices}")
   }
 
   # Apply case-insensitive matching to each argument
@@ -102,32 +97,27 @@ validate_positive_whole_number <- function(value, arg_name) {
 
   # Check that value is numeric
   if (!is.numeric(value)) {
-    stop(paste("Argument", paste0("'", arg_name, "'"), "must be numeric"),
-         call. = FALSE)
+    cli::cli_abort("Argument {arg_name} must be numeric")
   }
 
   # Check that value is a single value (length = 1)
   if (length(value) != 1) {
-    stop(paste("Argument", paste0("'", arg_name, "'"), "must be a single value"),
-         call. = FALSE)
+    cli::cli_abort("Argument {arg_name} must be a single value")
   }
 
   # Check that value is finite (not NA, NULL, Inf, -Inf, NaN)
   if (!is.finite(value)) {
-    stop(paste("Argument", paste0("'", arg_name, "'"), "must be a finite number"),
-         call. = FALSE)
+    cli::cli_abort("Argument {arg_name} must be a finite number")
   }
 
   # Check that value is a whole number
   if (value != as.integer(value)) {
-    stop(paste("Argument", paste0("'", arg_name, "'"), "must be a whole number"),
-         call. = FALSE)
+    cli::cli_abort("Argument {arg_name} must be a whole number")
   }
 
   # Check that value is positive
   if (value <= 0) {
-    stop(paste("Argument", paste0("'", arg_name, "'"), "must be a positive number"),
-         call. = FALSE)
+    cli::cli_abort("Argument {arg_name} must be a positive number")
   }
 
   invisible(NULL)
@@ -147,6 +137,7 @@ validate_positive_whole_number <- function(value, arg_name) {
 validate_class_inherits <- function(obj, class_names, require_all = TRUE) {
   # Ensure class_names is a character vector
   if (!is.character(class_names) || length(class_names) == 0) {
+    cli::cli_abort("{class_names} must be a non-empty character vector")
     stop("class_names must be a non-empty character vector", call. = FALSE)
   }
 
@@ -158,24 +149,19 @@ validate_class_inherits <- function(obj, class_names, require_all = TRUE) {
     if (!all(inheritance_results)) {
       missing_classes <- class_names[!inheritance_results]
       if (length(class_names) == 1) {
-        stop(paste("Input must be of class", class_names,
-                   "but got class:", paste(class(obj), collapse = ", ")),
-             call. = FALSE)
+        obj_class <- class(obj)
+        cli::cli_abort("Input must be of class {class_names} but got class: {obj_class}")
       } else {
-        stop(paste("Input must inherit from all classes:",
-                   paste(class_names, collapse = ", "),
-                   "\nMissing classes:", paste(missing_classes, collapse = ", "),
-                   "\nActual classes:", paste(class(obj), collapse = ", ")),
-             call. = FALSE)
+        cli::cli_abort(c("Input must inherit from all classes: {class_names}",
+                         "Missing classes: {missing_classes}",
+                         "Actual classes: {obj_class}"))
       }
     }
   } else {
     # Must inherit from at least ONE class
     if (!any(inheritance_results)) {
-      stop(paste("Input must inherit from at least one of:",
-                 paste(class_names, collapse = ", "),
-                 "\nActual classes:", paste(class(obj), collapse = ", ")),
-           call. = FALSE)
+      cli::cli_abort(c("Input must inherit from at least one of: {class_names}",
+                       "Actual classes: {obj_class}"))
     }
   }
 
@@ -194,11 +180,8 @@ validate_matching_lengths <- function(..., .error_call = rlang::caller_env()) {
 
   if (length(unique(lengths)) > 1) {
     length_info <- paste(paste(vector_names, lengths, sep = " (length "), ")", collapse = ", ")
-    rlang::abort(
-      message = paste("All input vectors must have the same length.",
-                      "Found:", length_info),
-      call = .error_call
-    )
+    cli::cli_abort(c("All input vectors must have the same length.",
+                     "Found: {length_info}"))
   }
 }
 
@@ -211,10 +194,7 @@ validate_matching_lengths <- function(..., .error_call = rlang::caller_env()) {
 #'
 validate_list_vector_lengths <- function(vector_list, list_name, reference_length = NULL, .error_call = rlang::caller_env()) {
   if (length(vector_list) == 0) {
-    rlang::abort(
-      message = paste(list_name, "cannot be empty"),
-      call = .error_call
-    )
+    cli::cli_abort("{list_name} cannot be empty")
   }
 
   lengths <- lengths(vector_list)
@@ -222,18 +202,12 @@ validate_list_vector_lengths <- function(vector_list, list_name, reference_lengt
 
   if (length(unique(lengths)) > 1) {
     length_info <- paste(paste(vector_names, lengths, sep = " (length "), ")", collapse = ", ")
-    rlang::abort(
-      message = paste("All vectors in", list_name, "must have the same length.",
-                      "Found:", length_info),
-      call = .error_call
-    )
+    cli::cli_abort(c("All vectors in {list_name} must have the same length.",
+                     "Found: {length_info}"))
   }
 
   if (!is.null(reference_length) && lengths[1] != reference_length) {
-    rlang::abort(
-      message = paste("Vectors in", list_name, "must have length", reference_length,
-                      "but found length", lengths[1]),
-      call = .error_call
-    )
+    length_obj <- lengths[1]
+    cli::cli_abort("Vectors in {list_name} must have length {reference_length} but found length {length_obj}")
   }
 }

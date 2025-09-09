@@ -292,9 +292,10 @@ get_cov_structure <- function(smoothing_structure = c('shared',
   cov_structure <- switch(smoothing_structure,
                           'shared' = 0,
                           'independent' = 1,
-                          'correlated' = 2,
-                          stop("Invalid smoothing_structure: ",
-                               smoothing_structure, call. = FALSE)
+                          'correlated' = 2,                            {
+                            cli::cli_abort("Invalid option provided: '{smoothing_structure}'.
+                                             Please choose 'shared', 'independent', or 'correlated'.")
+                          }
   )
 
   return(cov_structure)
@@ -322,8 +323,10 @@ get_noise_structure <- function(observation_noise = c('observation_noise_only',
   noise_structure <- switch(observation_noise,
                             'observation_noise_only' = 0,
                             'pathogen_specific_noise' = 1,
-                            stop("Invalid observation_noise: ",
-                                 observation_noise, call. = FALSE)
+                            {
+                              cli::cli_abort("Invalid option provided: '{observation_noise}'.
+                                             Please choose 'observation_noise_only' or 'pathogen_specific_noise'.")
+                            }
   )
 
   return(noise_structure)
