@@ -1,95 +1,12 @@
-#' Case-insensitive argument matching
-#'
-#' A helper function to perform case-insensitive argument matching, similar to
-#' `match.arg()` but ignoring case differences. This function converts both the
-#' argument and choices to lowercase before matching.
-#'
-#' @param arg The argument to match. Can be a character vector or missing.
-#' @param choices Character vector of valid choices (should be in lowercase).
-#' @param several.ok Logical; if TRUE, multiple matches are allowed.
-#' @param arg_name Optional character string giving the name of the argument
-#'   for better error messages.
-#'
-#' @return The matched argument (in lowercase).
-match_arg_case_insensitive <- function(arg, choices, several.ok = FALSE, arg_name = NULL) {
-
-  # Handle missing argument case (use first choice as default)
-  if (missing(arg)) {
-    return(choices[1L])
-  }
-
-  # Handle case where arg is the full choices vector (default parameter case)
-  if (length(arg) > 1 && identical(sort(tolower(arg)), sort(tolower(choices)))) {
-    return(choices[1L])
-  }
-
-  # Convert to lowercase for matching
-  arg_lower <- tolower(arg)
-  choices_lower <- tolower(choices)
-
-  # Perform the matching
-  matched_indices <- pmatch(arg_lower, choices_lower)
-
-  # Handle multiple matches
-  if (length(matched_indices) > 1L && !several.ok) {
-    arg_display <- if (is.null(arg_name)) "argument" else paste0("'", arg_name, "'")
-    cli::cli_abort("{arg_display} must be of length 1.")
-  }
-
-  # Handle no matches
-  if (any(is.na(matched_indices))) {
-    arg_display <- if (is.null(arg_name)) "argument" else paste0("'", arg_name, "'")
-    invalid_args <- arg[is.na(matched_indices)]
-    cli::cli_abort("{arg_display} should be one of: {.var {choices}}. Got {.var {invalid_args}}.")
-  }
-
-  # Return the matched choice(s) in original case
-  return(choices[matched_indices])
-}
-
-#' Apply case-insensitive matching to multiple arguments
-#'
-#' A convenience wrapper around `match_arg_case_insensitive()` for handling
-#' multiple arguments at once. Useful when you have several string parameters
-#' that all need case-insensitive matching.
-#'
-#' @param arg_list Named list where names are argument names and values are
-#'   the arguments to match
-#' @param choices_list Named list where names correspond to argument names
-#'   and values are character vectors of valid choices
-#' @param several.ok Logical; if TRUE, multiple matches are allowed for all args
-#'
-#' @return Named list with matched arguments (in lowercase)
-match_args_case_insensitive <- function(arg_list, choices_list, several.ok = FALSE) {
-
-  # Validate inputs
-  if (!is.list(arg_list) || !is.list(choices_list)) {
-    cli::cli_abort("Both `arg_list` and `choices_list` must be lists")
-  }
-
-  if (!all(names(arg_list) %in% names(choices_list))) {
-    missing_choices <- setdiff(names(arg_list), names(choices_list))
-    cli::cli_abort("Missing choices for arguments: {missing_choices}")
-  }
-
-  # Apply case-insensitive matching to each argument
-  result <- lapply(names(arg_list), function(arg_name) {
-    match_arg_case_insensitive(
-      arg = arg_list[[arg_name]],
-      choices = choices_list[[arg_name]],
-      several.ok = several.ok,
-      arg_name = arg_name
-    )
-  })
-
-  names(result) <- names(arg_list)
-  return(result)
-}
-
 #' Validate that input is a positive whole number
 #'
 #' @param value The value to validate
 #' @param arg_name Name of the argument being validated (for error messages)
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
 #'
 #' @return NULL (invisibly) if validation passes, otherwise stops with error
 #'
@@ -105,6 +22,7 @@ validate_positive_whole_number <- function(value, arg_name) {
     cli::cli_abort("Argument {arg_name} must be a single value")
   }
 
+  #' @srrstats {G2.16} error to check for undefined values
   # Check that value is finite (not NA, NULL, Inf, -Inf, NaN)
   if (!is.finite(value)) {
     cli::cli_abort("Argument {arg_name} must be a finite number")
@@ -133,12 +51,18 @@ validate_positive_whole_number <- function(value, arg_name) {
 #' @param require_all Logical; if TRUE (default), object must inherit from ALL
 #'   specified classes. If FALSE, object must inherit from at least ONE class.
 #'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
+#' @srrstats {G5.8, G5.8a} checks for zero length
+#'
 #' @return Invisible NULL if validation passes, otherwise throws an error
 validate_class_inherits <- function(obj, class_names, require_all = TRUE) {
+
   # Ensure class_names is a character vector
-  if (!is.character(class_names) || length(class_names) == 0) {
+  if (length(class_names) == 0) {
     cli::cli_abort("{class_names} must be a non-empty character vector")
-    stop("class_names must be a non-empty character vector", call. = FALSE)
   }
 
   # Check inheritance for each class
@@ -173,7 +97,13 @@ validate_class_inherits <- function(obj, class_names, require_all = TRUE) {
 #' @param ... Named vectors to check for matching lengths
 #' @param .error_call The calling function for better error messages
 #'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
+#'
 validate_matching_lengths <- function(..., .error_call = rlang::caller_env()) {
+
   vectors <- list(...)
   vector_names <- names(vectors)
   lengths <- lengths(vectors)
@@ -192,13 +122,34 @@ validate_matching_lengths <- function(..., .error_call = rlang::caller_env()) {
 #' @param reference_length Expected length (optional)
 #' @param .error_call The calling function for better error messages
 #'
-validate_list_vector_lengths <- function(vector_list, list_name, reference_length = NULL, .error_call = rlang::caller_env()) {
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
+#' @srrstats {G5.8, G5.8a} checks for zero length
+#'
+validate_list_vector <- function(vector_list, list_name,
+                                 reference_length = NULL,
+                                 .error_call = rlang::caller_env()) {
+
+  if (!is.list(vector_list)) {
+    cli::cli_abort("{.arg {list_name}} must be a list.")
+  }
+
   if (length(vector_list) == 0) {
     cli::cli_abort("{list_name} cannot be empty")
   }
 
   lengths <- lengths(vector_list)
   vector_names <- names(vector_list)
+
+  if (is.null(vector_names)) {
+    cli::cli_abort("{.arg {list_name}} must have named elements.")
+  }
+
+  if (any(vector_names == "" | is.na(vector_names))) {
+    cli::cli_abort("All elements in {.arg {list_name}} must have non-empty names.")
+  }
 
   if (length(unique(lengths)) > 1) {
     length_info <- paste(paste(vector_names, lengths, sep = " (length "), ")", collapse = ", ")
@@ -210,4 +161,6 @@ validate_list_vector_lengths <- function(vector_list, list_name, reference_lengt
     length_obj <- lengths[1]
     cli::cli_abort("Vectors in {list_name} must have length {reference_length} but found length {length_obj}")
   }
+
+  invisible(TRUE)
 }

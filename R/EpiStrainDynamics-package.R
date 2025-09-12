@@ -11,6 +11,10 @@
 #' @importFrom rstantools rstan_config
 #' @importFrom RcppParallel RcppParallelLibs
 #'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#'
 #' @references
 #' Stan Development Team (NA). RStan: the R interface to Stan. R package version 2.32.3. https://mc-stan.org
 #'

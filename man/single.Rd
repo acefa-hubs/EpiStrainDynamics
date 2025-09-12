@@ -12,11 +12,11 @@ single(case_timeseries, time, pathogen_name = "default")
 \item{time}{vector of labelled time data}
 
 \item{pathogen_name}{optionally provided name of pathogen. This value is
-preserved exactly as provided (case-sensitive). Default name is `default`.}
+preserved exactly as provided (case-sensitive). Default name is \code{default}.}
 }
 \value{
 formatted list with pathogen structure and data of class
-  `EpiStrainDynamics.pathogen_structure`.
+\code{EpiStrainDynamics.pathogen_structure}.
 }
 \description{
 Single pathogen structure

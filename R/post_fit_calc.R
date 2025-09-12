@@ -1,7 +1,3 @@
-# =============================================================================
-# SHARED HELPER FUNCTIONS
-# =============================================================================
-
 #' Calculate Summary Statistics for Posterior Samples
 #'
 #' Computes quantiles and proportion above threshold for a vector of posterior samples
@@ -11,7 +7,13 @@
 #'
 #' @importFrom stats quantile
 #'
-#' @return Data frame with columns: y (median), lb_50/ub_50 (50% CI), lb_95/ub_95 (95% CI), prop (proportion > threshold)
+#' @return Data frame with columns: y (median), lb_50/ub_50 (50% CI),
+#'   lb_95/ub_95 (95% CI), prop (proportion > threshold)
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#'
 calc_stats <- function(values, threshold = 0) {
   quan <- stats::quantile(values, c(0.5, 0.025, 0.25, 0.75, 0.975))
   prop <- mean(values > threshold)
@@ -31,8 +33,15 @@ calc_stats <- function(values, threshold = 0) {
 #' Extracts commonly used components from a fitted model object for analysis functions
 #'
 #' @param fitted_model Fitted model object containing fit, constructed_model, etc.
+#'
 #' @return List containing extracted components: fit, pathogen_names, num_path,
-#'   time_seq, time, num_days, days_per_knot, spline_degree, DOW, week_effect, dow_effect
+#'   time_seq, time, num_days, days_per_knot, spline_degree, DOW, week_effect,
+#'   dow_effect
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#'
 get_model_components <- function(fitted_model) {
   list(
     fit = fitted_model$fit,
@@ -56,7 +65,13 @@ get_model_components <- function(fitted_model) {
 #'
 #' @param time_grid Data frame from with time_idx columns
 #' @param pathogen_names Character vector of pathogen names
+#'
 #' @return Data frame with columns: pathogen, pathogen_idx, time_idx
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#'
 expand_pathogen_grid <- function(time_grid, pathogen_names) {
   num_days <- nrow(time_grid)
   num_path <- length(pathogen_names)
@@ -75,9 +90,18 @@ expand_pathogen_grid <- function(time_grid, pathogen_names) {
 #' @param time_seq Numeric vector of time points
 #' @param days_per_knot Integer number of days between knots
 #' @param spline_degree Integer degree of B-splines
-#' @return Matrix B_true for transforming spline coefficients
+#'
+#' @keywords internal
+#'
 #' @importFrom splines bs
 #' @importFrom stats predict
+#'
+#' @return Matrix B_true for transforming spline coefficients
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#'
 predict_B_true <- function(time_seq, days_per_knot, spline_degree) {
   X <- as.numeric(time_seq)
   knots <- get_knots(X, days_per_knot = days_per_knot, spline_degree = spline_degree)
@@ -96,7 +120,13 @@ predict_B_true <- function(time_seq, days_per_knot, spline_degree) {
 #' @param post Posterior samples object containing spline coefficients
 #' @param B_true B-spline basis matrix from predict_B_true()
 #' @param num_days Integer number of time points
-#' @return Array of transformed posterior samples [samples, time]
+#'
+#' @return Array of transformed posterior samples \code{[samples, time]}
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#'
 transform_posterior_single <- function(post, B_true, num_days) {
   a <- array(data = NA, dim = c(nrow(post$a), num_days))
   for(k in 1:nrow(post$a)) {
@@ -113,7 +143,13 @@ transform_posterior_single <- function(post, B_true, num_days) {
 #' @param B_true B-spline basis matrix from predict_B_true()
 #' @param num_path Integer number of pathogens
 #' @param num_days Integer number of time points
-#' @return Array of transformed posterior samples [samples, pathogens, time]
+#'
+#' @return Array of transformed posterior samples \code{[samples, pathogens, time]}
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#'
 transform_posterior_multi <- function(post, B_true, num_path, num_days) {
   a <- array(data = NA, dim = c(nrow(post$a), num_path, num_days))
   for(j in 1:num_path) {
@@ -123,10 +159,6 @@ transform_posterior_multi <- function(post, B_true, num_path, num_days) {
   }
   a
 }
-
-# =============================================================================
-# COMPUTATION ENGINE
-# =============================================================================
 
 #' Generic Computation Engine for Multiple Pathogen Analysis
 #'
@@ -139,6 +171,11 @@ transform_posterior_multi <- function(post, B_true, num_path, num_days) {
 #' @param use_splines Logical indicating whether to use spline transformation
 #' @param ... Additional arguments passed to calculation functions
 #'  (e.g., tau_max, gi_dist for Rt, and dow for incidence)
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#'
 #' @return Data frame with results for individual pathogens and totals
 #' @importFrom rstan extract
 #' @importFrom dplyr bind_rows arrange
@@ -218,6 +255,11 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
 #' @param threshold Numeric threshold for proportion calculations (default: 0)
 #' @param use_splines Logical indicating whether to use spline transformation
 #' @param ... Additional arguments passed to calculation functions (e.g., tau_max, gi_dist for Rt)
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#'
 #' @return Data frame with analysis results
 #' @importFrom rstan extract
 #' @examples
@@ -277,7 +319,6 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
     measure$pathogen <- do.call(rbind, pathogen_idx_col)
     return(measure)
   }
-
 }
 
 #' Unified Calculation Wrapper
@@ -293,6 +334,11 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
 #' @param components Model components from get_model_components()
 #' @param extra_args List of additional arguments for calc_fn
 #' @param threshold Numeric threshold for summary statistics
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#'
 #' @return Data frame with expanded summary statistics
 #' @importFrom purrr map2
 calc_wrapper <- function (df, time_idx_col, pathogen_idx_col, calc_fn,

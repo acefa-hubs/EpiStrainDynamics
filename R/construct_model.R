@@ -8,6 +8,13 @@
 #'  names of class `EpiStrainDynamics.model`
 #' @export
 #'
+#' @srrstats {BS1.1} Code examples of how to enter both simple and more complex
+#'   data are here in the `construct_model()` documentation. Descriptive text
+#'   can be found in the `README.md`
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {BS2.15} checks that data has been input in correct form, and
+#'   provides an informative error message if not
+#'
 #' @examples
 #' # Basic usage
 #' method_obj <- random_walk()
@@ -41,7 +48,7 @@ construct_model <- function(method,
                             pathogen_structure,
                             dow_effect = FALSE) {
 
-  # Input validation
+  #' @srrstats {G2.1, G2.2, G5.8, G5.8b} assertions on types of inputs
   validate_class_inherits(
     method, 'EpiStrainDynamics.method'
   )
@@ -110,7 +117,11 @@ construct_model <- function(method,
 #' @param method_name Character string: method name ('random-walk' or 'p-spline')
 #' @param pathogen_type Character string: pathogen structure type
 #'
+#' @noRd
 #' @returns Character string: model type
+#'
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
 #'
 get_model_type <- function(method_name, pathogen_type) {
 
@@ -150,7 +161,11 @@ get_model_type <- function(method_name, pathogen_type) {
 #' @param days_per_knot Number of days between knots (must be positive)
 #' @param spline_degree Polynomial degree of spline (must be positive)
 #'
+#' @noRd
 #' @return Numeric vector of knot locations
+#'
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
 #'
 get_knots <- function(X, days_per_knot = 3, spline_degree = 3) {
 
