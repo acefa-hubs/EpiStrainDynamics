@@ -1,9 +1,9 @@
 # Contributing to EpiStrainDynamics
 
-`EpiStrainDynamics` is in a stable state of development, with some degree of active subsequent development as envisioned by the primary authors.
+`EpiStrainDynamics` is in a stable state of development, with some degree of active subsequent development as envisioned by the primary authors. 
+Test cases and improvements are especially welcome. 
 This outlines how to propose a change to `EpiStrainDynamics`.
 For a detailed discussion on contributing to this package, please see the [development contributing guide](https://rstd.io/tidy-contrib) and [code review principles](https://code-review.tidyverse.org/).
-
 
 ## Fixing typos
 

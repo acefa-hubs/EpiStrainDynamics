@@ -28,8 +28,8 @@ proportion(
 )
 }
 \arguments{
-\item{fitted_model}{Fitted model object with class `EpiStrainDynamics.fit`
-with `multiple` or `subtyped` pathogen structure.}
+\item{fitted_model}{Fitted model object with class \code{EpiStrainDynamics.fit}
+with \code{multiple} or \code{subtyped} pathogen structure.}
 
 \item{numerator_combination}{Named pathogens or subtypes to be included in
 proportion numerator.}
@@ -40,16 +40,48 @@ proportion denominator, or 'all'.}
 \item{...}{Additional arguments passed to metrics calculation}
 }
 \value{
-named list of class `EpiStrainDynamics.metric` containing a dataframe
- of the calculated metric outcome (`$measure`), the fit object (`$fit`), and the
- constructed model object (`$constructed_model`). The `measure` data frame
- contains the median of the epidemiological quantity (`y`), the 50% credible
- interval of the quantity (`lb_50` & `ub_50`), the 95% credible interval
- (`lb_95` & `ub_95`), the proportion greater than a defined threshold value
- (`prop`), the pathogen name (`pathogen`), and the time label (`time`).
+named list of class \code{EpiStrainDynamics.metric} containing a dataframe
+of the calculated metric outcome (\verb{$measure}), the fit object (\verb{$fit}), and the
+constructed model object (\verb{$constructed_model}). The \code{measure} data frame
+contains the median of the epidemiological quantity (\code{y}), the 50\% credible
+interval of the quantity (\code{lb_50} & \code{ub_50}), the 95\% credible interval
+(\code{lb_95} & \code{ub_95}), the proportion greater than a defined threshold value
+(\code{prop}), the pathogen name (\code{pathogen}), and the time label (\code{time}).
 }
 \description{
-S3 generic for computing proportions from fitted models
+Computes epidemiological proportion, defined as the relative fraction of
+cases attributable to specific pathogen(s) or strain(s) at a given time point,
+calculated as the ratio of incidence from selected pathogen(s) to a
+reference group:
+\deqn{P_t = \frac{I_{\text{numerator}}(t)}{I_{\text{denominator}}(t)}}
+}
+\details{
+Where incidences are derived from the exponential of log-incidence estimates:
+\deqn{P_t = \frac{\sum_{i \in \text{numerator}} \exp(\log\text{-incidence}_{i,t})}{\sum_{j \in \text{denominator}} \exp(\log\text{-incidence}_{j,t})}}
+
+This metric quantifies the \strong{relative contribution} of specific pathogen(s)
+or strain(s) to the total disease burden. Key characteristics:
+\itemize{
+\item Values between 0 and 1 (\eqn{0 \leq P_t \leq 1}) when denominator
+includes numerator components
+\item Values can exceed 1 (\eqn{P_t > 1}) when denominator excludes
+numerator components
+\item Represents the fractional share of cases at each time point
+\item Time-varying to capture changing pathogen/strain dynamics
+}
+
+\strong{Flexible combinations}:
+\itemize{
+\item Individual proportions: Each pathogen relative to all pathogens
+(default)
+\item Custom numerator: Specific pathogen(s) of interest (e.g., variant
+of concern)
+\item Custom denominator: Either 'all' pathogens or a specified subset
+\item Subset comparisons: Compare specific groups (e.g., Alpha vs.
+Delta + Omicron)
+}
+
+This metric function can be run directly on the fitted model output.
 }
 \examples{
 \dontrun{
@@ -84,7 +116,7 @@ S3 generic for computing proportions from fitted models
 \seealso{
 Other metrics: 
 \code{\link{Rt}()},
-\code{\link{growth_rate}()},
+\code{\link{fit_model.rw_subtyped}()},
 \code{\link{incidence}()}
 }
 \concept{metrics}

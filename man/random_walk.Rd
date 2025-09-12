@@ -8,10 +8,15 @@ random_walk()
 }
 \value{
 list with method identified as random walk of class
-  `EpiStrainDynamics.method`
+\code{EpiStrainDynamics.method}
 }
 \description{
-Specify random walk method
+Random walk is one of two optional Bayesian smoothing prior methods that can
+be selected and used in the model definition with \code{EpiStrainDynamics}. The
+random walk is a stochastic process that describes a path of a series of
+random steps on a mathematical space, and each next step's direction only
+depends on the current position, not the previous path. No additional
+arguments must be supplied to define the random walk method.
 }
 \examples{
 random_walk()

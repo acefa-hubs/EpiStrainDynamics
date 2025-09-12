@@ -1,6 +1,27 @@
 #' Generic Method for Growth Rate Analysis
 #'
-#' S3 generic for computing growth rates from fitted models
+#' Computes the epidemiological growth rate, defined as the instantaneous
+#' rate of change in log-incidence over time. Mathematically, it represents:
+#' \deqn{r_t = \log(I_t) - \log(I_{t-1}) = \log\left(\frac{I_t}{I_{t-1}}\right)}
+#' where \eqn{I_t} is incidence at time t.
+#'
+#' This metric quantifies the **proportional change** in disease incidence
+#' from one time period to the next on a logarithmic scale, where:
+#' \itemize{
+#'   \item Positive values (\eqn{r_t > 0}) indicate exponential growth
+#'   \item Negative values (\eqn{r_t < 0}) indicate exponential decline
+#'   \item Values near zero (\eqn{r_t \approx 0}) indicate stable incidence
+#'   \item The magnitude indicates the rate of exponential change
+#' }
+#'
+#' For example:
+#' \itemize{
+#'   \item A growth rate of 0.1 means incidence increased by approximately 10.5% (\eqn{e^{0.1} - 1})
+#'   \item A growth rate of -0.05 means incidence decreased by approximately 4.9%
+#'   \item A growth rate of 0 means no change in incidence
+#' }
+#'
+#' This metric function can be run directly on the fitted model output.
 #'
 #' @param fitted_model Fitted model object with class `EpiStrainDynamics.fit`
 #' @param ... Additional arguments passed to metrics calculation
@@ -13,6 +34,9 @@
 #'  (`prop`), the pathogen name (`pathogen`), and the time label (`time`).
 #' @family metrics
 #' @export
+#'
+#' @srrstats {G1.3} metric defined clearly
+#' @srrstats {G1.4} uses `Roxygen2` documentation
 #'
 #' @examples
 #' \dontrun{
@@ -74,12 +98,20 @@ growth_rate.rw_single <- function(fitted_model, ...) {
 #'
 #' Computes log-difference in incidence for single pathogen models
 #'
-#' @param a Array of log-incidence posterior samples [samples, time]
+#' @param a Array of log-incidence posterior samples \code{[samples, time]}
 #' @param time_idx Integer time index
 #' @param pathogen_idx NULL (unused but required for interface consistency)
-#' @param post Posterior samples object (unused but required for interface consistency)
-#' @param components Model components (unused but required for interface consistency)
+#' @param post Posterior samples object (unused but required for interface
+#'   consistency)
+#' @param components Model components (unused but required for interface
+#'   consistency)
+#'
 #' @return Vector of growth rate posterior samples
+#' @noRd
+#'
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#'
 calc_growth_single <- function(a, time_idx, pathogen_idx, post, components) {
   a[, time_idx] - a[, time_idx - 1]
 }
@@ -88,12 +120,18 @@ calc_growth_single <- function(a, time_idx, pathogen_idx, post, components) {
 #'
 #' Computes log-difference in incidence for a specific pathogen
 #'
-#' @param a Array of log-incidence posterior samples [samples, pathogens, time]
+#' @param a Array of log-incidence posterior samples \code{[samples, pathogens, time]}
 #' @param time_idx Integer time index
 #' @param pathogen_idx Integer pathogen index
 #' @param post Posterior samples object (unused but required for interface consistency)
 #' @param components Model components (unused but required for interface consistency)
+#'
 #' @return Vector of growth rate posterior samples
+#' @noRd
+#'
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#'
 calc_growth_individual <- function(a, time_idx, pathogen_idx, post, components) {
   a[, pathogen_idx, time_idx] - a[, pathogen_idx, time_idx - 1]
 }
@@ -102,12 +140,18 @@ calc_growth_individual <- function(a, time_idx, pathogen_idx, post, components) 
 #'
 #' Computes log-difference in total incidence across all pathogens
 #'
-#' @param a Array of log-incidence posterior samples [samples, pathogens, time]
+#' @param a Array of log-incidence posterior samples \code{[samples, pathogens, time]}
 #' @param time_idx Integer time index
 #' @param pathogen_idx NULL (unused but required for interface consistency)
 #' @param post Posterior samples object (unused but required for interface consistency)
 #' @param components Model components (unused but required for interface consistency)
+#'
 #' @return Vector of total growth rate posterior samples
+#' @noRd
+#'
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#'
 calc_growth_total <- function(a, time_idx, pathogen_idx, post, components) {
   total_i <- rowSums(exp(a[, , time_idx]))
   total_im1 <- rowSums(exp(a[, , time_idx - 1]))

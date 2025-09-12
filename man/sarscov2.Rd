@@ -5,26 +5,28 @@
 \alias{sarscov2}
 \title{United Kingdom Health Security Agency SARS-CoV-2 case data}
 \format{
-## `sarscov2`
+\subsection{\code{sarscov2}}{
+
 A data frame with 830 rows and 15 columns:
 \describe{
-  \item{date}{Date, between 23 September 2020 and 31 December 2022}
-  \item{cases}{Numeric, daily number of cases}
-  \item{B.1.177}{Integer, daily number of cases of B.1.177}
-  \item{B.1.1.7}{Integer, daily number of cases of B.1.1.7 (Alpha variant)}
-  \item{B.1.617.2}{Integer, daily number of cases of B.1.617.2 (Delta variant)}
-  \item{BA.1}{Integer, daily number of cases of BA.1 (Omicron BA.1 variant)}
-  \item{BA.2}{Integer, daily number of cases of BA.2 (Omicron BA.2 variant)}
-  \item{BA.2.75}{Integer, daily number of cases of BA.4 (Omicron BA.4 variant)}
-  \item{BA.4}{Integer, daily number of cases of BA.5 (Omicron BA.5 variant)}
-  \item{BA.5}{Integer, daily number of cases of BA.2.75 (Omicron BA.2.75 variant)}
-  \item{BQ.1}{Integer, daily number of cases of BQ.1 (Omicron BQ.1 variant)}
-  \item{XBB}{Integer, daily number of cases of XBB (a recombinant of omicron
-     sub-variants)}
-  \item{Other}{Integer, daily number of cases of all lineages with a
-     designation not consistent with any of the major lineage calls}
-  \item{total}{}
-  \item{t}{}
+\item{date}{Date, between 23 September 2020 and 31 December 2022}
+\item{cases}{Numeric, daily number of cases}
+\item{B.1.177}{Integer, daily number of cases of B.1.177}
+\item{B.1.1.7}{Integer, daily number of cases of B.1.1.7 (Alpha variant)}
+\item{B.1.617.2}{Integer, daily number of cases of B.1.617.2 (Delta variant)}
+\item{BA.1}{Integer, daily number of cases of BA.1 (Omicron BA.1 variant)}
+\item{BA.2}{Integer, daily number of cases of BA.2 (Omicron BA.2 variant)}
+\item{BA.2.75}{Integer, daily number of cases of BA.4 (Omicron BA.4 variant)}
+\item{BA.4}{Integer, daily number of cases of BA.5 (Omicron BA.5 variant)}
+\item{BA.5}{Integer, daily number of cases of BA.2.75 (Omicron BA.2.75 variant)}
+\item{BQ.1}{Integer, daily number of cases of BQ.1 (Omicron BQ.1 variant)}
+\item{XBB}{Integer, daily number of cases of XBB (a recombinant of omicron
+sub-variants)}
+\item{Other}{Integer, daily number of cases of all lineages with a
+designation not consistent with any of the major lineage calls}
+\item{total}{}
+\item{t}{}
+}
 }
 }
 \source{

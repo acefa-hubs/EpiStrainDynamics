@@ -27,19 +27,19 @@ influenzaA}
 
 \item{other_pathogen_timeseries}{other pathogen case timeseries}
 
-\item{smoothing_structure}{either `shared` (all pathogens have the same
-smoothing structure; tau[1]), `independent` (each pathogen has completely
-independent smoothing structure; tau[number of pathogens]), or `correlated`
-(smoothing structure is correlated among pathogens Sigma[number of
-pathogens, number of pathogens]). Case-insensitive.}
+\item{smoothing_structure}{either \code{shared} (all pathogens have the same
+smoothing structure; \code{tau[1]}), \code{independent} (each pathogen with
+independent smoothing structure; \code{tau[number of pathogens]}), or
+\code{correlated} (smoothing structure is correlated among pathogens
+\code{Sigma[number of pathogens, number of pathogens]}). Case-insensitive.}
 
-\item{observation_noise}{either `observation_noise_only` (only includes
-observation noise - the same between pathogens) or `pathogen_specific_noise`
+\item{observation_noise}{either \code{observation_noise_only} (only includes
+observation noise - the same between pathogens) or \code{pathogen_specific_noise}
 (includes noise in individual pathogens as well). Case-insensitive.}
 }
 \value{
 named list including pathogen_structure, pathogen_names, data,
-  and model_params of class `EpiStrainDynamics.pathogen_structure`
+and model_params of class \code{EpiStrainDynamics.pathogen_structure}
 }
 \description{
 Subtyped pathogen structure
@@ -61,14 +61,6 @@ subtyped(
   smoothing_structure = 'independent',
   observation_noise = 'observation_noise_only'
 )
-
-# NOTE: smoothing_structure and observation_noise are case insensitive, so
-# these will work
-# subtyped(
-#    ...
-#    smoothing_structure = 'Independent',
-#    observation_noise = 'OBSERVATION_NOISE_ONLY'
-# )
 
 }
 \seealso{

@@ -19,23 +19,46 @@ incidence(fitted_model, dow, ...)
 \method{incidence}{rw_single}(fitted_model, dow, ...)
 }
 \arguments{
-\item{fitted_model}{Fitted model object with class `EpiStrainDynamics.fit`}
+\item{fitted_model}{Fitted model object with class \code{EpiStrainDynamics.fit}}
 
 \item{dow}{Logical whether or not to include day-of-week in incidence calc}
 
 \item{...}{Additional arguments passed to metrics calculation}
 }
 \value{
-named list of class `EpiStrainDynamics.metric` containing a dataframe
- of the calculated metric outcome (`$measure`), the fit object (`$fit`), and the
- constructed model object (`$constructed_model`). The `measure` data frame
- contains the median of the epidemiological quantity (`y`), the 50% credible
- interval of the quantity (`lb_50` & `ub_50`), the 95% credible interval
- (`lb_95` & `ub_95`), the proportion greater than a defined threshold value
- (`prop`), the pathogen name (`pathogen`), and the time label (`time`).
+named list of class \code{EpiStrainDynamics.metric} containing a dataframe
+of the calculated metric outcome (\verb{$measure}), the fit object (\verb{$fit}), and the
+constructed model object (\verb{$constructed_model}). The \code{measure} data frame
+contains the median of the epidemiological quantity (\code{y}), the 50\% credible
+interval of the quantity (\code{lb_50} & \code{ub_50}), the 95\% credible interval
+(\code{lb_95} & \code{ub_95}), the proportion greater than a defined threshold value
+(\code{prop}), the pathogen name (\code{pathogen}), and the time label (\code{time}).
 }
 \description{
-S3 generic for computing incidence from fitted models
+Computes epidemiological incidence, defined as the number of new cases
+occurring at a specific time point, derived by exponentiating the
+log-incidence estimates from the fitted model:
+\deqn{I_t = \exp(\log\text{-incidence}_t)}
+}
+\details{
+This metric quantifies the \strong{absolute number of new cases} at each time
+point, where it is:
+\itemize{
+\item Always positive (since it's an exponentiated value)
+\item Represents the expected case count at time t
+\item Can be adjusted for day-of-week effects when modeled
+\item Provides uncertainty quantification through posterior credible intervals
+}
+
+\strong{Day-of-week adjustment}: When day-of-week effects are included in the model,
+the incidence is further adjusted as:
+\deqn{I_t^{adj} = I_t \times \text{week\_effect} \times \text{dow\_simplex}[\text{DOW}(t)]}
+
+This accounts for systematic variations in case reporting or transmission
+patterns across different days of the week (e.g., lower weekend reporting,
+higher weekday transmission).
+
+This metric function can be run directly on the fitted model output.
 }
 \examples{
 \dontrun{
@@ -52,7 +75,7 @@ S3 generic for computing incidence from fitted models
 \seealso{
 Other metrics: 
 \code{\link{Rt}()},
-\code{\link{growth_rate}()},
+\code{\link{fit_model.rw_subtyped}()},
 \code{\link{proportion}()}
 }
 \concept{metrics}
