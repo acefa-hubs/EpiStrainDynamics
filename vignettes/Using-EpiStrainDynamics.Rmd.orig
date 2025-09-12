@@ -1,5 +1,5 @@
 ---
-title: "Using EpiStainDynamics"
+title: "Using-EpiStainDynamics"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Using-EpiStrainDynamics}
@@ -17,6 +17,17 @@ library(EpiStrainDynamics)
 # Set some stan settings
 rstan::rstan_options(auto_write = TRUE)
 options(mc.cores = 1)
+```
+
+```{r srr-tags, eval = FALSE, echo = FALSE}
+#' @srrstats {BS1.1} Descriptions in text and with code examples of how to
+#'   enter both simple and more complex data are below in 'Step 1: Construct
+#'   model'.
+#' @srrstats {BS6.1} All calculated epidemiological metrics can be plotted with
+#'   a default plot function. The stan fit object can be plotted using helper
+#'   packages as described below.
+#' @srrstats {BS6.2, BS6.3, BS6.5} Options for visualising posterior samples are described
+#'   below.
 ```
 
 EpiStrainDynamics extends an existing statistical modelling framework capable of inferring the trends of up to two pathogens. The modeling framework has been extended here to handle any number of pathogens; fit to time series data of counts (eg, daily number of cases); incorporate influenza testing data in which the subtype for influenza A samples may be undetermined; account for day-of-the-week effects in daily data; include options for fitting penalized splines or random walks; support additional (optional) correlation structures in the parameters describing the smoothness of the penalized splines (or random walks); and account for additional (optional) sources of noise in the observation process.
@@ -153,6 +164,26 @@ fit <- fit_model(
 ```
 
 The output of this function is a list with the stan fit object, accessed with `$fit`, and the elements of the constructed model object from the previous step, accessed with `$constructed_model`.
+
+The stan fit object can be interrogated with any package that works with stan outputs. One could visualise posteriors, for example with the package `bayesplot`:
+
+```{r}
+library(bayesplot)
+mcmc_area(as.matrix(fit$fit), pars = 'tau', prob = 0.8)
+```
+
+The `bayesplot` package can also be used to evaluate convergence:
+
+```{r}
+mcmc_trace(rstan::extract(fit$fit, permuted = FALSE), pars = c('a[1]'))
+```
+
+Or else the application `shinystan` is a great tool to visualise the fit and diagnose issues:
+
+```{r, eval = FALSE}
+library(shinystan)
+launch_shinystan(fit$fit)
+```
 
 # Step 3: Calculate and explore epidemiological quantities
 

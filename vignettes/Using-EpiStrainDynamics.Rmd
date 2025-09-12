@@ -1,11 +1,13 @@
 ---
-title: "Using EpiStainDynamics"
+title: "Using-EpiStainDynamics"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Using-EpiStrainDynamics}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+
 
 
 
@@ -124,6 +126,37 @@ fit <- fit_model(
 
 The output of this function is a list with the stan fit object, accessed with `$fit`, and the elements of the constructed model object from the previous step, accessed with `$constructed_model`.
 
+The stan fit object can be interrogated with any package that works with stan outputs. One could visualise posteriors, for example with the package `bayesplot`:
+
+
+``` r
+library(bayesplot)
+#> This is bayesplot version 1.14.0
+#> - Online documentation and vignettes at mc-stan.org/bayesplot
+#> - bayesplot theme set to bayesplot::theme_default()
+#>    * Does _not_ affect other ggplot2 plots
+#>    * See ?bayesplot_theme_set for details on theme setting
+mcmc_area(as.matrix(fit$fit), pars = 'tau', prob = 0.8)
+#> Error in mcmc_area(as.matrix(fit$fit), pars = "tau", prob = 0.8): could not find function "mcmc_area"
+```
+
+The `bayesplot` package can also be used to evaluate convergence:
+
+
+``` r
+mcmc_trace(rstan::extract(fit$fit, permuted = FALSE), pars = c('a[1]'))
+#> Error in `select_parameters()`:
+#> ! Some 'pars' don't match parameter names: a[1] FALSE
+```
+
+Or else the application `shinystan` is a great tool to visualise the fit and diagnose issues:
+
+
+``` r
+library(shinystan)
+launch_shinystan(fit$fit)
+```
+
 # Step 3: Calculate and explore epidemiological quantities
 
 The package provides helper functions to calculate a number of useful epidemiological quantities. The output of these methods functions  are a named list containing a data frame of the outcome quantity (`$measure`), the fit object (`$fit`), and the constructed model object (`$constructed_model`). `measure` is a data frame containing the median of the epidemiological quantity (`y`), the 50% credible interval of the quantity (`lb_50` & `ub_50`), the 95% credible interval (`lb_95` & `ub_95`), the proportion greater than a defined threshold value (`prop`), the pathogen name (`pathogen`), and the time label (`time`).
@@ -150,7 +183,7 @@ head(gr$measure)
 plot(gr)
 ```
 
-![plot of chunk growth_rate](vignettes/figure/growth_rate-1.png)
+![plot of chunk growth_rate](figure/growth_rate-1.png)
 
 Calculate effective reproduction number over time with `Rt()` (requiring specification of a generation interval distribution):
 
@@ -159,7 +192,7 @@ rt <- Rt(fit, gi_dist = function(x) 4*x*exp(-2*x))
 plot(rt)
 ```
 
-![plot of chunk Rt](vignettes/figure/Rt-1.png)
+![plot of chunk Rt](figure/Rt-1.png)
 
 Calculate incidence with or without a day of week effect with `incidence()`:
 
@@ -168,7 +201,7 @@ inc_dow <- incidence(fit, dow = TRUE)
 plot(inc_dow)
 ```
 
-![plot of chunk incidence](vignettes/figure/incidence-1.png)
+![plot of chunk incidence](figure/incidence-1.png)
 
 Calculate proportions of different combinations of cases attributable to different pathogens/subtypes using `proportion()`. By default, the function will return a dataframe with proportions of each pathogen or subtype out of all pathogens/subtypes. Alternatively, one can specify a selection of pathogens/subtypes by their names in the named lists provided to `construct_model()`:
 ```
@@ -185,4 +218,4 @@ prop <- proportion(fit)
 plot(prop)
 ```
 
-![plot of chunk proportion](vignettes/figure/proportion-1.png)
+![plot of chunk proportion](figure/proportion-1.png)
