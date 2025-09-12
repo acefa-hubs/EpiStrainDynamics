@@ -52,8 +52,8 @@ pak::pak("acefa-hubs/EpiStrainDynamics")
 
 ## Using `EpiStrainDynamics`
 
-Detailed instructions can be found on the vignette on the
-[website](https://acefa-hubs.github.io/EpiStrainDynamics/articles/Using-EpiStrainDyamics.html).
+Detailed instructions can be found on the
+[vignette](https://acefa-hubs.github.io/EpiStrainDynamics/articles/Using-EpiStrainDyamics.html).
 Here we provide a short overview.
 
 ### Step 1: Construct model
@@ -182,12 +182,14 @@ article underlying the statistical model developments:
 
 Windecker S, Eales O (2025). EpiStrainDynamics: Infer temporal trends of
 multiple pathogens. R package version 0.0.0.9000,
-<https://acefa-hubs.github.io/EpiStrainDynamics/>. Oliver Eales, Saras M
-Windecker, James M McCaw, Freya M Shearer, Inferring temporal trends of
-multiple pathogens, variants, subtypes or serotypes from routine
-surveillance data, American Journal of Epidemiology, 2025;, kwaf119,
-<https://doi.org/10.1093/aje/kwaf119> For code corresponding to this
-paper, see branch
+<https://acefa-hubs.github.io/EpiStrainDynamics/>.
+
+Oliver Eales, Saras M Windecker, James M McCaw, Freya M Shearer,
+Inferring temporal trends of multiple pathogens, variants, subtypes or
+serotypes from routine surveillance data, American Journal of
+Epidemiology, 2025;, kwaf119, <https://doi.org/10.1093/aje/kwaf119>
+
+For code corresponding to this paper, see branch
 [`paper_analysis`](https://github.com/acefa-hubs/EpiStrainDynamics/tree/paper_analysis).
 
 ## Contribution
