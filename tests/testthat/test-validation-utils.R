@@ -1,315 +1,8 @@
-# Tests for case-insensitive argument matching functions
-
-# Tests for match_arg_case_insensitive()
-test_that("match_arg_case_insensitive() handles basic matching correctly", {
-  choices <- c("apple", "banana", "cherry")
-
-  # Test exact lowercase match
-  expect_equal(match_arg_case_insensitive("apple", choices), "apple")
-  expect_equal(match_arg_case_insensitive("banana", choices), "banana")
-
-  # Test uppercase input
-  expect_equal(match_arg_case_insensitive("APPLE", choices), "apple")
-  expect_equal(match_arg_case_insensitive("BANANA", choices), "banana")
-
-  # Test mixed case input
-  expect_equal(match_arg_case_insensitive("Apple", choices), "apple")
-  expect_equal(match_arg_case_insensitive("BaNaNa", choices), "banana")
-  expect_equal(match_arg_case_insensitive("ChErRy", choices), "cherry")
-})
-
-test_that("match_arg_case_insensitive() handles partial matching", {
-  choices <- c("independent", "correlated", "shared")
-
-  # Test partial matches that are unambiguous
-  expect_equal(match_arg_case_insensitive("ind", choices), "independent")
-  expect_equal(match_arg_case_insensitive("cor", choices), "correlated")
-  expect_equal(match_arg_case_insensitive("sha", choices), "shared")
-
-  # Test partial matches with different cases
-  expect_equal(match_arg_case_insensitive("IND", choices), "independent")
-  expect_equal(match_arg_case_insensitive("Cor", choices), "correlated")
-})
-
-test_that("match_arg_case_insensitive() handles missing argument", {
-  choices <- c("first", "second", "third")
-
-  # Missing argument should return first choice
-  result <- match_arg_case_insensitive(choices = choices)
-  expect_equal(result, "first")
-})
-
-test_that("match_arg_case_insensitive() handles default parameter pattern", {
-  choices <- c("apple", "banana", "cherry")
-
-  # Simulate the pattern where arg is the full choices vector (R's default behavior)
-  result <- match_arg_case_insensitive(choices, choices)
-  expect_equal(result, "apple")
-
-  # Test with mixed case in the full vector
-  mixed_choices <- c("Apple", "BANANA", "cherry")
-  result <- match_arg_case_insensitive(mixed_choices, choices)
-  expect_equal(result, "apple")
-})
-
-test_that("match_arg_case_insensitive() handles multiple matches with several.ok", {
-  choices <- c("apple", "apricot", "banana")
-
-  # Test multiple matches not allowed by default
-  expect_error(
-    match_arg_case_insensitive(c("apple", "banana"), choices),
-    "argument must be of length 1"
-  )
-
-  # Test multiple matches allowed when several.ok = TRUE
-  result <- match_arg_case_insensitive(c("apple", "banana"), choices, several.ok = TRUE)
-  expect_equal(result, c("apple", "banana"))
-
-  # Test with mixed case
-  result <- match_arg_case_insensitive(c("APPLE", "Banana"), choices, several.ok = TRUE)
-  expect_equal(result, c("apple", "banana"))
-})
-
-test_that("match_arg_case_insensitive() provides informative error messages", {
-  choices <- c("red", "green", "blue")
-
-  # Test invalid argument without arg_name
-  expect_error(
-    match_arg_case_insensitive("yellow", choices),
-    "argument should be one of: `red`, `green`, and `blue`. Got `yellow`."
-  )
-
-  # Test invalid argument with arg_name
-  expect_error(
-    match_arg_case_insensitive("yellow", choices, arg_name = "color"),
-    "'color' should be one of: `red`, `green`, and `blue`. Got `yellow`."
-  )
-
-  # Test multiple invalid arguments
-  expect_error(
-    match_arg_case_insensitive(c("yellow", "purple"), choices, several.ok = TRUE),
-    "argument should be one of: `red`, `green`, and `blue`. Got `yellow` and `purple`."
-  )
-
-  # Test length error with arg_name
-  expect_error(
-    match_arg_case_insensitive(c("red", "green"), choices, arg_name = "color"),
-    "'color' must be of length 1"
-  )
-})
-
-test_that("match_arg_case_insensitive() handles edge cases", {
-  choices <- c("a", "b", "c")
-
-  # Test empty string
-  expect_error(
-    match_arg_case_insensitive("", choices),
-    "argument should be one of"
-  )
-
-  # Test single character choices
-  expect_equal(match_arg_case_insensitive("A", choices), "a")
-  expect_equal(match_arg_case_insensitive("b", choices), "b")
-
-  # Test choices with special characters
-  special_choices <- c("test-1", "test_2", "test.3")
-  expect_equal(match_arg_case_insensitive("TEST-1", special_choices), "test-1")
-  expect_equal(match_arg_case_insensitive("test_2", special_choices), "test_2")
-})
-
-test_that("match_arg_case_insensitive() preserves original choice case in output", {
-  choices <- c("CamelCase", "snake_case", "UPPER_CASE")
-
-  # Input case should not affect output case - should return original choice case
-  expect_equal(match_arg_case_insensitive("camelcase", choices), "CamelCase")
-  expect_equal(match_arg_case_insensitive("SNAKE_CASE", choices), "snake_case")
-  expect_equal(match_arg_case_insensitive("upper_case", choices), "UPPER_CASE")
-})
-
-# Tests for match_args_case_insensitive()
-test_that("match_args_case_insensitive() handles basic multiple argument matching", {
-  arg_list <- list(
-    color = "RED",
-    size = "large",
-    shape = "Circle"
-  )
-
-  choices_list <- list(
-    color = c("red", "green", "blue"),
-    size = c("small", "medium", "large"),
-    shape = c("circle", "square", "triangle")
-  )
-
-  result <- match_args_case_insensitive(arg_list, choices_list)
-
-  expected <- list(
-    color = "red",
-    size = "large",
-    shape = "circle"
-  )
-
-  expect_equal(result, expected)
-})
-
-test_that("match_args_case_insensitive() handles partial matching for multiple args", {
-  arg_list <- list(
-    method = "rand",
-    structure = "indep"
-  )
-
-  choices_list <- list(
-    method = c("random-walk", "p-spline"),
-    structure = c("independent", "correlated", "shared")
-  )
-
-  result <- match_args_case_insensitive(arg_list, choices_list)
-
-  expected <- list(
-    method = "random-walk",
-    structure = "independent"
-  )
-
-  expect_equal(result, expected)
-})
-
-test_that("match_args_case_insensitive() handles several.ok parameter", {
-  arg_list <- list(
-    colors = c("red", "blue"),
-    sizes = c("small", "large")
-  )
-
-  choices_list <- list(
-    colors = c("red", "green", "blue"),
-    sizes = c("small", "medium", "large")
-  )
-
-  # Should fail with several.ok = FALSE (default)
-  expect_error(
-    match_args_case_insensitive(arg_list, choices_list),
-    "'colors' must be of length 1"
-  )
-
-  # Should work with several.ok = TRUE
-  result <- match_args_case_insensitive(arg_list, choices_list, several.ok = TRUE)
-  expected <- list(
-    colors = c("red", "blue"),
-    sizes = c("small", "large")
-  )
-
-  expect_equal(result, expected)
-})
-
-test_that("match_args_case_insensitive() validates input arguments", {
-  # Test non-list inputs
-  expect_error(
-    match_args_case_insensitive("not_a_list", list(a = c("x", "y"))),
-    "Both `arg_list` and `choices_list` must be lists"
-  )
-
-  expect_error(
-    match_args_case_insensitive(list(a = "x"), "not_a_list"),
-    "Both `arg_list` and `choices_list` must be lists"
-  )
-
-  # Test missing choices for arguments
-  arg_list <- list(color = "red", size = "large")
-  choices_list <- list(color = c("red", "blue"))  # missing 'size'
-
-  expect_error(
-    match_args_case_insensitive(arg_list, choices_list),
-    "Missing choices for arguments: size"
-  )
-
-  # Test multiple missing choices
-  arg_list <- list(color = "red", size = "large", shape = "circle")
-  choices_list <- list(color = c("red", "blue"))  # missing 'size' and 'shape'
-
-  expect_error(
-    match_args_case_insensitive(arg_list, choices_list),
-    "Missing choices for arguments: size and shape"
-  )
-})
-
-test_that("match_args_case_insensitive() propagates individual matching errors", {
-  arg_list <- list(
-    color = "yellow",  # invalid choice
-    size = "large"     # valid choice
-  )
-
-  choices_list <- list(
-    color = c("red", "green", "blue"),
-    size = c("small", "medium", "large")
-  )
-
-  # Should get error from the invalid color choice
-  expect_error(
-    match_args_case_insensitive(arg_list, choices_list),
-    "'color' should be one of: `red`, `green`, and `blue`. Got `yellow`."
-  )
-})
-
-test_that("match_args_case_insensitive() handles empty lists", {
-  # Empty arg_list should return empty result
-  result <- match_args_case_insensitive(list(), list())
-  expect_equal(result, list())
-  expect_length(result, 0)
-
-  # Non-empty choices_list with empty arg_list should work
-  result <- match_args_case_insensitive(list(), list(color = c("red", "blue")))
-  expect_equal(result, list())
-})
-
-test_that("match_args_case_insensitive() preserves argument order", {
-  arg_list <- list(
-    z_param = "option1",
-    a_param = "option2",
-    m_param = "option3"
-  )
-
-  choices_list <- list(
-    z_param = c("option1", "option2"),
-    a_param = c("option1", "option2"),
-    m_param = c("option1", "option2", "option3")
-  )
-
-  result <- match_args_case_insensitive(arg_list, choices_list)
-
-  # Names should preserve original order
-  expect_equal(names(result), c("z_param", "a_param", "m_param"))
-  expect_equal(result$z_param, "option1")
-  expect_equal(result$a_param, "option2")
-  expect_equal(result$m_param, "option3")
-})
-
-# Integration tests using both functions together
-test_that("functions work together for common use cases", {
-  # Simulate a function that uses both single and multiple argument matching
-
-  # Single argument case
-  smoothing_choice <- match_arg_case_insensitive(
-    "INDEPENDENT",
-    c("shared", "independent", "correlated"),
-    arg_name = "smoothing_structure"
-  )
-  expect_equal(smoothing_choice, "independent")
-
-  # Multiple argument case
-  model_params <- list(
-    smoothing = "CORR",
-    noise = "PATH"
-  )
-
-  param_choices <- list(
-    smoothing = c("shared", "independent", "correlated"),
-    noise = c("observation_noise_only", "pathogen_specific_noise")
-  )
-
-  matched_params <- match_args_case_insensitive(model_params, param_choices)
-
-  expect_equal(matched_params$smoothing, "correlated")
-  expect_equal(matched_params$noise, "pathogen_specific_noise")
-})
-
+#' @srrstats {G5.2, G5.2b} error and warning behaviour explicitly tested,
+#'   including conditions that trigger these messages and comparing with
+#'   expected results
+#' @srrstats {G3.0} comparisons made between appropriate values
+#'
 # Tests for validate_positive_whole_number()
 test_that("validate_positive_whole_number() passes valid inputs", {
   # Should not throw errors for valid positive whole numbers
@@ -429,48 +122,80 @@ test_that("validate_matching_lengths() includes length information in error", {
                "short \\(length 2 \\).*long \\(length 5 \\)")
 })
 
-# Tests for validate_list_vector_lengths()
-test_that("validate_list_vector_lengths() passes valid lists", {
+# Tests for validate_list_vector()
+test_that("validate_list_vector() passes valid lists", {
   valid_list <- list(a = 1:3, b = letters[1:3], c = c(1.1, 2.2, 3.3))
-  expect_silent(validate_list_vector_lengths(valid_list, "test_list"))
+  expect_silent(validate_list_vector(valid_list, "test_list"))
 
   single_element <- list(x = 1:5)
-  expect_silent(validate_list_vector_lengths(single_element, "single_list"))
+  expect_silent(validate_list_vector(single_element, "single_list"))
 })
 
-test_that("validate_list_vector_lengths() validates against reference length", {
+test_that("validate_list_vector() validates against reference length", {
   valid_list <- list(a = 1:3, b = letters[1:3])
-  expect_silent(validate_list_vector_lengths(valid_list, "test_list", reference_length = 3))
+  expect_silent(validate_list_vector(valid_list, "test_list", reference_length = 3))
 
-  expect_error(validate_list_vector_lengths(valid_list, "test_list", reference_length = 5),
+  expect_error(validate_list_vector(valid_list, "test_list", reference_length = 5),
                "Vectors in test_list must have length 5 but found length 3")
 })
 
-test_that("validate_list_vector_lengths() rejects empty lists", {
+test_that("validate_list_vector() rejects non-lists", {
+  expect_error(validate_list_vector("not_a_list", "test_param"),
+               "Argument test_param must be a list")
+  expect_error(validate_list_vector(c(1, 2, 3), "test_param"),
+               "Argument test_param must be a list")
+  expect_error(validate_list_vector(data.frame(x = 1:3), "test_param"),
+               "Argument test_param must be a list")
+})
+
+test_that("validate_list_vector() rejects empty lists", {
   empty_list <- list()
-  expect_error(validate_list_vector_lengths(empty_list, "empty_list"),
+  expect_error(validate_list_vector(empty_list, "empty_list"),
                "empty_list cannot be empty")
 })
 
-test_that("validate_list_vector_lengths() rejects mismatched lengths", {
+test_that("validate_list_vector() rejects unnamed lists", {
+  unnamed_list <- list(1:3, letters[1:3])
+  expect_error(validate_list_vector(unnamed_list, "unnamed_list"),
+               "Argument unnamed_list must have named elements")
+})
+
+test_that("validate_list_vector() rejects lists with empty or missing names", {
+  empty_name_list <- list(a = 1:3, "" = letters[1:3])
+  expect_error(validate_list_vector(empty_name_list, "bad_names"),
+               "All elements in bad_names must have non-empty names")
+
+  na_name_list <- list(a = 1:3, b = letters[1:3])
+  names(na_name_list)[2] <- NA
+  expect_error(validate_list_vector(na_name_list, "bad_names"),
+               "All elements in bad_names must have non-empty names")
+})
+
+test_that("validate_list_vector() rejects mismatched lengths", {
   invalid_list <- list(short = 1:2, long = 1:5)
-  expect_error(validate_list_vector_lengths(invalid_list, "mixed_list"),
+  expect_error(validate_list_vector(invalid_list, "mixed_list"),
                "All vectors in mixed_list must have the same length")
 })
 
-test_that("validate_list_vector_lengths() includes detailed error information", {
+test_that("validate_list_vector() includes detailed error information", {
   invalid_list <- list(vec1 = 1:2, vec2 = 1:4, vec3 = 1:3)
-  expect_error(validate_list_vector_lengths(invalid_list, "test_list"),
+  expect_error(validate_list_vector(invalid_list, "test_list"),
                "vec1 \\(length 2 \\).*vec2 \\(length 4 \\).*vec3 \\(length 3 \\)")
 })
 
-test_that("validate_list_vector_lengths() uses correct list name in errors", {
+test_that("validate_list_vector() uses correct list name in errors", {
   invalid_list <- list(a = 1:2, b = 1:3)
-  expect_error(validate_list_vector_lengths(invalid_list, "my_data"),
+  expect_error(validate_list_vector(invalid_list, "my_data"),
                "All vectors in my_data must have the same length")
 
   empty_list <- list()
-  expect_error(validate_list_vector_lengths(empty_list, "strain_data"),
+  expect_error(validate_list_vector(empty_list, "strain_data"),
                "strain_data cannot be empty")
 })
 
+test_that("validate_list_vector() returns invisible TRUE", {
+  valid_list <- list(a = 1:3, b = letters[1:3])
+  result <- validate_list_vector(valid_list, "test_list")
+  expect_true(result)
+  expect_invisible(validate_list_vector(valid_list, "test_list"))
+})

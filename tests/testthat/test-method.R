@@ -1,4 +1,5 @@
 # Tests for method constructor functions - simplified version
+#' @srrstats {G3.0} comparisons made between appropriate values
 
 # Helper function for method validation tests (add to helper script)
 test_method_structure <- function(result, expected_method, expected_params = NULL) {
