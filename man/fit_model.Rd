@@ -4,23 +4,47 @@
 \alias{fit_model}
 \title{Generic Method for fitting model}
 \usage{
-fit_model(constructed_model, iter = 2000, warmup = 1000, chains = 3)
+fit_model(
+  constructed_model,
+  n_chain = 4,
+  n_iter = 2000,
+  n_warmup = floor(n_iter/2),
+  thin = 1,
+  adapt_delta = 0.8,
+  multi_cores = TRUE,
+  verbose = TRUE,
+  seed = NULL,
+  ...
+)
 }
 \arguments{
 \item{constructed_model}{prepared model object of class
-`EpiStrainDynamics.model`}
+\code{EpiStrainDynamics.model}}
 
-\item{iter}{number of iterations, defaults to 2000}
+\item{n_chain}{number of MCMC chains, defaults to 4}
 
-\item{warmup}{number of warmup iterations, defaults to 1000}
+\item{n_iter}{A positive integer specifying the number of iterations for each chain, default value is  2000}
 
-\item{chains}{number of chains, defaults to 3}
+\item{n_warmup}{A positive integer specifying the number of warmup iterations, default value is half the number of iterations}
+
+\item{thin}{A positive integer specifying the period for saving samples, default value is 1.}
+
+\item{adapt_delta}{Numeric value between 0 and 1 indicating target average acceptance probability used in \code{rstan::sampling}. Default value is 0.8.}
+
+\item{multi_cores}{A logical value indicating whether to parallelize chains with multiple cores, default is TRUE and uses all available cores - 1.}
+
+\item{verbose}{Logical value controlling the verbosity of output (i.e., warnings, messages, progress bar), default is TRUE.}
+
+\item{seed}{A positive integer seed used for random number generation in MCMC. Default is NULL, which means the seed is generated from 1 to the maximum integer supported by R.}
+
+\item{...}{additional arguments to \code{rstan::sampling()}}
 }
 \value{
-fit model of class `EpiStrainDynamics.fit`
+fit model of class \code{EpiStrainDynamics.fit}
 }
 \description{
 S3 generic for fitted models from constructed model object
+describe how to set up inits.
 }
 \examples{
 \dontrun{

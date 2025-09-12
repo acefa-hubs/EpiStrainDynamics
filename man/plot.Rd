@@ -19,8 +19,8 @@ plot(df, ...)
 \method{plot}{proportion}(df)
 }
 \arguments{
-\item{df}{Metrics calculation output of class `EpiStrainDynamics.metric`
-from either `incidence()`, `growth_rate()`, `Rt()`, or `proportion()`.}
+\item{df}{Metrics calculation output of class \code{EpiStrainDynamics.metric}
+from either \code{incidence()}, \code{growth_rate()}, \code{Rt()}, or \code{proportion()}.}
 
 \item{...}{Additional arguments passed to plot}
 }

@@ -14,10 +14,14 @@ used to construct the overall curve (must be a positive whole number)}
 }
 \value{
 list with method and model parameters of class
-  `EpiStrainDynamics.method`
+\code{EpiStrainDynamics.method}
 }
 \description{
-Specify p_spline method
+Penalised splines is one of two optional Bayesian smoothing prior methods
+that can be selected and used in the model definition with
+\code{EpiStrainDynamics}. The main benefit of selecting the penalised spline
+method over random walks is that it can capture dynamical effects (fine
+enough temporal resolution) while not being too computationally expensive.
 }
 \examples{
 # Valid usage

@@ -11,6 +11,10 @@
 #' @return ggplot2 plot output
 #' @export
 #'
+#' @srrstats {BS6.1} All calculated epidemiological metrics can be plotted with
+#'   a default plot function.
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#'
 #' @examples
 #' \dontrun{
 #'   mod <- construct_model(

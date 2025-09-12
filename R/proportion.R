@@ -1,6 +1,37 @@
 #' Generic Method for proportion Analysis
 #'
-#' S3 generic for computing proportions from fitted models
+#' Computes epidemiological proportion, defined as the relative fraction of
+#' cases attributable to specific pathogen(s) or strain(s) at a given time point,
+#' calculated as the ratio of incidence from selected pathogen(s) to a
+#' reference group:
+#' \deqn{P_t = \frac{I_{\text{numerator}}(t)}{I_{\text{denominator}}(t)}}
+#'
+#' Where incidences are derived from the exponential of log-incidence estimates:
+#' \deqn{P_t = \frac{\sum_{i \in \text{numerator}} \exp(\log\text{-incidence}_{i,t})}{\sum_{j \in \text{denominator}} \exp(\log\text{-incidence}_{j,t})}}
+#'
+#' This metric quantifies the **relative contribution** of specific pathogen(s)
+#' or strain(s) to the total disease burden. Key characteristics:
+#' \itemize{
+#'   \item Values between 0 and 1 (\eqn{0 \leq P_t \leq 1}) when denominator
+#'    includes numerator components
+#'   \item Values can exceed 1 (\eqn{P_t > 1}) when denominator excludes
+#'   numerator components
+#'   \item Represents the fractional share of cases at each time point
+#'   \item Time-varying to capture changing pathogen/strain dynamics
+#' }
+#'
+#' **Flexible combinations**:
+#' \itemize{
+#'   \item Individual proportions: Each pathogen relative to all pathogens
+#'   (default)
+#'   \item Custom numerator: Specific pathogen(s) of interest (e.g., variant
+#'   of concern)
+#'   \item Custom denominator: Either 'all' pathogens or a specified subset
+#'   \item Subset comparisons: Compare specific groups (e.g., Alpha vs.
+#'   Delta + Omicron)
+#' }
+#'
+#' This metric function can be run directly on the fitted model output.
 #'
 #' @param fitted_model Fitted model object with class `EpiStrainDynamics.fit`
 #'  with `multiple` or `subtyped` pathogen structure.
@@ -18,6 +49,9 @@
 #'  (`prop`), the pathogen name (`pathogen`), and the time label (`time`).
 #' @family metrics
 #' @export
+#'
+#' @srrstats {G1.3} metric defined clearly
+#' @srrstats {G1.4} uses `Roxygen2` documentation
 #'
 #' @examples
 #' \dontrun{
@@ -174,14 +208,20 @@ proportion.rw <- function(fitted_model,
 #'
 #' Computes log-difference in incidence for a specific pathogen
 #'
-#' @param a Array of log-incidence posterior samples [samples, pathogens, time]
+#' @param a Array of log-incidence posterior samples \code{[samples, pathogens, time]}
 #' @param time_idx Integer time index
 #' @param pathogen_idx Integer pathogen index
 #' @param post Posterior samples object (unused but required for interface consistency)
 #' @param components Model components (unused but required for interface consistency)
 #' @param numerator_idx Integer index of the pathogen/s used in numerator of proportion
 #' @param denominator_idx Integer index of the pathogen/s used in denominator of proportion
+#'
 #' @return Vector of proportion posterior samples
+#' @noRd
+#'
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#'
 calc_proportion <- function(a, time_idx, pathogen_idx, post, components,
                             numerator_idx, denominator_idx) {
 

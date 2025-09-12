@@ -7,15 +7,15 @@
 construct_model(method, pathogen_structure, dow_effect = FALSE)
 }
 \arguments{
-\item{method}{either `random_walk()` or `p_spline()`}
+\item{method}{either \code{random_walk()} or \code{p_spline()}}
 
-\item{pathogen_structure}{either `single()`, `multiple()`, or `subtyped()`}
+\item{pathogen_structure}{either \code{single()}, \code{multiple()}, or \code{subtyped()}}
 
 \item{dow_effect}{logical whether to incorporate a day of week model}
 }
 \value{
 a list containing the data, the model parameters, and pathogen
- names of class `EpiStrainDynamics.model`
+names of class \code{EpiStrainDynamics.model}
 }
 \description{
 Construct model

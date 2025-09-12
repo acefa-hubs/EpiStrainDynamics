@@ -30,7 +30,10 @@
 #'   \item{t}{}
 #' }
 #' @source <https://ukhsa-dashboard.data.gov.uk/covid-19-archive-data-download;
-#' https://datadryad.org/dataset/doi:10.5061/dryad.hx3ffbgm2>
+#'   https://datadryad.org/dataset/doi:10.5061/dryad.hx3ffbgm2>
+#' @srrstats {G5.1} Dataset `sarscov2` is exported and described in detail here.
+#'   It is used in both example code and in testing.
+#' @srrstats {G1.4} uses `Roxygen2` documentation
 "sarscov2"
 
 #' THIS NEEDS TO BE EDITED
@@ -62,4 +65,7 @@
 #'   \item{num_spec}{Integer, number of specimens} ??
 #' }
 #' @source <https://www.who.int/teams/global-influenza-programme/surveillance-and-monitoring/influenza-surveillance-outputs>
+#' @srrstats {G5.1} Dataset `influenza` is exported and described in detail
+#'   here. It is used in both example code and in testing.
+#' @srrstats {G1.4} uses `Roxygen2` documentation
 "influenza"
