@@ -19,7 +19,7 @@ License: Apache License 2.0
 URL: https://acefa-hubs.github.io/EpiStrainDynamics/, https://github.com/acefa-hubs/EpiStrainDynamics
 Encoding: UTF-8
 Language: en
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Roxygen: list (markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))
 Biarch: true
 Depends: 
