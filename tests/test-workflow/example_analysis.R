@@ -15,32 +15,21 @@ rstan::rstan_options(auto_write = TRUE)
 options(mc.cores = 4)
 
 # Example 1 "influenza" models
-# create data objects
-# Load aus data
-influenza_data <- read.csv('tests/test-workflow/example_data/aus_influenza_data.csv')
-
 # Set limits on dates to consider
-min_date <- as.Date("2011-08-29")
-max_date <- as.Date("2020-03-01")
-
-influenza_data$week <- as.Date(influenza_data$week)
-influenza_data <- influenza_data[influenza_data$week < max_date &
-                                   influenza_data$week >= min_date, ]
-influenza_data <- influenza_data[order(influenza_data$week), ]
 
 rw_subtyped_mod <- construct_model(
   method = random_walk(),
   pathogen_structure = subtyped(
-    case_timeseries = influenza_data$ili,
-    time = influenza_data$week,
-    influenzaA_unsubtyped_timeseries = influenza_data$inf_A,
+    case_timeseries = influenza$ili,
+    time = influenza$week,
+    influenzaA_unsubtyped_timeseries = influenza$inf_A,
     other_pathogen_timeseries = list(
-      influenzaB = influenza_data$inf_B,
-      other = influenza_data$num_spec - influenza_data$inf_all
+      influenzaB = influenza$inf_B,
+      other = influenza$num_spec - influenza$inf_all
     ),
     influenzaA_subtyped_timeseries = list(
-      influenzaA.H3N2 = influenza_data$inf_H3N2,
-      influenzaA.H1N1 = influenza_data$inf_H1N1
+      H3N2 = influenza$inf_H3N2,
+      H1N1 = influenza$inf_H1N1
     ),
     smoothing_structure = 'independent',
     observation_noise = 'observation_noise_only'
@@ -49,9 +38,9 @@ rw_subtyped_mod <- construct_model(
 )
 rw_subtyped_fit <- fit_model(
   rw_subtyped_mod,
-  iter = 2000,
-  warmup = 1000,
-  chains = 3
+  n_iter = 2000,
+  n_warmup = 1000,
+  n_chain = 3
 )
 rw_subtyped_gr <- growth_rate(rw_subtyped_fit)
 rw_subtyped_rt <- Rt(rw_subtyped_fit,
@@ -76,15 +65,15 @@ rw_subtyped_prop <- proportion(rw_subtyped_fit,
 ps_subtyped_mod <- construct_model(
   method = p_spline(),
   pathogen_structure = subtyped(
-    case_timeseries = influenza_data$ili,
-    influenzaA_unsubtyped_timeseries = influenza_data$inf_A,
+    case_timeseries = influenza$ili,
+    influenzaA_unsubtyped_timeseries = influenza$inf_A,
     influenzaA_subtyped_timeseries = list(
-      influenzaA.H3N2 = influenza_data$inf_H3N2,
-      influenzaA.H1N1 = influenza_data$inf_H1N1
+      influenzaA.H3N2 = influenza$inf_H3N2,
+      influenzaA.H1N1 = influenza$inf_H1N1
     ),
     other_pathogen_timeseries = list(
-      influenzaB = influenza_data$inf_B,
-      other = influenza_data$num_spec - influenza_data$inf_all
+      influenzaB = influenza$inf_B,
+      other = influenza$num_spec - influenza$inf_all
     ),
     smoothing_structure = 'independent',
     observation_noise = 'observation_noise_only'
@@ -93,9 +82,9 @@ ps_subtyped_mod <- construct_model(
 )
 ps_subtyped_fit <- fit_model(
   ps_subtyped_mod,
-  iter = 2000,
-  warmup = 1000,
-  chains = 3
+  n_iter = 2000,
+  n_warmup = 1000,
+  n_chains = 3
 )
 ps_subtyped_gr_orig <- ps_growth_rate_orig(ps_subtyped_fit) |>
   dplyr::arrange(pathogen)

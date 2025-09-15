@@ -27,51 +27,57 @@ namespace model_rw_multiple_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 73> locations_array__ =
+static constexpr std::array<const char*, 87> locations_array__ =
   {" (found before start of program)",
-  " (in 'rw_multiple', line 35, column 2 to column 31)",
-  " (in 'rw_multiple', line 36, column 2 to column 31)",
-  " (in 'rw_multiple', line 37, column 2 to column 48)",
-  " (in 'rw_multiple', line 38, column 2 to column 20)",
-  " (in 'rw_multiple', line 39, column 2 to column 74)",
-  " (in 'rw_multiple', line 40, column 2 to column 50)",
-  " (in 'rw_multiple', line 41, column 2 to column 43)",
-  " (in 'rw_multiple', line 56, column 6 to column 84)",
-  " (in 'rw_multiple', line 55, column 4 to line 56, column 84)",
-  " (in 'rw_multiple', line 54, column 6 to line 57, column 3)",
-  " (in 'rw_multiple', line 52, column 6 to column 84)",
-  " (in 'rw_multiple', line 51, column 4 to line 52, column 84)",
-  " (in 'rw_multiple', line 50, column 27 to line 53, column 3)",
-  " (in 'rw_multiple', line 50, column 7 to line 57, column 3)",
-  " (in 'rw_multiple', line 48, column 6 to column 59)",
-  " (in 'rw_multiple', line 47, column 4 to line 48, column 59)",
-  " (in 'rw_multiple', line 46, column 22 to line 49, column 3)",
-  " (in 'rw_multiple', line 46, column 2 to line 57, column 3)",
-  " (in 'rw_multiple', line 61, column 17 to column 25)",
-  " (in 'rw_multiple', line 61, column 2 to column 27)",
-  " (in 'rw_multiple', line 73, column 6 to column 37)",
-  " (in 'rw_multiple', line 74, column 6 to column 51)",
-  " (in 'rw_multiple', line 72, column 24 to line 75, column 5)",
-  " (in 'rw_multiple', line 72, column 4 to line 75, column 5)",
-  " (in 'rw_multiple', line 71, column 6 to line 76, column 3)",
-  " (in 'rw_multiple', line 64, column 6 to column 47)",
-  " (in 'rw_multiple', line 63, column 24 to line 65, column 5)",
-  " (in 'rw_multiple', line 63, column 4 to line 65, column 5)",
-  " (in 'rw_multiple', line 67, column 6 to column 32)",
-  " (in 'rw_multiple', line 68, column 6 to column 46)",
-  " (in 'rw_multiple', line 66, column 24 to line 69, column 5)",
-  " (in 'rw_multiple', line 66, column 4 to line 69, column 5)",
-  " (in 'rw_multiple', line 62, column 24 to line 70, column 3)",
-  " (in 'rw_multiple', line 62, column 2 to line 76, column 3)",
-  " (in 'rw_multiple', line 86, column 6 to column 89)",
-  " (in 'rw_multiple', line 85, column 24 to line 87, column 5)",
-  " (in 'rw_multiple', line 85, column 4 to line 87, column 5)",
-  " (in 'rw_multiple', line 84, column 6 to line 88, column 3)",
-  " (in 'rw_multiple', line 81, column 6 to column 49)",
-  " (in 'rw_multiple', line 80, column 24 to line 82, column 5)",
-  " (in 'rw_multiple', line 80, column 4 to line 82, column 5)",
-  " (in 'rw_multiple', line 79, column 20 to line 83, column 3)",
-  " (in 'rw_multiple', line 79, column 2 to line 88, column 3)",
+  " (in 'rw_multiple', line 42, column 2 to column 31)",
+  " (in 'rw_multiple', line 43, column 2 to column 31)",
+  " (in 'rw_multiple', line 44, column 2 to column 48)",
+  " (in 'rw_multiple', line 45, column 2 to column 20)",
+  " (in 'rw_multiple', line 46, column 2 to column 74)",
+  " (in 'rw_multiple', line 47, column 2 to column 50)",
+  " (in 'rw_multiple', line 48, column 2 to column 43)",
+  " (in 'rw_multiple', line 63, column 6 to column 84)",
+  " (in 'rw_multiple', line 62, column 4 to line 63, column 84)",
+  " (in 'rw_multiple', line 61, column 6 to line 64, column 3)",
+  " (in 'rw_multiple', line 59, column 6 to column 84)",
+  " (in 'rw_multiple', line 58, column 4 to line 59, column 84)",
+  " (in 'rw_multiple', line 57, column 27 to line 60, column 3)",
+  " (in 'rw_multiple', line 57, column 7 to line 64, column 3)",
+  " (in 'rw_multiple', line 55, column 6 to column 59)",
+  " (in 'rw_multiple', line 54, column 4 to line 55, column 59)",
+  " (in 'rw_multiple', line 53, column 22 to line 56, column 3)",
+  " (in 'rw_multiple', line 53, column 2 to line 64, column 3)",
+  " (in 'rw_multiple', line 67, column 4 to column 35)",
+  " (in 'rw_multiple', line 66, column 29 to line 68, column 3)",
+  " (in 'rw_multiple', line 66, column 2 to line 68, column 3)",
+  " (in 'rw_multiple', line 72, column 4 to column 35)",
+  " (in 'rw_multiple', line 71, column 29 to line 73, column 3)",
+  " (in 'rw_multiple', line 71, column 2 to line 73, column 3)",
+  " (in 'rw_multiple', line 76, column 17 to column 25)",
+  " (in 'rw_multiple', line 76, column 2 to column 27)",
+  " (in 'rw_multiple', line 88, column 6 to column 37)",
+  " (in 'rw_multiple', line 89, column 6 to column 51)",
+  " (in 'rw_multiple', line 87, column 24 to line 90, column 5)",
+  " (in 'rw_multiple', line 87, column 4 to line 90, column 5)",
+  " (in 'rw_multiple', line 86, column 6 to line 91, column 3)",
+  " (in 'rw_multiple', line 79, column 6 to column 47)",
+  " (in 'rw_multiple', line 78, column 24 to line 80, column 5)",
+  " (in 'rw_multiple', line 78, column 4 to line 80, column 5)",
+  " (in 'rw_multiple', line 82, column 6 to column 32)",
+  " (in 'rw_multiple', line 83, column 6 to column 46)",
+  " (in 'rw_multiple', line 81, column 24 to line 84, column 5)",
+  " (in 'rw_multiple', line 81, column 4 to line 84, column 5)",
+  " (in 'rw_multiple', line 77, column 24 to line 85, column 3)",
+  " (in 'rw_multiple', line 77, column 2 to line 91, column 3)",
+  " (in 'rw_multiple', line 101, column 6 to column 89)",
+  " (in 'rw_multiple', line 100, column 24 to line 102, column 5)",
+  " (in 'rw_multiple', line 100, column 4 to line 102, column 5)",
+  " (in 'rw_multiple', line 99, column 6 to line 103, column 3)",
+  " (in 'rw_multiple', line 96, column 6 to column 49)",
+  " (in 'rw_multiple', line 95, column 24 to line 97, column 5)",
+  " (in 'rw_multiple', line 95, column 4 to line 97, column 5)",
+  " (in 'rw_multiple', line 94, column 20 to line 98, column 3)",
+  " (in 'rw_multiple', line 94, column 2 to line 103, column 3)",
   " (in 'rw_multiple', line 13, column 2 to column 15)",
   " (in 'rw_multiple', line 14, column 2 to column 15)",
   " (in 'rw_multiple', line 15, column 8 to column 16)",
@@ -84,23 +90,31 @@ static constexpr std::array<const char*, 73> locations_array__ =
   " (in 'rw_multiple', line 18, column 2 to column 20)",
   " (in 'rw_multiple', line 19, column 2 to column 42)",
   " (in 'rw_multiple', line 20, column 2 to column 44)",
-  " (in 'rw_multiple', line 23, column 2 to column 11)",
-  " (in 'rw_multiple', line 24, column 2 to column 11)",
-  " (in 'rw_multiple', line 30, column 4 to column 13)",
-  " (in 'rw_multiple', line 31, column 4 to column 13)",
-  " (in 'rw_multiple', line 29, column 6 to line 32, column 3)",
-  " (in 'rw_multiple', line 26, column 4 to column 20)",
-  " (in 'rw_multiple', line 27, column 4 to column 20)",
-  " (in 'rw_multiple', line 25, column 24 to line 28, column 3)",
-  " (in 'rw_multiple', line 25, column 2 to line 32, column 3)",
-  " (in 'rw_multiple', line 35, column 9 to column 17)",
-  " (in 'rw_multiple', line 35, column 19 to column 27)",
-  " (in 'rw_multiple', line 36, column 18 to column 22)",
-  " (in 'rw_multiple', line 36, column 23 to column 27)",
-  " (in 'rw_multiple', line 37, column 20 to column 45)",
-  " (in 'rw_multiple', line 39, column 20 to column 71)",
-  " (in 'rw_multiple', line 40, column 13 to column 42)",
-  " (in 'rw_multiple', line 41, column 10 to column 21)"};
+  " (in 'rw_multiple', line 21, column 2 to column 26)",
+  " (in 'rw_multiple', line 22, column 2 to column 25)",
+  " (in 'rw_multiple', line 23, column 2 to column 23)",
+  " (in 'rw_multiple', line 25, column 2 to column 26)",
+  " (in 'rw_multiple', line 26, column 25 to column 76)",
+  " (in 'rw_multiple', line 26, column 2 to column 79)",
+  " (in 'rw_multiple', line 27, column 23 to column 74)",
+  " (in 'rw_multiple', line 27, column 2 to column 77)",
+  " (in 'rw_multiple', line 30, column 2 to column 11)",
+  " (in 'rw_multiple', line 31, column 2 to column 11)",
+  " (in 'rw_multiple', line 37, column 4 to column 13)",
+  " (in 'rw_multiple', line 38, column 4 to column 13)",
+  " (in 'rw_multiple', line 36, column 6 to line 39, column 3)",
+  " (in 'rw_multiple', line 33, column 4 to column 20)",
+  " (in 'rw_multiple', line 34, column 4 to column 20)",
+  " (in 'rw_multiple', line 32, column 24 to line 35, column 3)",
+  " (in 'rw_multiple', line 32, column 2 to line 39, column 3)",
+  " (in 'rw_multiple', line 42, column 9 to column 17)",
+  " (in 'rw_multiple', line 42, column 19 to column 27)",
+  " (in 'rw_multiple', line 43, column 18 to column 22)",
+  " (in 'rw_multiple', line 43, column 23 to column 27)",
+  " (in 'rw_multiple', line 44, column 20 to column 45)",
+  " (in 'rw_multiple', line 46, column 20 to column 71)",
+  " (in 'rw_multiple', line 47, column 13 to column 42)",
+  " (in 'rw_multiple', line 48, column 10 to column 21)"};
 #include <stan_meta_header.hpp>
 class model_rw_multiple final : public model_base_crtp<model_rw_multiple> {
 private:
@@ -112,6 +126,12 @@ private:
   std::vector<int> DOW;
   int cov_structure;
   int noise_structure;
+  int phi_priors_provided;
+  double phi_mean;
+  double phi_sd;
+  int tau_priors_provided;
+  std::vector<double> tau_mean;
+  std::vector<double> tau_sd;
   int cols;
   int rows;
   int eta_1dim__;
@@ -139,31 +159,31 @@ public:
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 44;
+      current_statement__ = 50;
       context__.validate_dims("data initialization", "num_data", "int",
         std::vector<size_t>{});
       num_data = std::numeric_limits<int>::min();
-      current_statement__ = 44;
+      current_statement__ = 50;
       num_data = context__.vals_i("num_data")[(1 - 1)];
-      current_statement__ = 45;
+      current_statement__ = 51;
       context__.validate_dims("data initialization", "num_path", "int",
         std::vector<size_t>{});
       num_path = std::numeric_limits<int>::min();
-      current_statement__ = 45;
+      current_statement__ = 51;
       num_path = context__.vals_i("num_path")[(1 - 1)];
-      current_statement__ = 46;
+      current_statement__ = 52;
       stan::math::validate_non_negative_index("Y", "num_data", num_data);
-      current_statement__ = 47;
+      current_statement__ = 53;
       context__.validate_dims("data initialization", "Y", "int",
         std::vector<size_t>{static_cast<size_t>(num_data)});
       Y = std::vector<int>(num_data, std::numeric_limits<int>::min());
-      current_statement__ = 47;
+      current_statement__ = 53;
       Y = context__.vals_i("Y");
-      current_statement__ = 48;
+      current_statement__ = 54;
       stan::math::validate_non_negative_index("P", "num_path", num_path);
-      current_statement__ = 49;
+      current_statement__ = 55;
       stan::math::validate_non_negative_index("P", "num_data", num_data);
-      current_statement__ = 50;
+      current_statement__ = 56;
       context__.validate_dims("data initialization", "P", "int",
         std::vector<size_t>{static_cast<size_t>(num_path),
           static_cast<size_t>(num_data)});
@@ -171,117 +191,179 @@ public:
             std::vector<int>(num_data, std::numeric_limits<int>::min()));
       {
         std::vector<int> P_flat__;
-        current_statement__ = 50;
+        current_statement__ = 56;
         P_flat__ = context__.vals_i("P");
-        current_statement__ = 50;
+        current_statement__ = 56;
         pos__ = 1;
-        current_statement__ = 50;
+        current_statement__ = 56;
         for (int sym1__ = 1; sym1__ <= num_data; ++sym1__) {
-          current_statement__ = 50;
+          current_statement__ = 56;
           for (int sym2__ = 1; sym2__ <= num_path; ++sym2__) {
-            current_statement__ = 50;
+            current_statement__ = 56;
             stan::model::assign(P, P_flat__[(pos__ - 1)],
               "assigning variable P", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 50;
+            current_statement__ = 56;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 51;
+      current_statement__ = 57;
       context__.validate_dims("data initialization", "week_effect", "int",
         std::vector<size_t>{});
       week_effect = std::numeric_limits<int>::min();
-      current_statement__ = 51;
+      current_statement__ = 57;
       week_effect = context__.vals_i("week_effect")[(1 - 1)];
-      current_statement__ = 52;
+      current_statement__ = 58;
       stan::math::validate_non_negative_index("DOW", "num_data", num_data);
-      current_statement__ = 53;
+      current_statement__ = 59;
       context__.validate_dims("data initialization", "DOW", "int",
         std::vector<size_t>{static_cast<size_t>(num_data)});
       DOW = std::vector<int>(num_data, std::numeric_limits<int>::min());
-      current_statement__ = 53;
+      current_statement__ = 59;
       DOW = context__.vals_i("DOW");
-      current_statement__ = 54;
+      current_statement__ = 60;
       context__.validate_dims("data initialization", "cov_structure", "int",
         std::vector<size_t>{});
       cov_structure = std::numeric_limits<int>::min();
-      current_statement__ = 54;
+      current_statement__ = 60;
       cov_structure = context__.vals_i("cov_structure")[(1 - 1)];
-      current_statement__ = 54;
+      current_statement__ = 60;
       stan::math::check_greater_or_equal(function__, "cov_structure",
         cov_structure, 0);
-      current_statement__ = 54;
+      current_statement__ = 60;
       stan::math::check_less_or_equal(function__, "cov_structure",
         cov_structure, 2);
-      current_statement__ = 55;
+      current_statement__ = 61;
       context__.validate_dims("data initialization", "noise_structure",
         "int", std::vector<size_t>{});
       noise_structure = std::numeric_limits<int>::min();
-      current_statement__ = 55;
+      current_statement__ = 61;
       noise_structure = context__.vals_i("noise_structure")[(1 - 1)];
-      current_statement__ = 55;
+      current_statement__ = 61;
       stan::math::check_greater_or_equal(function__, "noise_structure",
         noise_structure, 0);
-      current_statement__ = 55;
+      current_statement__ = 61;
       stan::math::check_less_or_equal(function__, "noise_structure",
         noise_structure, 1);
-      current_statement__ = 56;
-      cols = std::numeric_limits<int>::min();
-      current_statement__ = 57;
-      rows = std::numeric_limits<int>::min();
+      current_statement__ = 62;
+      context__.validate_dims("data initialization", "phi_priors_provided",
+        "int", std::vector<size_t>{});
+      phi_priors_provided = std::numeric_limits<int>::min();
+      current_statement__ = 62;
+      phi_priors_provided = context__.vals_i("phi_priors_provided")[(1 - 1)];
+      current_statement__ = 63;
+      context__.validate_dims("data initialization", "phi_mean", "double",
+        std::vector<size_t>{});
+      phi_mean = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 63;
+      phi_mean = context__.vals_r("phi_mean")[(1 - 1)];
+      current_statement__ = 63;
+      stan::math::check_greater_or_equal(function__, "phi_mean", phi_mean, 0);
       current_statement__ = 64;
+      context__.validate_dims("data initialization", "phi_sd", "double",
+        std::vector<size_t>{});
+      phi_sd = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 64;
+      phi_sd = context__.vals_r("phi_sd")[(1 - 1)];
+      current_statement__ = 64;
+      stan::math::check_greater_or_equal(function__, "phi_sd", phi_sd, 0);
+      current_statement__ = 65;
+      context__.validate_dims("data initialization", "tau_priors_provided",
+        "int", std::vector<size_t>{});
+      tau_priors_provided = std::numeric_limits<int>::min();
+      current_statement__ = 65;
+      tau_priors_provided = context__.vals_i("tau_priors_provided")[(1 - 1)];
+      current_statement__ = 66;
+      stan::math::validate_non_negative_index("tau_mean",
+        "cov_structure == 0 ? 1 : cov_structure == 1 ? num_path : 0",
+        (stan::math::logical_eq(cov_structure, 0) ? 1 : (stan::math::logical_eq(
+                                                           cov_structure, 1) ? num_path : 0)));
+      current_statement__ = 67;
+      context__.validate_dims("data initialization", "tau_mean", "double",
+        std::vector<size_t>{static_cast<size_t>(
+                              (stan::math::logical_eq(cov_structure, 0) ? 1 : (
+                              stan::math::logical_eq(cov_structure, 1) ? num_path : 0)))});
+      tau_mean = std::vector<double>((stan::math::logical_eq(cov_structure, 0) ? 1 : (
+                   stan::math::logical_eq(cov_structure, 1) ? num_path : 0)),
+                   std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 67;
+      tau_mean = context__.vals_r("tau_mean");
+      current_statement__ = 67;
+      stan::math::check_greater_or_equal(function__, "tau_mean", tau_mean, 0);
+      current_statement__ = 68;
+      stan::math::validate_non_negative_index("tau_sd",
+        "cov_structure == 0 ? 1 : cov_structure == 1 ? num_path : 0",
+        (stan::math::logical_eq(cov_structure, 0) ? 1 : (stan::math::logical_eq(
+                                                           cov_structure, 1) ? num_path : 0)));
+      current_statement__ = 69;
+      context__.validate_dims("data initialization", "tau_sd", "double",
+        std::vector<size_t>{static_cast<size_t>(
+                              (stan::math::logical_eq(cov_structure, 0) ? 1 : (
+                              stan::math::logical_eq(cov_structure, 1) ? num_path : 0)))});
+      tau_sd = std::vector<double>((stan::math::logical_eq(cov_structure, 0) ? 1 : (
+                 stan::math::logical_eq(cov_structure, 1) ? num_path : 0)),
+                 std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 69;
+      tau_sd = context__.vals_r("tau_sd");
+      current_statement__ = 69;
+      stan::math::check_greater_or_equal(function__, "tau_sd", tau_sd, 0);
+      current_statement__ = 70;
+      cols = std::numeric_limits<int>::min();
+      current_statement__ = 71;
+      rows = std::numeric_limits<int>::min();
+      current_statement__ = 78;
       if (stan::math::logical_eq(noise_structure, 1)) {
-        current_statement__ = 61;
+        current_statement__ = 75;
         cols = num_path;
-        current_statement__ = 62;
+        current_statement__ = 76;
         rows = num_data;
       } else {
-        current_statement__ = 58;
+        current_statement__ = 72;
         cols = 0;
-        current_statement__ = 59;
+        current_statement__ = 73;
         rows = 0;
       }
-      current_statement__ = 65;
+      current_statement__ = 79;
       stan::math::validate_non_negative_index("a", "num_path", num_path);
-      current_statement__ = 66;
+      current_statement__ = 80;
       stan::math::validate_non_negative_index("a", "num_data", num_data);
-      current_statement__ = 67;
+      current_statement__ = 81;
       stan::math::validate_non_negative_index("c", "cols", cols);
-      current_statement__ = 68;
+      current_statement__ = 82;
       stan::math::validate_non_negative_index("c", "rows", rows);
-      current_statement__ = 69;
+      current_statement__ = 83;
       eta_1dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 69;
+      current_statement__ = 83;
       eta_1dim__ = (stan::math::logical_eq(noise_structure, 1) ? 1 : 0);
-      current_statement__ = 69;
+      current_statement__ = 83;
       stan::math::validate_non_negative_index("eta",
         "noise_structure == 1 ? 1 : 0", eta_1dim__);
-      current_statement__ = 70;
+      current_statement__ = 84;
       tau_1dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 70;
+      current_statement__ = 84;
       tau_1dim__ = (stan::math::logical_eq(cov_structure, 0) ? 1 : (stan::math::logical_eq(
                                                                     cov_structure,
                                                                     1) ? num_path : 0));
-      current_statement__ = 70;
+      current_statement__ = 84;
       stan::math::validate_non_negative_index("tau",
         "cov_structure == 0 ? 1 : cov_structure == 1 ? num_path : 0",
         tau_1dim__);
-      current_statement__ = 71;
+      current_statement__ = 85;
       Sigma_1dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 71;
+      current_statement__ = 85;
       Sigma_1dim__ = (stan::math::logical_eq(cov_structure, 2) ? num_path : 0);
-      current_statement__ = 71;
+      current_statement__ = 85;
       stan::math::validate_non_negative_index("Sigma",
         "cov_structure == 2 ? num_path : 0", Sigma_1dim__);
-      current_statement__ = 71;
+      current_statement__ = 85;
       Sigma_2dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 71;
+      current_statement__ = 85;
       Sigma_2dim__ = (stan::math::logical_eq(cov_structure, 2) ? num_path : 0);
-      current_statement__ = 71;
+      current_statement__ = 85;
       stan::math::validate_non_negative_index("Sigma",
         "cov_structure == 2 ? num_path : 0", Sigma_2dim__);
-      current_statement__ = 72;
+      current_statement__ = 86;
       stan::math::validate_positive_index("day_of_week_simplex",
         "week_effect", week_effect);
     } catch (const std::exception& e) {
@@ -424,16 +506,28 @@ public:
             }
           }
         }
-        current_statement__ = 19;
+        current_statement__ = 21;
+        if (stan::math::logical_eq(phi_priors_provided, 2)) {
+          current_statement__ = 19;
+          lp_accum__.add(stan::math::normal_lpdf<propto__>(phi, phi_mean,
+                           phi_sd));
+        }
+        current_statement__ = 24;
+        if (stan::math::logical_eq(tau_priors_provided, 2)) {
+          current_statement__ = 22;
+          lp_accum__.add(stan::math::normal_lpdf<propto__>(tau, tau_mean,
+                           tau_sd));
+        }
+        current_statement__ = 25;
         stan::math::validate_non_negative_index("total_ILI", "num_data",
           num_data);
         std::vector<local_scalar_t__> total_ILI =
           std::vector<local_scalar_t__>(num_data, DUMMY_VAR__);
-        current_statement__ = 34;
+        current_statement__ = 40;
         if (stan::math::logical_eq(noise_structure, 1)) {
-          current_statement__ = 28;
+          current_statement__ = 34;
           for (int i = 1; i <= num_path; ++i) {
-            current_statement__ = 26;
+            current_statement__ = 32;
             lp_accum__.add(stan::math::gamma_lpdf<propto__>(
                              stan::model::rvalue(c, "c",
                                stan::model::index_uni(i),
@@ -448,15 +542,15 @@ public:
                              stan::model::rvalue(eta, "eta",
                                stan::model::index_uni(1))));
           }
-          current_statement__ = 32;
+          current_statement__ = 38;
           for (int i = 1; i <= num_data; ++i) {
-            current_statement__ = 29;
+            current_statement__ = 35;
             stan::model::assign(total_ILI,
               stan::math::sum(
                 stan::model::rvalue(c, "c", stan::model::index_omni(),
                   stan::model::index_uni(i))),
               "assigning variable total_ILI", stan::model::index_uni(i));
-            current_statement__ = 30;
+            current_statement__ = 36;
             lp_accum__.add(stan::math::multinomial_lpmf<propto__>(
                              stan::model::rvalue(P, "P",
                                stan::model::index_omni(),
@@ -469,16 +563,16 @@ public:
                                  stan::model::index_uni(i)))));
           }
         } else {
-          current_statement__ = 24;
+          current_statement__ = 30;
           for (int i = 1; i <= num_data; ++i) {
-            current_statement__ = 21;
+            current_statement__ = 27;
             stan::model::assign(total_ILI,
               stan::math::sum(
                 stan::math::exp(
                   stan::model::rvalue(a, "a", stan::model::index_omni(),
                     stan::model::index_uni(i)))),
               "assigning variable total_ILI", stan::model::index_uni(i));
-            current_statement__ = 22;
+            current_statement__ = 28;
             lp_accum__.add(stan::math::multinomial_lpmf<propto__>(
                              stan::model::rvalue(P, "P",
                                stan::model::index_omni(),
@@ -492,11 +586,11 @@ public:
                                  stan::model::index_uni(i)))));
           }
         }
-        current_statement__ = 43;
+        current_statement__ = 49;
         if (stan::math::logical_eq(week_effect, 1)) {
-          current_statement__ = 41;
+          current_statement__ = 47;
           for (int i = 1; i <= num_data; ++i) {
-            current_statement__ = 39;
+            current_statement__ = 45;
             lp_accum__.add(stan::math::neg_binomial_lpmf<propto__>(
                              stan::model::rvalue(Y, "Y",
                                stan::model::index_uni(i)),
@@ -504,9 +598,9 @@ public:
                                 stan::model::index_uni(i)) * phi), phi));
           }
         } else {
-          current_statement__ = 37;
+          current_statement__ = 43;
           for (int i = 1; i <= num_data; ++i) {
-            current_statement__ = 35;
+            current_statement__ = 41;
             lp_accum__.add(stan::math::neg_binomial_lpmf<propto__>(
                              stan::model::rvalue(Y, "Y",
                                stan::model::index_uni(i)),

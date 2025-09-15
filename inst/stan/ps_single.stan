@@ -53,6 +53,14 @@ data {
   real X[num_data];
   int week_effect;          // Number of days in day of week effect? 1=none, 2=weekends?, 7=all days
   int DOW[num_data];        // integer of day of the week
+  
+  int phi_priors_provided;      // 1=priors not provided, 2=priors provided
+  real<lower=0> phi_mean;
+  real<lower=0> phi_sd;
+  
+  int tau_priors_provided;      // 1=priors not provided, 2=priors provided
+  real<lower=0> tau_mean;
+  real<lower=0> tau_sd;
 }
 
 transformed data {
@@ -87,6 +95,15 @@ model {
   //// Priors
   // Second-order random walk prior on b-spline coefficients
   a[3:num_basis] ~ normal(2*a[2:(num_basis-1)] - a[1:(num_basis-2)], tau);
+  
+  // Prior on phi
+  if(phi_priors_provided ==2){
+    phi ~ normal(phi_mean, phi_sd);
+  }
+  // Prior on tau
+  if(tau_priors_provided ==2){
+    tau ~ normal(tau_mean, tau_sd);
+  }
   
   // Uninformative priors on scale parameters?
   
