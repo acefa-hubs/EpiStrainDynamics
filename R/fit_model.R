@@ -91,6 +91,14 @@ fit_model.rw_subtyped <- function (constructed_model,
     DOW = constructed_model$model_params$DOW,
     cov_structure = constructed_model$model_params$cov_structure,
     noise_structure = constructed_model$model_params$noise_structure
+    # phi_priors_provided = 2, # 1=priors not provided, 2=priors provided
+    # phi_mean = 0.5,
+    # phi_sd = 0.07,
+    #
+    # tau_priors_provided = 2,  # 1=priors not provided, 2=priors provided
+    # tau_mean = rep(0.13, 4),#[cov_structure==0 ? 1: cov_structure==1? num_path: 0 ];
+    # # so for cov0 "shared" tau_mean has dim 1. for cov1 it has dim num_path. whew
+    # tau_sd = 0.02
   )
 
   fit_object <- rstan::sampling(
@@ -110,9 +118,10 @@ fit_model.rw_subtyped <- function (constructed_model,
   )
 
   # check for divergent transitions
-  div_trans <- sum(lapply(rstan::get_sampler_params(fit_object,
-                                                    inc_warmup = FALSE),
-                          div_check)[[1]])
+  # div_trans <- sum(lapply(rstan::get_sampler_params(fit_object,
+  #                                                   inc_warmup = FALSE),
+  #                         div_check)[[1]])
+  #
   ## print either troubleshooting or visualization tips
   # if (div_trans > 0 && verbose) {
   #   url <- "https://ednajoint.netlify.app/tips#troubleshooting-tips"
@@ -133,7 +142,7 @@ fit_model.rw_subtyped <- function (constructed_model,
                       # inits = inits,
                       constructed_model = constructed_model)
 
-  class(result_list) <- c('rw', 'EpiStrainDynamics.fit', class(out))
+  class(result_list) <- c('rw', 'EpiStrainDynamics.fit', class(result_list))
 
   return(result_list)
 }
