@@ -4,7 +4,13 @@
 \alias{construct_model}
 \title{Construct model}
 \usage{
-construct_model(method, pathogen_structure, dow_effect = FALSE)
+construct_model(
+  method,
+  pathogen_structure,
+  dow_effect = FALSE,
+  tau_priors = NULL,
+  phi_priors = NULL
+)
 }
 \arguments{
 \item{method}{either \code{random_walk()} or \code{p_spline()}}
@@ -12,6 +18,8 @@ construct_model(method, pathogen_structure, dow_effect = FALSE)
 \item{pathogen_structure}{either \code{single()}, \code{multiple()}, or \code{subtyped()}}
 
 \item{dow_effect}{logical whether to incorporate a day of week model}
+
+\item{priors}{named list of priors}
 }
 \value{
 a list containing the data, the model parameters, and pathogen

@@ -78,24 +78,24 @@ fit_model.rw_subtyped <- function (constructed_model,
                                    verbose = TRUE,
                                    seed = NULL, ...) {
 
-  cases <- constructed_model$data$case_timeseries
-  pathogen_names <- constructed_model$pathogen_names
-
-  standata <- list(
-    num_data = length(cases),
-    num_path = length(pathogen_names),
-    Y = cases,
-    P1 = constructed_model$data$component_pathogens,
-    P2 = constructed_model$data$influenzaA_subtyped,
-    week_effect = constructed_model$model_params$week_effect,
-    DOW = constructed_model$model_params$DOW,
-    cov_structure = constructed_model$model_params$cov_structure,
-    noise_structure = constructed_model$model_params$noise_structure
-  )
+  # cases <- constructed_model$data$case_timeseries
+  # pathogen_names <- constructed_model$pathogen_names
+  #
+  # standata <- list(
+  #   num_data = length(cases),
+  #   num_path = length(pathogen_names),
+  #   Y = cases,
+  #   P1 = constructed_model$data$component_pathogens,
+  #   P2 = constructed_model$data$influenzaA_subtyped,
+  #   week_effect = constructed_model$model_params$week_effect,
+  #   DOW = constructed_model$model_params$DOW,
+  #   cov_structure = constructed_model$model_params$cov_structure,
+  #   noise_structure = constructed_model$model_params$noise_structure
+  # )
 
   fit_object <- rstan::sampling(
     stanmodels$rw_subtyped,
-    data = standata,
+    data = constructed_model$standata,
     #' @srrstats {G2.4, G2.4a} explicit conversion to integers
     chains = as.integer(n_chain),
     iter = as.integer(n_iter),
@@ -150,29 +150,29 @@ fit_model.ps_subtyped <- function (constructed_model,
                                    verbose = TRUE,
                                    seed = NULL, ...) {
 
-  cases <- constructed_model$data$case_timeseries
-  pathogen_names <- constructed_model$pathogen_names
-  time_seq <- constructed_model$data$time_seq
-  spline_degree <- constructed_model$model_params$spline_degree
-  knots <- constructed_model$model_params$knots
-
-  standata <- list(num_data = length(cases),
-                   num_knots = length(knots),
-                   num_path = length(pathogen_names),
-                   knots = knots,
-                   spline_degree = spline_degree,
-                   Y = cases,
-                   P1 = constructed_model$data$component_pathogens,
-                   P2 = constructed_model$data$influenzaA_subtyped,
-                   X = time_seq,
-                   week_effect = constructed_model$model_params$week_effect,
-                   DOW = constructed_model$model_params$DOW,
-                   cov_structure = constructed_model$model_params$cov_structure,
-                   noise_structure = constructed_model$model_params$noise_structure)
+  # cases <- constructed_model$data$case_timeseries
+  # pathogen_names <- constructed_model$pathogen_names
+  # time_seq <- constructed_model$data$time_seq
+  # spline_degree <- constructed_model$model_params$spline_degree
+  # knots <- constructed_model$model_params$knots
+  #
+  # standata <- list(num_data = length(cases),
+  #                  num_knots = length(knots),
+  #                  num_path = length(pathogen_names),
+  #                  knots = knots,
+  #                  spline_degree = spline_degree,
+  #                  Y = cases,
+  #                  P1 = constructed_model$data$component_pathogens,
+  #                  P2 = constructed_model$data$influenzaA_subtyped,
+  #                  X = time_seq,
+  #                  week_effect = constructed_model$model_params$week_effect,
+  #                  DOW = constructed_model$model_params$DOW,
+  #                  cov_structure = constructed_model$model_params$cov_structure,
+  #                  noise_structure = constructed_model$model_params$noise_structure)
 
   fit_object <- rstan::sampling(
     stanmodels$ps_subtyped,
-    data = standata,
+    data = constructed_model$standata,
     chains = as.integer(n_chain),
     iter = as.integer(n_iter),
     warmup = as.integer(n_warmup),
@@ -205,21 +205,21 @@ fit_model.rw_multiple <- function (constructed_model,
                                    verbose = TRUE,
                                    seed = NULL, ...) {
 
-  cases <- constructed_model$data$case_timeseries
-  pathogen_names <- constructed_model$pathogen_names
-
-  standata <- list(num_data = length(cases),
-                   num_path = length(pathogen_names),
-                   Y = cases,
-                   P = constructed_model$data$component_pathogens,
-                   week_effect = constructed_model$model_params$week_effect,
-                   DOW = constructed_model$model_params$DOW,
-                   cov_structure = constructed_model$model_params$cov_structure,
-                   noise_structure = constructed_model$model_params$noise_structure)
+  # cases <- constructed_model$data$case_timeseries
+  # pathogen_names <- constructed_model$pathogen_names
+  #
+  # standata <- list(num_data = length(cases),
+  #                  num_path = length(pathogen_names),
+  #                  Y = cases,
+  #                  P = constructed_model$data$component_pathogens,
+  #                  week_effect = constructed_model$model_params$week_effect,
+  #                  DOW = constructed_model$model_params$DOW,
+  #                  cov_structure = constructed_model$model_params$cov_structure,
+  #                  noise_structure = constructed_model$model_params$noise_structure)
 
   fit_object <- rstan::sampling(
     stanmodels$rw_multiple,
-    data = standata,
+    data = constructed_model$standata,
     chains = as.integer(n_chain),
     iter = as.integer(n_iter),
     warmup = as.integer(n_warmup),
@@ -252,28 +252,36 @@ fit_model.ps_multiple <- function (constructed_model,
                                    verbose = TRUE,
                                    seed = NULL, ...) {
 
-  cases <- constructed_model$data$case_timeseries
-  pathogen_names <- constructed_model$pathogen_names
-  time_seq <- constructed_model$data$time_seq
-  spline_degree <- constructed_model$model_params$spline_degree
-  knots <- constructed_model$model_params$knots
-
-  standata <- list(num_data = length(cases),
-                   num_knots = length(knots),
-                   num_path = length(pathogen_names),
-                   knots = knots,
-                   spline_degree = spline_degree,
-                   Y = cases,
-                   P = constructed_model$data$component_pathogens,
-                   X = time_seq,
-                   week_effect = constructed_model$model_params$week_effect,
-                   DOW = constructed_model$model_params$DOW,
-                   cov_structure = constructed_model$model_params$cov_structure,
-                   noise_structure = constructed_model$model_params$noise_structure)
+  # cases <- constructed_model$data$case_timeseries
+  # pathogen_names <- constructed_model$pathogen_names
+  # time_seq <- constructed_model$data$time_seq
+  # spline_degree <- constructed_model$model_params$spline_degree
+  # knots <- constructed_model$model_params$knots
+  #
+  # standata <- list(num_data = length(cases),
+  #                  num_knots = length(knots),
+  #                  num_path = length(pathogen_names),
+  #                  knots = knots,
+  #                  spline_degree = spline_degree,
+  #                  Y = cases,
+  #                  P = constructed_model$data$component_pathogens,
+  #                  X = time_seq,
+  #                  week_effect = constructed_model$model_params$week_effect,
+  #                  DOW = constructed_model$model_params$DOW,
+  #                  cov_structure = constructed_model$model_params$cov_structure,
+  #                  noise_structure = constructed_model$model_params$noise_structure,
+  #                  phi_priors_provided = 2, # 1=priors not provided, 2=priors provided
+  #                  phi_mean = 0,
+  #                  phi_sd = 1000,
+  #
+  #                  tau_priors_provided = 2,  # 1=priors not provided, 2=priors provided
+  #                  tau_mean = rep(0.13, 4),#[cov_structure==0 ? 1: cov_structure==1? num_path: 0 ];
+  #                  # so for cov0 "shared" tau_mean has dim 1. for cov1 it has dim num_path. whew
+  #                  tau_sd = rep(1000,4))
 
   fit_object <- rstan::sampling(
     stanmodels$ps_multiple,
-    data = standata,
+    data = constructed_model$standata,
     chains = as.integer(n_chain),
     iter = as.integer(n_iter),
     warmup = as.integer(n_warmup),
@@ -306,16 +314,16 @@ fit_model.rw_single <- function (constructed_model,
                                  verbose = TRUE,
                                  seed = NULL, ...) {
 
-  cases <- constructed_model$data$case_timeseries
-
-  standata <- list(num_data = length(cases),
-                   Y = cases,
-                   week_effect = constructed_model$model_params$week_effect,
-                   DOW = constructed_model$model_params$DOW)
+  # cases <- constructed_model$data$case_timeseries
+  #
+  # standata <- list(num_data = length(cases),
+  #                  Y = cases,
+  #                  week_effect = constructed_model$model_params$week_effect,
+  #                  DOW = constructed_model$model_params$DOW)
 
   fit_object <- rstan::sampling(
     stanmodels$rw_single,
-    data = standata,
+    data = constructed_model$standata,
     chains = as.integer(n_chain),
     iter = as.integer(n_iter),
     warmup = as.integer(n_warmup),
@@ -347,24 +355,24 @@ fit_model.ps_single <- function (constructed_model,
                                  multi_cores = TRUE,
                                  verbose = TRUE,
                                  seed = NULL, ...) {
-
-  cases <- constructed_model$data$case_timeseries
-  time_seq <- constructed_model$data$time_seq
-  spline_degree <- constructed_model$model_params$spline_degree
-  knots <- constructed_model$model_params$knots
-
-  standata <- list(num_data = length(cases),
-                   num_knots = length(knots),
-                   knots = knots,
-                   spline_degree = spline_degree,
-                   Y = cases,
-                   X = time_seq,
-                   week_effect = constructed_model$model_params$week_effect,
-                   DOW = constructed_model$model_params$DOW)
+#
+#   cases <- constructed_model$data$case_timeseries
+#   time_seq <- constructed_model$data$time_seq
+#   spline_degree <- constructed_model$model_params$spline_degree
+#   knots <- constructed_model$model_params$knots
+#
+#   standata <- list(num_data = length(cases),
+#                    num_knots = length(knots),
+#                    knots = knots,
+#                    spline_degree = spline_degree,
+#                    Y = cases,
+#                    X = time_seq,
+#                    week_effect = constructed_model$model_params$week_effect,
+#                    DOW = constructed_model$model_params$DOW)
 
   fit_object <- rstan::sampling(
     stanmodels$ps_single,
-    data = standata,
+    data = constructed_model$standata,
     chains = as.integer(n_chain),
     iter = as.integer(n_iter),
     warmup = as.integer(n_warmup),
@@ -385,31 +393,3 @@ fit_model.ps_single <- function (constructed_model,
   return(out)
 }
 
-#' Extract Model Components
-#'
-#' Extracts components from a fitted model object for analysis functions
-#'
-#' @param model_obj Model object
-#'
-#' @return List containing extracted components: fit, pathogen_names, num_path,
-#'   time_seq, time, num_days, days_per_knot, spline_degree, DOW, week_effect,
-#'   dow_effect
-#'
-#' @noRd
-#' @srrstats {G1.4} uses `Roxygen2` documentation
-#' @srrstats {G1.4a} internal function specified with `@noRd`
-#'
-get_model_components <- function(model_obj) {
-  list(
-    pathogen_names = fitted_model$constructed_model$pathogen_names %||% NULL,
-    num_path = length(fitted_model$constructed_model$pathogen_names %||% 1),
-    time_seq = fitted_model$constructed_model$data$time_seq,
-    time = fitted_model$constructed_model$data$time,
-    num_days = length(fitted_model$constructed_model$data$time),
-    days_per_knot = fitted_model$constructed_model$model_params$days_per_knot %||% NULL,
-    spline_degree = fitted_model$constructed_model$model_params$spline_degree %||% NULL,
-    DOW = fitted_model$constructed_model$model_params$DOW %||% NULL,
-    week_effect = fitted_model$constructed_model$model_params$week_effect %||% NULL,
-    dow_effect = fitted_model$constructed_model$dow_effect
-  )
-}

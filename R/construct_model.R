@@ -3,6 +3,7 @@
 #' @param method either `random_walk()` or `p_spline()`
 #' @param pathogen_structure either `single()`, `multiple()`, or `subtyped()`
 #' @param dow_effect logical whether to incorporate a day of week model
+#' @param priors named list of priors
 #'
 #' @returns a list containing the data, the model parameters, and pathogen
 #'  names of class `EpiStrainDynamics.model`
@@ -46,7 +47,9 @@
 #'
 construct_model <- function(method,
                             pathogen_structure,
-                            dow_effect = FALSE) {
+                            dow_effect = FALSE,
+                            tau_priors = NULL,
+                            phi_priors = NULL) {
 
   #' @srrstats {G2.1, G2.2, G5.8, G5.8b} assertions on types of inputs
   validate_class_inherits(
@@ -57,9 +60,15 @@ construct_model <- function(method,
   )
   if (!is.logical(dow_effect) || length(dow_effect) != 1) {
     cli::cli_abort(
-      "You provided {.var {dow_effect}} but `dow_effect` must be a single logical value (TRUE or FALSE)"
+      "You provided {.var {dow_effect}} but `dow_effect` must be a single
+      logical value (TRUE or FALSE)"
     )
   }
+  # priors
+  tau_priors <- validate_tau_priors(tau_priors, pathogen_structure)
+  phi_priors <- validate_phi_priors(phi_priors)
+  tau_priors_provided <- ifelse(is.null(tau_priors), 1, 2)
+  phi_priors_provided <- ifelse(is.null(phi_priors), 1, 2)
 
   # Extract model type
   model_type <- get_model_type(method$method,
@@ -72,25 +81,59 @@ construct_model <- function(method,
   week_effect <- if (dow_effect) 7L else 1L
   DOW <- (time_seq - 1L) %% week_effect + 1L
 
-  # Initialize model parameters list
-  dow_terms <- list(
-    week_effect = week_effect,
-    DOW = DOW
-  )
-  model_params <- c(dow_terms, pathogen_structure$model_params)
+  cases <- pathogen_structure$data$case_timeseries
+  pathogen_names <- pathogen_structure$pathogen_names
+  component_pathogens <- pathogen_structure$data$component_pathogens %||% NULL
+  influenzaA_subtyped <- pathogen_structure$data$influenzaA_subtyped %||% NULL
+  cov_structure <- pathogen_structure$model_params$cov_structure %||% NULL
+  noise_structure <- pathogen_structure$model_params$noise_structure %||% NULL
+  spline_degree <- method$model_params$spline_degree %||% NULL
+  tau_mean <- tau_priors$mean %||% NULL
+  tau_sd <- tau_priors$sd %||% NULL
+  phi_mean <- phi_priors$mean %||% NULL
+  phi_sd <- phi_priors$sd %||% NULL
 
-  # Add method-specific parameters
+  standata <- list(num_data = length(cases),
+                   Y = cases,
+                   week_effect = week_effect,
+                   DOW = DOW,
+                   tau_priors_provided = tau_priors_provided,
+                   tau_mean = tau_mean,
+                   tau_sd = tau_sd,
+                   phi_priors_provided = phi_priors_provided,
+                   phi_mean = phi_mean,
+                   phi_sd = phi_sd)
+
+  if (pathogen_structure$pathogen_structure == 'subtyped') {
+    standata <- c(standata,
+                  list(num_path = length(pathogen_names),
+                       cov_structure = cov_structure,
+                       noise_structure = noise_structure,
+                       P1 = component_pathogens,
+                       P2 = influenzaA_subtyped)
+    )
+  }
+
+  if (pathogen_structure$pathogen_structure == 'multiple') {
+    standata <- c(standata,
+                  list(num_path = length(pathogen_names),
+                       cov_structure = cov_structure,
+                       noise_structure = noise_structure,
+                       P = component_pathogens)
+    )
+  }
+
   if (method$method == 'p-spline') {
     knots <- get_knots(
       time_seq,
       days_per_knot = method$model_params$days_per_knot,
       spline_degree = method$model_params$spline_degree
     )
-
-    model_params <- c(
-      model_params,
-      method$model_params,
-      list(knots = knots)
+    standata <- c(standata,
+                  list(num_knots = length(knots),
+                       knots = knots,
+                       spline_degree = spline_degree,
+                       X = time_seq)
     )
   }
 
@@ -103,12 +146,13 @@ construct_model <- function(method,
   # Construct final model input list
   model_input <- list(
     data = data,
-    model_params = model_params,
+    standata = standata,
     pathogen_names = pathogen_structure$pathogen_names,
     dow_effect = dow_effect
   )
 
-  class(model_input) <- c(model_type, "EpiStrainDynamics.model", class(model_input))
+  class(model_input) <- c(model_type, "EpiStrainDynamics.model",
+                          class(model_input))
   return(model_input)
 }
 
