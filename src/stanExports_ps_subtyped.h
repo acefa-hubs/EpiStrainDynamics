@@ -27,65 +27,71 @@ namespace model_ps_subtyped_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 126> locations_array__ =
+static constexpr std::array<const char*, 140> locations_array__ =
   {" (found before start of program)",
-  " (in 'ps_subtyped', line 78, column 2 to column 32)",
-  " (in 'ps_subtyped', line 79, column 2 to column 35)",
-  " (in 'ps_subtyped', line 80, column 2 to column 48)",
-  " (in 'ps_subtyped', line 81, column 2 to column 20)",
-  " (in 'ps_subtyped', line 82, column 2 to column 74)",
-  " (in 'ps_subtyped', line 83, column 2 to column 50)",
-  " (in 'ps_subtyped', line 84, column 2 to column 43)",
-  " (in 'ps_subtyped', line 87, column 2 to column 35)",
-  " (in 'ps_subtyped', line 89, column 4 to column 25)",
-  " (in 'ps_subtyped', line 88, column 2 to line 89, column 25)",
-  " (in 'ps_subtyped', line 104, column 6 to column 87)",
-  " (in 'ps_subtyped', line 103, column 4 to line 104, column 87)",
-  " (in 'ps_subtyped', line 102, column 6 to line 105, column 3)",
-  " (in 'ps_subtyped', line 100, column 6 to column 87)",
-  " (in 'ps_subtyped', line 99, column 4 to line 100, column 87)",
-  " (in 'ps_subtyped', line 98, column 27 to line 101, column 3)",
-  " (in 'ps_subtyped', line 98, column 7 to line 105, column 3)",
-  " (in 'ps_subtyped', line 96, column 6 to column 59)",
-  " (in 'ps_subtyped', line 95, column 4 to line 96, column 59)",
-  " (in 'ps_subtyped', line 94, column 22 to line 97, column 3)",
-  " (in 'ps_subtyped', line 94, column 2 to line 105, column 3)",
-  " (in 'ps_subtyped', line 110, column 17 to column 25)",
-  " (in 'ps_subtyped', line 110, column 2 to column 27)",
-  " (in 'ps_subtyped', line 111, column 2 to column 15)",
-  " (in 'ps_subtyped', line 112, column 9 to column 19)",
-  " (in 'ps_subtyped', line 112, column 2 to column 27)",
-  " (in 'ps_subtyped', line 128, column 6 to column 41)",
-  " (in 'ps_subtyped', line 129, column 6 to column 41)",
-  " (in 'ps_subtyped', line 130, column 6 to column 26)",
-  " (in 'ps_subtyped', line 131, column 6 to column 55)",
-  " (in 'ps_subtyped', line 132, column 6 to column 47)",
-  " (in 'ps_subtyped', line 133, column 6 to column 54)",
-  " (in 'ps_subtyped', line 127, column 24 to line 134, column 5)",
-  " (in 'ps_subtyped', line 127, column 4 to line 134, column 5)",
-  " (in 'ps_subtyped', line 126, column 6 to line 135, column 3)",
-  " (in 'ps_subtyped', line 115, column 6 to column 55)",
-  " (in 'ps_subtyped', line 114, column 24 to line 116, column 5)",
-  " (in 'ps_subtyped', line 114, column 4 to line 116, column 5)",
-  " (in 'ps_subtyped', line 118, column 6 to column 36)",
-  " (in 'ps_subtyped', line 119, column 6 to column 36)",
-  " (in 'ps_subtyped', line 120, column 6 to column 26)",
-  " (in 'ps_subtyped', line 121, column 6 to column 50)",
-  " (in 'ps_subtyped', line 122, column 6 to column 47)",
-  " (in 'ps_subtyped', line 123, column 6 to column 49)",
-  " (in 'ps_subtyped', line 117, column 24 to line 124, column 5)",
-  " (in 'ps_subtyped', line 117, column 4 to line 124, column 5)",
-  " (in 'ps_subtyped', line 113, column 24 to line 125, column 3)",
-  " (in 'ps_subtyped', line 113, column 2 to line 135, column 3)",
-  " (in 'ps_subtyped', line 143, column 6 to column 89)",
-  " (in 'ps_subtyped', line 142, column 24 to line 144, column 7)",
-  " (in 'ps_subtyped', line 142, column 4 to line 144, column 7)",
-  " (in 'ps_subtyped', line 141, column 6 to line 145, column 3)",
-  " (in 'ps_subtyped', line 138, column 6 to column 49)",
-  " (in 'ps_subtyped', line 137, column 24 to line 139, column 7)",
-  " (in 'ps_subtyped', line 137, column 4 to line 139, column 7)",
-  " (in 'ps_subtyped', line 136, column 20 to line 140, column 3)",
-  " (in 'ps_subtyped', line 136, column 2 to line 145, column 3)",
+  " (in 'ps_subtyped', line 85, column 2 to column 32)",
+  " (in 'ps_subtyped', line 86, column 2 to column 35)",
+  " (in 'ps_subtyped', line 87, column 2 to column 48)",
+  " (in 'ps_subtyped', line 88, column 2 to column 20)",
+  " (in 'ps_subtyped', line 89, column 2 to column 74)",
+  " (in 'ps_subtyped', line 90, column 2 to column 50)",
+  " (in 'ps_subtyped', line 91, column 2 to column 43)",
+  " (in 'ps_subtyped', line 94, column 2 to column 35)",
+  " (in 'ps_subtyped', line 96, column 4 to column 25)",
+  " (in 'ps_subtyped', line 95, column 2 to line 96, column 25)",
+  " (in 'ps_subtyped', line 111, column 6 to column 87)",
+  " (in 'ps_subtyped', line 110, column 4 to line 111, column 87)",
+  " (in 'ps_subtyped', line 109, column 6 to line 112, column 3)",
+  " (in 'ps_subtyped', line 107, column 6 to column 87)",
+  " (in 'ps_subtyped', line 106, column 4 to line 107, column 87)",
+  " (in 'ps_subtyped', line 105, column 27 to line 108, column 3)",
+  " (in 'ps_subtyped', line 105, column 7 to line 112, column 3)",
+  " (in 'ps_subtyped', line 103, column 6 to column 59)",
+  " (in 'ps_subtyped', line 102, column 4 to line 103, column 59)",
+  " (in 'ps_subtyped', line 101, column 22 to line 104, column 3)",
+  " (in 'ps_subtyped', line 101, column 2 to line 112, column 3)",
+  " (in 'ps_subtyped', line 116, column 4 to column 35)",
+  " (in 'ps_subtyped', line 115, column 29 to line 117, column 3)",
+  " (in 'ps_subtyped', line 115, column 2 to line 117, column 3)",
+  " (in 'ps_subtyped', line 121, column 4 to column 35)",
+  " (in 'ps_subtyped', line 120, column 29 to line 122, column 3)",
+  " (in 'ps_subtyped', line 120, column 2 to line 122, column 3)",
+  " (in 'ps_subtyped', line 127, column 17 to column 25)",
+  " (in 'ps_subtyped', line 127, column 2 to column 27)",
+  " (in 'ps_subtyped', line 128, column 2 to column 15)",
+  " (in 'ps_subtyped', line 129, column 9 to column 19)",
+  " (in 'ps_subtyped', line 129, column 2 to column 27)",
+  " (in 'ps_subtyped', line 145, column 6 to column 41)",
+  " (in 'ps_subtyped', line 146, column 6 to column 41)",
+  " (in 'ps_subtyped', line 147, column 6 to column 26)",
+  " (in 'ps_subtyped', line 148, column 6 to column 55)",
+  " (in 'ps_subtyped', line 149, column 6 to column 47)",
+  " (in 'ps_subtyped', line 150, column 6 to column 54)",
+  " (in 'ps_subtyped', line 144, column 24 to line 151, column 5)",
+  " (in 'ps_subtyped', line 144, column 4 to line 151, column 5)",
+  " (in 'ps_subtyped', line 143, column 6 to line 152, column 3)",
+  " (in 'ps_subtyped', line 132, column 6 to column 55)",
+  " (in 'ps_subtyped', line 131, column 24 to line 133, column 5)",
+  " (in 'ps_subtyped', line 131, column 4 to line 133, column 5)",
+  " (in 'ps_subtyped', line 135, column 6 to column 36)",
+  " (in 'ps_subtyped', line 136, column 6 to column 36)",
+  " (in 'ps_subtyped', line 137, column 6 to column 26)",
+  " (in 'ps_subtyped', line 138, column 6 to column 50)",
+  " (in 'ps_subtyped', line 139, column 6 to column 47)",
+  " (in 'ps_subtyped', line 140, column 6 to column 49)",
+  " (in 'ps_subtyped', line 134, column 24 to line 141, column 5)",
+  " (in 'ps_subtyped', line 134, column 4 to line 141, column 5)",
+  " (in 'ps_subtyped', line 130, column 24 to line 142, column 3)",
+  " (in 'ps_subtyped', line 130, column 2 to line 152, column 3)",
+  " (in 'ps_subtyped', line 160, column 6 to column 89)",
+  " (in 'ps_subtyped', line 159, column 24 to line 161, column 7)",
+  " (in 'ps_subtyped', line 159, column 4 to line 161, column 7)",
+  " (in 'ps_subtyped', line 158, column 6 to line 162, column 3)",
+  " (in 'ps_subtyped', line 155, column 6 to column 49)",
+  " (in 'ps_subtyped', line 154, column 24 to line 156, column 7)",
+  " (in 'ps_subtyped', line 154, column 4 to line 156, column 7)",
+  " (in 'ps_subtyped', line 153, column 20 to line 157, column 3)",
+  " (in 'ps_subtyped', line 153, column 2 to line 162, column 3)",
   " (in 'ps_subtyped', line 43, column 2 to column 15)",
   " (in 'ps_subtyped', line 44, column 2 to column 16)",
   " (in 'ps_subtyped', line 45, column 2 to column 15)",
@@ -106,37 +112,45 @@ static constexpr std::array<const char*, 126> locations_array__ =
   " (in 'ps_subtyped', line 53, column 2 to column 20)",
   " (in 'ps_subtyped', line 54, column 2 to column 42)",
   " (in 'ps_subtyped', line 55, column 2 to column 44)",
-  " (in 'ps_subtyped', line 58, column 2 to column 48)",
-  " (in 'ps_subtyped', line 59, column 9 to column 18)",
-  " (in 'ps_subtyped', line 59, column 20 to column 28)",
-  " (in 'ps_subtyped', line 59, column 2 to column 32)",
-  " (in 'ps_subtyped', line 60, column 9 to column 34)",
-  " (in 'ps_subtyped', line 60, column 2 to column 51)",
-  " (in 'ps_subtyped', line 61, column 9 to column 36)",
-  " (in 'ps_subtyped', line 61, column 2 to column 48)",
-  " (in 'ps_subtyped', line 62, column 2 to column 74)",
-  " (in 'ps_subtyped', line 63, column 2 to column 86)",
-  " (in 'ps_subtyped', line 65, column 4 to column 96)",
-  " (in 'ps_subtyped', line 64, column 2 to line 65, column 96)",
-  " (in 'ps_subtyped', line 66, column 2 to column 11)",
-  " (in 'ps_subtyped', line 67, column 2 to column 11)",
-  " (in 'ps_subtyped', line 73, column 4 to column 13)",
-  " (in 'ps_subtyped', line 74, column 4 to column 13)",
-  " (in 'ps_subtyped', line 72, column 6 to line 75, column 3)",
-  " (in 'ps_subtyped', line 69, column 4 to column 20)",
-  " (in 'ps_subtyped', line 70, column 4 to column 20)",
-  " (in 'ps_subtyped', line 68, column 24 to line 71, column 3)",
-  " (in 'ps_subtyped', line 68, column 2 to line 75, column 3)",
-  " (in 'ps_subtyped', line 78, column 9 to column 17)",
-  " (in 'ps_subtyped', line 78, column 19 to column 28)",
-  " (in 'ps_subtyped', line 79, column 18 to column 22)",
-  " (in 'ps_subtyped', line 79, column 23 to column 27)",
-  " (in 'ps_subtyped', line 80, column 20 to column 45)",
-  " (in 'ps_subtyped', line 82, column 20 to column 71)",
-  " (in 'ps_subtyped', line 83, column 13 to column 42)",
-  " (in 'ps_subtyped', line 84, column 10 to column 21)",
-  " (in 'ps_subtyped', line 87, column 9 to column 17)",
-  " (in 'ps_subtyped', line 87, column 19 to column 27)",
+  " (in 'ps_subtyped', line 56, column 2 to column 26)",
+  " (in 'ps_subtyped', line 57, column 2 to column 25)",
+  " (in 'ps_subtyped', line 58, column 2 to column 23)",
+  " (in 'ps_subtyped', line 60, column 2 to column 26)",
+  " (in 'ps_subtyped', line 61, column 25 to column 76)",
+  " (in 'ps_subtyped', line 61, column 2 to column 79)",
+  " (in 'ps_subtyped', line 62, column 23 to column 74)",
+  " (in 'ps_subtyped', line 62, column 2 to column 77)",
+  " (in 'ps_subtyped', line 65, column 2 to column 48)",
+  " (in 'ps_subtyped', line 66, column 9 to column 18)",
+  " (in 'ps_subtyped', line 66, column 20 to column 28)",
+  " (in 'ps_subtyped', line 66, column 2 to column 32)",
+  " (in 'ps_subtyped', line 67, column 9 to column 34)",
+  " (in 'ps_subtyped', line 67, column 2 to column 51)",
+  " (in 'ps_subtyped', line 68, column 9 to column 36)",
+  " (in 'ps_subtyped', line 68, column 2 to column 48)",
+  " (in 'ps_subtyped', line 69, column 2 to column 74)",
+  " (in 'ps_subtyped', line 70, column 2 to column 86)",
+  " (in 'ps_subtyped', line 72, column 4 to column 96)",
+  " (in 'ps_subtyped', line 71, column 2 to line 72, column 96)",
+  " (in 'ps_subtyped', line 73, column 2 to column 11)",
+  " (in 'ps_subtyped', line 74, column 2 to column 11)",
+  " (in 'ps_subtyped', line 80, column 4 to column 13)",
+  " (in 'ps_subtyped', line 81, column 4 to column 13)",
+  " (in 'ps_subtyped', line 79, column 6 to line 82, column 3)",
+  " (in 'ps_subtyped', line 76, column 4 to column 20)",
+  " (in 'ps_subtyped', line 77, column 4 to column 20)",
+  " (in 'ps_subtyped', line 75, column 24 to line 78, column 3)",
+  " (in 'ps_subtyped', line 75, column 2 to line 82, column 3)",
+  " (in 'ps_subtyped', line 85, column 9 to column 17)",
+  " (in 'ps_subtyped', line 85, column 19 to column 28)",
+  " (in 'ps_subtyped', line 86, column 18 to column 22)",
+  " (in 'ps_subtyped', line 86, column 23 to column 27)",
+  " (in 'ps_subtyped', line 87, column 20 to column 45)",
+  " (in 'ps_subtyped', line 89, column 20 to column 71)",
+  " (in 'ps_subtyped', line 90, column 13 to column 42)",
+  " (in 'ps_subtyped', line 91, column 10 to column 21)",
+  " (in 'ps_subtyped', line 94, column 9 to column 17)",
+  " (in 'ps_subtyped', line 94, column 19 to column 27)",
   " (in 'ps_subtyped', line 22, column 11 to column 18)",
   " (in 'ps_subtyped', line 22, column 4 to column 29)",
   " (in 'ps_subtyped', line 23, column 11 to column 18)",
@@ -177,35 +191,35 @@ build_b_spline(const std::vector<T0__>& t, const std::vector<T1__>&
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 109;
+    current_statement__ = 123;
     stan::math::validate_non_negative_index("b_spline", "size(t)",
       stan::math::size(t));
     Eigen::Matrix<local_scalar_t__,-1,1> b_spline =
       Eigen::Matrix<local_scalar_t__,-1,1>::Constant(stan::math::size(t),
         DUMMY_VAR__);
-    current_statement__ = 111;
+    current_statement__ = 125;
     stan::math::validate_non_negative_index("w1", "size(t)",
       stan::math::size(t));
     Eigen::Matrix<local_scalar_t__,-1,1> w1 =
       Eigen::Matrix<local_scalar_t__,-1,1>::Constant(stan::math::size(t),
         DUMMY_VAR__);
-    current_statement__ = 112;
+    current_statement__ = 126;
     stan::model::assign(w1, stan::math::rep_vector(0, stan::math::size(t)),
       "assigning variable w1");
-    current_statement__ = 113;
+    current_statement__ = 127;
     stan::math::validate_non_negative_index("w2", "size(t)",
       stan::math::size(t));
     Eigen::Matrix<local_scalar_t__,-1,1> w2 =
       Eigen::Matrix<local_scalar_t__,-1,1>::Constant(stan::math::size(t),
         DUMMY_VAR__);
-    current_statement__ = 114;
+    current_statement__ = 128;
     stan::model::assign(w2, stan::math::rep_vector(0, stan::math::size(t)),
       "assigning variable w2");
-    current_statement__ = 123;
+    current_statement__ = 137;
     if (stan::math::logical_eq(order, 1)) {
-      current_statement__ = 122;
+      current_statement__ = 136;
       for (int i = 1; i <= stan::math::size(t); ++i) {
-        current_statement__ = 121;
+        current_statement__ = 135;
         stan::model::assign(b_spline,
           (stan::math::primitive_value(
              stan::math::logical_lte(
@@ -220,13 +234,13 @@ build_b_spline(const std::vector<T0__>& t, const std::vector<T1__>&
           "assigning variable b_spline", stan::model::index_uni(i));
       }
     } else {
-      current_statement__ = 116;
+      current_statement__ = 130;
       if (stan::math::logical_neq(
             stan::model::rvalue(ext_knots, "ext_knots",
               stan::model::index_uni(ind)),
             stan::model::rvalue(ext_knots, "ext_knots",
               stan::model::index_uni(((ind + order) - 1))))) {
-        current_statement__ = 115;
+        current_statement__ = 129;
         stan::model::assign(w1,
           stan::math::divide(
             stan::math::subtract(stan::math::to_vector(t),
@@ -238,13 +252,13 @@ build_b_spline(const std::vector<T0__>& t, const std::vector<T1__>&
             stan::model::rvalue(ext_knots, "ext_knots",
               stan::model::index_uni(ind)))), "assigning variable w1");
       }
-      current_statement__ = 118;
+      current_statement__ = 132;
       if (stan::math::logical_neq(
             stan::model::rvalue(ext_knots, "ext_knots",
               stan::model::index_uni((ind + 1))),
             stan::model::rvalue(ext_knots, "ext_knots",
               stan::model::index_uni((ind + order))))) {
-        current_statement__ = 117;
+        current_statement__ = 131;
         stan::model::assign(w2,
           stan::math::subtract(1,
             stan::math::divide(
@@ -258,7 +272,7 @@ build_b_spline(const std::vector<T0__>& t, const std::vector<T1__>&
                 stan::model::index_uni((ind + 1)))))),
           "assigning variable w2");
       }
-      current_statement__ = 119;
+      current_statement__ = 133;
       stan::model::assign(b_spline,
         stan::math::add(
           stan::math::elt_multiply(w1,
@@ -267,7 +281,7 @@ build_b_spline(const std::vector<T0__>& t, const std::vector<T1__>&
             build_b_spline(t, ext_knots, (ind + 1), (order - 1), pstream__))),
         "assigning variable b_spline");
     }
-    current_statement__ = 124;
+    current_statement__ = 138;
     return b_spline;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -289,6 +303,12 @@ private:
   std::vector<int> DOW;
   int cov_structure;
   int noise_structure;
+  int phi_priors_provided;
+  double phi_mean;
+  double phi_sd;
+  int tau_priors_provided;
+  std::vector<double> tau_mean;
+  std::vector<double> tau_sd;
   int num_basis;
   Eigen::Matrix<double,-1,-1> B_data__;
   Eigen::Matrix<double,-1,1> ext_knots_temp_data__;
@@ -324,27 +344,27 @@ public:
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 58;
+      current_statement__ = 64;
       context__.validate_dims("data initialization", "num_data", "int",
         std::vector<size_t>{});
       num_data = std::numeric_limits<int>::min();
-      current_statement__ = 58;
+      current_statement__ = 64;
       num_data = context__.vals_i("num_data")[(1 - 1)];
-      current_statement__ = 59;
+      current_statement__ = 65;
       context__.validate_dims("data initialization", "num_knots", "int",
         std::vector<size_t>{});
       num_knots = std::numeric_limits<int>::min();
-      current_statement__ = 59;
+      current_statement__ = 65;
       num_knots = context__.vals_i("num_knots")[(1 - 1)];
-      current_statement__ = 60;
+      current_statement__ = 66;
       context__.validate_dims("data initialization", "num_path", "int",
         std::vector<size_t>{});
       num_path = std::numeric_limits<int>::min();
-      current_statement__ = 60;
+      current_statement__ = 66;
       num_path = context__.vals_i("num_path")[(1 - 1)];
-      current_statement__ = 61;
+      current_statement__ = 67;
       stan::math::validate_non_negative_index("knots", "num_knots", num_knots);
-      current_statement__ = 62;
+      current_statement__ = 68;
       context__.validate_dims("data initialization", "knots", "double",
         std::vector<size_t>{static_cast<size_t>(num_knots)});
       knots_data__ = Eigen::Matrix<double,-1,1>::Constant(num_knots,
@@ -354,39 +374,39 @@ public:
         num_knots);
       {
         std::vector<local_scalar_t__> knots_flat__;
-        current_statement__ = 62;
+        current_statement__ = 68;
         knots_flat__ = context__.vals_r("knots");
-        current_statement__ = 62;
+        current_statement__ = 68;
         pos__ = 1;
-        current_statement__ = 62;
+        current_statement__ = 68;
         for (int sym1__ = 1; sym1__ <= num_knots; ++sym1__) {
-          current_statement__ = 62;
+          current_statement__ = 68;
           stan::model::assign(knots, knots_flat__[(pos__ - 1)],
             "assigning variable knots", stan::model::index_uni(sym1__));
-          current_statement__ = 62;
+          current_statement__ = 68;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 63;
+      current_statement__ = 69;
       context__.validate_dims("data initialization", "spline_degree", "int",
         std::vector<size_t>{});
       spline_degree = std::numeric_limits<int>::min();
-      current_statement__ = 63;
+      current_statement__ = 69;
       spline_degree = context__.vals_i("spline_degree")[(1 - 1)];
-      current_statement__ = 64;
+      current_statement__ = 70;
       stan::math::validate_non_negative_index("Y", "num_data", num_data);
-      current_statement__ = 65;
+      current_statement__ = 71;
       context__.validate_dims("data initialization", "Y", "int",
         std::vector<size_t>{static_cast<size_t>(num_data)});
       Y = std::vector<int>(num_data, std::numeric_limits<int>::min());
-      current_statement__ = 65;
+      current_statement__ = 71;
       Y = context__.vals_i("Y");
-      current_statement__ = 66;
+      current_statement__ = 72;
       stan::math::validate_non_negative_index("P1", "num_path - 1", (num_path
         - 1));
-      current_statement__ = 67;
+      current_statement__ = 73;
       stan::math::validate_non_negative_index("P1", "num_data", num_data);
-      current_statement__ = 68;
+      current_statement__ = 74;
       context__.validate_dims("data initialization", "P1", "int",
         std::vector<size_t>{static_cast<size_t>((num_path - 1)),
           static_cast<size_t>(num_data)});
@@ -394,26 +414,26 @@ public:
              std::vector<int>(num_data, std::numeric_limits<int>::min()));
       {
         std::vector<int> P1_flat__;
-        current_statement__ = 68;
+        current_statement__ = 74;
         P1_flat__ = context__.vals_i("P1");
-        current_statement__ = 68;
+        current_statement__ = 74;
         pos__ = 1;
-        current_statement__ = 68;
+        current_statement__ = 74;
         for (int sym1__ = 1; sym1__ <= num_data; ++sym1__) {
-          current_statement__ = 68;
+          current_statement__ = 74;
           for (int sym2__ = 1; sym2__ <= (num_path - 1); ++sym2__) {
-            current_statement__ = 68;
+            current_statement__ = 74;
             stan::model::assign(P1, P1_flat__[(pos__ - 1)],
               "assigning variable P1", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 68;
+            current_statement__ = 74;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 69;
+      current_statement__ = 75;
       stan::math::validate_non_negative_index("P2", "num_data", num_data);
-      current_statement__ = 70;
+      current_statement__ = 76;
       context__.validate_dims("data initialization", "P2", "int",
         std::vector<size_t>{static_cast<size_t>(2),
           static_cast<size_t>(num_data)});
@@ -421,186 +441,248 @@ public:
              std::vector<int>(num_data, std::numeric_limits<int>::min()));
       {
         std::vector<int> P2_flat__;
-        current_statement__ = 70;
+        current_statement__ = 76;
         P2_flat__ = context__.vals_i("P2");
-        current_statement__ = 70;
+        current_statement__ = 76;
         pos__ = 1;
-        current_statement__ = 70;
+        current_statement__ = 76;
         for (int sym1__ = 1; sym1__ <= num_data; ++sym1__) {
-          current_statement__ = 70;
+          current_statement__ = 76;
           for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            current_statement__ = 70;
+            current_statement__ = 76;
             stan::model::assign(P2, P2_flat__[(pos__ - 1)],
               "assigning variable P2", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 70;
+            current_statement__ = 76;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 71;
+      current_statement__ = 77;
       stan::math::validate_non_negative_index("X", "num_data", num_data);
-      current_statement__ = 72;
+      current_statement__ = 78;
       context__.validate_dims("data initialization", "X", "double",
         std::vector<size_t>{static_cast<size_t>(num_data)});
       X = std::vector<double>(num_data,
             std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 72;
+      current_statement__ = 78;
       X = context__.vals_r("X");
-      current_statement__ = 73;
+      current_statement__ = 79;
       context__.validate_dims("data initialization", "week_effect", "int",
         std::vector<size_t>{});
       week_effect = std::numeric_limits<int>::min();
-      current_statement__ = 73;
+      current_statement__ = 79;
       week_effect = context__.vals_i("week_effect")[(1 - 1)];
-      current_statement__ = 74;
+      current_statement__ = 80;
       stan::math::validate_non_negative_index("DOW", "num_data", num_data);
-      current_statement__ = 75;
+      current_statement__ = 81;
       context__.validate_dims("data initialization", "DOW", "int",
         std::vector<size_t>{static_cast<size_t>(num_data)});
       DOW = std::vector<int>(num_data, std::numeric_limits<int>::min());
-      current_statement__ = 75;
+      current_statement__ = 81;
       DOW = context__.vals_i("DOW");
-      current_statement__ = 76;
+      current_statement__ = 82;
       context__.validate_dims("data initialization", "cov_structure", "int",
         std::vector<size_t>{});
       cov_structure = std::numeric_limits<int>::min();
-      current_statement__ = 76;
+      current_statement__ = 82;
       cov_structure = context__.vals_i("cov_structure")[(1 - 1)];
-      current_statement__ = 76;
+      current_statement__ = 82;
       stan::math::check_greater_or_equal(function__, "cov_structure",
         cov_structure, 0);
-      current_statement__ = 76;
+      current_statement__ = 82;
       stan::math::check_less_or_equal(function__, "cov_structure",
         cov_structure, 2);
-      current_statement__ = 77;
+      current_statement__ = 83;
       context__.validate_dims("data initialization", "noise_structure",
         "int", std::vector<size_t>{});
       noise_structure = std::numeric_limits<int>::min();
-      current_statement__ = 77;
+      current_statement__ = 83;
       noise_structure = context__.vals_i("noise_structure")[(1 - 1)];
-      current_statement__ = 77;
+      current_statement__ = 83;
       stan::math::check_greater_or_equal(function__, "noise_structure",
         noise_structure, 0);
-      current_statement__ = 77;
+      current_statement__ = 83;
       stan::math::check_less_or_equal(function__, "noise_structure",
         noise_structure, 1);
-      current_statement__ = 78;
+      current_statement__ = 84;
+      context__.validate_dims("data initialization", "phi_priors_provided",
+        "int", std::vector<size_t>{});
+      phi_priors_provided = std::numeric_limits<int>::min();
+      current_statement__ = 84;
+      phi_priors_provided = context__.vals_i("phi_priors_provided")[(1 - 1)];
+      current_statement__ = 85;
+      context__.validate_dims("data initialization", "phi_mean", "double",
+        std::vector<size_t>{});
+      phi_mean = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 85;
+      phi_mean = context__.vals_r("phi_mean")[(1 - 1)];
+      current_statement__ = 85;
+      stan::math::check_greater_or_equal(function__, "phi_mean", phi_mean, 0);
+      current_statement__ = 86;
+      context__.validate_dims("data initialization", "phi_sd", "double",
+        std::vector<size_t>{});
+      phi_sd = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 86;
+      phi_sd = context__.vals_r("phi_sd")[(1 - 1)];
+      current_statement__ = 86;
+      stan::math::check_greater_or_equal(function__, "phi_sd", phi_sd, 0);
+      current_statement__ = 87;
+      context__.validate_dims("data initialization", "tau_priors_provided",
+        "int", std::vector<size_t>{});
+      tau_priors_provided = std::numeric_limits<int>::min();
+      current_statement__ = 87;
+      tau_priors_provided = context__.vals_i("tau_priors_provided")[(1 - 1)];
+      current_statement__ = 88;
+      stan::math::validate_non_negative_index("tau_mean",
+        "cov_structure == 0 ? 1 : cov_structure == 1 ? num_path : 0",
+        (stan::math::logical_eq(cov_structure, 0) ? 1 : (stan::math::logical_eq(
+                                                           cov_structure, 1) ? num_path : 0)));
+      current_statement__ = 89;
+      context__.validate_dims("data initialization", "tau_mean", "double",
+        std::vector<size_t>{static_cast<size_t>(
+                              (stan::math::logical_eq(cov_structure, 0) ? 1 : (
+                              stan::math::logical_eq(cov_structure, 1) ? num_path : 0)))});
+      tau_mean = std::vector<double>((stan::math::logical_eq(cov_structure, 0) ? 1 : (
+                   stan::math::logical_eq(cov_structure, 1) ? num_path : 0)),
+                   std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 89;
+      tau_mean = context__.vals_r("tau_mean");
+      current_statement__ = 89;
+      stan::math::check_greater_or_equal(function__, "tau_mean", tau_mean, 0);
+      current_statement__ = 90;
+      stan::math::validate_non_negative_index("tau_sd",
+        "cov_structure == 0 ? 1 : cov_structure == 1 ? num_path : 0",
+        (stan::math::logical_eq(cov_structure, 0) ? 1 : (stan::math::logical_eq(
+                                                           cov_structure, 1) ? num_path : 0)));
+      current_statement__ = 91;
+      context__.validate_dims("data initialization", "tau_sd", "double",
+        std::vector<size_t>{static_cast<size_t>(
+                              (stan::math::logical_eq(cov_structure, 0) ? 1 : (
+                              stan::math::logical_eq(cov_structure, 1) ? num_path : 0)))});
+      tau_sd = std::vector<double>((stan::math::logical_eq(cov_structure, 0) ? 1 : (
+                 stan::math::logical_eq(cov_structure, 1) ? num_path : 0)),
+                 std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 91;
+      tau_sd = context__.vals_r("tau_sd");
+      current_statement__ = 91;
+      stan::math::check_greater_or_equal(function__, "tau_sd", tau_sd, 0);
+      current_statement__ = 92;
       num_basis = std::numeric_limits<int>::min();
-      current_statement__ = 78;
+      current_statement__ = 92;
       num_basis = ((num_knots + spline_degree) - 1);
-      current_statement__ = 79;
+      current_statement__ = 93;
       stan::math::validate_non_negative_index("B", "num_basis", num_basis);
-      current_statement__ = 80;
+      current_statement__ = 94;
       stan::math::validate_non_negative_index("B", "num_data", num_data);
-      current_statement__ = 81;
+      current_statement__ = 95;
       B_data__ = Eigen::Matrix<double,-1,-1>::Constant(num_basis, num_data,
                    std::numeric_limits<double>::quiet_NaN());
       new (&B) Eigen::Map<Eigen::Matrix<double,-1,-1>>(B_data__.data(),
         num_basis, num_data);
-      current_statement__ = 82;
+      current_statement__ = 96;
       stan::math::validate_non_negative_index("ext_knots_temp",
         "spline_degree + num_knots", (spline_degree + num_knots));
-      current_statement__ = 83;
+      current_statement__ = 97;
       ext_knots_temp_data__ = Eigen::Matrix<double,-1,1>::Constant((spline_degree
                                 + num_knots),
                                 std::numeric_limits<double>::quiet_NaN());
       new (&ext_knots_temp)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(ext_knots_temp_data__.data(),
         (spline_degree + num_knots));
-      current_statement__ = 84;
+      current_statement__ = 98;
       stan::math::validate_non_negative_index("ext_knots",
         "2 * spline_degree + num_knots", ((2 * spline_degree) + num_knots));
-      current_statement__ = 85;
+      current_statement__ = 99;
       ext_knots_data__ = Eigen::Matrix<double,-1,1>::Constant(((2 *
                            spline_degree) + num_knots),
                            std::numeric_limits<double>::quiet_NaN());
       new (&ext_knots)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(ext_knots_data__.data(), ((2 *
         spline_degree) + num_knots));
-      current_statement__ = 86;
+      current_statement__ = 100;
       stan::model::assign(ext_knots_temp,
         stan::math::append_row(
           stan::math::rep_vector(
             stan::model::rvalue(knots, "knots", stan::model::index_uni(1)),
             spline_degree), knots), "assigning variable ext_knots_temp");
-      current_statement__ = 87;
+      current_statement__ = 101;
       stan::model::assign(ext_knots,
         stan::math::append_row(ext_knots_temp,
           stan::math::rep_vector(
             stan::model::rvalue(knots, "knots",
               stan::model::index_uni(num_knots)), spline_degree)),
         "assigning variable ext_knots");
-      current_statement__ = 89;
+      current_statement__ = 103;
       for (int ind = 1; ind <= num_basis; ++ind) {
-        current_statement__ = 88;
+        current_statement__ = 102;
         stan::model::assign(B,
           stan::math::to_row_vector(
             build_b_spline(X, stan::math::to_array_1d(ext_knots), ind,
               (spline_degree + 1), pstream__)), "assigning variable B",
           stan::model::index_uni(ind), stan::model::index_omni());
       }
-      current_statement__ = 90;
+      current_statement__ = 104;
       cols = std::numeric_limits<int>::min();
-      current_statement__ = 91;
+      current_statement__ = 105;
       rows = std::numeric_limits<int>::min();
-      current_statement__ = 98;
+      current_statement__ = 112;
       if (stan::math::logical_eq(noise_structure, 1)) {
-        current_statement__ = 95;
+        current_statement__ = 109;
         cols = num_path;
-        current_statement__ = 96;
+        current_statement__ = 110;
         rows = num_data;
       } else {
-        current_statement__ = 92;
+        current_statement__ = 106;
         cols = 0;
-        current_statement__ = 93;
+        current_statement__ = 107;
         rows = 0;
       }
-      current_statement__ = 99;
+      current_statement__ = 113;
       stan::math::validate_non_negative_index("a", "num_path", num_path);
-      current_statement__ = 100;
+      current_statement__ = 114;
       stan::math::validate_non_negative_index("a", "num_basis", num_basis);
-      current_statement__ = 101;
+      current_statement__ = 115;
       stan::math::validate_non_negative_index("c_new", "cols", cols);
-      current_statement__ = 102;
+      current_statement__ = 116;
       stan::math::validate_non_negative_index("c_new", "rows", rows);
-      current_statement__ = 103;
+      current_statement__ = 117;
       eta_1dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 103;
+      current_statement__ = 117;
       eta_1dim__ = (stan::math::logical_eq(noise_structure, 1) ? 1 : 0);
-      current_statement__ = 103;
+      current_statement__ = 117;
       stan::math::validate_non_negative_index("eta",
         "noise_structure == 1 ? 1 : 0", eta_1dim__);
-      current_statement__ = 104;
+      current_statement__ = 118;
       tau_1dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 104;
+      current_statement__ = 118;
       tau_1dim__ = (stan::math::logical_eq(cov_structure, 0) ? 1 : (stan::math::logical_eq(
                                                                     cov_structure,
                                                                     1) ? num_path : 0));
-      current_statement__ = 104;
+      current_statement__ = 118;
       stan::math::validate_non_negative_index("tau",
         "cov_structure == 0 ? 1 : cov_structure == 1 ? num_path : 0",
         tau_1dim__);
-      current_statement__ = 105;
+      current_statement__ = 119;
       Sigma_1dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 105;
+      current_statement__ = 119;
       Sigma_1dim__ = (stan::math::logical_eq(cov_structure, 2) ? num_path : 0);
-      current_statement__ = 105;
+      current_statement__ = 119;
       stan::math::validate_non_negative_index("Sigma",
         "cov_structure == 2 ? num_path : 0", Sigma_1dim__);
-      current_statement__ = 105;
+      current_statement__ = 119;
       Sigma_2dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 105;
+      current_statement__ = 119;
       Sigma_2dim__ = (stan::math::logical_eq(cov_structure, 2) ? num_path : 0);
-      current_statement__ = 105;
+      current_statement__ = 119;
       stan::math::validate_non_negative_index("Sigma",
         "cov_structure == 2 ? num_path : 0", Sigma_2dim__);
-      current_statement__ = 106;
+      current_statement__ = 120;
       stan::math::validate_positive_index("day_of_week_simplex",
         "week_effect", week_effect);
-      current_statement__ = 107;
+      current_statement__ = 121;
       stan::math::validate_non_negative_index("a_new", "num_path", num_path);
-      current_statement__ = 108;
+      current_statement__ = 122;
       stan::math::validate_non_negative_index("a_new", "num_data", num_data);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -754,23 +836,35 @@ public:
             }
           }
         }
-        current_statement__ = 22;
+        current_statement__ = 24;
+        if (stan::math::logical_eq(phi_priors_provided, 2)) {
+          current_statement__ = 22;
+          lp_accum__.add(stan::math::normal_lpdf<propto__>(phi, phi_mean,
+                           phi_sd));
+        }
+        current_statement__ = 27;
+        if (stan::math::logical_eq(tau_priors_provided, 2)) {
+          current_statement__ = 25;
+          lp_accum__.add(stan::math::normal_lpdf<propto__>(tau, tau_mean,
+                           tau_sd));
+        }
+        current_statement__ = 28;
         stan::math::validate_non_negative_index("total_ILI", "num_data",
           num_data);
         std::vector<local_scalar_t__> total_ILI =
           std::vector<local_scalar_t__>(num_data, DUMMY_VAR__);
         local_scalar_t__ total_A = DUMMY_VAR__;
-        current_statement__ = 25;
+        current_statement__ = 31;
         stan::math::validate_non_negative_index("theta", "num_path - 1",
           (num_path - 1));
         Eigen::Matrix<local_scalar_t__,-1,1> theta =
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant((num_path - 1),
             DUMMY_VAR__);
-        current_statement__ = 48;
+        current_statement__ = 54;
         if (stan::math::logical_eq(noise_structure, 1)) {
-          current_statement__ = 38;
+          current_statement__ = 44;
           for (int i = 1; i <= num_path; ++i) {
-            current_statement__ = 36;
+            current_statement__ = 42;
             lp_accum__.add(stan::math::gamma_lpdf<propto__>(
                              stan::model::rvalue(c_new, "c_new",
                                stan::model::index_uni(i),
@@ -785,29 +879,29 @@ public:
                              stan::model::rvalue(eta, "eta",
                                stan::model::index_uni(1))));
           }
-          current_statement__ = 46;
+          current_statement__ = 52;
           for (int i = 1; i <= num_data; ++i) {
-            current_statement__ = 39;
+            current_statement__ = 45;
             stan::model::assign(total_ILI,
               stan::math::sum(
                 stan::model::rvalue(c_new, "c_new",
                   stan::model::index_omni(), stan::model::index_uni(i))),
               "assigning variable total_ILI", stan::model::index_uni(i));
-            current_statement__ = 40;
+            current_statement__ = 46;
             total_A = stan::math::sum(
                         stan::model::rvalue(c_new, "c_new",
                           stan::model::index_min_max(1, 2),
                           stan::model::index_uni(i)));
-            current_statement__ = 41;
+            current_statement__ = 47;
             stan::model::assign(theta, total_A, "assigning variable theta",
               stan::model::index_uni(1));
-            current_statement__ = 42;
+            current_statement__ = 48;
             stan::model::assign(theta,
               stan::model::rvalue(c_new, "c_new",
                 stan::model::index_min_max(3, num_path),
                 stan::model::index_uni(i)), "assigning variable theta",
               stan::model::index_min_max(2, (num_path - 1)));
-            current_statement__ = 43;
+            current_statement__ = 49;
             lp_accum__.add(stan::math::multinomial_lpmf<propto__>(
                              stan::model::rvalue(P1, "P1",
                                stan::model::index_omni(),
@@ -815,7 +909,7 @@ public:
                              stan::math::divide(theta,
                                stan::model::rvalue(total_ILI, "total_ILI",
                                  stan::model::index_uni(i)))));
-            current_statement__ = 44;
+            current_statement__ = 50;
             lp_accum__.add(stan::math::multinomial_lpmf<propto__>(
                              stan::model::rvalue(P2, "P2",
                                stan::model::index_omni(),
@@ -826,32 +920,32 @@ public:
                                  stan::model::index_uni(i)), total_A)));
           }
         } else {
-          current_statement__ = 34;
+          current_statement__ = 40;
           for (int i = 1; i <= num_data; ++i) {
-            current_statement__ = 27;
+            current_statement__ = 33;
             stan::model::assign(total_ILI,
               stan::math::sum(
                 stan::math::exp(
                   stan::model::rvalue(a_new, "a_new",
                     stan::model::index_omni(), stan::model::index_uni(i)))),
               "assigning variable total_ILI", stan::model::index_uni(i));
-            current_statement__ = 28;
+            current_statement__ = 34;
             total_A = stan::math::sum(
                         stan::math::exp(
                           stan::model::rvalue(a_new, "a_new",
                             stan::model::index_min_max(1, 2),
                             stan::model::index_uni(i))));
-            current_statement__ = 29;
+            current_statement__ = 35;
             stan::model::assign(theta, total_A, "assigning variable theta",
               stan::model::index_uni(1));
-            current_statement__ = 30;
+            current_statement__ = 36;
             stan::model::assign(theta,
               stan::math::exp(
                 stan::model::rvalue(a_new, "a_new",
                   stan::model::index_min_max(3, num_path),
                   stan::model::index_uni(i))), "assigning variable theta",
               stan::model::index_min_max(2, (num_path - 1)));
-            current_statement__ = 31;
+            current_statement__ = 37;
             lp_accum__.add(stan::math::multinomial_lpmf<propto__>(
                              stan::model::rvalue(P1, "P1",
                                stan::model::index_omni(),
@@ -859,7 +953,7 @@ public:
                              stan::math::divide(theta,
                                stan::model::rvalue(total_ILI, "total_ILI",
                                  stan::model::index_uni(i)))));
-            current_statement__ = 32;
+            current_statement__ = 38;
             lp_accum__.add(stan::math::multinomial_lpmf<propto__>(
                              stan::model::rvalue(P2, "P2",
                                stan::model::index_omni(),
@@ -871,11 +965,11 @@ public:
                                    stan::model::index_uni(i))), total_A)));
           }
         }
-        current_statement__ = 57;
+        current_statement__ = 63;
         if (stan::math::logical_eq(week_effect, 1)) {
-          current_statement__ = 55;
+          current_statement__ = 61;
           for (int i = 1; i <= num_data; ++i) {
-            current_statement__ = 53;
+            current_statement__ = 59;
             lp_accum__.add(stan::math::neg_binomial_lpmf<propto__>(
                              stan::model::rvalue(Y, "Y",
                                stan::model::index_uni(i)),
@@ -883,9 +977,9 @@ public:
                                 stan::model::index_uni(i)) * phi), phi));
           }
         } else {
-          current_statement__ = 51;
+          current_statement__ = 57;
           for (int i = 1; i <= num_data; ++i) {
-            current_statement__ = 49;
+            current_statement__ = 55;
             lp_accum__.add(stan::math::neg_binomial_lpmf<propto__>(
                              stan::model::rvalue(Y, "Y",
                                stan::model::index_uni(i)),
