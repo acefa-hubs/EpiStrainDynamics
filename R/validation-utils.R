@@ -164,3 +164,107 @@ validate_list_vector <- function(vector_list, list_name,
 
   invisible(TRUE)
 }
+
+#' Validate input of tau priors
+#'
+#' @param tau_priors priors object of class `EpiStrainDynamics.priors`
+#' @param structure pathogen_structure object, containing information on
+#'  the number of pathogens
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
+#' @srrstats {G5.8, G5.8a} checks for zero length
+#'
+validate_tau_priors <- function(tau_priors, structure) {
+
+  # If tau_priors is NULL, return NULL (valid default)
+  if (is.null(tau_priors)) {
+    return(NULL)
+  }
+
+  # Check if tau_priors has the correct class
+  if (!inherits(tau_priors, "EpiStrainDynamics.prior")) {
+    cli::cli_abort("tau_priors must be created using the priors() function or be NULL")
+  }
+
+  # Check if tau_priors has required components
+  if (!all(c("mean", "sd") %in% names(tau_priors))) {
+    cli::cli_abort("tau_priors must contain both 'mean' and 'sd' components")
+  }
+
+  # Determine expected dimension based on cov_structure
+  if (structure$model_params$cov_structure == "0") {
+    expected_dim <- 1
+  } else if (structure$model_params$cov_structure == "1") {
+    if (is.null(structure$pathogen_names)) {
+      cli::cli_abort("structure$pathogen_names is required when cov_structure is '1'")
+    }
+    expected_dim <- length(structure$pathogen_names)
+  } else if (structure$model_params$cov_structure == "2") {
+    cli::cli_alert("user-supplied priors for tau are not currently supported for correlated covariance structures")
+  }
+
+  # Validate and adjust dimensions for mean
+  mean_dim <- length(tau_priors$mean)
+  if (mean_dim == 1 && expected_dim > 1) {
+    # Repeat single value to match expected dimension
+    tau_priors$mean <- rep(tau_priors$mean, expected_dim)
+  } else if (mean_dim != expected_dim && mean_dim > 1) {
+    cli::cli_abort(
+      "Length of 'mean' in tau_priors ({mean_dim}) does not match expected dimension ({expected_dim}) for cov_structure '{.var {structure$cov_structure}}'")
+  }
+
+  # Validate and adjust dimensions for sd
+  sd_dim <- length(tau_priors$sd)
+  if (sd_dim == 1 && expected_dim > 1) {
+    # Repeat single value to match expected dimension
+    tau_priors$sd <- rep(tau_priors$sd, expected_dim)
+  } else if (sd_dim != expected_dim && sd_dim > 1) {
+    cli::cli_abort(
+      "Length of 'sd' in tau_priors ({sd_dim}) does not match expected dimension ({expected_dim}) for cov_structure {.var {structure$cov_structure}}"
+    )
+  }
+
+  # Return the validated (and potentially adjusted) tau_priors
+  return(tau_priors)
+}
+
+#' Validate input of phi priors
+#'
+#' @param phi_priors priors object of class `EpiStrainDynamics.priors`
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
+#' @srrstats {G5.8, G5.8a} checks for zero length
+#'
+validate_phi_priors <- function(phi_priors) {
+  # If phi_priors is NULL, return NULL (valid default)
+  if (is.null(phi_priors)) {
+    return(NULL)
+  }
+
+  # Check if phi_priors has the correct class
+  if (!inherits(phi_priors, "EpiStrainDynamics.prior")) {
+    cli::cli_abort("phi_priors must be created using the priors() function or be NULL")
+  }
+
+  # Check if phi_priors has required components
+  if (!all(c("mean", "sd") %in% names(phi_priors))) {
+    cli::cli_abort("phi_priors must contain both 'mean' and 'sd' components")
+  }
+
+  # Check that both mean and sd are scalar (length 1)
+  if (length(phi_priors$mean) != 1) {
+    cli::cli_abort("phi_priors$mean must be a single value")
+  }
+
+  if (length(phi_priors$sd) != 1) {
+    cli::cli_abort("phi_priors$sd must be a single value")
+  }
+
+  return(phi_priors)
+}

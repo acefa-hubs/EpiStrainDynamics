@@ -20,6 +20,14 @@ data {
   int DOW[num_data];        // integer of day of the week
   int<lower = 0, upper = 2> cov_structure; //0 is tau[1], 1 is tau[num_path], 2 is Sigma[num_path, num_path]
   int<lower = 0, upper = 1> noise_structure; //0 is only includes observation noise (same between pathogens), 1 includes noise in individual pathogens as well
+
+  int phi_priors_provided;      // 1=priors not provided, 2=priors provided
+  real<lower=0> phi_mean;
+  real<lower=0> phi_sd;
+  
+  int tau_priors_provided;      // 1=priors not provided, 2=priors provided
+  real<lower=0> tau_mean[cov_structure==0 ? 1: cov_structure==1? num_path: 0 ];
+  real<lower=0> tau_sd[cov_structure==0 ? 1: cov_structure==1? num_path: 0 ];
 }
 
 transformed data {
@@ -70,7 +78,15 @@ model {
       a[i,3:num_data] ~ normal(2*a[i,2:(num_data-1)] - a[i,1:(num_data-2)], tau[1]);
   }
 
-  // Uninformative priors on scale parameters?
+  // Prior on phi
+  if(phi_priors_provided ==2){
+    phi ~ normal(phi_mean, phi_sd);
+  }
+  
+  // Prior on tau
+  if(tau_priors_provided ==2){
+    tau ~ normal(tau_mean, tau_sd);
+  }
 
 
   //// Likelihood
