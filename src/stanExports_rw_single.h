@@ -27,27 +27,39 @@ namespace model_rw_single_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 20> locations_array__ =
+static constexpr std::array<const char*, 32> locations_array__ =
   {" (found before start of program)",
-  " (in 'rw_single', line 19, column 2 to column 25)",
-  " (in 'rw_single', line 21, column 2 to column 20)",
-  " (in 'rw_single', line 23, column 2 to column 20)",
-  " (in 'rw_single', line 25, column 2 to column 43)",
-  " (in 'rw_single', line 30, column 2 to column 71)",
-  " (in 'rw_single', line 39, column 6 to column 83)",
-  " (in 'rw_single', line 38, column 4 to line 39, column 83)",
-  " (in 'rw_single', line 37, column 6 to line 40, column 3)",
-  " (in 'rw_single', line 35, column 4 to column 38)",
-  " (in 'rw_single', line 34, column 20 to line 36, column 3)",
-  " (in 'rw_single', line 34, column 2 to line 40, column 3)",
+  " (in 'rw_single', line 27, column 2 to column 25)",
+  " (in 'rw_single', line 29, column 2 to column 20)",
+  " (in 'rw_single', line 31, column 2 to column 20)",
+  " (in 'rw_single', line 33, column 2 to column 43)",
+  " (in 'rw_single', line 38, column 2 to column 71)",
+  " (in 'rw_single', line 41, column 4 to column 35)",
+  " (in 'rw_single', line 40, column 29 to line 42, column 3)",
+  " (in 'rw_single', line 40, column 2 to line 42, column 3)",
+  " (in 'rw_single', line 46, column 4 to column 35)",
+  " (in 'rw_single', line 45, column 29 to line 47, column 3)",
+  " (in 'rw_single', line 45, column 2 to line 47, column 3)",
+  " (in 'rw_single', line 55, column 6 to column 83)",
+  " (in 'rw_single', line 54, column 4 to line 55, column 83)",
+  " (in 'rw_single', line 53, column 6 to line 56, column 3)",
+  " (in 'rw_single', line 51, column 4 to column 38)",
+  " (in 'rw_single', line 50, column 20 to line 52, column 3)",
+  " (in 'rw_single', line 50, column 2 to line 56, column 3)",
   " (in 'rw_single', line 13, column 2 to column 15)",
   " (in 'rw_single', line 14, column 8 to column 16)",
   " (in 'rw_single', line 14, column 2 to column 18)",
   " (in 'rw_single', line 15, column 2 to column 18)",
   " (in 'rw_single', line 16, column 10 to column 18)",
   " (in 'rw_single', line 16, column 2 to column 20)",
-  " (in 'rw_single', line 19, column 13 to column 21)",
-  " (in 'rw_single', line 25, column 10 to column 21)"};
+  " (in 'rw_single', line 18, column 2 to column 26)",
+  " (in 'rw_single', line 19, column 2 to column 25)",
+  " (in 'rw_single', line 20, column 2 to column 23)",
+  " (in 'rw_single', line 22, column 2 to column 26)",
+  " (in 'rw_single', line 23, column 2 to column 25)",
+  " (in 'rw_single', line 24, column 2 to column 23)",
+  " (in 'rw_single', line 27, column 13 to column 21)",
+  " (in 'rw_single', line 33, column 10 to column 21)"};
 #include <stan_meta_header.hpp>
 class model_rw_single final : public model_base_crtp<model_rw_single> {
 private:
@@ -55,6 +67,12 @@ private:
   std::vector<int> Y;
   int week_effect;
   std::vector<int> DOW;
+  int phi_priors_provided;
+  double phi_mean;
+  double phi_sd;
+  int tau_priors_provided;
+  double tau_mean;
+  double tau_sd;
 public:
   ~model_rw_single() {}
   model_rw_single(stan::io::var_context& context__, unsigned int
@@ -76,37 +94,81 @@ public:
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 12;
+      current_statement__ = 18;
       context__.validate_dims("data initialization", "num_data", "int",
         std::vector<size_t>{});
       num_data = std::numeric_limits<int>::min();
-      current_statement__ = 12;
+      current_statement__ = 18;
       num_data = context__.vals_i("num_data")[(1 - 1)];
-      current_statement__ = 13;
+      current_statement__ = 19;
       stan::math::validate_non_negative_index("Y", "num_data", num_data);
-      current_statement__ = 14;
+      current_statement__ = 20;
       context__.validate_dims("data initialization", "Y", "int",
         std::vector<size_t>{static_cast<size_t>(num_data)});
       Y = std::vector<int>(num_data, std::numeric_limits<int>::min());
-      current_statement__ = 14;
+      current_statement__ = 20;
       Y = context__.vals_i("Y");
-      current_statement__ = 15;
+      current_statement__ = 21;
       context__.validate_dims("data initialization", "week_effect", "int",
         std::vector<size_t>{});
       week_effect = std::numeric_limits<int>::min();
-      current_statement__ = 15;
+      current_statement__ = 21;
       week_effect = context__.vals_i("week_effect")[(1 - 1)];
-      current_statement__ = 16;
+      current_statement__ = 22;
       stan::math::validate_non_negative_index("DOW", "num_data", num_data);
-      current_statement__ = 17;
+      current_statement__ = 23;
       context__.validate_dims("data initialization", "DOW", "int",
         std::vector<size_t>{static_cast<size_t>(num_data)});
       DOW = std::vector<int>(num_data, std::numeric_limits<int>::min());
-      current_statement__ = 17;
+      current_statement__ = 23;
       DOW = context__.vals_i("DOW");
-      current_statement__ = 18;
+      current_statement__ = 24;
+      context__.validate_dims("data initialization", "phi_priors_provided",
+        "int", std::vector<size_t>{});
+      phi_priors_provided = std::numeric_limits<int>::min();
+      current_statement__ = 24;
+      phi_priors_provided = context__.vals_i("phi_priors_provided")[(1 - 1)];
+      current_statement__ = 25;
+      context__.validate_dims("data initialization", "phi_mean", "double",
+        std::vector<size_t>{});
+      phi_mean = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 25;
+      phi_mean = context__.vals_r("phi_mean")[(1 - 1)];
+      current_statement__ = 25;
+      stan::math::check_greater_or_equal(function__, "phi_mean", phi_mean, 0);
+      current_statement__ = 26;
+      context__.validate_dims("data initialization", "phi_sd", "double",
+        std::vector<size_t>{});
+      phi_sd = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 26;
+      phi_sd = context__.vals_r("phi_sd")[(1 - 1)];
+      current_statement__ = 26;
+      stan::math::check_greater_or_equal(function__, "phi_sd", phi_sd, 0);
+      current_statement__ = 27;
+      context__.validate_dims("data initialization", "tau_priors_provided",
+        "int", std::vector<size_t>{});
+      tau_priors_provided = std::numeric_limits<int>::min();
+      current_statement__ = 27;
+      tau_priors_provided = context__.vals_i("tau_priors_provided")[(1 - 1)];
+      current_statement__ = 28;
+      context__.validate_dims("data initialization", "tau_mean", "double",
+        std::vector<size_t>{});
+      tau_mean = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 28;
+      tau_mean = context__.vals_r("tau_mean")[(1 - 1)];
+      current_statement__ = 28;
+      stan::math::check_greater_or_equal(function__, "tau_mean", tau_mean, 0);
+      current_statement__ = 29;
+      context__.validate_dims("data initialization", "tau_sd", "double",
+        std::vector<size_t>{});
+      tau_sd = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 29;
+      tau_sd = context__.vals_r("tau_sd")[(1 - 1)];
+      current_statement__ = 29;
+      stan::math::check_greater_or_equal(function__, "tau_sd", tau_sd, 0);
+      current_statement__ = 30;
       stan::math::validate_non_negative_index("a", "num_data", num_data);
-      current_statement__ = 19;
+      current_statement__ = 31;
       stan::math::validate_positive_index("day_of_week_simplex",
         "week_effect", week_effect);
     } catch (const std::exception& e) {
@@ -172,15 +234,27 @@ public:
                            stan::model::rvalue(a, "a",
                              stan::model::index_min_max(1, (num_data - 2)))),
                          tau));
+        current_statement__ = 8;
+        if (stan::math::logical_eq(phi_priors_provided, 2)) {
+          current_statement__ = 6;
+          lp_accum__.add(stan::math::normal_lpdf<propto__>(phi, phi_mean,
+                           phi_sd));
+        }
         current_statement__ = 11;
-        if (stan::math::logical_eq(week_effect, 1)) {
+        if (stan::math::logical_eq(tau_priors_provided, 2)) {
           current_statement__ = 9;
+          lp_accum__.add(stan::math::normal_lpdf<propto__>(tau, tau_mean,
+                           tau_sd));
+        }
+        current_statement__ = 17;
+        if (stan::math::logical_eq(week_effect, 1)) {
+          current_statement__ = 15;
           lp_accum__.add(stan::math::neg_binomial_lpmf<propto__>(Y,
                            stan::math::multiply(stan::math::exp(a), phi), phi));
         } else {
-          current_statement__ = 7;
+          current_statement__ = 13;
           for (int i = 1; i <= num_data; ++i) {
-            current_statement__ = 6;
+            current_statement__ = 12;
             lp_accum__.add(stan::math::neg_binomial_lpmf<propto__>(
                              stan::model::rvalue(Y, "Y",
                                stan::model::index_uni(i)),
