@@ -4,13 +4,7 @@
 \alias{multiple}
 \title{Multiple pathogen structure}
 \usage{
-multiple(
-  case_timeseries,
-  time,
-  component_pathogen_timeseries,
-  smoothing_structure = c("shared", "independent", "correlated"),
-  observation_noise = c("observation_noise_only", "pathogen_specific_noise")
-)
+multiple(case_timeseries, time, component_pathogen_timeseries)
 }
 \arguments{
 \item{case_timeseries}{vector of total case data}
@@ -19,20 +13,10 @@ multiple(
 
 \item{component_pathogen_timeseries}{named list of each pathogen that has
 timeseries of case counts}
-
-\item{smoothing_structure}{either \code{shared} (all pathogens have the same
-smoothing structure; \code{tau[1]}), \code{independent} (each pathogen with
-independent smoothing structure; \code{tau[number of pathogens]}), or
-\code{correlated} (smoothing structure is correlated among pathogens
-\code{Sigma[number of pathogens, number of pathogens]}). Case-insensitive.}
-
-\item{observation_noise}{either \code{observation_noise_only} (only includes
-observation noise - the same between pathogens) or \code{pathogen_specific_noise}
-(includes noise in individual pathogens as well). Case-insensitive.}
 }
 \value{
-named list including pathogen_structure, pathogen_names, data,
-and model_params of class \code{EpiStrainDynamics.pathogen_structure}
+named list including pathogen_structure, pathogen_names, and data
+of class \code{EpiStrainDynamics.pathogen_structure}
 }
 \description{
 Multiple pathogen structure
@@ -46,9 +30,7 @@ multiple(
     delta = sarscov2$delta,
     omicron = sarscov2$omicron,
     other = sarscov2$other
-  ),
-  smoothing_structure = 'independent',
-  observation_noise = 'observation_noise_only'
+  )
 )
 
 }
