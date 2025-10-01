@@ -7,9 +7,10 @@
 construct_model(
   method,
   pathogen_structure,
-  dow_effect = FALSE,
-  tau_priors = NULL,
-  phi_priors = NULL
+  smoothing_params = NULL,
+  dispersion_params = NULL,
+  pathogen_noise = FALSE,
+  dow_effect = FALSE
 )
 }
 \arguments{
@@ -17,9 +18,21 @@ construct_model(
 
 \item{pathogen_structure}{either \code{single()}, \code{multiple()}, or \code{subtyped()}}
 
-\item{dow_effect}{logical whether to incorporate a day of week model}
+\item{smoothing_params}{argument is optional and defines the structure of the
+smoothing terms including optionally setting the smoothing prior tau.
+Created with \code{smoothing_structure()}. NULL option defaults to 'shared'
+smoothing structure and default priors.}
 
-\item{priors}{named list of priors}
+\item{dispersion_params}{argument is optional and defines priors for the
+overdispersion parameter of the negative binomial likelihood for
+the case timeseries. Created using \code{dispersion_structure()}. NULL option
+uses default priors for phi.}
+
+\item{pathogen_noise}{logical whether individual pathogen counts have
+additional gamma-distributed noise. Default is FALSE. Models with \code{single}
+pathogen structure will be set to FALSE.}
+
+\item{dow_effect}{logical whether to incorporate a day of week model.}
 }
 \value{
 a list containing the data, the model parameters, and pathogen
@@ -36,25 +49,34 @@ pathogen_obj <- single(
   time = sarscov2$date,
   pathogen_name = "SARS-CoV-2"
 )
-
 mod <- construct_model(
   method = method_obj,
   pathogen_structure = pathogen_obj,
   dow_effect = TRUE
 )
 
-# Alternatively, call the methods and pathogen structure inside the function
+# Specifying priors on tau and phi are optional
 mod <- construct_model(
+
   method = p_spline(),
+
   pathogen_structure = multiple(
     case_timeseries = sarscov2$cases,
     time = sarscov2$date,
+
     component_pathogen_timeseries = list(
       alpha = sarscov2$alpha,
       delta = sarscov2$delta,
       omicron = sarscov2$omicron,
-      other = sarscov2$other)),
-  dow_effect = FALSE
+      other = sarscov2$other)
+   ),
+
+   smoothing_params = smoothing_structure(
+      'independent', tau_mean = c(0, 0.1, 0.3, 0), tau_sd = rep(1, times = 4)),
+   dispersion_params = dispersion_structure(phi_mean = 0, phi_sd = 1),
+   pathogen_noise = FALSE,
+   dow_effect = TRUE
 )
+
 
 }

@@ -35,6 +35,14 @@ single <- function (case_timeseries,
                     time,
                     pathogen_name = 'default') {
 
+  #' @srrstats {G2.13, G2.14, G2.14a} check for missing data, error if found
+  #' @srrstats {G2.15, BS3.0} Data prep does not assume non-missingness
+  if (any(is.na(case_timeseries)) || any(is.na(time))) {
+    cli::cli_abort("{case_timeseries} and {time} cannot contain NA values.
+                   `EpiStrainDynamics` expects data in regular timesteps with
+                   no gaps. Please review your data.")
+  }
+
   #' @srrstats {G2.1, G5.8, G5.8b} assertions on types of inputs
   #' @srrstats {G2.4, G2.4b} ensure consistent numeric handling for all numeric
   #'   inputs
@@ -73,22 +81,12 @@ single <- function (case_timeseries,
 #' @param time vector of labelled time data
 #' @param component_pathogen_timeseries named list of each pathogen that has
 #'   timeseries of case counts
-#' @param smoothing_structure either `shared` (all pathogens have the same
-#'   smoothing structure; \code{tau[1]}), `independent` (each pathogen with
-#'   independent smoothing structure; \code{tau[number of pathogens]}), or
-#'   `correlated` (smoothing structure is correlated among pathogens
-#'   \code{Sigma[number of pathogens, number of pathogens]}). Case-insensitive.
-#' @param observation_noise either `observation_noise_only` (only includes
-#'   observation noise - the same between pathogens) or `pathogen_specific_noise`
-#'   (includes noise in individual pathogens as well). Case-insensitive.
 #'
-#' @returns named list including pathogen_structure, pathogen_names, data,
-#'   and model_params of class `EpiStrainDynamics.pathogen_structure`
+#' @returns named list including pathogen_structure, pathogen_names, and data
+#'   of class `EpiStrainDynamics.pathogen_structure`
 #' @family pathogen_structure
 #' @export
 #'
-#' @srrstats {G1.3} clear definitions of smoothing_structure and
-#'   observation_noise
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #' @srrstats {BS2.15} checks that data has been input in correct form, and
 #'   provides an informative error message if not
@@ -102,21 +100,22 @@ single <- function (case_timeseries,
 #'     delta = sarscov2$delta,
 #'     omicron = sarscov2$omicron,
 #'     other = sarscov2$other
-#'   ),
-#'   smoothing_structure = 'independent',
-#'   observation_noise = 'observation_noise_only'
+#'   )
 #' )
 #'
 multiple <- function (case_timeseries,
                       time,
-                      component_pathogen_timeseries,
-                      smoothing_structure = c(
-                        'shared',
-                        'independent',
-                        'correlated'),
-                      observation_noise = c(
-                        'observation_noise_only',
-                        'pathogen_specific_noise')) {
+                      component_pathogen_timeseries) {
+
+  #' @srrstats {G2.13, G2.14, G2.14a} check for missing data, error if found
+  #' @srrstats {G2.15, BS3.0} Data prep does not assume non-missingness
+  na_in_components <- do.call(
+    any, lapply(component_pathogen_timeseries, function(x) is.na(x))
+  )
+  if (any(is.na(case_timeseries)) || any(is.na(time)) || na_in_components) {
+    cli::cli_abort("Input data cannot contain NA values. `EpiStrainDynamics`
+    expects data in regular timesteps with no gaps. Please review your data.")
+  }
 
   #' @srrstats {G2.1, G5.8, G5.8b} assertions on types of inputs
   #' @srrstats {G2.4, G2.4b} ensure consistent numeric handling for all numeric
@@ -136,17 +135,6 @@ multiple <- function (case_timeseries,
     reference_length = length(case_timeseries)
   )
 
-  #' @srrstats {G2.3, G2.3a, G2.3b} univariate variables must match and be
-  #'   case insensitive
-  smoothing_structure <- tolower(rlang::arg_match(
-    arg = smoothing_structure
-  ))
-  observation_noise <- tolower(rlang::arg_match(
-    arg = observation_noise
-  ))
-  cov_structure <- get_cov_structure(smoothing_structure)
-  noise_structure <- get_noise_structure(observation_noise)
-
   pathogen_names <- names(component_pathogen_timeseries)
   component_pathogens <- t(matrix(
     data = do.call(c, component_pathogen_timeseries),
@@ -159,10 +147,6 @@ multiple <- function (case_timeseries,
       case_timeseries = case_timeseries,
       time = time,
       component_pathogens = component_pathogens
-    ),
-    model_params = list(
-      cov_structure = cov_structure,
-      noise_structure = noise_structure
     )
   )
   class(model_inputs) <- c('EpiStrainDynamics.pathogen_structure',
@@ -179,22 +163,12 @@ multiple <- function (case_timeseries,
 #' @param influenzaA_subtyped_timeseries case timeseries data for subtyped
 #'   influenzaA
 #' @param other_pathogen_timeseries other pathogen case timeseries
-#' @param smoothing_structure either `shared` (all pathogens have the same
-#'   smoothing structure; \code{tau[1]}), `independent` (each pathogen with
-#'   independent smoothing structure; \code{tau[number of pathogens]}), or
-#'   `correlated` (smoothing structure is correlated among pathogens
-#'   \code{Sigma[number of pathogens, number of pathogens]}). Case-insensitive.
-#' @param observation_noise either `observation_noise_only` (only includes
-#'   observation noise - the same between pathogens) or `pathogen_specific_noise`
-#'   (includes noise in individual pathogens as well). Case-insensitive.
 #'
-#' @returns named list including pathogen_structure, pathogen_names, data,
-#'   and model_params of class `EpiStrainDynamics.pathogen_structure`
+#' @returns named list including pathogen_structure, pathogen_names, and data
+#'   of class `EpiStrainDynamics.pathogen_structure`
 #' @family pathogen_structure
 #' @export
 #'
-#' @srrstats {G1.3} clear definitions of smoothing_structure and
-#'   observation_noise
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #' @srrstats {BS2.15} checks that data has been input in correct form, and
 #'   provides an informative error message if not
@@ -212,23 +186,31 @@ multiple <- function (case_timeseries,
 #'   other_pathogen_timeseries = list(
 #'     influenzaB = influenza$inf_B,
 #'     other = influenza$num_spec - influenza$inf_all
-#'   ),
-#'   smoothing_structure = 'independent',
-#'   observation_noise = 'observation_noise_only'
+#'   )
 #' )
 #'
 subtyped <- function (case_timeseries,
                       time,
                       influenzaA_unsubtyped_timeseries,
                       influenzaA_subtyped_timeseries,
-                      other_pathogen_timeseries,
-                      smoothing_structure = c(
-                        'shared',
-                        'independent',
-                        'correlated'),
-                      observation_noise = c(
-                        'observation_noise_only',
-                        'pathogen_specific_noise')) {
+                      other_pathogen_timeseries) {
+
+  #' @srrstats {G2.13, G2.14, G2.14a} check for missing data, error if found
+  #' @srrstats {G2.15, BS3.0} Data prep does not assume non-missingness
+  na_unsubtyped <- do.call(
+    any, lapply(influenzaA_unsubtyped_timeseries, function(x) is.na(x))
+  )
+  na_subtyped <- do.call(
+    any, lapply(influenzaA_subtyped_timeseries, function(x) is.na(x))
+  )
+  na_other <- do.call(
+    any, lapply(other_pathogen_timeseries, function(x) is.na(x))
+  )
+  if (any(is.na(case_timeseries)) || any(is.na(time)) || na_unsubtyped
+      || na_subtyped || na_other) {
+    cli::cli_abort("Input data cannot contain NA values. `EpiStrainDynamics`
+    expects data in regular timesteps with no gaps. Please review your data.")
+  }
 
   #' @srrstats {G2.1, G5.8, G5.8b} assertions on types of inputs
   #' @srrstats {G2.4, G2.4b} ensure consistent numeric handling for all numeric
@@ -256,18 +238,6 @@ subtyped <- function (case_timeseries,
     reference_length = length(case_timeseries)
   )
 
-  #' @srrstats {G2.3, G2.3a, G2.3b} univariate variables must match and be
-  #'   case insensitive
-  smoothing_structure <- tolower(rlang::arg_match(
-    arg = smoothing_structure
-  ))
-  observation_noise <- tolower(rlang::arg_match(
-    arg = observation_noise
-  ))
-  cov_structure <- get_cov_structure(smoothing_structure)
-  noise_structure <- get_noise_structure(observation_noise)
-
-  # add check that influenzaA_subtyped_timeseries and other_pathogen_timeseries are named lists
   pathogen_names <- c(
     names(influenzaA_subtyped_timeseries),
     names(other_pathogen_timeseries)
@@ -297,73 +267,10 @@ subtyped <- function (case_timeseries,
       time = time,
       component_pathogens = component_pathogens,
       influenzaA_subtyped = influenzaA_subtyped
-    ),
-    model_params = list(
-      cov_structure = cov_structure,
-      noise_structure = noise_structure
     )
   )
 
   class(model_inputs) <- c('EpiStrainDynamics.pathogen_structure',
                            class(model_inputs))
   model_inputs
-}
-
-#' Get covariance structure from assigned smoothing structure
-#'
-#' @param smoothing_structure either `shared` (all pathogens have the same
-#'   smoothing structure; \code{tau[1]}), `independent` (each pathogen with
-#'   independent smoothing structure; \code{tau[number of pathogens]}), or
-#'   `correlated` (smoothing structure is correlated among pathogens
-#'   \code{Sigma[number of pathogens, number of pathogens]}). Case-insensitive.
-#'
-#' @returns numeric value for covariance structure needed by stan models
-#' @noRd
-#'
-#' @srrstats {G1.4} uses `Roxygen2` documentation
-#' @srrstats {G1.4a} internal function specified with `@noRd`
-#'
-get_cov_structure <- function(smoothing_structure = c('shared',
-                                                      'independent',
-                                                      'correlated')) {
-
-  # Convert to numeric codes
-  cov_structure <- switch(smoothing_structure,
-                          'shared' = 0,
-                          'independent' = 1,
-                          'correlated' = 2,                            {
-                            cli::cli_abort("Invalid option provided: '{smoothing_structure}'.
-                                             Please choose 'shared', 'independent', or 'correlated'.")
-                          }
-  )
-
-  return(cov_structure)
-}
-
-#' Get noise structure from specified observation noise
-#'
-#' @param observation_noise either 'observation_noise_only' (only includes
-#'   observation noise - the same between pathogens) or 'pathogen_specific_noise'
-#'   (includes noise in individual pathogens as well). Case-insensitive.
-#'
-#' @returns numeric value for noise structure needed by stan models
-#' @noRd
-#'
-#' @srrstats {G1.4} uses `Roxygen2` documentation
-#' @srrstats {G1.4a} internal function specified with `@noRd`
-#'
-get_noise_structure <- function(observation_noise = c('observation_noise_only',
-                                                      'pathogen_specific_noise')) {
-
-  # Convert to numeric codes
-  noise_structure <- switch(observation_noise,
-                            'observation_noise_only' = 0,
-                            'pathogen_specific_noise' = 1,
-                            {
-                              cli::cli_abort("Invalid option provided: '{observation_noise}'.
-                                             Please choose 'observation_noise_only' or 'pathogen_specific_noise'.")
-                            }
-  )
-
-  return(noise_structure)
 }

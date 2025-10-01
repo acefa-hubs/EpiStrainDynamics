@@ -133,6 +133,10 @@ fit_model.rw_subtyped <- function (constructed_model,
                       # inits = inits,
                       constructed_model = constructed_model)
 
+  #' @srrstats {BS5.2} *Bayesian Software should either return the input function or prior distributional specification in the return object; or enable direct access to such via additional functions which accept the return object as single argument.*
+
+  # return priors
+
   class(result_list) <- c('rw', 'EpiStrainDynamics.fit', class(out))
 
   return(result_list)
