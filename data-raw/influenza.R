@@ -10,9 +10,10 @@ max_date <- as.Date("2020-03-01")
 df$week <- lubridate::dmy(df$week)
 
 df <- df[df$week < max_date & df$week >= min_date, ]
+df$other <- df$num_spec - df$inf_all
 
-cols <- c('ili', 'week', 'inf_A', 'inf_B', 'inf_all',
-          'inf_neg', 'inf_H3N2', 'inf_H1N1', 'num_spec')
+cols <- c('ili', 'week', 'inf_A', 'inf_B',
+          'inf_H3N2', 'inf_H1N1', 'other')
 
 influenza <- df[order(df$week), cols]
 
