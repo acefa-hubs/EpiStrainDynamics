@@ -22,8 +22,12 @@ NULL
 #' @srrstatsNA {G1.6} This software makes no performance claims.
 #' @srrstatsNA {G2.4c} no conversion to character object
 #' @srrstatsNA {G2.4d, G2.4e, G2.5} no use of factor type objects
-#' @srrstatsNA {G2.7, G2.8, G2.9, G2.10, G2.11, G2.12, G5.8c, G5.8d} This software
-#'   does not accept tabular input data, and no type conversion is taking place
+#' @srrstatsNA {G2.6} vector input is confined to columns names, so this
+#'   pre-processing appears unnecessary
+#' @srrstatsNA {G2.9} no information is lost from type conversion to tsibble
+#' @srrstatsNA {G2.11, G2.12} data.frame-like objects are not used
+#' @srrstatsNA {G2.14b, G2.14c} These models do not currently accommodate data
+#'   with missing entries. So missing data cannot be ignored or replaced.
 #' @srrstatsNA {G3.1, G3.1a} The software does not rely on covariance calculations
 #' @srrstatsNA {G4.0} There are no outputs written to local files
 #' @srrstatsNA {G5.0} This software is applicable to specific data so NIST
@@ -33,6 +37,8 @@ NULL
 #'   instead uses functions from the `rstan` package.
 #' @srrstatsNA {G5.4b} This is not a new implementation of an existing method
 #' @srrstatsNA {G5.4c} No stored values are needed for correctness testing
+#' @srrstatsNA {G5.7} This software relies on Stan which has it's own underlying
+#'  algortithm performance tests.
 #' @srrstatsNA {G5.10,G5.11,G5.11a,G5.12} I have not implemented any extended
 #'   tests
 #' @srrstatsNA {BS1.0} The term 'hyperparameter' is not used
@@ -44,6 +50,9 @@ NULL
 #'   convergence, reporting the maximum R-hat and minimum n_eff. It does not
 #'   explicitly choose for the user if the model converged, and so comparison
 #'   of alternative dianostics is not necessary
+#' @srrstatsNA {BS2.1, BS2.1a} only one tabular input, so numbers of rows don't
+#'   need to be compared between multiple inputs
+#' @srrstatsNA {BS2.6} Stan takes care of this directly
 #' @srrstatsNA {BS2.9} This software uses `rstan`'s `sampling`, which ensures
 #'   different seeds are used (from rstan's sampling() documentation: "Even if
 #'   multiple chains are used, only one seed is needed, with other chains having
@@ -57,6 +66,8 @@ NULL
 #'   risk of collinear response and predictor variables
 #' @srrstatsNA {BS4.0, BS4.1} This software does not implement internal
 #'  sampling algorithms
+#' @srrstatsNA {BS4.2, BS7.2} The only way to validate the posterior estimates would
+#'  be to compare against an analytical solution, which we don't have.
 #' @srrstatsNA {BS4.4} This software uses `rstan`'s `sampling`, and there does
 #'   not appear to yet be a mechanism of stopping the chain upon convergence
 #' @srrstatsNA {BS4.6} Convergence checker is a separate diagnostic function,
@@ -73,5 +84,14 @@ NULL
 #'   epidemiological metrics using the `metrics` family of functions.
 #' @srrstatsNA {BS6.4} `rstan` built-in summary methods can be used on the
 #'   fitted model object
+#' @srrstatsNA {BS7.0, BS7.1} Recovery of parametric estimates of the prior
+#'   distributions are not scientifically relevant to this type of analysis.
+#'   The priors are mainly implemented to improve sampling efficiency of the
+#'   No-U-Turns Sampler in Stan and they are not related to the outcomes a user
+#'   would be interested in evaluating.
+#' @srrstatsNA {G5.6, G5.6a, G5.6b} Parameter recovery tests have not been
+#'   implemented because the methods implemented in these stan models have
+#'   been well tested previously in the literature. See README for full
+#'   list of citations.
 #' @noRd
 NULL
