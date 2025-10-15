@@ -8,6 +8,8 @@
 #' @importFrom viridis viridis
 #' @importFrom stats setNames
 #' @import ggplot2
+#' @importFrom rlang .data
+#'
 #' @return ggplot2 plot output
 #' @export
 #'
@@ -50,21 +52,21 @@ plot.incidence <- function(df) {
   input_data <- data.frame(time = df$constructed_model$data$time,
                            case_timeseries = df$constructed_model$data$case_timeseries)
   ggplot(measure_df) +
-    geom_line(aes(x = time, y = y, color = pathogen)) +
-    geom_ribbon(aes(x = time, y = y,
-                    ymin = lb_50, ymax = ub_50,
-                    fill = pathogen),
+    geom_line(aes(x = .data$time, y = .data$y, color = .data$pathogen)) +
+    geom_ribbon(aes(x = .data$time, y = .data$y,
+                    ymin = .data$lb_50, ymax = .data$ub_50,
+                    fill = .data$pathogen),
                 alpha = 0.2) +
-    geom_ribbon(aes(x = time, y = y,
-                    ymin = lb_95, ymax = ub_95,
-                    fill = pathogen),
+    geom_ribbon(aes(x = .data$time, y = .data$y,
+                    ymin = .data$lb_95, ymax = .data$ub_95,
+                    fill = .data$pathogen),
                 alpha = 0.2) +
     theme_bw(base_size = 14) +
     geom_point(data = input_data,
-               aes(x = time, y = case_timeseries),
+               aes(x = .data$time, y = .data$case_timeseries),
                size = 0.8) +
     geom_line(data = input_data,
-              aes(x = time, y = case_timeseries),
+              aes(x = .data$time, y = .data$case_timeseries),
               linewidth = 0.2) +
     scale_colour_manual(
       values = colors,
@@ -92,14 +94,14 @@ plot.growth_rate <- function(df) {
   )
 
   p <- ggplot(measure_df) +
-    geom_line(aes(x = time, y = y, color = pathogen)) +
-    geom_ribbon(aes(x = time, y = y,
-                    ymin = lb_50, ymax = ub_50,
-                    fill = pathogen),
+    geom_line(aes(x = .data$time, y = .data$y, color = .data$pathogen)) +
+    geom_ribbon(aes(x = .data$time, y = .data$y,
+                    ymin = .data$lb_50, ymax = .data$ub_50,
+                    fill = .data$pathogen),
                 alpha = 0.2) +
-    geom_ribbon(aes(x = time, y = y,
-                    ymin = lb_95, ymax = ub_95,
-                    fill = pathogen),
+    geom_ribbon(aes(x = .data$time, y = .data$y,
+                    ymin = .data$lb_95, ymax = .data$ub_95,
+                    fill = .data$pathogen),
                 alpha = 0.2) +
     theme_bw(base_size = 14) +
     scale_colour_manual(
@@ -149,14 +151,14 @@ plot.Rt <- function(df) {
   )
 
   ggplot(measure_df) +
-    geom_line(aes(x = time, y = y, color = pathogen)) +
-    geom_ribbon(aes(x = time, y = y,
-                    ymin = lb_50, ymax = ub_50,
-                    fill = pathogen),
+    geom_line(aes(x = .data$time, y = .data$y, color = .data$pathogen)) +
+    geom_ribbon(aes(x = .data$time, y = .data$y,
+                    ymin = .data$lb_50, ymax = .data$ub_50,
+                    fill = .data$pathogen),
                 alpha = 0.2) +
-    geom_ribbon(aes(x = time, y = y,
-                    ymin = lb_95, ymax = ub_95,
-                    fill = pathogen),
+    geom_ribbon(aes(x = .data$time, y = .data$y,
+                    ymin = .data$lb_95, ymax = .data$ub_95,
+                    fill = .data$pathogen),
                 alpha = 0.2) +
     theme_bw(base_size = 14) +
     scale_colour_manual(
@@ -179,14 +181,14 @@ plot.proportion <- function(df) {
   colors <- setNames(viridis::viridis(length(combos)), combos)
 
   ggplot(measure_df) +
-    geom_line(aes(x = time, y = y, color = pathogen)) +
-    geom_ribbon(aes(x = time, y = y,
-                    ymin = lb_50, ymax = ub_50,
-                    fill = pathogen),
+    geom_line(aes(x = .data$time, y = .data$y, color = .data$pathogen)) +
+    geom_ribbon(aes(x = .data$time, y = .data$y,
+                    ymin = .data$lb_50, ymax = .data$ub_50,
+                    fill = .data$pathogen),
                 alpha = 0.2) +
-    geom_ribbon(aes(x = time, y = y,
-                    ymin = lb_95, ymax = ub_95,
-                    fill = pathogen),
+    geom_ribbon(aes(x = .data$time, y = .data$y,
+                    ymin = .data$lb_95, ymax = .data$ub_95,
+                    fill = .data$pathogen),
                 alpha = 0.2) +
     theme_bw(base_size = 14) +
     scale_colour_manual(
