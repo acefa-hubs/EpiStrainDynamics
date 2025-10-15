@@ -5,6 +5,7 @@
 \title{Subtyped pathogen structure}
 \usage{
 subtyped(
+  data,
   case_timeseries,
   time,
   influenzaA_unsubtyped_timeseries,
@@ -13,17 +14,23 @@ subtyped(
 )
 }
 \arguments{
-\item{case_timeseries}{vector of total case data}
+\item{data}{dataframe containing columns with all relevant data}
 
-\item{time}{vector of labelled time data}
+\item{case_timeseries}{name of column with total case data, this name will be
+used as the name of the pathogen}
 
-\item{influenzaA_unsubtyped_timeseries}{case timeseries data for unsubtyped
-influenzaA}
+\item{time}{name of column with time data. flexible format - can be date,
+index, or others, accepted as \code{index} identifiers in the \code{tsibble} time
+format.}
 
-\item{influenzaA_subtyped_timeseries}{case timeseries data for subtyped
-influenzaA}
+\item{influenzaA_unsubtyped_timeseries}{vector of columns names with additional
+unsubtyped influenzaA case count timeseries}
 
-\item{other_pathogen_timeseries}{other pathogen case timeseries}
+\item{influenzaA_subtyped_timeseries}{vector of columns names with additional
+subtyped influenzaA case count timeseries}
+
+\item{other_pathogen_timeseries}{vector of columns names with additional
+pathogen case count timeseries to model}
 }
 \value{
 named list including pathogen_structure, pathogen_names, and data
@@ -33,19 +40,13 @@ of class \code{EpiStrainDynamics.pathogen_structure}
 Subtyped pathogen structure
 }
 \examples{
-# Both integer and numeric inputs work consistently
 subtyped(
-  case_timeseries = influenza$ili,
-  time = influenza$week,
-  influenzaA_unsubtyped_timeseries = influenza$inf_A,
-  influenzaA_subtyped_timeseries = list(
-    influenzaA.H3N2 = influenza$inf_H3N2,
-    influenzaA.H1N1 = influenza$inf_H1N1
-  ),
-  other_pathogen_timeseries = list(
-    influenzaB = influenza$inf_B,
-    other = influenza$num_spec - influenza$inf_all
-  )
+  data = influenza,
+  case_timeseries = 'ili',
+  time = 'week',
+  influenzaA_unsubtyped_timeseries = 'inf_A',
+  influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
+  other_pathogen_timeseries = c('inf_B', 'other')
 )
 
 }
