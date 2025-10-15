@@ -179,6 +179,8 @@ transform_posterior_multi <- function(post, B_true, num_path, num_days) {
 #' @return Data frame with results for individual pathogens and totals
 #' @importFrom rstan extract
 #' @importFrom dplyr bind_rows arrange
+#' @importFrom rlang .data
+#'
 #' @examples
 #' \dontrun{
 #' results <- compute_multi_pathogen(fitted_model, 1, "incidence")
@@ -237,7 +239,7 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
   total_results$pathogen <- "Total"
 
   measure_out <- dplyr::bind_rows(pathogen_results, total_results) |>
-    dplyr::arrange(pathogen != "Total", pathogen) |>
+    dplyr::arrange(.data$pathogen != "Total", .data$pathogen) |>
     cbind(time = components$time[selection_index])
 
   out <- list(measure = measure_out,
