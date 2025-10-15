@@ -1,6 +1,7 @@
 ^EpiStrainDynamics\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+LICENSE.txt
 ^data-raw$
 ^_pkgdown\.yml$
 ^docs$
