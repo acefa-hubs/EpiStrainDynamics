@@ -2,9 +2,93 @@
 % Please edit documentation in R/fit_model.R
 \name{fit_model}
 \alias{fit_model}
+\alias{fit_model.rw_subtyped}
+\alias{fit_model.ps_subtyped}
+\alias{fit_model.rw_multiple}
+\alias{fit_model.ps_multiple}
+\alias{fit_model.rw_single}
+\alias{fit_model.ps_single}
 \title{Generic Method for fitting model}
 \usage{
 fit_model(
+  constructed_model,
+  n_chain = 4,
+  n_iter = 2000,
+  n_warmup = floor(n_iter/2),
+  thin = 1,
+  adapt_delta = 0.8,
+  multi_cores = TRUE,
+  verbose = TRUE,
+  seed = NULL,
+  ...
+)
+
+\method{fit_model}{rw_subtyped}(
+  constructed_model,
+  n_chain = 4,
+  n_iter = 2000,
+  n_warmup = floor(n_iter/2),
+  thin = 1,
+  adapt_delta = 0.8,
+  multi_cores = TRUE,
+  verbose = TRUE,
+  seed = NULL,
+  ...
+)
+
+\method{fit_model}{ps_subtyped}(
+  constructed_model,
+  n_chain = 4,
+  n_iter = 2000,
+  n_warmup = floor(n_iter/2),
+  thin = 1,
+  adapt_delta = 0.8,
+  multi_cores = TRUE,
+  verbose = TRUE,
+  seed = NULL,
+  ...
+)
+
+\method{fit_model}{rw_multiple}(
+  constructed_model,
+  n_chain = 4,
+  n_iter = 2000,
+  n_warmup = floor(n_iter/2),
+  thin = 1,
+  adapt_delta = 0.8,
+  multi_cores = TRUE,
+  verbose = TRUE,
+  seed = NULL,
+  ...
+)
+
+\method{fit_model}{ps_multiple}(
+  constructed_model,
+  n_chain = 4,
+  n_iter = 2000,
+  n_warmup = floor(n_iter/2),
+  thin = 1,
+  adapt_delta = 0.8,
+  multi_cores = TRUE,
+  verbose = TRUE,
+  seed = NULL,
+  ...
+)
+
+\method{fit_model}{rw_single}(
+  constructed_model,
+  n_chain = 4,
+  n_iter = 2000,
+  n_warmup = floor(n_iter/2),
+  thin = 1,
+  adapt_delta = 0.8,
+  multi_cores = TRUE,
+  verbose = TRUE,
+  seed = NULL,
+  ...
+)
+
+\method{fit_model}{ps_single}(
   constructed_model,
   n_chain = 4,
   n_iter = 2000,
