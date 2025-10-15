@@ -25,6 +25,7 @@ Biarch: true
 Depends: 
     R (>= 3.5)
 Imports: 
+    cli,
     dplyr,
     ggplot2,
     methods,
@@ -34,6 +35,7 @@ Imports:
     rlang, 
     rstan (>= 2.18.1),
     rstantools (>= 2.4.0),
+    tsibble,
     viridis
 LinkingTo: 
     BH (>= 1.66.0),
