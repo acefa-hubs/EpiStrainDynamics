@@ -4,15 +4,20 @@
 \alias{multiple}
 \title{Multiple pathogen structure}
 \usage{
-multiple(case_timeseries, time, component_pathogen_timeseries)
+multiple(data, case_timeseries, time, component_pathogen_timeseries)
 }
 \arguments{
-\item{case_timeseries}{vector of total case data}
+\item{data}{dataframe containing columns with all relevant data}
 
-\item{time}{vector of labelled time data}
+\item{case_timeseries}{name of column with total case data, this name will be
+used as the name of the pathogen}
 
-\item{component_pathogen_timeseries}{named list of each pathogen that has
-timeseries of case counts}
+\item{time}{name of column with time data. flexible format - can be date,
+index, or others, accepted as \code{index} identifiers in the \code{tsibble} time
+format.}
+
+\item{component_pathogen_timeseries}{vector of columns names with additional
+pathogen case count timeseries to model}
 }
 \value{
 named list including pathogen_structure, pathogen_names, and data
@@ -23,14 +28,10 @@ Multiple pathogen structure
 }
 \examples{
 multiple(
-  case_timeseries = sarscov2$cases,
-  time = sarscov2$date,
-  component_pathogen_timeseries = list(
-    alpha = sarscov2$alpha,
-    delta = sarscov2$delta,
-    omicron = sarscov2$omicron,
-    other = sarscov2$other
-  )
+  data = sarscov2,
+  case_timeseries = 'cases',
+  time = 'date',
+  component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
 )
 
 }

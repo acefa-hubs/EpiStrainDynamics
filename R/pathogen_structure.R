@@ -1,9 +1,11 @@
 #' Single pathogen structure
 #'
-#' @param case_timeseries vector of total case data
-#' @param time vector of labelled time data
-#' @param pathogen_name optionally provided name of pathogen. This value is
-#'   preserved exactly as provided (case-sensitive). Default name is `default`.
+#' @param data dataframe containing columns with all relevant data
+#' @param case_timeseries name of column with total case data, this name will be
+#'   used as the name of the pathogen
+#' @param time name of column with time data. flexible format - can be date,
+#'   index, or others, accepted as `index` identifiers in the `tsibble` time
+#'   format.
 #'
 #' @returns formatted list with pathogen structure and data of class
 #'   `EpiStrainDynamics.pathogen_structure`.
@@ -13,60 +15,46 @@
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #' @srrstats {BS2.15} checks that data has been input in correct form, and
 #'   provides an informative error message if not
+#' @srrstats {G2.7, G2.8} data argument accepts standard tabular forms, which
+#'   are then post-processed internally to ensure subsequent functions receive
+#'   standard inputs
 #'
 #' @examples
 #' single(
-#'   case_timeseries = sarscov2$cases,
-#'   time = sarscov2$date,
-#'   pathogen_name = 'SARS-COV-2' # preserved as provided
+#'   data = sarscov2,
+#'   case_timeseries = 'cases',
+#'   time = 'date'
 #' )
 #'
-#' single(
-#'   case_timeseries = sarscov2$cases,
-#'   time = sarscov2$date,
-#'   pathogen_name = 'sarscov2' # preserved as provided
-#' )
-#'
-#' single(
-#'   case_timeseries = sarscov2$cases,
-#'   time = sarscov2$date
-#' )
-single <- function (case_timeseries,
-                    time,
-                    pathogen_name = 'default') {
+single <- function (data,
+                    case_timeseries,
+                    time) {
 
-  #' @srrstats {G2.13, G2.14, G2.14a} check for missing data, error if found
-  #' @srrstats {G2.15, BS3.0} Data prep does not assume non-missingness
-  if (any(is.na(case_timeseries)) || any(is.na(time))) {
-    cli::cli_abort("{case_timeseries} and {time} cannot contain NA values.
-                   `EpiStrainDynamics` expects data in regular timesteps with
-                   no gaps. Please review your data.")
-  }
-
+  #' @srrstats {G5.8c, G5.8d} edge cases produce errors
   #' @srrstats {G2.1, G5.8, G5.8b} assertions on types of inputs
+  #' @srrstats {G2.1a} validation for vector inputs
   #' @srrstats {G2.4, G2.4b} ensure consistent numeric handling for all numeric
   #'   inputs
-  case_timeseries <- as.numeric(case_timeseries)
+  check_column_exists(data, time, "time")
+  check_column_exists(data, case_timeseries, "case_timeseries")
+  check_column_numeric(data, case_timeseries, "case_timeseries")
 
   #' @srrstats {G2.0, G2.0a} validate matching lengths for input data
-  validate_matching_lengths(
-    case_timeseries = case_timeseries,
-    time = time
-  )
+  #' @srrstats {G2.13, G2.14, G2.14a} check for missing data, error if found
+  #' @srrstats {G2.15, BS3.0} Data prep does not assume non-missingness
+  temp_df <- data[, c(time, case_timeseries), drop = FALSE]
+  validated_tsbl <- create_validated_tsibble(temp_df, time)
 
-  #' @srrstats {G2.2} restrict to selection of only first provided name
-  if (length(pathogen_name) != 1) {
-    single_pathogen_name <- pathogen_name[1]
-    cli::cli_alert('More than one {pathogen_name} provided, using only
-                   {.var {single_pathogen_name')
-  }
-
+  #' @srrstats {G5.3} data objects are returns with no missing values. this
+  #'   is validated through conversion to tsibble in `create_validated_tsibble`
+  #' @srrstats {G2.10} extraction of single columns happens after conversion
+  #'   to consistent tabular form
   model_inputs <- list(
     pathogen_structure = 'single',
-    pathogen_names = pathogen_name,
+    pathogen_names = case_timeseries,
     data = list(
-      case_timeseries = case_timeseries,
-      time = time
+      case_timeseries = validated_tsbl[[case_timeseries]],
+      time = validated_tsbl[[time]]
     )
   )
 
@@ -77,10 +65,14 @@ single <- function (case_timeseries,
 
 #' Multiple pathogen structure
 #'
-#' @param case_timeseries vector of total case data
-#' @param time vector of labelled time data
-#' @param component_pathogen_timeseries named list of each pathogen that has
-#'   timeseries of case counts
+#' @param data dataframe containing columns with all relevant data
+#' @param case_timeseries name of column with total case data, this name will be
+#'   used as the name of the pathogen
+#' @param time name of column with time data. flexible format - can be date,
+#'   index, or others, accepted as `index` identifiers in the `tsibble` time
+#'   format.
+#' @param component_pathogen_timeseries vector of columns names with additional
+#'   pathogen case count timeseries to model
 #'
 #' @returns named list including pathogen_structure, pathogen_names, and data
 #'   of class `EpiStrainDynamics.pathogen_structure`
@@ -90,62 +82,57 @@ single <- function (case_timeseries,
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #' @srrstats {BS2.15} checks that data has been input in correct form, and
 #'   provides an informative error message if not
+#' @srrstats {G2.7, G2.8} data argument accepts standard tabular forms, which
+#'   are then post-processed internally to ensure subsequent functions receive
+#'   standard inputs
 #'
 #' @examples
 #' multiple(
-#'   case_timeseries = sarscov2$cases,
-#'   time = sarscov2$date,
-#'   component_pathogen_timeseries = list(
-#'     alpha = sarscov2$alpha,
-#'     delta = sarscov2$delta,
-#'     omicron = sarscov2$omicron,
-#'     other = sarscov2$other
-#'   )
+#'   data = sarscov2,
+#'   case_timeseries = 'cases',
+#'   time = 'date',
+#'   component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
 #' )
 #'
-multiple <- function (case_timeseries,
+multiple <- function (data,
+                      case_timeseries,
                       time,
                       component_pathogen_timeseries) {
 
-  #' @srrstats {G2.13, G2.14, G2.14a} check for missing data, error if found
-  #' @srrstats {G2.15, BS3.0} Data prep does not assume non-missingness
-  na_in_components <- do.call(
-    any, lapply(component_pathogen_timeseries, function(x) is.na(x))
-  )
-  if (any(is.na(case_timeseries)) || any(is.na(time)) || na_in_components) {
-    cli::cli_abort("Input data cannot contain NA values. `EpiStrainDynamics`
-    expects data in regular timesteps with no gaps. Please review your data.")
-  }
-
+  #' @srrstats {G5.8c, G5.8d} edge cases produce errors
   #' @srrstats {G2.1, G5.8, G5.8b} assertions on types of inputs
+  #' @srrstats {G2.1a} validation for vector inputs
   #' @srrstats {G2.4, G2.4b} ensure consistent numeric handling for all numeric
   #'   inputs
-  case_timeseries <- as.numeric(case_timeseries)
-  component_pathogen_timeseries <- lapply(component_pathogen_timeseries, as.numeric)
+  check_column_exists(data, case_timeseries, "case_timeseries")
+  check_column_numeric(data, case_timeseries, "case_timeseries")
+  check_column_exists(data, time, "time")
+
+  for (col in component_pathogen_timeseries) {
+    check_column_exists(data, col, "component_pathogen_timeseries")
+    check_column_numeric(data, col, "component_pathogen_timeseries")
+  }
 
   #' @srrstats {G2.0, G2.0a} validate matching lengths for input data
-  #' @srrstats {G2.1a, G2.6} validation for vector inputs
-  validate_matching_lengths(
-    case_timeseries = case_timeseries,
-    time = time
-  )
-  validate_list_vector(
-    component_pathogen_timeseries,
-    "component_pathogen_timeseries",
-    reference_length = length(case_timeseries)
-  )
+  #' @srrstats {G2.13, G2.14, G2.14a} check for missing data, error if found
+  #' @srrstats {G2.15, BS3.0} Data prep does not assume non-missingness
+  all_cols <- c(time, case_timeseries, component_pathogen_timeseries)
+  temp_df <- data[, all_cols, drop = FALSE]
+  validated_tsbl <- create_validated_tsibble(temp_df, time)
 
-  pathogen_names <- names(component_pathogen_timeseries)
-  component_pathogens <- t(matrix(
-    data = do.call(c, component_pathogen_timeseries),
-    ncol = length(component_pathogen_timeseries)
-  ))
+  # Create matrix from validated tsibble
+  component_pathogens <- t(as.matrix(validated_tsbl[, component_pathogen_timeseries]))
+
+  #' @srrstats {G5.3} data objects are returns with no missing values. this
+  #'   is validated through conversion to tsibble in `create_validated_tsibble`
+  #' @srrstats {G2.10} extraction of single columns happens after conversion
+  #'   to consistent tabular form
   model_inputs <- list(
     pathogen_structure = 'multiple',
-    pathogen_names = pathogen_names,
+    pathogen_names = component_pathogen_timeseries,
     data = list(
-      case_timeseries = case_timeseries,
-      time = time,
+      case_timeseries = validated_tsbl[[case_timeseries]],
+      time = validated_tsbl[[time]],
       component_pathogens = component_pathogens
     )
   )
@@ -156,13 +143,18 @@ multiple <- function (case_timeseries,
 
 #' Subtyped pathogen structure
 #'
-#' @param case_timeseries vector of total case data
-#' @param time vector of labelled time data
-#' @param influenzaA_unsubtyped_timeseries case timeseries data for unsubtyped
-#'   influenzaA
-#' @param influenzaA_subtyped_timeseries case timeseries data for subtyped
-#'   influenzaA
-#' @param other_pathogen_timeseries other pathogen case timeseries
+#' @param data dataframe containing columns with all relevant data
+#' @param case_timeseries name of column with total case data, this name will be
+#'   used as the name of the pathogen
+#' @param time name of column with time data. flexible format - can be date,
+#'   index, or others, accepted as `index` identifiers in the `tsibble` time
+#'   format.
+#' @param influenzaA_unsubtyped_timeseries vector of columns names with additional
+#'   unsubtyped influenzaA case count timeseries
+#' @param influenzaA_subtyped_timeseries vector of columns names with additional
+#'   subtyped influenzaA case count timeseries
+#' @param other_pathogen_timeseries vector of columns names with additional
+#'   pathogen case count timeseries to model
 #'
 #' @returns named list including pathogen_structure, pathogen_names, and data
 #'   of class `EpiStrainDynamics.pathogen_structure`
@@ -172,99 +164,78 @@ multiple <- function (case_timeseries,
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #' @srrstats {BS2.15} checks that data has been input in correct form, and
 #'   provides an informative error message if not
+#' @srrstats {G2.7, G2.8} data argument accepts standard tabular forms, which
+#'   are then post-processed internally to ensure subsequent functions receive
+#'   standard inputs
 #'
 #' @examples
-#' # Both integer and numeric inputs work consistently
 #' subtyped(
-#'   case_timeseries = influenza$ili,
-#'   time = influenza$week,
-#'   influenzaA_unsubtyped_timeseries = influenza$inf_A,
-#'   influenzaA_subtyped_timeseries = list(
-#'     influenzaA.H3N2 = influenza$inf_H3N2,
-#'     influenzaA.H1N1 = influenza$inf_H1N1
-#'   ),
-#'   other_pathogen_timeseries = list(
-#'     influenzaB = influenza$inf_B,
-#'     other = influenza$num_spec - influenza$inf_all
-#'   )
+#'   data = influenza,
+#'   case_timeseries = 'ili',
+#'   time = 'week',
+#'   influenzaA_unsubtyped_timeseries = 'inf_A',
+#'   influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
+#'   other_pathogen_timeseries = c('inf_B', 'other')
 #' )
 #'
-subtyped <- function (case_timeseries,
+subtyped <- function (data,
+                      case_timeseries,
                       time,
                       influenzaA_unsubtyped_timeseries,
                       influenzaA_subtyped_timeseries,
                       other_pathogen_timeseries) {
 
-  #' @srrstats {G2.13, G2.14, G2.14a} check for missing data, error if found
-  #' @srrstats {G2.15, BS3.0} Data prep does not assume non-missingness
-  na_unsubtyped <- do.call(
-    any, lapply(influenzaA_unsubtyped_timeseries, function(x) is.na(x))
-  )
-  na_subtyped <- do.call(
-    any, lapply(influenzaA_subtyped_timeseries, function(x) is.na(x))
-  )
-  na_other <- do.call(
-    any, lapply(other_pathogen_timeseries, function(x) is.na(x))
-  )
-  if (any(is.na(case_timeseries)) || any(is.na(time)) || na_unsubtyped
-      || na_subtyped || na_other) {
-    cli::cli_abort("Input data cannot contain NA values. `EpiStrainDynamics`
-    expects data in regular timesteps with no gaps. Please review your data.")
-  }
-
+  #' @srrstats {G5.8c, G5.8d} edge cases produce errors
   #' @srrstats {G2.1, G5.8, G5.8b} assertions on types of inputs
+  #' @srrstats {G2.1a} validation for vector inputs
   #' @srrstats {G2.4, G2.4b} ensure consistent numeric handling for all numeric
   #'   inputs
-  case_timeseries <- as.numeric(case_timeseries)
-  influenzaA_unsubtyped_timeseries <- as.numeric(influenzaA_unsubtyped_timeseries)
-  influenzaA_subtyped_timeseries <- lapply(influenzaA_subtyped_timeseries, as.numeric)
-  other_pathogen_timeseries <- lapply(other_pathogen_timeseries, as.numeric)
+  check_column_exists(data, time, "time")
+  check_column_exists(data, case_timeseries, "case_timeseries")
+  check_column_numeric(data, case_timeseries, "case_timeseries")
+  check_column_exists(data, influenzaA_unsubtyped_timeseries,
+                      "influenzaA_unsubtyped_timeseries")
+  check_column_numeric(data, influenzaA_unsubtyped_timeseries,
+                       "influenzaA_unsubtyped_timeseries")
+
+  for (col in influenzaA_subtyped_timeseries) {
+    check_column_exists(data, col, "influenzaA_subtyped_timeseries")
+    check_column_numeric(data, col, "influenzaA_subtyped_timeseries")
+  }
+
+  for (col in other_pathogen_timeseries) {
+    check_column_exists(data, col, "other_pathogen_timeseries")
+    check_column_numeric(data, col, "other_pathogen_timeseries")
+  }
 
   #' @srrstats {G2.0, G2.0a} validate matching lengths for input data
-  #' @srrstats {G2.1a, G2.6} validation for vector inputs
-  validate_matching_lengths(
-    case_timeseries = case_timeseries,
-    time = time,
-    influenzaA_unsubtyped_timeseries = influenzaA_unsubtyped_timeseries
-  )
-  validate_list_vector(
-    influenzaA_subtyped_timeseries,
-    "influenzaA_subtyped_timeseries",
-    reference_length = length(case_timeseries)
-  )
-  validate_list_vector(
-    other_pathogen_timeseries,
-    "other_pathogen_timeseries",
-    reference_length = length(case_timeseries)
-  )
+  #' @srrstats {G2.13, G2.14, G2.14a} check for missing data, error if found
+  #' @srrstats {G2.15, BS3.0} Data prep does not assume non-missingness
+  all_cols <- c(time, case_timeseries, influenzaA_unsubtyped_timeseries,
+                influenzaA_subtyped_timeseries, other_pathogen_timeseries)
+  temp_df <- data[, all_cols, drop = FALSE]
+  validated_tsbl <- create_validated_tsibble(temp_df, time)
 
-  pathogen_names <- c(
-    names(influenzaA_subtyped_timeseries),
-    names(other_pathogen_timeseries)
-  )
+  # Create pathogen names
+  pathogen_names <- c(influenzaA_subtyped_timeseries, other_pathogen_timeseries)
 
-  component_pathogens_list <- append(
-    list(influenzaA = influenzaA_unsubtyped_timeseries),
-    other_pathogen_timeseries
-  )
-
-  # Ensure consistent matrix creation
-  component_pathogens <- t(matrix(
-    data = as.numeric(do.call(c, component_pathogens_list)),
-    ncol = length(component_pathogens_list)
+  # Create matrices directly from validated tsibble
+  component_pathogens <- t(as.matrix(
+    validated_tsbl[, c(influenzaA_unsubtyped_timeseries, other_pathogen_timeseries)]
   ))
 
-  influenzaA_subtyped <- t(matrix(
-    data = as.numeric(do.call(c, influenzaA_subtyped_timeseries)),
-    ncol = length(influenzaA_subtyped_timeseries)
-  ))
+  influenzaA_subtyped <- t(as.matrix(validated_tsbl[, influenzaA_subtyped_timeseries]))
 
+  #' @srrstats {G5.3} data objects are returns with no missing values. this
+  #'   is validated through conversion to tsibble in `create_validated_tsibble`
+  #' @srrstats {G2.10} extraction of single columns happens after conversion
+  #'   to consistent tabular form
   model_inputs <- list(
     pathogen_structure = 'subtyped',
     pathogen_names = pathogen_names,
     data = list(
-      case_timeseries = case_timeseries,
-      time = time,
+      case_timeseries = validated_tsbl[[case_timeseries]],
+      time = validated_tsbl[[time]],
       component_pathogens = component_pathogens,
       influenzaA_subtyped = influenzaA_subtyped
     )

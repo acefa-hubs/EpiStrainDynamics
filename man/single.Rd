@@ -4,15 +4,17 @@
 \alias{single}
 \title{Single pathogen structure}
 \usage{
-single(case_timeseries, time, pathogen_name = "default")
+single(data, case_timeseries, time)
 }
 \arguments{
-\item{case_timeseries}{vector of total case data}
+\item{data}{dataframe containing columns with all relevant data}
 
-\item{time}{vector of labelled time data}
+\item{case_timeseries}{name of column with total case data, this name will be
+used as the name of the pathogen}
 
-\item{pathogen_name}{optionally provided name of pathogen. This value is
-preserved exactly as provided (case-sensitive). Default name is \code{default}.}
+\item{time}{name of column with time data. flexible format - can be date,
+index, or others, accepted as \code{index} identifiers in the \code{tsibble} time
+format.}
 }
 \value{
 formatted list with pathogen structure and data of class
@@ -23,21 +25,11 @@ Single pathogen structure
 }
 \examples{
 single(
-  case_timeseries = sarscov2$cases,
-  time = sarscov2$date,
-  pathogen_name = 'SARS-COV-2' # preserved as provided
+  data = sarscov2,
+  case_timeseries = 'cases',
+  time = 'date'
 )
 
-single(
-  case_timeseries = sarscov2$cases,
-  time = sarscov2$date,
-  pathogen_name = 'sarscov2' # preserved as provided
-)
-
-single(
-  case_timeseries = sarscov2$cases,
-  time = sarscov2$date
-)
 }
 \seealso{
 Other pathogen_structure: 
