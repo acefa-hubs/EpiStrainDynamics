@@ -119,8 +119,8 @@ construct_model <- function(method,
   spline_degree <- method$model_params$spline_degree %||% NULL
 
   # priors
-  tau_priors_provided <- ifelse(is.null(tau_priors), 1, 2)
-  phi_priors_provided <- ifelse(is.null(phi_priors), 1, 2)
+  tau_priors_provided <- ifelse(is.null(smoothing_params$tau_priors), 1, 2)
+  phi_priors_provided <- ifelse(is.null(dispersion_params$phi_priors), 1, 2)
   tau_mean <- smoothing_params$tau_priors$mean %||% NULL
   tau_sd <- smoothing_params$tau_priors$sd %||% NULL
   phi_mean <- dispersion_params$phi_priors$mean %||% NULL
