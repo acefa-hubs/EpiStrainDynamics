@@ -75,7 +75,7 @@ This metric function can be run directly on the fitted model output.
 \seealso{
 Other metrics: 
 \code{\link{Rt}()},
-\code{\link{fit_model.rw_subtyped}()},
+\code{\link{growth_rate}()},
 \code{\link{proportion}()}
 }
 \concept{metrics}
