@@ -161,7 +161,7 @@ test_that("validate_list_vector() rejects unnamed lists", {
 })
 
 test_that("validate_list_vector() rejects lists with empty or missing names", {
-  empty_name_list <- list(a = 1:3, "" = letters[1:3])
+  empty_name_list <- list(1:3, letters[1:3])
   expect_error(validate_list_vector(empty_name_list, "bad_names"),
                "All elements in bad_names must have non-empty names")
 
