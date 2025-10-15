@@ -32,6 +32,7 @@
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #' @srrstats {BS1.2, BS1.2c} Code examples of how to specify prior distributions.
 #'   Descriptive text can be found in the `README.md`
+#' @srrstats {BS2.2} Prior distributions are pre-processed and validated
 #' @srrstats {BS2.15} checks that data has been input in correct form, and
 #'   provides an informative error message if not
 #'
@@ -72,6 +73,7 @@ smoothing_structure <- function(smoothing_type,
     tau_priors <- validate_priors(tau_mean, tau_sd)
   }
 
+  #' @srrstats {BS5.2} return priors
   # Create the smoothing structure object
   smooth_obj <- list(
     smoothing_type = smoothing_type,
@@ -102,6 +104,7 @@ smoothing_structure <- function(smoothing_type,
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #' @srrstats {BS1.2, BS1.2c} Code examples of how to specify prior distributions.
 #'   Descriptive text can be found in the `README.md`
+#' @srrstats {BS2.2} Prior distributions are pre-processed and validated
 #' @srrstats {BS2.15} checks that data has been input in correct form, and
 #'   provides an informative error message if not
 #'
@@ -120,6 +123,7 @@ dispersion_structure <- function(phi_mean = NULL, phi_sd = NULL) {
     cli::cli_abort("Only one value for {phi_mean} and {phi_sd} expected.")
   }
 
+  #' @srrstats {BS5.2} return priors
   class(disp_obj) <- c('EpiStrainDynamics.dispersion', class(disp_obj))
   return(disp_obj)
 }
