@@ -175,6 +175,9 @@ validate_list_vector <- function(vector_list, list_name,
 #' @srrstats {G1.4a} internal function specified with `@noRd`
 #' @srrstats {G5.2a} every error statement is unique
 #' @srrstats {G5.8, G5.8a} checks for zero length
+#' @srrstats {BS2.3, BS2.4, BS2.5} checks priors for length, appropriate
+#'  values, and distributionally appropriate
+#'
 validate_priors <- function(mean, sd) {
 
   # Check if both are provided or both are missing
@@ -262,4 +265,64 @@ validate_smoothing_structure <- function(smoothing_obj, pathogen_names = NULL) {
   }
 
   return(smoothing_obj)
+}
+
+check_gaps <- function(x) {
+  if (any(tsibble::has_gaps(x)[[".gaps"]])) {
+    cli::cli_abort("{x} contains implicit gaps in time. You should check your
+                   data and remove gaps from all data")
+  }
+}
+
+check_regular <- function(x) {
+  if (!tsibble::is_regular(x)) {
+    cli::cli_abort("{x} is an irregular time series, which this model does not
+                   support. You should consider if your data can be made regular.")
+  }
+}
+
+check_ordered <- function(x) {
+  if (!tsibble::is_ordered(x)) {
+    cli::cli_abort("{x} is an unordered time series. To use this model, you
+      first must sort the data in time order")
+  }
+}
+
+validate_time_sequence <- function() {
+  check_gaps(.data)
+  check_regular(.data)
+  check_ordered(.data)
+  if (NROW(.data) == 0) {
+    cli::cli_abort("There is no data to model. Please provide a dataset with at
+                   least one observation.")
+  }
+}
+# Helper: Validate column exists in data
+check_column_exists <- function(data, col_name, arg_name) {
+  if (!col_name %in% names(data)) {
+    stop(sprintf("Column '%s' specified in %s not found in data", col_name, arg_name))
+  }
+}
+
+# Helper: Validate column is numeric
+check_column_numeric <- function(data, col_name, arg_name) {
+  if (!is.numeric(data[[col_name]])) {
+    stop(sprintf("Column '%s' specified in %s must be numeric, but is %s",
+                 col_name, arg_name, class(data[[col_name]])[1]))
+  }
+}
+
+# Helper: Create and validate tsibble from dataframe
+create_validated_tsibble <- function(df, time_col) {
+  temp_tsbl <- tryCatch({
+    tsibble::tsibble(df, index = !!rlang::sym(time_col))
+  }, error = function(e) {
+    stop(sprintf("Error creating tsibble: %s", e$message))
+  })
+
+  if (tsibble::has_gaps(temp_tsbl)$.gaps) {
+    stop("Time series has gaps")
+  }
+
+  return(temp_tsbl)
 }
