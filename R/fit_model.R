@@ -34,7 +34,7 @@
 #'   includes the fit object of class `stanfit` and the pre-specified
 #'   constructed model object of class `EpiStrainDynamics.model`. The
 #'   model object itself includes the input data.
-#'
+
 #'
 #' @examples
 #' \dontrun{
@@ -66,7 +66,7 @@ fit_model <- function (constructed_model,
   UseMethod("fit_model")
 }
 
-#' @rdname growth_rate
+#' @rdname fit_model
 #' @export
 fit_model.rw_subtyped <- function (constructed_model,
                                    n_chain = 4,
@@ -77,21 +77,6 @@ fit_model.rw_subtyped <- function (constructed_model,
                                    multi_cores = TRUE,
                                    verbose = TRUE,
                                    seed = NULL, ...) {
-
-  # cases <- constructed_model$data$case_timeseries
-  # pathogen_names <- constructed_model$pathogen_names
-  #
-  # standata <- list(
-  #   num_data = length(cases),
-  #   num_path = length(pathogen_names),
-  #   Y = cases,
-  #   P1 = constructed_model$data$component_pathogens,
-  #   P2 = constructed_model$data$influenzaA_subtyped,
-  #   week_effect = constructed_model$model_params$week_effect,
-  #   DOW = constructed_model$model_params$DOW,
-  #   cov_structure = constructed_model$model_params$cov_structure,
-  #   noise_structure = constructed_model$model_params$noise_structure
-  # )
 
   fit_object <- rstan::sampling(
     stanmodels$rw_subtyped,
@@ -109,19 +94,10 @@ fit_model.rw_subtyped <- function (constructed_model,
     ...
   )
 
-  # check for divergent transitions
-  div_trans <- sum(lapply(rstan::get_sampler_params(fit_object,
-                                                    inc_warmup = FALSE),
-                          div_check)[[1]])
-  ## print either troubleshooting or visualization tips
-  # if (div_trans > 0 && verbose) {
-  #   url <- "https://ednajoint.netlify.app/tips#troubleshooting-tips"
-  #   message <- "Refer to the eDNAjoint guide for troubleshooting tips: "
-  # } else {
-  #   url <- "https://ednajoint.netlify.app/tips#visualization-tips"
-  #   message <- "Refer to the eDNAjoint guide for visualization tips: "
-  # }
-  # cat(message, url, "\n")
+  diagnostics <- diagnose_model(fit_object)
+  if (!diagnostics$convergence) {
+    cli::cli_alert("Model has convergence issues")
+  }
 
   # add chain names to init list
   # names(inits) <- paste0("chain", seq(1, n_chain, 1))
@@ -129,20 +105,15 @@ fit_model.rw_subtyped <- function (constructed_model,
   #' @srrstats {BS5.0} function returns initial values used in computation
   #' @srrstats {BS5.5} the `model` return object is of class `stanfit`, which
   #'   includes information about convergence
-  result_list <- list(fit = fit_object,
+  out <- list(fit = fit_object,
                       # inits = inits,
                       constructed_model = constructed_model)
 
-  #' @srrstats {BS5.2} *Bayesian Software should either return the input function or prior distributional specification in the return object; or enable direct access to such via additional functions which accept the return object as single argument.*
-
-  # return priors
-
-  class(result_list) <- c('rw', 'EpiStrainDynamics.fit', class(out))
-
-  return(result_list)
+  class(out) <- c('rw', 'EpiStrainDynamics.fit', class(out))
+  return(out)
 }
 
-#' @rdname growth_rate
+#' @rdname fit_model
 #' @export
 fit_model.ps_subtyped <- function (constructed_model,
                                    n_chain = 4,
@@ -153,26 +124,6 @@ fit_model.ps_subtyped <- function (constructed_model,
                                    multi_cores = TRUE,
                                    verbose = TRUE,
                                    seed = NULL, ...) {
-
-  # cases <- constructed_model$data$case_timeseries
-  # pathogen_names <- constructed_model$pathogen_names
-  # time_seq <- constructed_model$data$time_seq
-  # spline_degree <- constructed_model$model_params$spline_degree
-  # knots <- constructed_model$model_params$knots
-  #
-  # standata <- list(num_data = length(cases),
-  #                  num_knots = length(knots),
-  #                  num_path = length(pathogen_names),
-  #                  knots = knots,
-  #                  spline_degree = spline_degree,
-  #                  Y = cases,
-  #                  P1 = constructed_model$data$component_pathogens,
-  #                  P2 = constructed_model$data$influenzaA_subtyped,
-  #                  X = time_seq,
-  #                  week_effect = constructed_model$model_params$week_effect,
-  #                  DOW = constructed_model$model_params$DOW,
-  #                  cov_structure = constructed_model$model_params$cov_structure,
-  #                  noise_structure = constructed_model$model_params$noise_structure)
 
   fit_object <- rstan::sampling(
     stanmodels$ps_subtyped,
@@ -197,7 +148,7 @@ fit_model.ps_subtyped <- function (constructed_model,
   return(out)
 }
 
-#' @rdname growth_rate
+#' @rdname fit_model
 #' @export
 fit_model.rw_multiple <- function (constructed_model,
                                    n_chain = 4,
@@ -208,18 +159,6 @@ fit_model.rw_multiple <- function (constructed_model,
                                    multi_cores = TRUE,
                                    verbose = TRUE,
                                    seed = NULL, ...) {
-
-  # cases <- constructed_model$data$case_timeseries
-  # pathogen_names <- constructed_model$pathogen_names
-  #
-  # standata <- list(num_data = length(cases),
-  #                  num_path = length(pathogen_names),
-  #                  Y = cases,
-  #                  P = constructed_model$data$component_pathogens,
-  #                  week_effect = constructed_model$model_params$week_effect,
-  #                  DOW = constructed_model$model_params$DOW,
-  #                  cov_structure = constructed_model$model_params$cov_structure,
-  #                  noise_structure = constructed_model$model_params$noise_structure)
 
   fit_object <- rstan::sampling(
     stanmodels$rw_multiple,
@@ -240,11 +179,10 @@ fit_model.rw_multiple <- function (constructed_model,
               constructed_model = constructed_model)
 
   class(out) <- c('rw', 'EpiStrainDynamics.fit', class(out))
-
   return(out)
 }
 
-#' @rdname growth_rate
+#' @rdname fit_model
 #' @export
 fit_model.ps_multiple <- function (constructed_model,
                                    n_chain = 4,
@@ -255,33 +193,6 @@ fit_model.ps_multiple <- function (constructed_model,
                                    multi_cores = TRUE,
                                    verbose = TRUE,
                                    seed = NULL, ...) {
-
-  # cases <- constructed_model$data$case_timeseries
-  # pathogen_names <- constructed_model$pathogen_names
-  # time_seq <- constructed_model$data$time_seq
-  # spline_degree <- constructed_model$model_params$spline_degree
-  # knots <- constructed_model$model_params$knots
-  #
-  # standata <- list(num_data = length(cases),
-  #                  num_knots = length(knots),
-  #                  num_path = length(pathogen_names),
-  #                  knots = knots,
-  #                  spline_degree = spline_degree,
-  #                  Y = cases,
-  #                  P = constructed_model$data$component_pathogens,
-  #                  X = time_seq,
-  #                  week_effect = constructed_model$model_params$week_effect,
-  #                  DOW = constructed_model$model_params$DOW,
-  #                  cov_structure = constructed_model$model_params$cov_structure,
-  #                  noise_structure = constructed_model$model_params$noise_structure,
-  #                  phi_priors_provided = 2, # 1=priors not provided, 2=priors provided
-  #                  phi_mean = 0,
-  #                  phi_sd = 1000,
-  #
-  #                  tau_priors_provided = 2,  # 1=priors not provided, 2=priors provided
-  #                  tau_mean = rep(0.13, 4),#[cov_structure==0 ? 1: cov_structure==1? num_path: 0 ];
-  #                  # so for cov0 "shared" tau_mean has dim 1. for cov1 it has dim num_path. whew
-  #                  tau_sd = rep(1000,4))
 
   fit_object <- rstan::sampling(
     stanmodels$ps_multiple,
@@ -302,11 +213,10 @@ fit_model.ps_multiple <- function (constructed_model,
               constructed_model = constructed_model)
 
   class(out) <- c('ps', 'EpiStrainDynamics.fit', class(out))
-
   return(out)
 }
 
-#' @rdname growth_rate
+#' @rdname fit_model
 #' @export
 fit_model.rw_single <- function (constructed_model,
                                  n_chain = 4,
@@ -317,13 +227,6 @@ fit_model.rw_single <- function (constructed_model,
                                  multi_cores = TRUE,
                                  verbose = TRUE,
                                  seed = NULL, ...) {
-
-  # cases <- constructed_model$data$case_timeseries
-  #
-  # standata <- list(num_data = length(cases),
-  #                  Y = cases,
-  #                  week_effect = constructed_model$model_params$week_effect,
-  #                  DOW = constructed_model$model_params$DOW)
 
   fit_object <- rstan::sampling(
     stanmodels$rw_single,
@@ -344,11 +247,10 @@ fit_model.rw_single <- function (constructed_model,
               constructed_model = constructed_model)
 
   class(out) <- c('rw_single', 'EpiStrainDynamics.fit', class(out))
-
   return(out)
 }
 
-#' @rdname growth_rate
+#' @rdname fit_model
 #' @export
 fit_model.ps_single <- function (constructed_model,
                                  n_chain = 4,
@@ -359,20 +261,6 @@ fit_model.ps_single <- function (constructed_model,
                                  multi_cores = TRUE,
                                  verbose = TRUE,
                                  seed = NULL, ...) {
-#
-#   cases <- constructed_model$data$case_timeseries
-#   time_seq <- constructed_model$data$time_seq
-#   spline_degree <- constructed_model$model_params$spline_degree
-#   knots <- constructed_model$model_params$knots
-#
-#   standata <- list(num_data = length(cases),
-#                    num_knots = length(knots),
-#                    knots = knots,
-#                    spline_degree = spline_degree,
-#                    Y = cases,
-#                    X = time_seq,
-#                    week_effect = constructed_model$model_params$week_effect,
-#                    DOW = constructed_model$model_params$DOW)
 
   fit_object <- rstan::sampling(
     stanmodels$ps_single,
@@ -393,7 +281,6 @@ fit_model.ps_single <- function (constructed_model,
               constructed_model = constructed_model)
 
   class(out) <- c('ps_single', 'EpiStrainDynamics.fit', class(out))
-
   return(out)
 }
 
