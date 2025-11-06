@@ -23,13 +23,13 @@ used as the name of the pathogen}
 index, or others, accepted as \code{index} identifiers in the \code{tsibble} time
 format.}
 
-\item{influenzaA_unsubtyped_timeseries}{vector of columns names with additional
+\item{influenzaA_unsubtyped_timeseries}{vector of column names with additional
 unsubtyped influenzaA case count timeseries}
 
-\item{influenzaA_subtyped_timeseries}{vector of columns names with additional
+\item{influenzaA_subtyped_timeseries}{vector of column names with additional
 subtyped influenzaA case count timeseries}
 
-\item{other_pathogen_timeseries}{vector of columns names with additional
+\item{other_pathogen_timeseries}{vector of column names with additional
 pathogen case count timeseries to model}
 }
 \value{

@@ -16,7 +16,7 @@ used as the name of the pathogen}
 index, or others, accepted as \code{index} identifiers in the \code{tsibble} time
 format.}
 
-\item{component_pathogen_timeseries}{vector of columns names with additional
+\item{component_pathogen_timeseries}{vector of column names with additional
 pathogen case count timeseries to model}
 }
 \value{
