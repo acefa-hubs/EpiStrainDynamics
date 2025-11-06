@@ -42,34 +42,17 @@ names of class \code{EpiStrainDynamics.model}
 Construct model
 }
 \examples{
-# Basic usage
-method_obj <- random_walk()
-pathogen_obj <- single(
-  case_timeseries = sarscov2$cases,
-  time = sarscov2$date,
-  pathogen_name = "SARS-CoV-2"
-)
-mod <- construct_model(
-  method = method_obj,
-  pathogen_structure = pathogen_obj,
-  dow_effect = TRUE
-)
 
-# Specifying priors on tau and phi are optional
 mod <- construct_model(
 
   method = p_spline(),
 
   pathogen_structure = multiple(
-    case_timeseries = sarscov2$cases,
-    time = sarscov2$date,
-
-    component_pathogen_timeseries = list(
-      alpha = sarscov2$alpha,
-      delta = sarscov2$delta,
-      omicron = sarscov2$omicron,
-      other = sarscov2$other)
-   ),
+    data = sarscov2,
+    case_timeseries = 'cases',
+    time = 'date',
+    component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+    ),
 
    smoothing_params = smoothing_structure(
       'independent', tau_mean = c(0, 0.1, 0.3, 0), tau_sd = rep(1, times = 4)),
