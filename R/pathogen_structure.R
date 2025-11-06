@@ -42,8 +42,8 @@ single <- function (data,
   #' @srrstats {G2.0, G2.0a} validate matching lengths for input data
   #' @srrstats {G2.13, G2.14, G2.14a} check for missing data, error if found
   #' @srrstats {G2.15, BS3.0} Data prep does not assume non-missingness
-  temp_df <- data[, c(time, case_timeseries), drop = FALSE]
-  validated_tsbl <- create_validated_tsibble(temp_df, time)
+  all_cols <- c(time, case_timeseries)
+  validated_tsbl <- create_validated_tsibble(data, all_cols, time)
 
   #' @srrstats {G5.3} data objects are returns with no missing values. this
   #'   is validated through conversion to tsibble in `create_validated_tsibble`
@@ -71,7 +71,7 @@ single <- function (data,
 #' @param time name of column with time data. flexible format - can be date,
 #'   index, or others, accepted as `index` identifiers in the `tsibble` time
 #'   format.
-#' @param component_pathogen_timeseries vector of columns names with additional
+#' @param component_pathogen_timeseries vector of column names with additional
 #'   pathogen case count timeseries to model
 #'
 #' @returns named list including pathogen_structure, pathogen_names, and data
@@ -117,8 +117,7 @@ multiple <- function (data,
   #' @srrstats {G2.13, G2.14, G2.14a} check for missing data, error if found
   #' @srrstats {G2.15, BS3.0} Data prep does not assume non-missingness
   all_cols <- c(time, case_timeseries, component_pathogen_timeseries)
-  temp_df <- data[, all_cols, drop = FALSE]
-  validated_tsbl <- create_validated_tsibble(temp_df, time)
+  validated_tsbl <- create_validated_tsibble(data, all_cols, time)
 
   # Create matrix from validated tsibble
   component_pathogens <- t(as.matrix(validated_tsbl[, component_pathogen_timeseries]))
@@ -149,11 +148,11 @@ multiple <- function (data,
 #' @param time name of column with time data. flexible format - can be date,
 #'   index, or others, accepted as `index` identifiers in the `tsibble` time
 #'   format.
-#' @param influenzaA_unsubtyped_timeseries vector of columns names with additional
+#' @param influenzaA_unsubtyped_timeseries vector of column names with additional
 #'   unsubtyped influenzaA case count timeseries
-#' @param influenzaA_subtyped_timeseries vector of columns names with additional
+#' @param influenzaA_subtyped_timeseries vector of column names with additional
 #'   subtyped influenzaA case count timeseries
-#' @param other_pathogen_timeseries vector of columns names with additional
+#' @param other_pathogen_timeseries vector of column names with additional
 #'   pathogen case count timeseries to model
 #'
 #' @returns named list including pathogen_structure, pathogen_names, and data
@@ -213,8 +212,7 @@ subtyped <- function (data,
   #' @srrstats {G2.15, BS3.0} Data prep does not assume non-missingness
   all_cols <- c(time, case_timeseries, influenzaA_unsubtyped_timeseries,
                 influenzaA_subtyped_timeseries, other_pathogen_timeseries)
-  temp_df <- data[, all_cols, drop = FALSE]
-  validated_tsbl <- create_validated_tsibble(temp_df, time)
+  validated_tsbl <- create_validated_tsibble(data, all_cols, time)
 
   # Create pathogen names
   pathogen_names <- c(influenzaA_subtyped_timeseries, other_pathogen_timeseries)
