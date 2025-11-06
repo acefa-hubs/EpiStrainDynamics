@@ -52,14 +52,11 @@ smoothing_structure <- function(smoothing_type,
 
   #' @srrstats {G2.3, G2.3a, G2.3b} univariate variables must match and be
   #'   case insensitive
-  smoothing_type <- tolower(rlang::arg_match(
-    arg = smoothing_type
-  ))
-  # Validate smoothing_type argument
   valid_structures <- c("shared", "independent", "correlated")
-  if (!smoothing_type %in% valid_structures) {
-    cli::cli_abort("{smoothing_type} must be one of: {.var {valid_structures}}")
-  }
+  smoothing_type <- tolower(rlang::arg_match(
+    arg = smoothing_type,
+    values = valid_structures
+  ))
 
   # Handle priors based on structure type
   if (smoothing_type == "correlated") {
