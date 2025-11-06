@@ -204,7 +204,7 @@ validate_priors <- function(mean, sd) {
     cli::cli_abort("{mean} and {sd} cannot contain NA values")
   }
 
-  if (any(mean <= 0) || any(sd <= 0)) {
+  if (any(mean < 0) || any(sd <= 0)) {
     cli::cli_abort("All {mean} and {sd} values must be positive")
   }
 
@@ -232,7 +232,7 @@ validate_smoothing_structure <- function(smoothing_obj, pathogen_names = NULL) {
   }
 
   # For independent structure, validate and adjust dimensions
-  if (smoothing_obj$smoothing_structure == "independent") {
+  if (smoothing_obj$smoothing_type == "independent") {
     if (is.null(pathogen_names)) {
       stop("pathogen_names is required for 'independent' smoothing structure")
     }
@@ -267,36 +267,7 @@ validate_smoothing_structure <- function(smoothing_obj, pathogen_names = NULL) {
   return(smoothing_obj)
 }
 
-check_gaps <- function(x) {
-  if (any(tsibble::has_gaps(x)[[".gaps"]])) {
-    cli::cli_abort("{x} contains implicit gaps in time. You should check your
-                   data and remove gaps from all data")
-  }
-}
 
-check_regular <- function(x) {
-  if (!tsibble::is_regular(x)) {
-    cli::cli_abort("{x} is an irregular time series, which this model does not
-                   support. You should consider if your data can be made regular.")
-  }
-}
-
-check_ordered <- function(x) {
-  if (!tsibble::is_ordered(x)) {
-    cli::cli_abort("{x} is an unordered time series. To use this model, you
-      first must sort the data in time order")
-  }
-}
-
-validate_time_sequence <- function() {
-  check_gaps(.data)
-  check_regular(.data)
-  check_ordered(.data)
-  if (NROW(.data) == 0) {
-    cli::cli_abort("There is no data to model. Please provide a dataset with at
-                   least one observation.")
-  }
-}
 # Helper: Validate column exists in data
 check_column_exists <- function(data, col_name, arg_name) {
   if (!col_name %in% names(data)) {
@@ -312,16 +283,79 @@ check_column_numeric <- function(data, col_name, arg_name) {
   }
 }
 
+#' Check for missing data (NA values) in specified columns
+#'
+#' @param data dataframe to check
+#' @param columns character vector of column names to check for missing data
+#' @param context character string describing the context (e.g., "case_timeseries")
+#'
+#' @returns NULL (invisibly) if no missing data, otherwise throws an error
+#' @keywords internal
+#'
+#' @srrstats {G2.13, G2.14, G2.14a} check for missing data, error if found
+#' @srrstats {G2.15, BS3.0} Data prep does not assume non-missingness
+#'
+check_missing_data <- function(data, columns, context) {
+  for (col in columns) {
+    if (any(is.na(data[[col]]))) {
+      na_count <- sum(is.na(data[[col]]))
+      na_indices <- which(is.na(data[[col]]))
+
+      # Show first few indices if there are many
+      if (na_count > 5) {
+        indices_msg <- paste0(
+          "rows ",
+          paste(head(na_indices, 5), collapse = ", "),
+          ", ... (", na_count, " total)"
+        )
+      } else {
+        indices_msg <- paste0(
+          "row(s) ",
+          paste(na_indices, collapse = ", ")
+        )
+      }
+
+      cli::cli_abort(
+        "Missing values (NA) found in column {.val {col}} (specified as {context}) at {indices_msg}. All data columns must have complete values (no NAs) before creating time series."
+      )
+    }
+  }
+  invisible(NULL)
+}
+
 # Helper: Create and validate tsibble from dataframe
-create_validated_tsibble <- function(df, time_col) {
+create_validated_tsibble <- function(data, columns, time_col) {
+  # Subset to only the columns we need
+  temp_df <- data[, columns, drop = FALSE]
+
+  # Check for NA values before tsibble conversion
+  check_missing_data(temp_df, columns, "input data")
+
+  # Create tsibble
   temp_tsbl <- tryCatch({
-    tsibble::tsibble(df, index = !!rlang::sym(time_col))
+    tsibble::tsibble(temp_df, index = !!rlang::sym(time_col))
   }, error = function(e) {
-    stop(sprintf("Error creating tsibble: %s", e$message))
+    cli::cli_abort("Error creating tsibble: {e$message}")
   })
 
+  # Check for gaps
   if (tsibble::has_gaps(temp_tsbl)$.gaps) {
-    stop("Time series has gaps")
+    cli::cli_abort("Time series has gaps. All time points must be present with no missing time periods.")
+  }
+
+  # Check regularity
+  if (!tsibble::is_regular(temp_tsbl)) {
+    cli::cli_abort("Time series is irregular. The model requires regularly spaced time intervals.")
+  }
+
+  # Check ordering
+  if (!tsibble::is_ordered(temp_tsbl)) {
+    cli::cli_abort("Time series is not ordered. Please sort the data in chronological order.")
+  }
+
+  # Check for empty data
+  if (NROW(temp_tsbl) == 0) {
+    cli::cli_abort("There is no data to model. Please provide a dataset with at least one observation.")
   }
 
   return(temp_tsbl)
