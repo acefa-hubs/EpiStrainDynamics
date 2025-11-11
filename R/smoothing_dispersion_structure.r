@@ -46,7 +46,7 @@
 #'                                     tau_sd = c(1, 1, 1))
 #'
 #' @export
-smoothing_structure <- function(smoothing_type,
+smoothing_structure <- function(smoothing_type = 'shared',
                                 tau_mean = NULL,
                                 tau_sd = NULL) {
 
