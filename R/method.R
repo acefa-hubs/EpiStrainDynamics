@@ -70,14 +70,11 @@ random_walk <- function () {
 p_spline <- function (spline_degree = 3,
                       days_per_knot = 3) {
 
-  #' @srrstats {G2.4a} explicit conversion to `integer` via `as.integer()`
-  spline_degree <- as.integer(spline_degree)
-  days_per_knot <- as.integer(days_per_knot)
-
   #' @srrstats {G2.1} assertions on types of inputs
   validate_positive_whole_number(spline_degree, "spline_degree")
   validate_positive_whole_number(days_per_knot, "days_per_knot")
 
+  #' @srrstats {G2.4a} explicit conversion to `integer` via `as.integer()`
   model_inputs <- list(
     method = 'p-spline',
     model_params = list(
