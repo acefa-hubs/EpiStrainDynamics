@@ -51,8 +51,8 @@
 #'
 construct_model <- function(method,
                             pathogen_structure,
-                            smoothing_params = NULL,
-                            dispersion_params = NULL,
+                            smoothing_params = smoothing_structure(),
+                            dispersion_params = dispersion_structure(),
                             pathogen_noise = FALSE,
                             dow_effect = FALSE) {
 
@@ -65,9 +65,7 @@ construct_model <- function(method,
   )
   smoothing_params <- validate_smoothing_structure(
     smoothing_params, pathogen_structure$pathogen_names)
-  if (!is.null(dispersion_params)) {
-    validate_class_inherits(dispersion_params, "EpiStrainDynamics.dispersion")
-  }
+  validate_class_inherits(dispersion_params, "EpiStrainDynamics.dispersion")
 
   if (!is.logical(pathogen_noise) || length(pathogen_noise) != 1) {
     cli::cli_abort(
@@ -106,8 +104,8 @@ construct_model <- function(method,
   phi_priors_provided <- ifelse(is.null(dispersion_params$phi_priors), 1, 2)
   tau_mean <- smoothing_params$tau_priors$mean %||% NULL
   tau_sd <- smoothing_params$tau_priors$sd %||% NULL
-  phi_mean <- dispersion_params$phi_priors$mean %||% NULL
-  phi_sd <- dispersion_params$phi_priors$sd %||% NULL
+  phi_mean <- dispersion_params$mean %||% NULL
+  phi_sd <- dispersion_params$sd %||% NULL
 
   standata <- list(num_data = length(cases),
                    Y = cases,
