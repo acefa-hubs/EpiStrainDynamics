@@ -57,7 +57,7 @@ fit_model <- function (constructed_model,
                        n_iter = 2000,
                        n_warmup = floor(n_iter/2),
                        thin = 1,
-                       adapt_delta = 0.8,
+                       adapt_delta = 0.9,
                        multi_cores = TRUE,
                        verbose = TRUE,
                        seed = NULL, ...) {
@@ -73,7 +73,7 @@ fit_model.rw_subtyped <- function (constructed_model,
                                    n_iter = 2000,
                                    n_warmup = floor(n_iter/2),
                                    thin = 1,
-                                   adapt_delta = 0.8,
+                                   adapt_delta = 0.9,
                                    multi_cores = TRUE,
                                    verbose = TRUE,
                                    seed = NULL, ...) {
@@ -93,11 +93,6 @@ fit_model.rw_subtyped <- function (constructed_model,
     refresh = ifelse(verbose == TRUE, 500, 0),
     ...
   )
-
-  diagnostics <- diagnose_model(fit_object)
-  if (!diagnostics$convergence) {
-    cli::cli_alert("Model has convergence issues")
-  }
 
   # add chain names to init list
   # names(inits) <- paste0("chain", seq(1, n_chain, 1))
@@ -120,7 +115,7 @@ fit_model.ps_subtyped <- function (constructed_model,
                                    n_iter = 2000,
                                    n_warmup = floor(n_iter/2),
                                    thin = 1,
-                                   adapt_delta = 0.8,
+                                   adapt_delta = 0.9,
                                    multi_cores = TRUE,
                                    verbose = TRUE,
                                    seed = NULL, ...) {
@@ -155,7 +150,7 @@ fit_model.rw_multiple <- function (constructed_model,
                                    n_iter = 2000,
                                    n_warmup = floor(n_iter/2),
                                    thin = 1,
-                                   adapt_delta = 0.8,
+                                   adapt_delta = 0.9,
                                    multi_cores = TRUE,
                                    verbose = TRUE,
                                    seed = NULL, ...) {
@@ -189,7 +184,7 @@ fit_model.ps_multiple <- function (constructed_model,
                                    n_iter = 2000,
                                    n_warmup = floor(n_iter/2),
                                    thin = 1,
-                                   adapt_delta = 0.8,
+                                   adapt_delta = 0.9,
                                    multi_cores = TRUE,
                                    verbose = TRUE,
                                    seed = NULL, ...) {
@@ -223,7 +218,7 @@ fit_model.rw_single <- function (constructed_model,
                                  n_iter = 2000,
                                  n_warmup = floor(n_iter/2),
                                  thin = 1,
-                                 adapt_delta = 0.8,
+                                 adapt_delta = 0.9,
                                  multi_cores = TRUE,
                                  verbose = TRUE,
                                  seed = NULL, ...) {
@@ -257,7 +252,7 @@ fit_model.ps_single <- function (constructed_model,
                                  n_iter = 2000,
                                  n_warmup = floor(n_iter/2),
                                  thin = 1,
-                                 adapt_delta = 0.8,
+                                 adapt_delta = 0.9,
                                  multi_cores = TRUE,
                                  verbose = TRUE,
                                  seed = NULL, ...) {
