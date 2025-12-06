@@ -49,11 +49,11 @@ get_model_components <- function(fitted_model) {
     num_path = length(fitted_model$constructed_model$pathogen_names %||% 1),
     time_seq = fitted_model$constructed_model$data$time_seq,
     time = fitted_model$constructed_model$data$time,
-    num_days = length(fitted_model$constructed_model$data$time),
-    days_per_knot = fitted_model$constructed_model$model_params$days_per_knot %||% NULL,
-    spline_degree = fitted_model$constructed_model$model_params$spline_degree %||% NULL,
-    DOW = fitted_model$constructed_model$model_params$DOW %||% NULL,
-    week_effect = fitted_model$constructed_model$model_params$week_effect %||% NULL,
+    num_days = length(fitted_model$constructed_model$data$time_seq),
+    knots = fitted_model$constructed_model$standata$knots %||% NULL,
+    spline_degree = fitted_model$constructed_model$standata$spline_degree %||% NULL,
+    DOW = fitted_model$constructed_model$standata$DOW %||% NULL,
+    week_effect = fitted_model$constructed_model$standata$week_effect %||% NULL,
     dow_effect = fitted_model$constructed_model$dow_effect
   )
 }
@@ -102,10 +102,8 @@ expand_pathogen_grid <- function(time_grid, pathogen_names) {
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #' @srrstats {G1.4a} internal function specified with `@noRd`
 #'
-predict_B_true <- function(time_seq, days_per_knot, spline_degree) {
+predict_B_true <- function(time_seq, knots, spline_degree) {
   X <- as.numeric(time_seq)
-  knots <- get_knots(X, days_per_knot = days_per_knot, spline_degree = spline_degree)
-
   B_true <- splines::bs(seq(knots[1], knots[length(knots)], 1),
                         knots = knots[2:(length(knots)-1)],
                         degree = spline_degree,
@@ -194,7 +192,7 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
 
   # Transform data if using splines
   if (use_splines) {
-    B_true <- predict_B_true(components$time_seq, components$days_per_knot,
+    B_true <- predict_B_true(components$time_seq, components$knots,
                              components$spline_degree)
     a <- transform_posterior_multi(post, B_true, components$num_path,
                                    components$num_days)
@@ -276,7 +274,7 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
 
   # Transform data if using splines
   if (use_splines) {
-    B_true <- predict_B_true(components$time_seq, components$days_per_knot, components$spline_degree)
+    B_true <- predict_B_true(components$time_seq, components$knots, components$spline_degree)
     a <- transform_posterior_multi(post, B_true, components$num_path, components$num_days)
   } else {
     a <- post$a
