@@ -37,8 +37,6 @@ NULL
 #'   instead uses functions from the `rstan` package.
 #' @srrstatsNA {G5.4b} This is not a new implementation of an existing method
 #' @srrstatsNA {G5.4c} No stored values are needed for correctness testing
-#' @srrstatsNA {G5.7} This software relies on Stan which has it's own underlying
-#'  algortithm performance tests.
 #' @srrstatsNA {G5.10,G5.11,G5.11a,G5.12} I have not implemented any extended
 #'   tests
 #' @srrstatsNA {BS1.0} The term 'hyperparameter' is not used
@@ -70,11 +68,9 @@ NULL
 #'  be to compare against an analytical solution, which we don't have.
 #' @srrstatsNA {BS4.4} This software uses `rstan`'s `sampling`, and there does
 #'   not appear to yet be a mechanism of stopping the chain upon convergence
-#' @srrstatsNA {BS4.6} Convergence checker is a separate diagnostic function,
-#'   it is not resulting in a shortened run sequence that needs to be evaluated
-#' @srrstatsNA {BS4.7} This software does not implement a convergence checker
-#'   whose threshold determines when to stop collecting samples
-#' @srrstatsNA {BS5.4} A single function to diagnose convergence is used
+#' @srrstatsNA {BS4.6, BS4.7, BS5.3, BS5.4} No separate convergence
+#'   checker is implemented. Stan software returns some convergence warnings
+#'   itself and the README illustrates other options.
 #' @srrstatsNA {BS6.0} The fitting function, `fit_model()`, returns a list of
 #'   class `EpiStrainDynamics.fit` as well as a class for the family of pathogen
 #'   structure used (`ps`, `rw`, `ps_single`, or `rw_single`). The first item
