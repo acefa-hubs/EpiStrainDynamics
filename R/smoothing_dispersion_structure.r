@@ -60,21 +60,30 @@ smoothing_structure <- function(smoothing_type = 'shared',
 
   # Handle priors based on structure type
   if (smoothing_type == "correlated") {
-    # No priors needed for correlated structure
     if (!is.null(tau_mean) || !is.null(tau_sd)) {
-      cli::cli_alert("{tau_mean} and {tau_sd} are ignored for 'correlated' smoothing type")
+      cli::cli_alert("{.var {tau_mean}} and {.var {tau_sd}} are ignored for 'correlated' smoothing type")
     }
-    tau_priors <- NULL
+    tau_priors <- list(mean = numeric(0), sd = numeric(0))
+    priors_provided <- 1
+
+  }
+  # For shared and independent structures
+  if (is.null(tau_mean) && is.null(tau_sd)) {
+    # No priors provided
+    tau_priors <- list(mean = NULL, sd = NULL)
+    priors_provided <- 1
+
   } else {
-    # For shared and independent structures, validate priors
+    # Priors provided - validate them
     tau_priors <- validate_priors(tau_mean, tau_sd)
+    priors_provided <- 2
   }
 
   #' @srrstats {BS5.2} return priors
-  # Create the smoothing structure object
   smooth_obj <- list(
     smoothing_type = smoothing_type,
-    tau_priors = tau_priors
+    tau_priors = tau_priors,
+    priors_provided = priors_provided
   )
 
   class(smooth_obj) <- c('EpiStrainDynamics.smoothing', class(smooth_obj))
@@ -112,15 +121,29 @@ smoothing_structure <- function(smoothing_type = 'shared',
 #' @export
 dispersion_structure <- function(phi_mean = NULL, phi_sd = NULL) {
 
-  # Validate dispersion parameters using helper function
-  disp_obj <- validate_priors(phi_mean, phi_sd)
+  if (is.null(phi_mean) && is.null(phi_sd)) {
+    # No priors provided - use dummy vectorised scalar values
+    priors_provided <- 1
+    disp_priors <- list(mean = 0.0, sd = 1.0)
+  } else {
+    # Validate provided priors
+    priors_provided <- 2
+    disp_priors <- validate_priors(phi_mean, phi_sd)
 
-  # Additional check for dispersion priors (must be scalar)
-  if (length(phi_mean) != 1 || length(phi_sd) != 1) {
-    cli::cli_abort("Only one value for {phi_mean} and {phi_sd} expected.")
+    # Check scalar
+    if (length(disp_priors$mean) > 1 || length(disp_priors$sd) > 1) {
+      cli::cli_abort("Only one value for {.var phi_mean} and {.var phi_sd} expected.")
+    }
   }
 
   #' @srrstats {BS5.2} return priors
+  disp_obj <- list(
+    mean = disp_priors$mean,
+    sd = disp_priors$sd,
+    priors_provided = priors_provided
+  )
+
   class(disp_obj) <- c('EpiStrainDynamics.dispersion', class(disp_obj))
   return(disp_obj)
 }
+
