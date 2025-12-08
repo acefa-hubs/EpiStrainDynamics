@@ -88,6 +88,14 @@ proportion <- function(fitted_model,
 
   validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')
   validate_class_inherits(fitted_model, c('ps', 'rw'), require_all = FALSE)
+
+  # Validate combination arguments
+  pathogen_names <- unique(fitted_model$constructed_model$pathogen_names)
+  validate_pathogen_combination(numerator_combination, pathogen_names,
+                                "numerator_combination")
+  validate_pathogen_combination(denominator_combination, pathogen_names,
+                                "denominator_combination")
+
   UseMethod("proportion")
 }
 
@@ -116,7 +124,7 @@ proportion.ps <- function(fitted_model,
   else {
     numerator_idx <- match(numerator_combination, fitted_model$constructed_model$pathogen_names)
 
-    if (denominator_combination == 'all') {
+    if (identical(denominator_combination, "all")) {
       denominator_idx <- 1:length(unique(fitted_model$constructed_model$pathogen_names))
     }
     else {
@@ -132,9 +140,8 @@ proportion.ps <- function(fitted_model,
   match_pathogen_name <- function(x) unique(fitted_model$constructed_model$pathogen_names)[x]
 
   measure <- measure |>
-    dplyr::mutate(dplyr::across(dplyr::matches("pathogen"), match_pathogen_name)) |>
     dplyr::rowwise() |>
-    dplyr::mutate(pathogen = paste(dplyr::c_across(dplyr::matches('pathogen')), collapse = ', ')) |>
+    dplyr::mutate(pathogen = paste(match_pathogen_name(pathogen), collapse = ', ')) |>
     dplyr::ungroup()
 
   out <- list(measure = measure,
@@ -184,12 +191,14 @@ proportion.rw <- function(fitted_model,
                                        denominator_idx = denominator_idx)
   }
 
-  match_pathogen_name <- function(x) unique(fitted_model$constructed_model$pathogen_names)[x]
-
+  match_pathogen_name <- function(x) {
+    unique(fitted_model$constructed_model$pathogen_names)[x]
+  }
   measure <- measure |>
     dplyr::mutate(dplyr::across(dplyr::matches("pathogen"), match_pathogen_name)) |>
     dplyr::rowwise() |>
-    dplyr::mutate(pathogen = paste(dplyr::c_across(dplyr::matches('pathogen')), collapse = ', ')) |>
+    dplyr::mutate(pathogen = paste(dplyr::c_across(dplyr::matches('pathogen')),
+                                   collapse = ', ')) |>
     dplyr::ungroup()
 
   out <- list(measure = measure,
