@@ -12,3 +12,4 @@ LICENSE.txt
 ^codemeta\.json$
 paper.md
 ^README\.Rmd$
+^vignettes/articles$
