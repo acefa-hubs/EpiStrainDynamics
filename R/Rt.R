@@ -67,7 +67,10 @@
 #' }
 #'
 Rt <- function(fitted_model, tau_max = 7, gi_dist, ...) {
+  #' @srrstats {G2.1, G2.2, G5.8, G5.8a, G5.8b, G5.8c, G5.8d} assertions on types of inputs
   validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')
+  validate_positive_whole_number(tau_max, 'tau_max')
+  validate_gi_dist(gi_dist)
   UseMethod("Rt")
 }
 
