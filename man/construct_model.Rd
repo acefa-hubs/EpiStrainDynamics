@@ -7,8 +7,8 @@
 construct_model(
   method,
   pathogen_structure,
-  smoothing_params = NULL,
-  dispersion_params = NULL,
+  smoothing_params = smoothing_structure(),
+  dispersion_params = dispersion_structure(),
   pathogen_noise = FALSE,
   dow_effect = FALSE
 )
