@@ -91,79 +91,6 @@ validate_class_inherits <- function(obj, class_names, require_all = TRUE) {
   invisible(NULL)
 }
 
-#' Validate input vectors have matching lengths
-#'
-#' @param ... Named vectors to check for matching lengths
-#' @param .error_call The calling function for better error messages
-#'
-#' @noRd
-#' @srrstats {G1.4} uses `Roxygen2` documentation
-#' @srrstats {G1.4a} internal function specified with `@noRd`
-#' @srrstats {G5.2a} every error statement is unique
-#'
-validate_matching_lengths <- function(..., .error_call = rlang::caller_env()) {
-
-  vectors <- list(...)
-  vector_names <- names(vectors)
-  lengths <- lengths(vectors)
-
-  if (length(unique(lengths)) > 1) {
-    length_info <- paste(paste(vector_names, lengths, sep = " (length "), ")", collapse = ", ")
-    cli::cli_abort(c("All input vectors must have the same length.",
-                     "Found: {length_info}"))
-  }
-}
-
-#' Validate that a list of vectors all have the same length
-#'
-#' @param vector_list Named list of vectors
-#' @param list_name Name of the list parameter for error messages
-#' @param reference_length Expected length (optional)
-#' @param .error_call The calling function for better error messages
-#'
-#' @noRd
-#' @srrstats {G1.4} uses `Roxygen2` documentation
-#' @srrstats {G1.4a} internal function specified with `@noRd`
-#' @srrstats {G5.2a} every error statement is unique
-#' @srrstats {G5.8, G5.8a} checks for zero length
-#'
-validate_list_vector <- function(vector_list, list_name,
-                                 reference_length = NULL,
-                                 .error_call = rlang::caller_env()) {
-
-  if (!is.list(vector_list)) {
-    cli::cli_abort("{.arg {list_name}} must be a list.")
-  }
-
-  if (length(vector_list) == 0) {
-    cli::cli_abort("{list_name} cannot be empty")
-  }
-
-  lengths <- lengths(vector_list)
-  vector_names <- names(vector_list)
-
-  if (is.null(vector_names)) {
-    cli::cli_abort("{.arg {list_name}} must have named elements.")
-  }
-
-  if (any(vector_names == "" | is.na(vector_names))) {
-    cli::cli_abort("All elements in {.arg {list_name}} must have non-empty names.")
-  }
-
-  if (length(unique(lengths)) > 1) {
-    length_info <- paste(paste(vector_names, lengths, sep = " (length "), ")", collapse = ", ")
-    cli::cli_abort(c("All vectors in {list_name} must have the same length.",
-                     "Found: {length_info}"))
-  }
-
-  if (!is.null(reference_length) && lengths[1] != reference_length) {
-    length_obj <- lengths[1]
-    cli::cli_abort("Vectors in {list_name} must have length {reference_length} but found length {length_obj}")
-  }
-
-  invisible(TRUE)
-}
-
 #' Validate prior parameters
 #'
 #' @param mean The mean parameter value
@@ -179,7 +106,6 @@ validate_list_vector <- function(vector_list, list_name,
 #'  values, and distributionally appropriate
 #'
 validate_priors <- function(mean, sd) {
-
   # Check if both are provided or both are missing
   mean_provided <- !missing(mean) && !is.null(mean)
   sd_provided <- !missing(sd) && !is.null(sd)
@@ -189,26 +115,32 @@ validate_priors <- function(mean, sd) {
     cli::cli_abort("If specifying priors, both mean and sd must be provided")
   }
 
-  # If neither provided, return NULL
-  if (!mean_provided && !sd_provided) {
-    return(NULL)
+  # If both are provided, validate them
+  if (mean_provided && sd_provided) {
+    # Validate parameters
+    if (!is.numeric(mean) || !is.numeric(sd)) {
+      cli::cli_abort("Both {.var mean} and {.var sd} must be numeric")
+    }
+
+    #' @srrstats {G2.16} error to check for undefined values
+    if (any(is.na(mean)) || any(is.na(sd))) {
+      cli::cli_abort("{.var mean} and {.var sd} cannot contain NA values")
+    }
+
+    # Check that mean and sd have the same length
+    if (length(mean) != length(sd)) {
+      cli::cli_abort(
+        "{.var mean} and {.var sd} must have the same length",
+        "i" = "{.var mean} has length {length(mean)}, {.var sd} has length {length(sd)}"
+      )
+    }
+
+    if (any(mean < 0) || any(sd <= 0)) {
+      cli::cli_abort("All {.var mean} and {.var sd} values must be positive")
+    }
   }
 
-  # Validate parameters when both are provided
-  if (!is.numeric(mean) || !is.numeric(sd)) {
-    cli::cli_abort("Both {mean} and {sd} must be numeric")
-  }
-
-  #' @srrstats {G2.16} error to check for undefined values
-  if (any(is.na(mean)) || any(is.na(sd))) {
-    cli::cli_abort("{mean} and {sd} cannot contain NA values")
-  }
-
-  if (any(mean < 0) || any(sd <= 0)) {
-    cli::cli_abort("All {mean} and {sd} values must be positive")
-  }
-
-  # Create and return priors object
+  # Always create priors list structure (even if both are NULL)
   priors <- list('mean' = mean, 'sd' = sd)
   class(priors) <- c('EpiStrainDynamics.prior', class(priors))
   return(priors)
@@ -224,11 +156,21 @@ validate_priors <- function(mean, sd) {
 #' @srrstats {G1.4a} internal function specified with `@noRd`
 #' @srrstats {G5.2a} every error statement is unique
 #' @srrstats {G5.8, G5.8a} checks for zero length
-validate_smoothing_structure <- function(smoothing_obj, pathogen_names = NULL) {
-
+validate_smoothing_structure <- function(smoothing_obj, pathogen_names = NULL,
+                                         pathogen_str) {
   # Check if object has correct class
   if (!inherits(smoothing_obj, "EpiStrainDynamics.smoothing")) {
     stop("smoothing_params must be created using the smoothing_structure() function")
+  }
+
+  if (pathogen_str == 'single' & smoothing_obj$smoothing_type != 'shared') {
+    smoothing_obj$smoothing_type <- 'shared'
+    cli::cli_alert('smoothing_type can only be "shared" for "single" pathogen_type')
+  }
+  if (pathogen_str == 'single' & is.null(smoothing_obj$tau_priors$mean)){
+    smoothing_obj$tau_priors$mean <- 0.0
+    smoothing_obj$tau_priors$sd <- 1.0
+    return(smoothing_obj)
   }
 
   # For independent structure, validate and adjust dimensions
@@ -239,7 +181,12 @@ validate_smoothing_structure <- function(smoothing_obj, pathogen_names = NULL) {
 
     expected_dim <- length(pathogen_names)
 
-    if (!is.null(smoothing_obj$tau_priors)) {
+    # If no priors were provided (priors_provided = 1), create dummy values with correct dimensions
+    if (smoothing_obj$priors_provided == 1) {
+      smoothing_obj$tau_priors$mean <- rep(0.0, expected_dim)
+      smoothing_obj$tau_priors$sd <- rep(1.0, expected_dim)
+    } else {
+      # If priors were provided, validate and adjust dimensions
       # Validate and adjust dimensions for mean
       mean_dim <- length(smoothing_obj$tau_priors$mean)
       if (mean_dim == 1 && expected_dim > 1) {
@@ -264,11 +211,26 @@ validate_smoothing_structure <- function(smoothing_obj, pathogen_names = NULL) {
     }
   }
 
+  # For shared structure with no priors, ensure values are 1-element arrays
+  if (smoothing_obj$smoothing_type == "shared" && smoothing_obj$priors_provided == 1) {
+    if (is.null(smoothing_obj$tau_priors$mean) || length(smoothing_obj$tau_priors$mean) == 0) {
+      smoothing_obj$tau_priors$mean <- array(0.0, dim = 1)
+      smoothing_obj$tau_priors$sd <- array(1.0, dim = 1)
+    }
+  }
+
+  if (smoothing_obj$smoothing_type == "correlated" && smoothing_obj$priors_provided == 1) {
+    if (is.null(smoothing_obj$tau_priors$mean) || length(smoothing_obj$tau_priors$mean) == 0) {
+      smoothing_obj$tau_priors$mean <- numeric(0)
+      smoothing_obj$tau_priors$sd <- numeric(0)
+    }
+  }
+
   return(smoothing_obj)
 }
 
-
 # Helper: Validate column exists in data
+#' @noRd
 check_column_exists <- function(data, col_name, arg_name) {
   if (!col_name %in% names(data)) {
     stop(sprintf("Column '%s' specified in %s not found in data", col_name, arg_name))
@@ -276,6 +238,7 @@ check_column_exists <- function(data, col_name, arg_name) {
 }
 
 # Helper: Validate column is numeric
+#' @noRd
 check_column_numeric <- function(data, col_name, arg_name) {
   if (!is.numeric(data[[col_name]])) {
     stop(sprintf("Column '%s' specified in %s must be numeric, but is %s",
@@ -289,12 +252,13 @@ check_column_numeric <- function(data, col_name, arg_name) {
 #' @param columns character vector of column names to check for missing data
 #' @param context character string describing the context (e.g., "case_timeseries")
 #'
-#' @returns NULL (invisibly) if no missing data, otherwise throws an error
-#' @keywords internal
-#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
 #' @srrstats {G2.13, G2.14, G2.14a} check for missing data, error if found
 #' @srrstats {G2.15, BS3.0} Data prep does not assume non-missingness
 #'
+#' @returns NULL (invisibly) if no missing data, otherwise throws an error
 check_missing_data <- function(data, columns, context) {
   for (col in columns) {
     if (any(is.na(data[[col]]))) {
@@ -323,7 +287,16 @@ check_missing_data <- function(data, columns, context) {
   invisible(NULL)
 }
 
-# Helper: Create and validate tsibble from dataframe
+#' Helper: Create and validate tsibble from dataframe
+#'
+#' @param data input dataset to check time formatting
+#' @param columns column names with data to include in the validated df
+#' @param time_col the column name with time data to validate
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
 create_validated_tsibble <- function(data, columns, time_col) {
   # Subset to only the columns we need
   temp_df <- data[, columns, drop = FALSE]
@@ -359,4 +332,129 @@ create_validated_tsibble <- function(data, columns, time_col) {
   }
 
   return(temp_tsbl)
+}
+
+#' Validate generation interval distribution function
+#'
+#' @param gi_dist A function that takes a numeric vector and returns
+#'   generation interval probabilities
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
+#'
+validate_gi_dist <- function(gi_dist) {
+  # Check if it's a function
+  if (!is.function(gi_dist)) {
+    cli::cli_abort(c(
+      "{.arg gi_dist} must be a function",
+      "x" = "You supplied a {.cls {class(gi_dist)}} object"
+    ))
+  }
+
+  # Check if it accepts at least one argument
+  if (length(formals(gi_dist)) < 1) {
+    cli::cli_abort(c(
+      "{.arg gi_dist} must accept at least one argument",
+      "i" = "The function should accept {.arg x} as input"
+    ))
+  }
+
+  # Test with a numeric vector
+  test_input <- c(0, 1, 5, 10)
+  test_output <- tryCatch(
+    gi_dist(test_input),
+    error = function(e) {
+      cli::cli_abort(c(
+        "{.arg gi_dist} failed when called with numeric input",
+        "x" = "Error: {e$message}"
+      ))
+    }
+  )
+
+  # Check output is numeric
+  if (!is.numeric(test_output)) {
+    cli::cli_abort(c(
+      "{.arg gi_dist} must return numeric values",
+      "x" = "Function returned {.cls {class(test_output)}}"
+    ))
+  }
+
+  # Check output has same length as input (vectorized)
+  if (length(test_output) != length(test_input)) {
+    cli::cli_abort(c(
+      "{.arg gi_dist} must be vectorized (return same length as input)",
+      "x" = "Input length: {length(test_input)}, Output length: {length(test_output)}"
+    ))
+  }
+
+  # Check for non-negative values (probabilities should be >= 0)
+  if (any(test_output < 0, na.rm = TRUE)) {
+    cli::cli_abort(c(
+      "{.arg gi_dist} must return non-negative values",
+      "x" = "Found {sum(test_output < 0, na.rm = TRUE)} negative value{?s}"
+    ))
+  }
+
+  # Check for NA/NaN/Inf
+  if (any(!is.finite(test_output))) {
+    cli::cli_warn(c(
+      "{.arg gi_dist} returns non-finite values for some inputs",
+      "i" = "Found {sum(!is.finite(test_output))} NA/NaN/Inf value{?s}"
+    ))
+  }
+
+  invisible(NULL)
+}
+
+#' Validate pathogen combination arguments
+#'
+#' @param combination Vector of pathogen names, 'all' (for denominator only), or NULL
+#' @param pathogen_names Vector of valid pathogen names from the model
+#' @param arg_name Name of the argument being validated (for error messages).
+#'   Must be either "numerator_combination" or "denominator_combination"
+#' @noRd
+validate_pathogen_combination <- function(combination, pathogen_names, arg_name) {
+  if (is.null(combination)) {
+    return()
+  }
+
+  # Determine if "all" is allowed based on argument name
+  allow_all <- identical(arg_name, "denominator_combination")
+
+  if (!is.character(combination)) {
+    all_msg <- if (allow_all) " or {.val all}" else ""
+    cli::cli_abort(c(
+      "{.arg {arg_name}} must be a character vector{all_msg}",
+      "x" = "You supplied a {.cls {class(combination)}} object"
+    ))
+  }
+
+  if (length(combination) == 0) {
+    default_msg <- if (allow_all) "{.val all}, or {.code NULL}" else "{.code NULL}"
+    cli::cli_abort(c(
+      "{.arg {arg_name}} cannot be empty",
+      "i" = "Provide pathogen name{?s}, use {default_msg} for default"
+    ))
+  }
+
+  # Check if it's exactly "all" (only valid for denominator)
+  if (allow_all && length(combination) == 1 && identical(combination, "all")) {
+    invisible(NULL)
+  }
+
+  # Validate pathogen names
+  invalid_names <- setdiff(combination, pathogen_names)
+  if (length(invalid_names) > 0) {
+    extra_msg <- if (allow_all) list("i" = "Or use {.val all} for all pathogens") else NULL
+    cli::cli_abort(c(
+      "{.arg {arg_name}} contains invalid pathogen name{?s}",
+      "x" = "Invalid: {.val {invalid_names}}",
+      "i" = "Valid pathogen names: {.val {pathogen_names}}",
+      extra_msg
+    ))
+  }
+
+  invisible(NULL)
 }
