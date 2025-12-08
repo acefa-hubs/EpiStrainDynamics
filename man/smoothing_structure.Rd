@@ -4,7 +4,7 @@
 \alias{smoothing_structure}
 \title{Create Smoothing Structure Specification with Priors}
 \usage{
-smoothing_structure(smoothing_type, tau_mean = NULL, tau_sd = NULL)
+smoothing_structure(smoothing_type = "shared", tau_mean = NULL, tau_sd = NULL)
 }
 \arguments{
 \item{smoothing_type}{Character string specifying the smoothing type:
