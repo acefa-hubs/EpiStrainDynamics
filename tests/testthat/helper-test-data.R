@@ -10,12 +10,6 @@ check_package_data <- function() {
   }
 }
 
-# Helper function for validation testing using error expectations
-validate_length_mismatch <- function(constructor_func, base_args, mismatch_args, expected_pattern = "length|same|match") {
-  args <- modifyList(base_args, mismatch_args)
-  expect_error(do.call(constructor_func, args), expected_pattern, ignore.case = TRUE)
-}
-
 # Helper function for testing method constructor structure
 test_method_structure <- function(result, expected_method, expected_params = NULL) {
   # Test basic structure
@@ -39,140 +33,168 @@ test_method_structure <- function(result, expected_method, expected_params = NUL
   }
 }
 
-# Create standard test models using package datasets
+# Create standard test models using package datasets with various parameter combinations
 create_test_models <- function() {
   check_package_data()
 
+  # Base pathogen structures (reused across models)
+  single_struct <- single(
+    data = sarscov2,
+    case_timeseries = 'cases',
+    time = 'date'
+  )
+
+  multiple_struct <- multiple(
+    data = sarscov2,
+    case_timeseries = 'cases',
+    time = 'date',
+    component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+  )
+
+  subtyped_struct <- subtyped(
+    data = influenza,
+    case_timeseries = 'ili',
+    time = 'week',
+    influenzaA_unsubtyped_timeseries = 'inf_A',
+    influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
+    other_pathogen_timeseries = c('inf_B', 'other')
+  )
+
   list(
+    # Basic models with default parameters
     rw_single = construct_model(
       method = random_walk(),
-      pathogen_structure = single(
-        case_timeseries = sarscov2$cases,
-        time = sarscov2$date
-      )
+      pathogen_structure = single_struct
     ),
 
     ps_single = construct_model(
       method = p_spline(),
-      pathogen_structure = single(
-        case_timeseries = sarscov2$cases,
-        time = sarscov2$date
-      )
+      pathogen_structure = single_struct
     ),
 
     rw_multiple = construct_model(
       method = random_walk(),
-      pathogen_structure = multiple(
-        case_timeseries = sarscov2$cases,
-        time = sarscov2$date,
-        component_pathogen_timeseries = list(
-          alpha = sarscov2$alpha,
-          delta = sarscov2$delta,
-          omicron = sarscov2$omicron,
-          other = sarscov2$other
-        )
-      )
+      pathogen_structure = multiple_struct
     ),
 
     ps_multiple = construct_model(
       method = p_spline(),
-      pathogen_structure = multiple(
-        case_timeseries = sarscov2$cases,
-        time = sarscov2$date,
-        component_pathogen_timeseries = list(
-          alpha = sarscov2$alpha,
-          delta = sarscov2$delta,
-          omicron = sarscov2$omicron,
-          other = sarscov2$other
-        )
-      )
+      pathogen_structure = multiple_struct
     ),
 
     rw_subtyped = construct_model(
       method = random_walk(),
-      pathogen_structure = subtyped(
-        case_timeseries = influenza$ili,
-        time = influenza$week,
-        influenzaA_unsubtyped_timeseries = influenza$inf_A,
-        influenzaA_subtyped_timeseries = list(
-          H3N2 = influenza$inf_H3N2,
-          H1N1 = influenza$inf_H1N1
-        ),
-        other_pathogen_timeseries = list(
-          influenzaB = influenza$inf_B,
-          other = influenza$num_spec - influenza$inf_all
-        )
-      )
+      pathogen_structure = subtyped_struct
     ),
 
     ps_subtyped = construct_model(
       method = p_spline(),
-      pathogen_structure = subtyped(
-        case_timeseries = influenza$ili,
-        time = influenza$week,
-        influenzaA_unsubtyped_timeseries = influenza$inf_A,
-        influenzaA_subtyped_timeseries = list(
-          H3N2 = influenza$inf_H3N2,
-          H1N1 = influenza$inf_H1N1
-        ),
-        other_pathogen_timeseries = list(
-          influenzaB = influenza$inf_B,
-          other = influenza$num_spec - influenza$inf_all
-        )
-      )
+      pathogen_structure = subtyped_struct
+    ),
+
+    # Models with custom smoothing structure (shared)
+    rw_multiple_shared_smooth = construct_model(
+      method = random_walk(),
+      pathogen_structure = multiple_struct,
+      smoothing_params = smoothing_structure("shared", tau_mean = 0, tau_sd = 1)
+    ),
+
+    ps_multiple_shared_smooth = construct_model(
+      method = p_spline(),
+      pathogen_structure = multiple_struct,
+      smoothing_params = smoothing_structure("shared", tau_mean = 0, tau_sd = 1)
+    ),
+
+    # Models with independent smoothing
+    rw_multiple_indep_smooth = construct_model(
+      method = random_walk(),
+      pathogen_structure = multiple_struct,
+      smoothing_params = smoothing_structure("independent",
+                                             tau_mean = c(0, 0.1, 0.3, 0),
+                                             tau_sd = rep(1, 4))
+    ),
+
+    ps_subtyped_indep_smooth = construct_model(
+      method = p_spline(),
+      pathogen_structure = subtyped_struct,
+      smoothing_params = smoothing_structure("independent",
+                                             tau_mean = c(0, 0, 0.2, 0.1),
+                                             tau_sd = rep(0.5, 4))
+    ),
+
+    # Models with correlated smoothing
+    rw_multiple_corr_smooth = construct_model(
+      method = random_walk(),
+      pathogen_structure = multiple_struct,
+      smoothing_params = smoothing_structure("correlated")
+    ),
+
+    ps_subtyped_corr_smooth = construct_model(
+      method = p_spline(),
+      pathogen_structure = subtyped_struct,
+      smoothing_params = smoothing_structure("correlated")
+    ),
+
+    # Models with custom dispersion parameters
+    rw_multiple_custom_disp = construct_model(
+      method = random_walk(),
+      pathogen_structure = multiple_struct,
+      dispersion_params = dispersion_structure(phi_mean = 2.0, phi_sd = 0.5)
+    ),
+
+    ps_subtyped_custom_disp = construct_model(
+      method = p_spline(),
+      pathogen_structure = subtyped_struct,
+      dispersion_params = dispersion_structure(phi_mean = 1.5, phi_sd = 0.75)
+    ),
+
+    # Models with pathogen noise enabled
+    rw_multiple_noise = construct_model(
+      method = random_walk(),
+      pathogen_structure = multiple_struct,
+      pathogen_noise = TRUE
+    ),
+
+    ps_subtyped_noise = construct_model(
+      method = p_spline(),
+      pathogen_structure = subtyped_struct,
+      pathogen_noise = TRUE
+    ),
+
+    # Models with day-of-week effects
+    rw_single_dow = construct_model(
+      method = random_walk(),
+      pathogen_structure = single_struct,
+      dow_effect = TRUE
+    ),
+
+    ps_multiple_dow = construct_model(
+      method = p_spline(),
+      pathogen_structure = multiple_struct,
+      dow_effect = TRUE
+    ),
+
+    # Combined features: custom smoothing + dispersion + noise + dow
+    rw_multiple_full = construct_model(
+      method = random_walk(),
+      pathogen_structure = multiple_struct,
+      smoothing_params = smoothing_structure("independent",
+                                             tau_mean = rep(0, 4),
+                                             tau_sd = rep(1, 4)),
+      dispersion_params = dispersion_structure(phi_mean = 2.0, phi_sd = 0.5),
+      pathogen_noise = TRUE,
+      dow_effect = TRUE
+    ),
+
+    ps_subtyped_full = construct_model(
+      method = p_spline(),
+      pathogen_structure = subtyped_struct,
+      smoothing_params = smoothing_structure("correlated"),
+      dispersion_params = dispersion_structure(phi_mean = 1.5, phi_sd = 0.3),
+      pathogen_noise = TRUE,
+      dow_effect = TRUE
     )
   )
-}
-
-# Mock setup functions for Stan
-setup_stan_mocks <- function() {
-  # Create mock objects in the test environment
-  test_env$mock_stanmodels <- list(
-    rw_single = "mock_model",
-    ps_single = "mock_model",
-    rw_multiple = "mock_model",
-    ps_multiple = "mock_model",
-    rw_subtyped = "mock_model",
-    ps_subtyped = "mock_model"
-  )
-
-  test_env$mock_stan_fit <- structure(list(), class = "stanfit")
-
-  test_env$mock_rstan_sampling <- function(object, data, iter, warmup, chains) {
-    return(test_env$mock_stan_fit)
-  }
-
-  # Store originals in test environment
-  test_env$original_sampling <- NULL
-  if (exists("sampling", envir = getNamespace("rstan"))) {
-    test_env$original_sampling <- get("sampling", envir = getNamespace("rstan"))
-  }
-
-  test_env$original_stanmodels <- NULL
-  if (exists("stanmodels", envir = .GlobalEnv)) {
-    test_env$original_stanmodels <- get("stanmodels", envir = .GlobalEnv)
-  }
-}
-
-setup_mocks <- function() {
-  setup_stan_mocks()
-
-  # Use the mock functions from test environment
-  assignInNamespace("sampling", test_env$mock_rstan_sampling, ns = "rstan")
-  assign("stanmodels", test_env$mock_stanmodels, envir = .GlobalEnv)
-}
-
-teardown_mocks <- function() {
-  if (!is.null(test_env$original_sampling)) {
-    assignInNamespace("sampling", test_env$original_sampling, ns = "rstan")
-  }
-  if (!is.null(test_env$original_stanmodels)) {
-    assign("stanmodels", test_env$original_stanmodels, envir = .GlobalEnv)
-  } else {
-    if (exists("stanmodels", envir = .GlobalEnv)) {
-      rm("stanmodels", envir = .GlobalEnv)
-    }
-  }
 }
 
 # Helper function to get expected data lengths from package datasets
@@ -192,7 +214,6 @@ get_expected_data_lengths <- function() {
 get_expected_pathogen_names <- function() {
   list(
     sarscov2_multiple = c("alpha", "delta", "omicron", "other"),
-    influenza_subtyped = c("H3N2", "H1N1"),
-    influenza_other = c("influenzaB", "other")
+    influenza_subtyped = c("inf_H3N2", "inf_H1N1", "inf_B", "other")
   )
 }
