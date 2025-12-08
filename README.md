@@ -58,10 +58,11 @@ Here we provide a short overview.
 
 ### Step 1: Construct model
 
-Modelling specifications are provided using the `construct_model`
+Modelling specifications are provided using the `construct_model()`
 function. The correct stan model is then applied based on the
-specifications provided. `construct_model()` takes three arguments:
-`method`, `pathogen_structure`, and `dow_effect`.
+specifications provided. `construct_model()` takes these arguments:
+`method`, `pathogen_structure`, `smoothing_params`, `dispersion_params`,
+`pathogen_noise`, and `dow_effect`.
 
 #### `method`
 
@@ -76,86 +77,116 @@ days for each knot (must also be a positive whole number).
 
 So we may specify:
 
-    method = random_walk(), 
-
+    method = random_walk(),
     # OR
-    method = p_spline(spline_degree = 3, days_per_knot = 2),  # example options
+    method = p_spline(spline_degree = 3, days_per_knot = 2)
 
-#### `pathogen_structure`
+## Pathogen structure
 
 There are three main types of pathogen structure available to model:
-`single()`, `multiple()`, and `subtyped()`.
+`single()`, `multiple()`, and `subtyped()`. These functions require the
+name of the dataset itself and the column names for different data
+elements.
 
 The `single()` pathogen structure is the simplest and models a single
-pathogen timeseries. A vector of the case timeseries is provided to the
-argument `case_timeseries`, a vector of date or time labels is provided
-to `time`, and optionally a pathogen name can be assigned with
-`pathogen_name`. The `multiple()` and `subtyped()` pathogen structures
-both also have the `case_timeseries` and `time` arguments, as in the
-`single()` structure. In addition to these two arguments, instead of a
-single argument for `pathogen_name`, `multiple()` and `subtyped()` have
-one or more arguments that allow the user to define the names and data
-for the different components or subtypes to be modelled. For
-`multiple()`, these are specified as a named list with the argument
-`component_pathogen_timeseries`. The names in this list will be using in
-subsequent plotting. For `subtyped()`, which allows the user to
-incorporate testing data for influenza A subtypes, a vector of total
-unsubtyped influenza A cases is specified with
-`influenzaA_unsubtyped_timeseries`, a named list of the subtyped
-influenza A timeseries is provided to `influenzaA_subtyped_timeseries`,
-and further pathogens are provided in a named list to
-`other_pathogen_timeseries`.
+pathogen timeseries. The user must specify the dataset name, the name of
+the column with total case data, and the name of the column of time
+data. The `multiple()` pathogen structure allows modelling of different
+component pathogens. In addition to specifying the dataset, total case
+data, and time, the additional pathogens are specified as a vector of
+column names. The `subtyped()` pathogen structure enables additional
+complexity, specifically for an influenza modelling scenario, by
+allowing the user to incorporate testing data for influenza A subtypes.
+The user specifies columns containing the unsubtyped influenza A case
+count as well as the subtyped influenza A cases, and any additional
+pathogens to be modelled. See the vignette for further detail.
 
-In addition to specifying the data and pathogen names, `multiple()` and
-`subtyped()` both allow the user to modify the correlation structures in
-the parameters describing the smoothness (with argument
-`smoothing_structure`) and account for additional sources of noise in
-the observation process (`observation_noise`). `smoothing_structure` is
-either `'shared'` (all pathogens have the same smoothness),
-`'independent'` (each pathogen has completely independent smoothing
-structure), or `'correlated'` (smoothing structure is correlated among
-pathogens). `observation_noise` is either `'observation_noise_only'`
-(only includes observation noise - the same between pathogens) or
-`'pathogen_specific_noise'` (includes noise in individual pathogens as
-well).
+## Smoothing parameters
 
-#### `dow_effect`
+The argument `smoothing_params` allows users to modify the correlation
+structures in the parameters describing smoothness and to set related
+priors. These are specified with the function `smoothing_structure()`,
+which requires the user to specify a `smoothing_type` that is either
+`shared` (all pathogens have the same smoothing parameter),
+`independent` (each pathogen has a completely independent smoothing
+parameter), or `correlated` (smoothing structure is correlated among
+pathogens). For smoothign types `shared` and `independent` the priors
+for the mean and standard deviation on tau can also be specified. The
+number of values specified for each parameter depend on how many
+pathogens are provided. As below:
+
+    smoothing_structure(
+      smoothing_type = 'shared',
+      tau_mean = 0, tau_sd = 1
+    )
+    # for a model with 4 parameters:
+    smoothing_structure(
+      smoothing_type = 'independent',
+      tau_mean = c(0, 0, 0, 0),
+      tau_sd = c(1, 1, 1, 1)
+    )
+
+## Dispersion parameters
+
+The argument `dispersion_params` optionally allows users to set a prior
+for the overdispersion parameter of the negative binomial likelihood for
+the case timeseries. If specified, each parameter only ever needs a
+single value. It is specified using `dispersion_structure()` as below:
+
+    dispersion_structure(
+      phi_mean = 0, phi_sd = 1
+    )
+
+## Pathogen noise
+
+A logical (`TRUE` or `FALSE`) value indicating whether to include noise
+between individual pathogens in addition to the observation noise.
+
+## Day of week effect
 
 Day of week effect is specified as a logical (`TRUE` or `FALSE`) to the
-`dow_effect` argument. In plotting the day of week effect can be
+`dow_effect` argument. In plotting, the day of week effect can be
 selectively removed.
 
+## Example
+
 Altogether, an example constructed model for a random walk model with
-multiple pathogens might look as follows, illustrated using data
-provided with the package `sarscov2`:
+multiple pathogens might look as follows, illustrated using data that
+has been provided with the package - `sarscov2`:
 
     mod <- construct_model(
-      method = random_walk(),                   # specify `random_walk` method
+      method = random_walk(),                   # random_walk method
       
-      pathogen_structure = multiple(            # specify `multiple` pathogen structure
-       case_timeseries = sarscov2$cases,        # timeseries of case data
-       time = sarscov2$date,                    # date or time variable labels
+      pathogen_structure = multiple(            # multiple pathogen structure
+       data = sarscov2,
+       case_timeseries = 'cases',               # timeseries of case data
+       time = 'date',                           # date or time variable labels
+       component_pathogen_timeseries = c(       # component pathogens
+         'alpha', 'delta', 'omicron', 'other'
+       )
+      ),
        
-       component_pathogen_timeseries = list(    # named list of component pathogens
-         alpha = sarscov2$alpha,
-         delta = sarscov2$delta,
-         omicron = sarscov2$omicron,
-         other = sarscov2$other
-       ),
-       
-       smoothing_structure = 'independent',             # correlation structure
-       observation_noise = 'observation_noise_only'     # observation noise
-     ),
-      dow_effect = TRUE                         # day of week effect
+      smoothing_params = smoothing_structure(   # independent smoothing structure 
+        'independent',                          # with four values for each prior
+        tau_mean = c(0, 0.1, 0.3, 0),           # parameter - one for each pathogen
+        tau_sd = rep(1, times = 4)
+      ),
+      dispersion_params = dispersion_structure(phi_mean = 0, phi_sd = 1),
+      pathogen_noise = FALSE,
+      dow_effect = TRUE
     )
 
 ### Step 2: fit model
 
 The model estimates the expected value of the time series (eg, a
 smoothed trend in the daily number of cases accounting for noise) for
-each individual pathogen. Model parameterisation decisions specified
-when constructing the model in step 1 mean the correct stan model will
-be applied at this stage by simply calling:
+each individual pathogen. In this step additional fitting parameters
+related to stan models can be modified such as `n_chain`, `n_iter`,
+`n_warmup`, `thin`, `adapt_delta`, `multi_cores`, `verbose`, and `seed`,
+which are described in further detail in the documentation. Model
+parameterisation decisions specified when constructing the model in step
+1 mean the correct stan model will be applied at this stage by simply
+calling:
 
     fit <- fit_model(mod)
 
@@ -189,7 +220,7 @@ Inferring temporal trends of multiple pathogens, variants, subtypes or
 serotypes from routine surveillance data, American Journal of
 Epidemiology, 2025;, kwaf119, <https://doi.org/10.1093/aje/kwaf119>
 
-For code corresponding to this paper, see branch
+For code corresponding to the AJE paper, see branch
 [`paper_analysis`](https://github.com/acefa-hubs/EpiStrainDynamics/tree/paper_analysis).
 
 ## Contribution

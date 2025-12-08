@@ -1,8 +1,8 @@
 ---
-title: "Using-EpiStainDynamics"
+title: "Using EpiStrainDynamics"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Using-EpiStrainDynamics}
+  %\VignetteIndexEntry{Using EpiStrainDynamics}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -23,6 +23,7 @@ options(mc.cores = 1)
 #' @srrstats {BS1.1} Descriptions in text and with code examples of how to
 #'   enter both simple and more complex data are below in 'Step 1: Construct
 #'   model'.
+#' @srrstats {BS1.4, BS4.3, BS4.5} Examples of convergence checkers are described and troubleshooting tips offered.
 #' @srrstats {BS6.1} All calculated epidemiological metrics can be plotted with
 #'   a default plot function. The stan fit object can be plotted using helper
 #'   packages as described below.
@@ -34,7 +35,7 @@ EpiStrainDynamics extends an existing statistical modelling framework capable of
 
 # Step 1: Construct model
 
-These modelling specifications are specified using the `construct_model` function. The correct stan model is then applied based on the specifications provided. `construct_model()` takes three arguments: `method`, `pathogen_structure`, and `dow_effect`. We will break these down one by one.
+These modelling specifications are specified using the `construct_model` function. The correct stan model is then applied based on the specifications provided. `construct_model()` requires specification of the `method` and `pathogen_structure`, and allows the user to additionally specify four arguments related to model design: `smoothing_params`, `dispersion_params`, `pathogen_noise`, and `dow_effect`. We will break these down one by one.
 
 ## Method
 
@@ -42,111 +43,118 @@ EpiStrainDynamics has pre-compiled stan models that fit either with bayesian pen
 
 So we may specify:
 ```
-mod <- construct_model(
-  method = random_walk(),
-  ...
-)
+method = random_walk(),
+
 # OR
 
-mod <- construct_model(
-  method = p_spline(spline_degree = 3, days_per_knot = 2),  # example options
-  ...
-)
+method = p_spline(spline_degree = 3,  # example value for spline degree
+                  days_per_knot = 2)  # example value for days per knot
 ```
 
 ## Pathogen structure
 
 There are three main types of pathogen structure available to model: `single()`, `multiple()`, and `subtyped()`.
+These functions require the name of the dataset itself and the column names for different data elements.
 
-The `single()` pathogen structure is the simplest and models a single pathogen timeseries. A vector is the case timeseries is provided to the argument `case_timeseries`, a vector of date or time labels is provided to `time`, and optionally a pathogen name can be assigned with `pathogen_name`. It can be specified as follows, illustrated using data provided with the package `sarscov2`:
+The `single()` pathogen structure is the simplest and models a single pathogen timeseries. The name of the dataframe is passed to argument `data`, the name of the column with total case data is passed to `case_timeseries`, and the name of the column of time data is passed to `time`. It can be specified as follows, illustrated using data provided with the package `sarscov2`:
 
 ```
-single(
-  case_timeseries = sarscov2$cases,           # timeseries of case data
-  time = sarscov2$date,                       # date or time variable labels
-  pathogen_name = 'SARS-COV-2'                # optional name of pathogen
+pathogen_structure = single(
+  data = sarscov2,                    # dataframe
+  case_timeseries = 'cases',          # timeseries of case data
+  time = 'date'                       # date or time variable
 )
 ```
 
-The `multiple()` and `subtyped()` pathogen structures both also have the `case_timeseries` and `time` arguments, as in the `single()` structure.
+The `multiple()` pathogen structure allows modelling of different component pathogens. In addition to specifying `data`, `case_timeseries`, and `time`, these additional pathogens are specified as a vector of column names with the argument `component_pathogen_timeseries`. Example pathogen structure specification for multiple pathogens model using the `sarscov2` dataset:
 
-In addition to these two arguments, instead of a single argument for `pathogen_name`, `multiple()` and `subtyped()` have one or more arguments that allow the user to define the names and data for the different components or subtypes to be modelled. For `multiple()`, these are specified as a named list with the argument `component_pathogen_timeseries`. The names in this list will be using in subsequent plotting. For `subtyped()`, which allows the user to incorporate testing data for influenza A subtypes, a vector of total unsubtyped influenza A cases is specified with `influenzaA_unsubtyped_timeseries`, a named list of the subtyped influenza A timeseries is provided to `influenzaA_subtyped_timeseries`, and further pathogens are provided in a named list to `other_pathogen_timeseries`.
-
-In addition to specifying the data and pathogen names, `multiple()` and `subtyped()` both allow the user to modify the correlation structures in the parameters describing the smoothness (with argument `smoothing_structure`) and account for additional sources of noise in the observation process (`observation_noise`). `smoothing_structure` is either `'shared'` (all pathogens have the same smoothness), `'independent'` (each pathogen has completely independent smoothing structure), or `'correlated'` (smoothing structure is correlated among pathogens). `observation_noise` is either `'observation_noise_only'` (only includes observation noise - the same between pathogens) or `'pathogen_specific_noise'` (includes noise in individual pathogens as well).
-
-Example pathogen structure specification for multiple pathogens model:
 ```
-multiple(
-   case_timeseries = sarscov2$cases,        # timeseries of case data
-   time = sarscov2$date,                    # date or time variable labels
+pathogen_structure = multiple(
+   data = sarscov2,                         # dataframe
+   case_timeseries = 'cases',               # timeseries of case data
+   time = 'date',                           # date or time variable labels
 
-   component_pathogen_timeseries = list(    # named list of component pathogens
-     alpha = sarscov2$alpha,
-     delta = sarscov2$delta,
-     omicron = sarscov2$omicron,
-     other = sarscov2$other
-   ),
-
-   smoothing_structure = 'independent',             # correlation structures
-   observation_noise = 'observation_noise_only'     # observation noise
+   component_pathogen_timeseries = c(       # vector of column names of
+     'alpha', 'delta', 'omicron', 'other'   #   component pathogens
+   )
  )
 ```
 
-Example pathogen structure specification for subtyped model:
+The `subtyped()` pathogen structure enables additional complexity specifically for an influenza modelling scenario by allowing the user to incorporate testing data for influenza A subtypes. The unsubtyped column is specified with `influenzaA_unsubtyped_timeseries`, and the subtyped data are specified with vector of column names of provided to `influenzaA_subtyped_timeseries`. Additional pathogens are provided as a vector of column names to `other_pathogen_timeseries`. Example pathogen structure specification for subtyped model using the `influenza` dataset included in the package:
+
 ```
-subtyped(
-   case_timeseries = influenza$ili,         # timeseries of case data
-   time = influenza$week,                   # date or time variable labels
+pathogen_structure = subtyped(
+   data = influenza,                            # dataframe
+   case_timeseries = ili,                       # timeseries of case data
+   time = week,                                 # date or time variable labels
 
-   influenzaA_unsubtyped_timeseries = influenza$inf_A,  # unsubtyped influenzaA
-   influenzaA_subtyped_timeseries = list(       # named list of subtyped infA
-     H3N2 = influenza$inf_H3N2,
-     H1N1 = influenza$inf_H1N1
+   influenzaA_unsubtyped_timeseries = 'inf_A',  # unsubtyped influenzaA
+   influenzaA_subtyped_timeseries = c(          # subtyped influenzaA
+     'inf_H3N2', 'inf_H1N1'
    ),
-   other_pathogen_timeseries = list(            # named list of other pathogens
-     influenzaB = influenza$inf_B,
-     other = influenza$num_spec - influenza$inf_all
-   ),
-
-   smoothing_structure = 'correlated',            # correlation structures
-   observation_noise = 'pathogen_specific_noise'  # observation noise
+   other_pathogen_timeseries = c(               # other pathogens
+     'inf_B', 'other'
+   )
  )
 ```
+
+## Smoothing parameters
+
+The argument `smoothing_params` allows users to modify the correlation structures in the parameters describing smoothness and set related priors. These are specified with the function `smoothing_structure()` that requires the user to specify a `smoothing_type` that is either `shared` (all pathogens have the same smoothness), `independent` (each pathogen has completely independent smoothing structure), or `correlated` (smoothing structure is correlated among pathogens). For `shared` or `independent` smoothing types parameters for the mean and standard deviation of the prior on tau can also be specified, as below:
+
+```
+smoothing_params = smoothing_structure(
+  smoothing_type = 'independent',
+  tau_mean = c(0, 0.1, 0.3, 0),
+  tau_sd = rep(1, times = 4)
+)
+```
+
+## Dispersion parameters
+
+The argument `dispersion_params` allows users to set a prior for the overdispersion parameter of the negative binomial likelihood for the case timeseries. It is specified using `dispersion_structure()` as below:
+
+```
+dispersion_params = dispersion_structure(
+  phi_mean = 0, phi_sd = 1
+)
+```
+
+## Pathogen noise
+
+Whether to include noise between individual pathogens as well as the observation noise is specified as a logical (`TRUE` or `FALSE`) to the argument `pathogen_noise`.
 
 ## Day of week effect
 
 Day of week effect is specified as a logical (`TRUE` or `FALSE`) to the `dow_effect` argument. In plotting the day of week effect can be selectively removed.
 
-```
+## Worked example
+
+A full worked example using a subtyped structure:
+
+```{r}
 mod <- construct_model(
-  method = ...,
-  pathogen_structure = ...,
-  dow_effect = TRUE
+
+  method = p_spline(),
+
+  pathogen_structure = subtyped(
+   data = influenza,
+   case_timeseries = 'ili',
+   time = 'week',
+   influenzaA_unsubtyped_timeseries = 'inf_A',
+   influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
+   other_pathogen_timeseries = c('inf_B', 'other')
+  ),
+
+   smoothing_params = smoothing_structure(
+      'independent', tau_mean = c(0, 0.1, 0.3, 0), tau_sd = rep(1, times = 4)),
+   dispersion_params = dispersion_structure(phi_mean = 0, phi_sd = 1),
+   pathogen_noise = FALSE,
+   dow_effect = TRUE
 )
 ```
 
-```{r, echo=FALSE}
-pathogen_structure = subtyped(
-    case_timeseries = influenza$ili,
-    time = influenza$week,
-    influenzaA_unsubtyped_timeseries = influenza$inf_A,
-    influenzaA_subtyped_timeseries = list(
-      H3N2 = influenza$inf_H3N2,
-      H1N1 = influenza$inf_H1N1
-    ),
-    other_pathogen_timeseries = list(
-      influenzaB = influenza$inf_B,
-      other = influenza$num_spec - influenza$inf_all
-    ),
-    smoothing_structure = 'independent',
-    observation_noise = 'observation_noise_only'
-  )
-mod <- construct_model(
-  method = p_spline(),
-  pathogen_structure = pathogen_structure,
-  dow_effect = TRUE
-)
-```
+## Output
 
 The constructed model object is a named list containing input data, accessed with `$data`, parameter values (such as smoothing structure, observation noise, and penalised spline parameters, if appropriate), accessed with `model_params`, names of provided pathogens, accessed with `pathogen_names`, and record of whether day of week effect has been selected, accessed with `dow_effect`.
 
@@ -157,25 +165,31 @@ The model estimates the expected value of the time series (eg, a smoothed trend 
 ```{r, cache = TRUE, results = 'hide'}
 fit <- fit_model(
   mod,
-  iter = 2000,
-  warmup = 1000,
-  chains = 3
+  n_iter = 2000,
+  n_warmup = 1000
 )
 ```
 
 The output of this function is a list with the stan fit object, accessed with `$fit`, and the elements of the constructed model object from the previous step, accessed with `$constructed_model`.
 
-The stan fit object can be interrogated with any package that works with stan outputs. One could visualise posteriors, for example with the package `bayesplot`:
+## Step 3: Check fit
+
+A summary of model convergence diagnostics can be viewed using:
 
 ```{r}
-library(bayesplot)
-mcmc_area(as.matrix(fit$fit), pars = 'tau', prob = 0.8)
+diagnose_model(fit)
+```
+
+Beyond this summary, the stan fit object can be interrogated with any package that works with stan outputs. For example, one could visualise posteriors with the package `bayesplot`:
+
+```{r}
+bayesplot::mcmc_areas(as.matrix(fit$fit), pars = 'tau[1]', prob = 0.8)
 ```
 
 The `bayesplot` package can also be used to evaluate convergence:
 
 ```{r}
-mcmc_trace(rstan::extract(fit$fit, permuted = FALSE), pars = c('a[1]'))
+bayesplot::mcmc_trace(rstan::extract(fit$fit, permuted = FALSE), pars = c('a[1,1]'))
 ```
 
 Or else the application `shinystan` is a great tool to visualise the fit and diagnose issues:
@@ -184,6 +198,12 @@ Or else the application `shinystan` is a great tool to visualise the fit and dia
 library(shinystan)
 launch_shinystan(fit$fit)
 ```
+
+Model not converging? You can find more information about divergent transitions [here](https://mc-stan.org/docs/2_19/reference-manual/divergent-transitions). Some quick tips:
+
+* Increase the `adapt_delta` parameter in fit_model(), which governs how big the steps are in the MCMC.
+* Try reducing the complexity of the model. For example, by using `pathogen_noise = FALSE` or a shared smoothing structure.
+* Increase the number of warmup samples with the n_warmup parameter.
 
 # Step 3: Calculate and explore epidemiological quantities
 
@@ -203,7 +223,7 @@ plot(rt)
 ```
 
 Calculate incidence with or without a day of week effect with `incidence()`:
-```{r incidence}
+```{r incidence, fig.width=10,fig.height=6}
 inc_dow <- incidence(fit, dow = TRUE)
 plot(inc_dow)
 ```
@@ -212,8 +232,8 @@ Calculate proportions of different combinations of cases attributable to differe
 ```
 prop <- proportion(
   fit,
-  numerator_combination = c('alpha', 'delta', 'omicron'),
-  denominator_combination = c('alpha', 'delta', 'omicron', 'other')
+  numerator_combination = c('inf_H3N2', 'inf_H1N1'),
+  denominator_combination = c('inf_H3N2', 'inf_H1N1', 'inf_B', 'other')
 )
 ```
 
