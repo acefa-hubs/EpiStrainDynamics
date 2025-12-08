@@ -3,6 +3,13 @@ template:
   bootstrap: 5
   light-switch: true
   bootswatch: flatly
+articles:
+  - title: Statistical Properties
+    navbar: ~
+    contents:
+      - Using-EpiStrainDynamics
+      - articles/algorithmic-scaling
+      - articles/parameter-recovery
 reference:
   - title: Data
     desc: Datasets incorporated in the package for demonstration.
@@ -12,12 +19,14 @@ reference:
   - title: Construct model functions
     desc: Functions for constructing model object.
     contents:
-      - construct_model
+      - p_spline
+      - random_walk
       - single
       - multiple
       - subtyped
-      - p_spline
-      - random_walk
+      - smoothing_structure
+      - dispersion_structure
+      - construct_model
   - title: Fit stan model
     contents:
       - fit_model
@@ -25,7 +34,6 @@ reference:
   - title: Post-modelling metrics calculations
     desc: Functions to calculate and plot metrics from fitted models.
     contents:
-      - extract_smoothing_parameters
       - Rt
       - growth_rate
       - incidence
