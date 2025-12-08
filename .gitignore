@@ -6,4 +6,7 @@
 *.Rproj
 inst/doc
 docs
-vignettes/ExampleAnalysis-rw_subtyped_cache/
+vignettes/**/*_cache/
+vignettes/**/*_files/
+vignettes/cache/
+vignettes/figure/
