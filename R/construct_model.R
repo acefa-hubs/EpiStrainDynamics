@@ -64,7 +64,8 @@ construct_model <- function(method,
     pathogen_structure, 'EpiStrainDynamics.pathogen_structure'
   )
   smoothing_params <- validate_smoothing_structure(
-    smoothing_params, pathogen_structure$pathogen_names)
+    smoothing_params, pathogen_structure$pathogen_names,
+    pathogen_structure$pathogen_structure)
   validate_class_inherits(dispersion_params, "EpiStrainDynamics.dispersion")
 
   if (!is.logical(pathogen_noise) || length(pathogen_noise) != 1) {
@@ -95,28 +96,21 @@ construct_model <- function(method,
   pathogen_names <- pathogen_structure$pathogen_names
   component_pathogens <- pathogen_structure$data$component_pathogens %||% NULL
   influenzaA_subtyped <- pathogen_structure$data$influenzaA_subtyped %||% NULL
-  cov_structure <- get_cov_structure(smoothing_params$smoothing_type) %||% NULL
-  noise_structure <- as.numeric(pathogen_noise) %||% NULL
+  cov_structure <- get_cov_structure(smoothing_params$smoothing_type)
+  noise_structure <- as.numeric(pathogen_noise)
   spline_degree <- method$model_params$spline_degree %||% NULL
-
-  # priors
-  tau_priors_provided <- ifelse(is.null(smoothing_params$tau_priors), 1, 2)
-  phi_priors_provided <- ifelse(is.null(dispersion_params$phi_priors), 1, 2)
-  tau_mean <- smoothing_params$tau_priors$mean %||% NULL
-  tau_sd <- smoothing_params$tau_priors$sd %||% NULL
-  phi_mean <- dispersion_params$mean %||% NULL
-  phi_sd <- dispersion_params$sd %||% NULL
 
   standata <- list(num_data = length(cases),
                    Y = cases,
                    week_effect = week_effect,
                    DOW = DOW,
-                   tau_priors_provided = tau_priors_provided,
-                   tau_mean = tau_mean,
-                   tau_sd = tau_sd,
-                   phi_priors_provided = phi_priors_provided,
-                   phi_mean = phi_mean,
-                   phi_sd = phi_sd)
+                   tau_priors_provided = smoothing_params$priors_provided,
+                   tau_mean = smoothing_params$tau_priors$mean,
+                   tau_sd = smoothing_params$tau_priors$sd,
+                   phi_priors_provided = dispersion_params$priors_provided,
+                   phi_mean = dispersion_params$mean,
+                   phi_sd = dispersion_params$sd
+  )
 
   if (pathogen_structure$pathogen_structure == 'subtyped') {
     standata <- c(standata,
@@ -156,10 +150,6 @@ construct_model <- function(method,
     list(time_seq = time_seq),
     pathogen_structure$data
   )
-
-  # return priors
-  # tau_priors = smoothing_params$tau_priors,
-  # phi_priors = dispersion_params$phi_priors,
 
   # Construct final model input list
   model_input <- list(
@@ -290,4 +280,65 @@ get_cov_structure <- function(smoothing_structure = c('shared',
   )
 
   return(cov_structure)
+}
+
+#' Prepare prior values for Stan data
+#'
+#' Stan requires all data variables to exist with correct dimensions even if not used.
+#' This function provides appropriately-sized dummy values when priors aren't specified.
+#'
+#' @param prior_obj Prior object from smoothing_structure() or dispersion_structure()
+#' @param prior_type Either "tau" or "phi"
+#' @param smoothing_type For tau priors: "shared", "independent", or "correlated"
+#' @param num_path For independent tau priors: number of pathogens
+#' @returns List with mean, sd, and priors_provided flag
+#' @keywords internal
+#' @noRd
+prepare_stan_priors <- function(prior_obj, prior_type = c("tau", "phi"),
+                                smoothing_type = NULL, num_path = NULL) {
+  prior_type <- match.arg(prior_type)
+
+  # Check if priors were provided
+  priors_provided <- ifelse(is_empty_prior(prior_obj), 1, 2)
+
+  if (prior_type == "phi") {
+    # Phi priors are always scalar
+    if (priors_provided == 1) {
+      mean_val <- 0.0
+      sd_val <- 1.0
+    } else {
+      mean_val <- prior_obj$mean
+      sd_val <- prior_obj$sd
+    }
+
+  } else if (prior_type == "tau") {
+    # Tau priors depend on smoothing structure
+    if (priors_provided == 1) {
+      # Provide dummy values with correct dimensions
+      cov_structure_val <- get_cov_structure(smoothing_type)
+
+      if (cov_structure_val == 0) {
+        # Shared: need 1 element
+        mean_val <- 0.0
+        sd_val <- 1.0
+      } else if (cov_structure_val == 1) {
+        # Independent: need num_path elements
+        mean_val <- rep(0.0, num_path)
+        sd_val <- rep(1.0, num_path)
+      } else {
+        # Correlated: tau not used
+        mean_val <- NULL
+        sd_val <- NULL
+      }
+    } else {
+      mean_val <- prior_obj$mean
+      sd_val <- prior_obj$sd
+    }
+  }
+
+  list(
+    mean = mean_val,
+    sd = sd_val,
+    priors_provided = priors_provided
+  )
 }
