@@ -8,7 +8,9 @@
 #'
 #' @return list of diagnostic information
 #' @export
-diagnose_model <- function(fitted_model, rhat_threshold = 1.1, eff_sample_threshold = 100) {
+diagnose_model <- function(fitted_model,
+                           rhat_threshold = 1.1,
+                           eff_sample_threshold = 100) {
 
   if (!inherits(fitted_model, "EpiStrainDynamics.fit")) {
     stop("fitted_model must be an EpiStrainDynamics.fit object")
@@ -51,8 +53,3 @@ diagnose_model <- function(fitted_model, rhat_threshold = 1.1, eff_sample_thresh
   return(invisible(diagnostics))
 }
 
-# Example usage:
-# diagnostics <- diagnose_model(fitted_model)
-# if (!diagnostics$convergence) {
-#   warning("Model has convergence issues")
-# }
