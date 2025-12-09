@@ -252,6 +252,8 @@ check_column_numeric <- function(data, col_name, arg_name) {
 #' @param columns character vector of column names to check for missing data
 #' @param context character string describing the context (e.g., "case_timeseries")
 #'
+#' @importFrom utils head
+#'
 #' @noRd
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #' @srrstats {G1.4a} internal function specified with `@noRd`
@@ -269,7 +271,7 @@ check_missing_data <- function(data, columns, context) {
       if (na_count > 5) {
         indices_msg <- paste0(
           "rows ",
-          paste(head(na_indices, 5), collapse = ", "),
+          paste(utils::head(na_indices, 5), collapse = ", "),
           ", ... (", na_count, " total)"
         )
       } else {
@@ -441,7 +443,7 @@ validate_pathogen_combination <- function(combination, pathogen_names, arg_name)
 
   # Check if it's exactly "all" (only valid for denominator)
   if (allow_all && length(combination) == 1 && identical(combination, "all")) {
-    invisible(NULL)
+    return()
   }
 
   # Validate pathogen names
