@@ -33,7 +33,6 @@ This document demonstrates parameter recovery properties of `EpiStrainDynamics` 
 library(EpiStrainDynamics)
 library(ggplot2)
 library(dplyr)
-library(tidyr)
 ```
 
 ## Overview
@@ -350,15 +349,16 @@ rw_props <- multiple_fits[[1]]$proportions
 rw_prop1 <- rw_props$measure$y[rw_props$measure$pathogen == "pathogen1"]
 ps_prop1 <- props_ps$measure$y[props_ps$measure$pathogen == "pathogen1"]
 
+# Create separate vectors for each method
 comparison_data <- data.frame(
-  date = dates,
-  true = true_proportions[, 1],
-  random_walk = rw_prop1,
-  p_spline = ps_prop1
-) %>%
-  pivot_longer(cols = c(true, random_walk, p_spline),
-               names_to = "method",
-               values_to = "proportion")
+  date = rep(dates, 3),
+  method = rep(c("true", "random_walk", "p_spline"), each = length(dates)),
+  proportion = c(
+    true_proportions[, 1],
+    rw_prop1,
+    ps_prop1
+  )
+)
 
 ggplot(comparison_data, aes(x = date, y = proportion, color = method, linetype = method)) +
   geom_line(linewidth = 1) +
