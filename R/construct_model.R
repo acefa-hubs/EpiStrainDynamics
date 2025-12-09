@@ -270,75 +270,16 @@ get_cov_structure <- function(smoothing_structure = c('shared',
                                                       'correlated')) {
 
   # Convert to numeric codes
-  cov_structure <- switch(smoothing_structure,
-                          'shared' = 0,
-                          'independent' = 1,
-                          'correlated' = 2,                            {
-                            cli::cli_abort("Invalid option provided: '{smoothing_structure}'.
-                                             Please choose 'shared', 'independent', or 'correlated'.")
-                          }
+  cov_structure <- switch(
+    smoothing_structure,
+    'shared' = 0,
+    'independent' = 1,
+    'correlated' = 2,
+    {
+      cli::cli_abort("Invalid option provided: '{smoothing_structure}'.
+                      Please choose 'shared', 'independent', or 'correlated'.")
+    }
   )
 
   return(cov_structure)
-}
-
-#' Prepare prior values for Stan data
-#'
-#' Stan requires all data variables to exist with correct dimensions even if not used.
-#' This function provides appropriately-sized dummy values when priors aren't specified.
-#'
-#' @param prior_obj Prior object from smoothing_structure() or dispersion_structure()
-#' @param prior_type Either "tau" or "phi"
-#' @param smoothing_type For tau priors: "shared", "independent", or "correlated"
-#' @param num_path For independent tau priors: number of pathogens
-#' @returns List with mean, sd, and priors_provided flag
-#' @keywords internal
-#' @noRd
-prepare_stan_priors <- function(prior_obj, prior_type = c("tau", "phi"),
-                                smoothing_type = NULL, num_path = NULL) {
-  prior_type <- match.arg(prior_type)
-
-  # Check if priors were provided
-  priors_provided <- ifelse(is_empty_prior(prior_obj), 1, 2)
-
-  if (prior_type == "phi") {
-    # Phi priors are always scalar
-    if (priors_provided == 1) {
-      mean_val <- 0.0
-      sd_val <- 1.0
-    } else {
-      mean_val <- prior_obj$mean
-      sd_val <- prior_obj$sd
-    }
-
-  } else if (prior_type == "tau") {
-    # Tau priors depend on smoothing structure
-    if (priors_provided == 1) {
-      # Provide dummy values with correct dimensions
-      cov_structure_val <- get_cov_structure(smoothing_type)
-
-      if (cov_structure_val == 0) {
-        # Shared: need 1 element
-        mean_val <- 0.0
-        sd_val <- 1.0
-      } else if (cov_structure_val == 1) {
-        # Independent: need num_path elements
-        mean_val <- rep(0.0, num_path)
-        sd_val <- rep(1.0, num_path)
-      } else {
-        # Correlated: tau not used
-        mean_val <- NULL
-        sd_val <- NULL
-      }
-    } else {
-      mean_val <- prior_obj$mean
-      sd_val <- prior_obj$sd
-    }
-  }
-
-  list(
-    mean = mean_val,
-    sd = sd_val,
-    priors_provided = priors_provided
-  )
 }
