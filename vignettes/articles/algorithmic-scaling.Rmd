@@ -37,7 +37,6 @@ This document demonstrates the algorithmic scaling properties and statistical be
 library(EpiStrainDynamics)
 library(ggplot2)
 library(dplyr)
-library(tidyr)
 
 # Set seed for reproducibility of data generation
 set.seed(42)
