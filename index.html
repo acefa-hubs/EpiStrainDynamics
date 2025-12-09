@@ -35,7 +35,9 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/Using-EpiStrainDynamics.html">Using EpiStainDynamics</a></li>
+<li><a class="dropdown-item" href="articles/Using-EpiStrainDynamics.html">Using EpiStrainDynamics</a></li>
+    <li><a class="dropdown-item" href="articles/algorithmic-scaling.html">Algorithmic Scaling and Statistical Properties</a></li>
+    <li><a class="dropdown-item" href="articles/parameter-recovery.html">Parameter Recovery Tests</a></li>
   </ul>
 </li>
       </ul>
@@ -77,76 +79,108 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install <code>EpiStrainDynamics</code> with:</p>
-<pre><code><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">'acefa-hubs/EpiStrainDynamics'</span><span class="op">)</span></span></code></pre>
+<p>You can install the development version of EpiStrainDynamics from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"acefa-hubs/EpiStrainDynamics"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="using-epistraindynamics">Using <code>EpiStrainDynamics</code>
 <a class="anchor" aria-label="anchor" href="#using-epistraindynamics"></a>
 </h2>
-<p>Detailed instructions can be found on the vignette on the <a href="https://acefa-hubs.github.io/EpiStrainDynamics/articles/Using-EpiStrainDyamics.html">website</a>. Here we provide a short overview.</p>
+<p>Detailed instructions can be found on the <a href="https://acefa-hubs.github.io/EpiStrainDynamics/articles/Using-EpiStrainDyamics.html">vignette</a>. Here we provide a short overview.</p>
 <div class="section level3">
 <h3 id="step-1-construct-model">Step 1: Construct model<a class="anchor" aria-label="anchor" href="#step-1-construct-model"></a>
 </h3>
-<p>Modelling specifications are provided using the <code>construct_model</code> function. The correct stan model is then applied based on the specifications provided. <code><a href="reference/construct_model.html">construct_model()</a></code> takes three arguments: <code>method</code>, <code>pathogen_structure</code>, and <code>dow_effect</code>.</p>
+<p>Modelling specifications are provided using the <code><a href="reference/construct_model.html">construct_model()</a></code> function. The correct stan model is then applied based on the specifications provided. <code><a href="reference/construct_model.html">construct_model()</a></code> takes these arguments: <code>method</code>, <code>pathogen_structure</code>, <code>smoothing_params</code>, <code>dispersion_params</code>, <code>pathogen_noise</code>, and <code>dow_effect</code>.</p>
 <div class="section level4">
 <h4 id="method">
 <code>method</code><a class="anchor" aria-label="anchor" href="#method"></a>
 </h4>
 <p>EpiStrainDynamics has pre-compiled stan models that fit either with bayesian penalised splines or random walks. These are specified using the <code>method</code> argument of <code><a href="reference/construct_model.html">construct_model()</a></code> as functions, either with <code><a href="reference/random_walk.html">random_walk()</a></code> or <code><a href="reference/p_spline.html">p_spline()</a></code>. The penalised spline model has two further options to specify: <code>spline_degree</code> is the polynomial degree of the individual spline segments used to construct the overall curve (must be a positive whole number) and <code>days_per_knot</code>, which is the number of days for each knot (must also be a positive whole number).</p>
 <p>So we may specify:</p>
-<pre><code>method = random_walk(),
-
-# OR
-method = p_spline(spline_degree = 3, days_per_knot = 2),  # example options</code></pre>
-</div>
-<div class="section level4">
-<h4 id="pathogen_structure">
-<code>pathogen_structure</code><a class="anchor" aria-label="anchor" href="#pathogen_structure"></a>
-</h4>
-<p>There are three main types of pathogen structure available to model: <code><a href="reference/single.html">single()</a></code>, <code><a href="reference/multiple.html">multiple()</a></code>, and <code><a href="reference/subtyped.html">subtyped()</a></code>.</p>
-<p>The <code><a href="reference/single.html">single()</a></code> pathogen structure is the simplest and models a single pathogen timeseries. A vector of the case timeseries is provided to the argument <code>case_timeseries</code>, a vector of date or time labels is provided to <code>time</code>, and optionally a pathogen name can be assigned with <code>pathogen_name</code>. The <code><a href="reference/multiple.html">multiple()</a></code> and <code><a href="reference/subtyped.html">subtyped()</a></code> pathogen structures both also have the <code>case_timeseries</code> and <code>time</code> arguments, as in the <code><a href="reference/single.html">single()</a></code> structure. In addition to these two arguments, instead of a single argument for <code>pathogen_name</code>, <code><a href="reference/multiple.html">multiple()</a></code> and <code><a href="reference/subtyped.html">subtyped()</a></code> have one or more arguments that allow the user to define the names and data for the different components or subtypes to be modelled. For <code><a href="reference/multiple.html">multiple()</a></code>, these are specified as a named list with the argument <code>component_pathogen_timeseries</code>. The names in this list will be using in subsequent plotting. For <code><a href="reference/subtyped.html">subtyped()</a></code>, which allows the user to incorporate testing data for influenza A subtypes, a vector of total unsubtyped influenza A cases is specified with <code>influenzaA_unsubtyped_timeseries</code>, a named list of the subtyped influenza A timeseries is provided to <code>influenzaA_subtyped_timeseries</code>, and further pathogens are provided in a named list to <code>other_pathogen_timeseries</code>.</p>
-<p>In addition to specifying the data and pathogen names, <code><a href="reference/multiple.html">multiple()</a></code> and <code><a href="reference/subtyped.html">subtyped()</a></code> both allow the user to modify the correlation structures in the parameters describing the smoothness (with argument <code>smoothing_structure</code>) and account for additional sources of noise in the observation process (<code>observation_noise</code>). <code>smoothing_structure</code> is either <code>'shared'</code> (all pathogens have the same smoothness), <code>'independent'</code> (each pathogen has completely independent smoothing structure), or <code>'correlated'</code> (smoothing structure is correlated among pathogens). <code>observation_noise</code> is either <code>'observation_noise_only'</code> (only includes observation noise - the same between pathogens) or <code>'pathogen_specific_noise'</code> (includes noise in individual pathogens as well).</p>
-</div>
-<div class="section level4">
-<h4 id="dow_effect">
-<code>dow_effect</code><a class="anchor" aria-label="anchor" href="#dow_effect"></a>
-</h4>
-<p>Day of week effect is specified as a logical (<code>TRUE</code> or <code>FALSE</code>) to the <code>dow_effect</code> argument. In plotting the day of week effect can be selectively removed.</p>
-<p>Altogether, an example constructed model for a random walk model with multiple pathogens might look as follows, illustrated using data provided with the package <code>sarscov2</code>:</p>
-<pre><code><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
-<span>  method <span class="op">=</span> <span class="fu"><a href="reference/random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,                   <span class="co"># specify `random_walk` method</span></span>
-<span></span>
-<span>  pathogen_structure <span class="op">=</span> <span class="fu"><a href="reference/multiple.html">multiple</a></span><span class="op">(</span>            <span class="co"># specify `multiple` pathogen structure</span></span>
-<span>   case_timeseries <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span>,        <span class="co"># timeseries of case data</span></span>
-<span>   time <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">date</span>,                    <span class="co"># date or time variable labels</span></span>
-<span></span>
-<span>   component_pathogen_timeseries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>    <span class="co"># named list of component pathogens</span></span>
-<span>     alpha <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">alpha</span>,</span>
-<span>     delta <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">delta</span>,</span>
-<span>     omicron <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">omicron</span>,</span>
-<span>     other <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">other</span></span>
-<span>   <span class="op">)</span>,</span>
-<span></span>
-<span>   smoothing_structure <span class="op">=</span> <span class="st">'independent'</span>,             <span class="co"># correlation structure</span></span>
-<span>   observation_noise <span class="op">=</span> <span class="st">'observation_noise_only'</span>     <span class="co"># observation noise</span></span>
-<span> <span class="op">)</span>,</span>
-<span>  dow_effect <span class="op">=</span> <span class="cn">TRUE</span>                         <span class="co"># day of week effect</span></span>
-<span><span class="op">)</span></span></code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>method <span class="ot">=</span> <span class="fu">random_walk</span>(),</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co"># OR</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>method <span class="ot">=</span> <span class="fu">p_spline</span>(<span class="at">spline_degree =</span> <span class="dv">3</span>, <span class="at">days_per_knot =</span> <span class="dv">2</span>)</span></code></pre></div>
 </div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="pathogen-structure">Pathogen structure<a class="anchor" aria-label="anchor" href="#pathogen-structure"></a>
+</h2>
+<p>There are three main types of pathogen structure available to model: <code><a href="reference/single.html">single()</a></code>, <code><a href="reference/multiple.html">multiple()</a></code>, and <code><a href="reference/subtyped.html">subtyped()</a></code>. These functions require the name of the dataset itself and the column names for different data elements.</p>
+<p>The <code><a href="reference/single.html">single()</a></code> pathogen structure is the simplest and models a single pathogen timeseries. The user must specify the dataset name, the name of the column with total case data, and the name of the column of time data. The <code><a href="reference/multiple.html">multiple()</a></code> pathogen structure allows modelling of different component pathogens. In addition to specifying the dataset, total case data, and time, the additional pathogens are specified as a vector of column names. The <code><a href="reference/subtyped.html">subtyped()</a></code> pathogen structure enables additional complexity, specifically for an influenza modelling scenario, by allowing the user to incorporate testing data for influenza A subtypes. The user specifies columns containing the unsubtyped influenza A case count as well as the subtyped influenza A cases, and any additional pathogens to be modelled. See the vignette for further detail.</p>
+</div>
+<div class="section level2">
+<h2 id="smoothing-parameters">Smoothing parameters<a class="anchor" aria-label="anchor" href="#smoothing-parameters"></a>
+</h2>
+<p>The argument <code>smoothing_params</code> allows users to modify the correlation structures in the parameters describing smoothness and to set related priors. These are specified with the function <code><a href="reference/smoothing_structure.html">smoothing_structure()</a></code>, which requires the user to specify a <code>smoothing_type</code> that is either <code>shared</code> (all pathogens have the same smoothing parameter), <code>independent</code> (each pathogen has a completely independent smoothing parameter), or <code>correlated</code> (smoothing structure is correlated among pathogens). For smoothign types <code>shared</code> and <code>independent</code> the priors for the mean and standard deviation on tau can also be specified. The number of values specified for each parameter depend on how many pathogens are provided. As below:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">smoothing_structure</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="at">smoothing_type =</span> <span class="st">'shared'</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">tau_mean =</span> <span class="dv">0</span>, <span class="at">tau_sd =</span> <span class="dv">1</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>)</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co"># for a model with 4 parameters:</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="fu">smoothing_structure</span>(</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  <span class="at">smoothing_type =</span> <span class="st">'independent'</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="at">tau_mean =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>  <span class="at">tau_sd =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="dispersion-parameters">Dispersion parameters<a class="anchor" aria-label="anchor" href="#dispersion-parameters"></a>
+</h2>
+<p>The argument <code>dispersion_params</code> optionally allows users to set a prior for the overdispersion parameter of the negative binomial likelihood for the case timeseries. If specified, each parameter only ever needs a single value. It is specified using <code><a href="reference/dispersion_structure.html">dispersion_structure()</a></code> as below:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">dispersion_structure</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="at">phi_mean =</span> <span class="dv">0</span>, <span class="at">phi_sd =</span> <span class="dv">1</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="pathogen-noise">Pathogen noise<a class="anchor" aria-label="anchor" href="#pathogen-noise"></a>
+</h2>
+<p>A logical (<code>TRUE</code> or <code>FALSE</code>) value indicating whether to include noise between individual pathogens in addition to the observation noise.</p>
+</div>
+<div class="section level2">
+<h2 id="day-of-week-effect">Day of week effect<a class="anchor" aria-label="anchor" href="#day-of-week-effect"></a>
+</h2>
+<p>Day of week effect is specified as a logical (<code>TRUE</code> or <code>FALSE</code>) to the <code>dow_effect</code> argument. In plotting, the day of week effect can be selectively removed.</p>
+</div>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
+<p>Altogether, an example constructed model for a random walk model with multiple pathogens might look as follows, illustrated using data that has been provided with the package - <code>sarscov2</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">construct_model</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">random_walk</span>(),                   <span class="co"># random_walk method</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  </span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">pathogen_structure =</span> <span class="fu">multiple</span>(            <span class="co"># multiple pathogen structure</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>   <span class="at">data =</span> sarscov2,</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>   <span class="at">case_timeseries =</span> <span class="st">'cases'</span>,               <span class="co"># timeseries of case data</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>   <span class="at">time =</span> <span class="st">'date'</span>,                           <span class="co"># date or time variable labels</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>   <span class="at">component_pathogen_timeseries =</span> <span class="fu">c</span>(       <span class="co"># component pathogens</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>     <span class="st">'alpha'</span>, <span class="st">'delta'</span>, <span class="st">'omicron'</span>, <span class="st">'other'</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>   )</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>  ),</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>   </span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>  <span class="at">smoothing_params =</span> <span class="fu">smoothing_structure</span>(   <span class="co"># independent smoothing structure </span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>    <span class="st">'independent'</span>,                          <span class="co"># with four values for each prior</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>    <span class="at">tau_mean =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="dv">0</span>),           <span class="co"># parameter - one for each pathogen</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>    <span class="at">tau_sd =</span> <span class="fu">rep</span>(<span class="dv">1</span>, <span class="at">times =</span> <span class="dv">4</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a>  ),</span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a>  <span class="at">dispersion_params =</span> <span class="fu">dispersion_structure</span>(<span class="at">phi_mean =</span> <span class="dv">0</span>, <span class="at">phi_sd =</span> <span class="dv">1</span>),</span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>  <span class="at">pathogen_noise =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a>  <span class="at">dow_effect =</span> <span class="cn">TRUE</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a>)</span></code></pre></div>
 <div class="section level3">
 <h3 id="step-2-fit-model">Step 2: fit model<a class="anchor" aria-label="anchor" href="#step-2-fit-model"></a>
 </h3>
-<p>The model estimates the expected value of the time series (eg, a smoothed trend in the daily number of cases accounting for noise) for each individual pathogen. Model parameterisation decisions specified when constructing the model in step 1 mean the correct stan model will be applied at this stage by simply calling:</p>
-<pre><code><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></code></pre>
+<p>The model estimates the expected value of the time series (eg, a smoothed trend in the daily number of cases accounting for noise) for each individual pathogen. In this step additional fitting parameters related to stan models can be modified such as <code>n_chain</code>, <code>n_iter</code>, <code>n_warmup</code>, <code>thin</code>, <code>adapt_delta</code>, <code>multi_cores</code>, <code>verbose</code>, and <code>seed</code>, which are described in further detail in the documentation. Model parameterisation decisions specified when constructing the model in step 1 mean the correct stan model will be applied at this stage by simply calling:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">fit_model</span>(mod)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="step-3-calculate-and-visualise-epidemiological-quantities">Step 3: Calculate and visualise epidemiological quantities<a class="anchor" aria-label="anchor" href="#step-3-calculate-and-visualise-epidemiological-quantities"></a>
 </h3>
 <p>Calculate epidemic growth rate with <code>growth_rate(fit)</code>, effective reproduction number over time with <code>Rt(fit, gi_dist = X)</code> (requiring specification of a generation interval distribution X), incidence with or without a day of week effect with <code>incidence(fit, dow_effect = TRUE)</code>, and proportions of different combinations of cases attributable to different pathogens/subtypes using <code><a href="reference/proportion.html">proportion()</a></code>.</p>
-<pre><code><span><span class="va">prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/proportion.html">proportion</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/plot.html">plot</a></span><span class="op">(</span><span class="va">prop</span><span class="op">)</span></span></code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>prop <span class="ot">&lt;-</span> <span class="fu">proportion</span>(fit)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">plot</span>(prop)</span></code></pre></div>
 <p>For a more detailed discussion, check out the <a href="https://acefa-hubs.github.io/EpiStrainDynamics/articles/Using-EpiStrainDyamics.html">vignette</a>.</p>
 </div>
 </div>
@@ -154,7 +188,9 @@ method = p_spline(spline_degree = 3, days_per_knot = 2),  # example options</cod
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
 <p>When using this package, please cite both the package and the research article underlying the statistical model developments:</p>
-<p>Windecker S, Eales O (2025). EpiStrainDynamics: Infer temporal trends of multiple pathogens. R package version 0.0.0.9000, <a href="https://acefa-hubs.github.io/EpiStrainDynamics/" class="uri">https://acefa-hubs.github.io/EpiStrainDynamics/</a>. Oliver Eales, Saras M Windecker, James M McCaw, Freya M Shearer, Inferring temporal trends of multiple pathogens, variants, subtypes or serotypes from routine surveillance data, American Journal of Epidemiology, 2025;, kwaf119, <a href="https://doi.org/10.1093/aje/kwaf119" class="external-link uri">https://doi.org/10.1093/aje/kwaf119</a> For code corresponding to this paper, see branch <a href="https://github.com/acefa-hubs/EpiStrainDynamics/tree/paper_analysis" class="external-link"><code>paper_analysis</code></a>.</p>
+<p>Windecker S, Eales O (2025). EpiStrainDynamics: Infer temporal trends of multiple pathogens. R package version 0.0.0.9000, <a href="https://acefa-hubs.github.io/EpiStrainDynamics/" class="uri">https://acefa-hubs.github.io/EpiStrainDynamics/</a>.</p>
+<p>Oliver Eales, Saras M Windecker, James M McCaw, Freya M Shearer, Inferring temporal trends of multiple pathogens, variants, subtypes or serotypes from routine surveillance data, American Journal of Epidemiology, 2025;, kwaf119, <a href="https://doi.org/10.1093/aje/kwaf119" class="external-link uri">https://doi.org/10.1093/aje/kwaf119</a></p>
+<p>For code corresponding to the AJE paper, see branch <a href="https://github.com/acefa-hubs/EpiStrainDynamics/tree/paper_analysis" class="external-link"><code>paper_analysis</code></a>.</p>
 </div>
 <div class="section level2">
 <h2 id="contribution">Contribution<a class="anchor" aria-label="anchor" href="#contribution"></a>
@@ -171,6 +207,7 @@ method = p_spline(spline_degree = 3, days_per_knot = 2),  # example options</cod
 </h2>
 <p>This project was supported by the Australia-Aotearoa Consortium for Epidemic Forecasting and Analytics.</p>
 <p><a href="https://acefa-hubs.github.io/" class="external-link"><img src="reference/figures/ACEFA.png" align="center" height="150" alt="EpiStrainDynamics website"></a></p>
+<!-- `devtools::build_readme()` is handy for this. -->
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -209,9 +246,9 @@ method = p_spline(spline_degree = 3, days_per_knot = 2),  # example options</cod
 <ul class="list-unstyled">
 <li>Saras Windecker <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-4870-8353" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 <li>Oliver Eales <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-8086-4495" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
-<li>James McCaw <br><small class="roles"> Contributor </small> <a href="https://orcid.org/0000-0002-2452-3098" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
-<li>Freya Shearer <br><small class="roles"> Contributor </small> <a href="https://orcid.org/0000-0001-9600-3473" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
-<li>Milad Kharratzadeh <br><small class="roles"> Contributor </small>   </li>
+<li>James McCaw <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-2452-3098" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Freya Shearer <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-9600-3473" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
 
@@ -222,11 +259,11 @@ method = p_spline(spline_degree = 3, days_per_knot = 2),  # example options</cod
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Saras Windecker, Oliver Eales.</p>
+  <p>Developed by Saras Windecker, Oliver Eales, James McCaw, Freya Shearer.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

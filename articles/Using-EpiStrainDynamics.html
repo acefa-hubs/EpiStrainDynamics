@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Using EpiStainDynamics • EpiStrainDynamics</title>
+<title>Using EpiStrainDynamics • EpiStrainDynamics</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Using EpiStainDynamics">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Using EpiStrainDynamics">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -33,7 +33,9 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/Using-EpiStrainDynamics.html">Using EpiStainDynamics</a></li>
+<li><a class="dropdown-item" href="../articles/Using-EpiStrainDynamics.html">Using EpiStrainDynamics</a></li>
+    <li><a class="dropdown-item" href="../articles/algorithmic-scaling.html">Algorithmic Scaling and Statistical Properties</a></li>
+    <li><a class="dropdown-item" href="../articles/parameter-recovery.html">Parameter Recovery Tests</a></li>
   </ul>
 </li>
       </ul>
@@ -63,7 +65,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Using EpiStainDynamics</h1>
+      <h1>Using EpiStrainDynamics</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/acefa-hubs/EpiStrainDynamics/blob/main/vignettes/Using-EpiStrainDynamics.Rmd" class="external-link"><code>vignettes/Using-EpiStrainDynamics.Rmd</code></a></small>
@@ -89,9 +91,12 @@ observation process.</p>
 <p>These modelling specifications are specified using the
 <code>construct_model</code> function. The correct stan model is then
 applied based on the specifications provided.
-<code><a href="../reference/construct_model.html">construct_model()</a></code> takes three arguments:
-<code>method</code>, <code>pathogen_structure</code>, and
-<code>dow_effect</code>. We will break these down one by one.</p>
+<code><a href="../reference/construct_model.html">construct_model()</a></code> requires specification of the
+<code>method</code> and <code>pathogen_structure</code>, and allows the
+user to additionally specify four arguments related to model design:
+<code>smoothing_params</code>, <code>dispersion_params</code>,
+<code>pathogen_noise</code>, and <code>dow_effect</code>. We will break
+these down one by one.</p>
 <div class="section level3">
 <h3 id="method">Method<a class="anchor" aria-label="anchor" href="#method"></a>
 </h3>
@@ -106,99 +111,110 @@ of the individual spline segments used to construct the overall curve
 is the number of days for each knot (must also be a positive whole
 number).</p>
 <p>So we may specify:</p>
-<pre><code><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
-<span>  method <span class="op">=</span> <span class="fu"><a href="../reference/random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co"># OR</span></span>
-<span></span>
-<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
-<span>  method <span class="op">=</span> <span class="fu"><a href="../reference/p_spline.html">p_spline</a></span><span class="op">(</span>spline_degree <span class="op">=</span> <span class="fl">3</span>, days_per_knot <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,  <span class="co"># example options</span></span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span></code></pre>
+<pre><code>method = random_walk(),
+
+# OR
+
+method = p_spline(spline_degree = 3,  # example value for spline degree
+                  days_per_knot = 2)  # example value for days per knot</code></pre>
 </div>
 <div class="section level3">
 <h3 id="pathogen-structure">Pathogen structure<a class="anchor" aria-label="anchor" href="#pathogen-structure"></a>
 </h3>
 <p>There are three main types of pathogen structure available to model:
 <code><a href="../reference/single.html">single()</a></code>, <code><a href="../reference/multiple.html">multiple()</a></code>, and
-<code><a href="../reference/subtyped.html">subtyped()</a></code>.</p>
+<code><a href="../reference/subtyped.html">subtyped()</a></code>. These functions require the name of the dataset
+itself and the column names for different data elements.</p>
 <p>The <code><a href="../reference/single.html">single()</a></code> pathogen structure is the simplest and
-models a single pathogen timeseries. A vector is the case timeseries is
-provided to the argument <code>case_timeseries</code>, a vector of date
-or time labels is provided to <code>time</code>, and optionally a
-pathogen name can be assigned with <code>pathogen_name</code>. It can be
-specified as follows, illustrated using data provided with the package
+models a single pathogen timeseries. The name of the dataframe is passed
+to argument <code>data</code>, the name of the column with total case
+data is passed to <code>case_timeseries</code>, and the name of the
+column of time data is passed to <code>time</code>. It can be specified
+as follows, illustrated using data provided with the package
 <code>sarscov2</code>:</p>
-<pre><code><span><span class="fu"><a href="../reference/single.html">single</a></span><span class="op">(</span></span>
-<span>  case_timeseries <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span>,           <span class="co"># timeseries of case data</span></span>
-<span>  time <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">date</span>,                       <span class="co"># date or time variable labels</span></span>
-<span>  pathogen_name <span class="op">=</span> <span class="st">'SARS-COV-2'</span>                <span class="co"># optional name of pathogen</span></span>
+<pre><code><span><span class="va">pathogen_structure</span> <span class="op">=</span> <span class="fu"><a href="../reference/single.html">single</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">sarscov2</span>,                    <span class="co"># dataframe</span></span>
+<span>  case_timeseries <span class="op">=</span> <span class="st">'cases'</span>,          <span class="co"># timeseries of case data</span></span>
+<span>  time <span class="op">=</span> <span class="st">'date'</span>                       <span class="co"># date or time variable</span></span>
 <span><span class="op">)</span></span></code></pre>
-<p>The <code><a href="../reference/multiple.html">multiple()</a></code> and <code><a href="../reference/subtyped.html">subtyped()</a></code> pathogen
-structures both also have the <code>case_timeseries</code> and
-<code>time</code> arguments, as in the <code><a href="../reference/single.html">single()</a></code>
-structure.</p>
-<p>In addition to these two arguments, instead of a single argument for
-<code>pathogen_name</code>, <code><a href="../reference/multiple.html">multiple()</a></code> and
-<code><a href="../reference/subtyped.html">subtyped()</a></code> have one or more arguments that allow the user
-to define the names and data for the different components or subtypes to
-be modelled. For <code><a href="../reference/multiple.html">multiple()</a></code>, these are specified as a named
-list with the argument <code>component_pathogen_timeseries</code>. The
-names in this list will be using in subsequent plotting. For
-<code><a href="../reference/subtyped.html">subtyped()</a></code>, which allows the user to incorporate testing
-data for influenza A subtypes, a vector of total unsubtyped influenza A
-cases is specified with <code>influenzaA_unsubtyped_timeseries</code>, a
-named list of the subtyped influenza A timeseries is provided to
-<code>influenzaA_subtyped_timeseries</code>, and further pathogens are
-provided in a named list to <code>other_pathogen_timeseries</code>.</p>
-<p>In addition to specifying the data and pathogen names,
-<code><a href="../reference/multiple.html">multiple()</a></code> and <code><a href="../reference/subtyped.html">subtyped()</a></code> both allow the user
-to modify the correlation structures in the parameters describing the
-smoothness (with argument <code>smoothing_structure</code>) and account
-for additional sources of noise in the observation process
-(<code>observation_noise</code>). <code>smoothing_structure</code> is
-either <code>'shared'</code> (all pathogens have the same smoothness),
-<code>'independent'</code> (each pathogen has completely independent
-smoothing structure), or <code>'correlated'</code> (smoothing structure
-is correlated among pathogens). <code>observation_noise</code> is either
-<code>'observation_noise_only'</code> (only includes observation noise -
-the same between pathogens) or <code>'pathogen_specific_noise'</code>
-(includes noise in individual pathogens as well).</p>
-<p>Example pathogen structure specification for multiple pathogens
-model:</p>
-<pre><code><span><span class="fu"><a href="../reference/multiple.html">multiple</a></span><span class="op">(</span></span>
-<span>   case_timeseries <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span>,        <span class="co"># timeseries of case data</span></span>
-<span>   time <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">date</span>,                    <span class="co"># date or time variable labels</span></span>
+<p>The <code><a href="../reference/multiple.html">multiple()</a></code> pathogen structure allows modelling of
+different component pathogens. In addition to specifying
+<code>data</code>, <code>case_timeseries</code>, and <code>time</code>,
+these additional pathogens are specified as a vector of column names
+with the argument <code>component_pathogen_timeseries</code>. Example
+pathogen structure specification for multiple pathogens model using the
+<code>sarscov2</code> dataset:</p>
+<pre><code><span><span class="va">pathogen_structure</span> <span class="op">=</span> <span class="fu"><a href="../reference/multiple.html">multiple</a></span><span class="op">(</span></span>
+<span>   data <span class="op">=</span> <span class="va">sarscov2</span>,                         <span class="co"># dataframe</span></span>
+<span>   case_timeseries <span class="op">=</span> <span class="st">'cases'</span>,               <span class="co"># timeseries of case data</span></span>
+<span>   time <span class="op">=</span> <span class="st">'date'</span>,                           <span class="co"># date or time variable labels</span></span>
 <span></span>
-<span>   component_pathogen_timeseries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>    <span class="co"># named list of component pathogens</span></span>
-<span>     alpha <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">alpha</span>,</span>
-<span>     delta <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">delta</span>,</span>
-<span>     omicron <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">omicron</span>,</span>
-<span>     other <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">other</span></span>
-<span>   <span class="op">)</span>,</span>
-<span></span>
-<span>   smoothing_structure <span class="op">=</span> <span class="st">'independent'</span>,             <span class="co"># correlation structures</span></span>
-<span>   observation_noise <span class="op">=</span> <span class="st">'observation_noise_only'</span>     <span class="co"># observation noise</span></span>
+<span>   component_pathogen_timeseries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>       <span class="co"># vector of column names of</span></span>
+<span>     <span class="st">'alpha'</span>, <span class="st">'delta'</span>, <span class="st">'omicron'</span>, <span class="st">'other'</span>   <span class="co">#   component pathogens</span></span>
+<span>   <span class="op">)</span></span>
 <span> <span class="op">)</span></span></code></pre>
-<p>Example pathogen structure specification for subtyped model:</p>
-<pre><code><span><span class="fu"><a href="../reference/subtyped.html">subtyped</a></span><span class="op">(</span></span>
-<span>   case_timeseries <span class="op">=</span> <span class="va">influenza</span><span class="op">$</span><span class="va">ili</span>,         <span class="co"># timeseries of case data</span></span>
-<span>   time <span class="op">=</span> <span class="va">influenza</span><span class="op">$</span><span class="va">week</span>,                   <span class="co"># date or time variable labels</span></span>
+<p>The <code><a href="../reference/subtyped.html">subtyped()</a></code> pathogen structure enables additional
+complexity specifically for an influenza modelling scenario by allowing
+the user to incorporate testing data for influenza A subtypes. The
+unsubtyped column is specified with
+<code>influenzaA_unsubtyped_timeseries</code>, and the subtyped data are
+specified with vector of column names of provided to
+<code>influenzaA_subtyped_timeseries</code>. Additional pathogens are
+provided as a vector of column names to
+<code>other_pathogen_timeseries</code>. Example pathogen structure
+specification for subtyped model using the <code>influenza</code>
+dataset included in the package:</p>
+<pre><code><span><span class="va">pathogen_structure</span> <span class="op">=</span> <span class="fu"><a href="../reference/subtyped.html">subtyped</a></span><span class="op">(</span></span>
+<span>   data <span class="op">=</span> <span class="va">influenza</span>,                            <span class="co"># dataframe</span></span>
+<span>   case_timeseries <span class="op">=</span> <span class="va">ili</span>,                       <span class="co"># timeseries of case data</span></span>
+<span>   time <span class="op">=</span> <span class="va">week</span>,                                 <span class="co"># date or time variable labels</span></span>
 <span></span>
-<span>   influenzaA_unsubtyped_timeseries <span class="op">=</span> <span class="va">influenza</span><span class="op">$</span><span class="va">inf_A</span>,  <span class="co"># unsubtyped influenzaA</span></span>
-<span>   influenzaA_subtyped_timeseries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>       <span class="co"># named list of subtyped infA</span></span>
-<span>     H3N2 <span class="op">=</span> <span class="va">influenza</span><span class="op">$</span><span class="va">inf_H3N2</span>,</span>
-<span>     H1N1 <span class="op">=</span> <span class="va">influenza</span><span class="op">$</span><span class="va">inf_H1N1</span></span>
+<span>   influenzaA_unsubtyped_timeseries <span class="op">=</span> <span class="st">'inf_A'</span>,  <span class="co"># unsubtyped influenzaA</span></span>
+<span>   influenzaA_subtyped_timeseries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>          <span class="co"># subtyped influenzaA</span></span>
+<span>     <span class="st">'inf_H3N2'</span>, <span class="st">'inf_H1N1'</span></span>
 <span>   <span class="op">)</span>,</span>
-<span>   other_pathogen_timeseries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>            <span class="co"># named list of other pathogens</span></span>
-<span>     influenzaB <span class="op">=</span> <span class="va">influenza</span><span class="op">$</span><span class="va">inf_B</span>,</span>
-<span>     other <span class="op">=</span> <span class="va">influenza</span><span class="op">$</span><span class="va">num_spec</span> <span class="op">-</span> <span class="va">influenza</span><span class="op">$</span><span class="va">inf_all</span></span>
-<span>   <span class="op">)</span>,</span>
-<span></span>
-<span>   smoothing_structure <span class="op">=</span> <span class="st">'correlated'</span>,            <span class="co"># correlation structures</span></span>
-<span>   observation_noise <span class="op">=</span> <span class="st">'pathogen_specific_noise'</span>  <span class="co"># observation noise</span></span>
+<span>   other_pathogen_timeseries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>               <span class="co"># other pathogens</span></span>
+<span>     <span class="st">'inf_B'</span>, <span class="st">'other'</span></span>
+<span>   <span class="op">)</span></span>
 <span> <span class="op">)</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="smoothing-parameters">Smoothing parameters<a class="anchor" aria-label="anchor" href="#smoothing-parameters"></a>
+</h3>
+<p>The argument <code>smoothing_params</code> allows users to modify the
+correlation structures in the parameters describing smoothness and set
+related priors. These are specified with the function
+<code><a href="../reference/smoothing_structure.html">smoothing_structure()</a></code> that requires the user to specify a
+<code>smoothing_type</code> that is either <code>shared</code> (all
+pathogens have the same smoothness), <code>independent</code> (each
+pathogen has completely independent smoothing structure), or
+<code>correlated</code> (smoothing structure is correlated among
+pathogens). For <code>shared</code> or <code>independent</code>
+smoothing types parameters for the mean and standard deviation of the
+prior on tau can also be specified, as below:</p>
+<pre><code><span><span class="va">smoothing_params</span> <span class="op">=</span> <span class="fu"><a href="../reference/smoothing_structure.html">smoothing_structure</a></span><span class="op">(</span></span>
+<span>  smoothing_type <span class="op">=</span> <span class="st">'independent'</span>,</span>
+<span>  tau_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  tau_sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, times <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="dispersion-parameters">Dispersion parameters<a class="anchor" aria-label="anchor" href="#dispersion-parameters"></a>
+</h3>
+<p>The argument <code>dispersion_params</code> allows users to set a
+prior for the overdispersion parameter of the negative binomial
+likelihood for the case timeseries. It is specified using
+<code><a href="../reference/dispersion_structure.html">dispersion_structure()</a></code> as below:</p>
+<pre><code><span><span class="va">dispersion_params</span> <span class="op">=</span> <span class="fu"><a href="../reference/dispersion_structure.html">dispersion_structure</a></span><span class="op">(</span></span>
+<span>  phi_mean <span class="op">=</span> <span class="fl">0</span>, phi_sd <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="pathogen-noise">Pathogen noise<a class="anchor" aria-label="anchor" href="#pathogen-noise"></a>
+</h3>
+<p>Whether to include noise between individual pathogens as well as the
+observation noise is specified as a logical (<code>TRUE</code> or
+<code>FALSE</code>) to the argument <code>pathogen_noise</code>.</p>
 </div>
 <div class="section level3">
 <h3 id="day-of-week-effect">Day of week effect<a class="anchor" aria-label="anchor" href="#day-of-week-effect"></a>
@@ -206,11 +222,35 @@ model:</p>
 <p>Day of week effect is specified as a logical (<code>TRUE</code> or
 <code>FALSE</code>) to the <code>dow_effect</code> argument. In plotting
 the day of week effect can be selectively removed.</p>
-<pre><code><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
-<span>  method <span class="op">=</span> <span class="va">...</span>,</span>
-<span>  pathogen_structure <span class="op">=</span> <span class="va">...</span>,</span>
-<span>  dow_effect <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="worked-example">Worked example<a class="anchor" aria-label="anchor" href="#worked-example"></a>
+</h3>
+<p>A full worked example using a subtyped structure:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
+<span></span>
+<span>  method <span class="op">=</span> <span class="fu"><a href="../reference/p_spline.html">p_spline</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span></span>
+<span>  pathogen_structure <span class="op">=</span> <span class="fu"><a href="../reference/subtyped.html">subtyped</a></span><span class="op">(</span></span>
+<span>   data <span class="op">=</span> <span class="va">influenza</span>,</span>
+<span>   case_timeseries <span class="op">=</span> <span class="st">'ili'</span>,</span>
+<span>   time <span class="op">=</span> <span class="st">'week'</span>,</span>
+<span>   influenzaA_unsubtyped_timeseries <span class="op">=</span> <span class="st">'inf_A'</span>,</span>
+<span>   influenzaA_subtyped_timeseries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'inf_H3N2'</span>, <span class="st">'inf_H1N1'</span><span class="op">)</span>,</span>
+<span>   other_pathogen_timeseries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'inf_B'</span>, <span class="st">'other'</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span></span>
+<span>   smoothing_params <span class="op">=</span> <span class="fu"><a href="../reference/smoothing_structure.html">smoothing_structure</a></span><span class="op">(</span></span>
+<span>      <span class="st">'independent'</span>, tau_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0</span><span class="op">)</span>, tau_sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, times <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>   dispersion_params <span class="op">=</span> <span class="fu"><a href="../reference/dispersion_structure.html">dispersion_structure</a></span><span class="op">(</span>phi_mean <span class="op">=</span> <span class="fl">0</span>, phi_sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>   pathogen_noise <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>   dow_effect <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="output">Output<a class="anchor" aria-label="anchor" href="#output"></a>
+</h3>
 <p>The constructed model object is a named list containing input data,
 accessed with <code>$data</code>, parameter values (such as smoothing
 structure, observation noise, and penalised spline parameters, if
@@ -229,17 +269,60 @@ each individual pathogen. Model parameterisation decisions specified
 when constructing the model in step 1 mean the correct stan model will
 be applied at this stage by simply calling <code><a href="../reference/fit_model.html">fit_model()</a></code> onto
 the constructed model object.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_model.html">fit_model</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod</span>,</span>
-<span>  iter <span class="op">=</span> <span class="fl">2000</span>,</span>
-<span>  warmup <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span>  chains <span class="op">=</span> <span class="fl">3</span></span>
+<span>  n_iter <span class="op">=</span> <span class="fl">2000</span>,</span>
+<span>  n_warmup <span class="op">=</span> <span class="fl">1000</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The output of this function is a list with the stan fit object,
 accessed with <code>$fit</code>, and the elements of the constructed
 model object from the previous step, accessed with
 <code>$constructed_model</code>.</p>
+<div class="section level3">
+<h3 id="step-3-check-fit">Step 3: Check fit<a class="anchor" aria-label="anchor" href="#step-3-check-fit"></a>
+</h3>
+<p>A summary of model convergence diagnostics can be viewed using:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/diagnose_model.html">diagnose_model</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Model Convergence Diagnostics</span></span>
+<span><span class="co">#&gt; =============================</span></span>
+<span><span class="co">#&gt; Overall convergence: GOOD </span></span>
+<span><span class="co">#&gt; Maximum R-hat: 1.004 </span></span>
+<span><span class="co">#&gt; Minimum n_eff: 1084</span></span></code></pre></div>
+<p>Beyond this summary, the stan fit object can be interrogated with any
+package that works with stan outputs. For example, one could visualise
+posteriors with the package <code>bayesplot</code>:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">bayesplot</span><span class="fu">::</span><span class="fu">mcmc_areas</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">fit</span><span class="op">)</span>, pars <span class="op">=</span> <span class="st">'tau[1]'</span>, prob <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="figure/unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5"><div class="figcaption">plot of chunk unnamed-chunk-5</div>
+</div>
+<p>The <code>bayesplot</code> package can also be used to evaluate
+convergence:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">bayesplot</span><span class="fu">::</span><span class="fu">mcmc_trace</span><span class="op">(</span><span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-extract.html" class="external-link">extract</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">fit</span>, permuted <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a[1,1]'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="figure/unnamed-chunk-6-1.png" alt="plot of chunk unnamed-chunk-6"><div class="figcaption">plot of chunk unnamed-chunk-6</div>
+</div>
+<p>Or else the application <code>shinystan</code> is a great tool to
+visualise the fit and diagnose issues:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/shinystan/" class="external-link">shinystan</a></span><span class="op">)</span></span>
+<span><span class="fu">launch_shinystan</span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
+<p>Model not converging? You can find more information about divergent
+transitions <a href="https://mc-stan.org/docs/2_19/reference-manual/divergent-transitions" class="external-link">here</a>.
+Some quick tips:</p>
+<ul>
+<li>Increase the <code>adapt_delta</code> parameter in fit_model(),
+which governs how big the steps are in the MCMC.</li>
+<li>Try reducing the complexity of the model. For example, by using
+<code>pathogen_noise = FALSE</code> or a shared smoothing
+structure.</li>
+<li>Increase the number of warmup samples with the n_warmup
+parameter.</li>
+</ul>
+</div>
 </div>
 <div class="section level2">
 <h2 id="step-3-calculate-and-explore-epidemiological-quantities">Step 3: Calculate and explore epidemiological quantities<a class="anchor" aria-label="anchor" href="#step-3-calculate-and-explore-epidemiological-quantities"></a>
@@ -257,43 +340,36 @@ proportion greater than a defined threshold value (<code>prop</code>),
 the pathogen name (<code>pathogen</code>), and the time label
 (<code>time</code>).</p>
 <p>Calculate epidemic growth rate with <code><a href="../reference/growth_rate.html">growth_rate()</a></code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/growth_rate.html">growth_rate</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">gr</span><span class="op">$</span><span class="va">measure</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   pathogen pathogen_idx          y         lb_50      ub_50</span></span>
-<span><span class="co">#&gt; 1    Total           NA 0.03698827 -0.0089480085 0.08706294</span></span>
-<span><span class="co">#&gt; 2    Total           NA 0.03972700 -0.0002951054 0.07915102</span></span>
-<span><span class="co">#&gt; 3    Total           NA 0.03678505  0.0066676300 0.06701464</span></span>
-<span><span class="co">#&gt; 4    Total           NA 0.03218735  0.0065694847 0.05737864</span></span>
-<span><span class="co">#&gt; 5    Total           NA 0.02799872  0.0034695705 0.05295108</span></span>
-<span><span class="co">#&gt; 6    Total           NA 0.02606898  0.0036616871 0.04803510</span></span>
-<span><span class="co">#&gt;         lb_95      ub_95      prop       time</span></span>
-<span><span class="co">#&gt; 1 -0.09949339 0.18583034 0.7086667 2012-01-09</span></span>
-<span><span class="co">#&gt; 2 -0.07437469 0.15766399 0.7480000 2012-01-16</span></span>
-<span><span class="co">#&gt; 3 -0.04990268 0.12807260 0.7936667 2012-01-23</span></span>
-<span><span class="co">#&gt; 4 -0.04024085 0.10721439 0.8116667 2012-01-30</span></span>
-<span><span class="co">#&gt; 5 -0.04507178 0.10040364 0.7816667 2012-02-06</span></span>
-<span><span class="co">#&gt; 6 -0.03690913 0.08900377 0.7860000 2012-02-13</span></span>
+<span><span class="co">#&gt;   pathogen pathogen_idx          y        lb_50      ub_50       lb_95      ub_95    prop       time</span></span>
+<span><span class="co">#&gt; 1    Total           NA 0.04424791 -0.001764557 0.09174841 -0.09220633 0.19091771 0.74100 2012-01-09</span></span>
+<span><span class="co">#&gt; 2    Total           NA 0.04416839  0.004574589 0.08297307 -0.06747162 0.16449009 0.77800 2012-01-16</span></span>
+<span><span class="co">#&gt; 3    Total           NA 0.04088482  0.009349758 0.07189987 -0.04613782 0.13382457 0.81525 2012-01-23</span></span>
+<span><span class="co">#&gt; 4    Total           NA 0.03456322  0.009268216 0.06043808 -0.03686109 0.10896738 0.82650 2012-01-30</span></span>
+<span><span class="co">#&gt; 5    Total           NA 0.02976339  0.005555991 0.05384755 -0.03835551 0.10122351 0.79900 2012-02-06</span></span>
+<span><span class="co">#&gt; 6    Total           NA 0.02574690  0.005070046 0.04796448 -0.03426203 0.08897248 0.80375 2012-02-13</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">gr</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="articles/figure/growth_rate-1.png" alt="plot of chunk growth_rate"><div class="figcaption">plot of chunk growth_rate</div>
+<img src="figure/growth_rate-1.png" alt="plot of chunk growth_rate"><div class="figcaption">plot of chunk growth_rate</div>
 </div>
 <p>Calculate effective reproduction number over time with
 <code><a href="../reference/Rt.html">Rt()</a></code> (requiring specification of a generation interval
 distribution):</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Rt.html">Rt</a></span><span class="op">(</span><span class="va">fit</span>, gi_dist <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">4</span><span class="op">*</span><span class="va">x</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span><span class="op">*</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">rt</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="articles/figure/Rt-1.png" alt="plot of chunk Rt"><div class="figcaption">plot of chunk Rt</div>
+<img src="figure/Rt-1.png" alt="plot of chunk Rt"><div class="figcaption">plot of chunk Rt</div>
 </div>
 <p>Calculate incidence with or without a day of week effect with
 <code><a href="../reference/incidence.html">incidence()</a></code>:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">inc_dow</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/incidence.html">incidence</a></span><span class="op">(</span><span class="va">fit</span>, dow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">inc_dow</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="articles/figure/incidence-1.png" alt="plot of chunk incidence"><div class="figcaption">plot of chunk incidence</div>
+<img src="figure/incidence-1.png" alt="plot of chunk incidence"><div class="figcaption">plot of chunk incidence</div>
 </div>
 <p>Calculate proportions of different combinations of cases attributable
 to different pathogens/subtypes using <code><a href="../reference/proportion.html">proportion()</a></code>. By
@@ -303,14 +379,14 @@ can specify a selection of pathogens/subtypes by their names in the
 named lists provided to <code><a href="../reference/construct_model.html">construct_model()</a></code>:</p>
 <pre><code><span><span class="va">prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/proportion.html">proportion</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit</span>,</span>
-<span>  numerator_combination <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'alpha'</span>, <span class="st">'delta'</span>, <span class="st">'omicron'</span><span class="op">)</span>,</span>
-<span>  denominator_combination <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'alpha'</span>, <span class="st">'delta'</span>, <span class="st">'omicron'</span>, <span class="st">'other'</span><span class="op">)</span></span>
+<span>  numerator_combination <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'inf_H3N2'</span>, <span class="st">'inf_H1N1'</span><span class="op">)</span>,</span>
+<span>  denominator_combination <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'inf_H3N2'</span>, <span class="st">'inf_H1N1'</span>, <span class="st">'inf_B'</span>, <span class="st">'other'</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/proportion.html">proportion</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">prop</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="articles/figure/proportion-1.png" alt="plot of chunk proportion"><div class="figcaption">plot of chunk proportion</div>
+<img src="figure/proportion-1.png" alt="plot of chunk proportion"><div class="figcaption">plot of chunk proportion</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -320,11 +396,11 @@ named lists provided to <code><a href="../reference/construct_model.html">constr
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Saras Windecker, Oliver Eales.</p>
+  <p>Developed by Saras Windecker, Oliver Eales, James McCaw, Freya Shearer.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
