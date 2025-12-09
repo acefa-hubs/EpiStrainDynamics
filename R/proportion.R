@@ -141,7 +141,8 @@ proportion.ps <- function(fitted_model,
 
   measure <- measure |>
     dplyr::rowwise() |>
-    dplyr::mutate(pathogen = paste(match_pathogen_name(pathogen), collapse = ', ')) |>
+    dplyr::mutate(pathogen = paste(match_pathogen_name(.data$pathogen),
+                                   collapse = ', ')) |>
     dplyr::ungroup()
 
   out <- list(measure = measure,
