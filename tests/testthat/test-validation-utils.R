@@ -94,19 +94,19 @@ test_that("validate_class_inherits() handles inheritance", {
 test_that("validate_gi_dist accepts valid functions", {
   # Standard valid function
   gi_dist <- function(x) 4 * x * exp(-2 * x)
-  expect_true(validate_gi_dist(gi_dist))
+  expect_silent(validate_gi_dist(gi_dist))
 
   # Exponential-like
   gi_dist1 <- function(x) exp(-x)
-  expect_true(validate_gi_dist(gi_dist1))
+  expect_silent(validate_gi_dist(gi_dist1))
 
   # Gamma-like
   gi_dist2 <- function(x) x^2 * exp(-x)
-  expect_true(validate_gi_dist(gi_dist2))
+  expect_silent(validate_gi_dist(gi_dist2))
 
   # Constant
   gi_dist3 <- function(x) rep(0.1, length(x))
-  expect_true(validate_gi_dist(gi_dist3))
+  expect_silent(validate_gi_dist(gi_dist3))
 })
 
 test_that("validate_gi_dist rejects invalid input types", {
@@ -154,15 +154,15 @@ test_that("validate_pathogen_combination accepts valid inputs", {
   pathogen_names <- c("alpha", "delta", "omicron", "other")
 
   # NULL is valid for both
-  expect_true(validate_pathogen_combination(NULL, pathogen_names, "numerator_combination"))
-  expect_true(validate_pathogen_combination(NULL, pathogen_names, "denominator_combination"))
+  expect_silent(validate_pathogen_combination(NULL, pathogen_names, "numerator_combination"))
+  expect_silent(validate_pathogen_combination(NULL, pathogen_names, "denominator_combination"))
 
   # Single and multiple pathogens valid for both
-  expect_true(validate_pathogen_combination("alpha", pathogen_names, "numerator_combination"))
-  expect_true(validate_pathogen_combination(c("alpha", "delta"), pathogen_names, "denominator_combination"))
+  expect_silent(validate_pathogen_combination("alpha", pathogen_names, "numerator_combination"))
+  expect_silent(validate_pathogen_combination(c("alpha", "delta"), pathogen_names, "denominator_combination"))
 
   # "all" only valid for denominator
-  expect_true(validate_pathogen_combination("all", pathogen_names, "denominator_combination"))
+  expect_silent(validate_pathogen_combination("all", pathogen_names, "denominator_combination"))
 })
 
 test_that("validate_pathogen_combination rejects invalid inputs", {
