@@ -24,8 +24,8 @@ test_that("Models produce expected results on fixed test data", {
     )
   )
 
-  fit_single <- fit_model(model_single, n_chain = 2, n_iter = 1000,
-                          seed = 98765, verbose = FALSE)
+  fit_single <- fit_model(model_single, n_chain = 3, n_iter = 3000,
+                          multi_cores = FALSE, seed = 98765, verbose = FALSE)
   inc_single <- incidence(fit_single, dow = FALSE)
 
   # Expected values from a known good run (update these after first run)
@@ -47,8 +47,8 @@ test_that("Models produce expected results on fixed test data", {
     )
   )
 
-  fit_multi <- fit_model(model_multi, n_chain = 2, n_iter = 1000,
-                         seed = 98765, verbose = FALSE)
+  fit_multi <- fit_model(model_multi, n_chain = 4, n_iter = 3000,
+                         multi_cores = FALSE, seed = 98765, verbose = FALSE)
   inc_multi <- incidence(fit_multi, dow = FALSE)
   inc <- inc_multi$measure$y[inc_multi$measure$pathogen == 'Total']
 
