@@ -237,10 +237,10 @@ knitr::kable(scaling_results, digits = 3,
 
 | method      | pathogen_structure | scaling_exponent | r_squared |
 |:------------|:-------------------|-----------------:|----------:|
-| p_spline    | multiple           |            0.986 |     0.998 |
-| p_spline    | single             |            0.914 |     0.986 |
-| random_walk | multiple           |            0.917 |     0.995 |
-| random_walk | single             |            0.952 |     0.999 |
+| p_spline    | multiple           |            0.975 |     0.999 |
+| p_spline    | single             |            0.911 |     0.982 |
+| random_walk | multiple           |            0.923 |     0.996 |
+| random_walk | single             |            0.937 |     0.998 |
 
 Scaling exponents: time complexity approximately O(n^exponent)
 
@@ -741,7 +741,7 @@ sessionInfo()
 #> [19] codetools_0.2-20      textshaping_1.0.4     jquerylib_0.1.4      
 #> [22] cli_3.6.5             rlang_1.1.6           ellipsis_0.3.2       
 #> [25] splines_4.5.2         withr_3.0.2           cachem_1.1.0         
-#> [28] yaml_2.3.11           StanHeaders_2.32.10   tools_4.5.2          
+#> [28] yaml_2.3.12           StanHeaders_2.32.10   tools_4.5.2          
 #> [31] rstan_2.32.7          inline_0.3.21         parallel_4.5.2       
 #> [34] rstantools_2.5.0      tsibble_1.1.6         vctrs_0.6.5          
 #> [37] R6_2.6.1              lubridate_1.9.4       matrixStats_1.5.0    
