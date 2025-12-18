@@ -62,7 +62,17 @@ fit_model <- function (constructed_model,
                        verbose = TRUE,
                        seed = NULL, ...) {
 
+  # validate inputs
   validate_class_inherits(constructed_model, 'EpiStrainDynamics.model')
+  validate_n_chain(n_chain)
+  validate_n_iter(n_iter)
+  validate_n_warmup(n_warmup)
+  validate_thin(thin)
+  validate_adapt_delta(adapt_delta)
+  validate_seed(seed)
+  validate_verbose(verbose)
+  validate_multi_cores(multi_cores)
+
   UseMethod("fit_model")
 }
 
