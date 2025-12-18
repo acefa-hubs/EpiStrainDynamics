@@ -36,9 +36,9 @@
 #' @param fitted_model Fitted model object with class `EpiStrainDynamics.fit`
 #'  with `multiple` or `subtyped` pathogen structure.
 #' @param numerator_combination Named pathogens or subtypes to be included in
-#'  proportion numerator.
+#'  proportion numerator, or NULL. If NULL, it will use each pathogen.
 #' @param denominator_combination Named pathogens or subtypes to be included in
-#'  proportion denominator, or 'all'.
+#'  proportion denominator, or NULL. If NULL, it will use all pathogens.
 #' @param ... Additional arguments passed to metrics calculation
 #' @return named list of class `EpiStrainDynamics.metric` containing a dataframe
 #'  of the calculated metric outcome (`$measure`), the fit object (`$fit`), and the
@@ -72,8 +72,7 @@
 #'
 #'   # or a unique combination, compared to all pathogens
 #'   prop2 <- proportion(fit,
-#'     numerator_combination = c('alpha', 'delta', 'omicron'),
-#'     denominator_combination = 'all'
+#'     numerator_combination = c('alpha', 'delta', 'omicron')
 #'   )
 #'
 #'   # or a user-specified combination in both numerator and denominator
@@ -91,116 +90,32 @@ proportion <- function(fitted_model,
 
   # Validate combination arguments
   pathogen_names <- unique(fitted_model$constructed_model$pathogen_names)
-  validate_pathogen_combination(numerator_combination, pathogen_names,
-                                "numerator_combination")
-  validate_pathogen_combination(denominator_combination, pathogen_names,
-                                "denominator_combination")
+  num_idx <- validate_pathogen_combination(
+    numerator_combination, pathogen_names, "numerator_combination")
+  denom_idx <- validate_pathogen_combination(
+    denominator_combination, pathogen_names, "denominator_combination")
 
-  UseMethod("proportion")
-}
-
-#' @rdname proportion
-#' @export
-proportion.ps <- function(fitted_model,
-                          numerator_combination = NULL,
-                          denominator_combination = NULL, ...) {
+  use_splines <- ifelse(inherits(fitted_model, 'ps'), TRUE, FALSE)
+  path_names <- fitted_model$constructed_model$pathogen_names
 
   if (is.null(numerator_combination)) {
-    numerator_idx_all <- length(unique(fitted_model$constructed_model$pathogen_names))
-
     measure <- do.call(
-      rbind, lapply(1:numerator_idx_all,
+      rbind, lapply(num_idx,
                     function(x) {
-                      compute_single_pathogen(
-                        fitted_model, 1, 'proportion',
-                        use_splines = TRUE,
+                      compute_proportion(
+                        fitted_model,
+                        use_splines = use_splines,
                         numerator_idx = x,
-                        denominator_idx = 1:numerator_idx_all
+                        denominator_idx = denom_idx
                       )
                     }
       ))
+  } else {
+    measure <- compute_proportion(fitted_model,
+                                  use_splines = use_splines,
+                                  numerator_idx = num_idx,
+                                  denominator_idx = denom_idx)
   }
-
-  else {
-    numerator_idx <- match(numerator_combination, fitted_model$constructed_model$pathogen_names)
-
-    if (identical(denominator_combination, "all")) {
-      denominator_idx <- 1:length(unique(fitted_model$constructed_model$pathogen_names))
-    }
-    else {
-      denominator_idx <- match(denominator_combination, fitted_model$constructed_model$pathogen_names)
-    }
-
-    measure <- compute_single_pathogen(fitted_model, 1, 'proportion',
-                                       use_splines = TRUE,
-                                       numerator_idx = numerator_idx,
-                                       denominator_idx = denominator_idx)
-  }
-
-  match_pathogen_name <- function(x) unique(fitted_model$constructed_model$pathogen_names)[x]
-
-  measure <- measure |>
-    dplyr::rowwise() |>
-    dplyr::mutate(pathogen = paste(match_pathogen_name(.data$pathogen),
-                                   collapse = ', ')) |>
-    dplyr::ungroup()
-
-  out <- list(measure = measure,
-              fit = fitted_model$fit,
-              constructed_model = fitted_model$constructed_model
-  )
-  class(out) <- c('proportion', 'EpiStrainDynamics.metric', class(out))
-  out
-
-}
-
-#' @rdname proportion
-#' @export
-proportion.rw <- function(fitted_model,
-                          numerator_combination = NULL,
-                          denominator_combination = NULL, ...) {
-
-  if (is.null(numerator_combination)) {
-    numerator_idx_all <- length(unique(fitted_model$constructed_model$pathogen_names))
-
-    measure <- do.call(
-      rbind, lapply(1:numerator_idx_all,
-                    function(x) {
-                      compute_single_pathogen(
-                        fitted_model, 1, 'proportion',
-                        use_splines = FALSE,
-                        numerator_idx = x,
-                        denominator_idx = 1:numerator_idx_all
-                      )
-                    }
-      ))
-  }
-
-  else {
-    numerator_idx <- match(numerator_combination, fitted_model$constructed_model$pathogen_names)
-
-    if (denominator_combination == 'all') {
-      denominator_idx <- 1:length(unique(fitted_model$constructed_model$pathogen_names))
-    }
-    else {
-      denominator_idx <- match(denominator_combination, fitted_model$constructed_model$pathogen_names)
-    }
-
-    measure <- compute_single_pathogen(fitted_model, 1, 'proportion',
-                                       use_splines = FALSE,
-                                       numerator_idx = numerator_idx,
-                                       denominator_idx = denominator_idx)
-  }
-
-  match_pathogen_name <- function(x) {
-    unique(fitted_model$constructed_model$pathogen_names)[x]
-  }
-  measure <- measure |>
-    dplyr::mutate(dplyr::across(dplyr::matches("pathogen"), match_pathogen_name)) |>
-    dplyr::rowwise() |>
-    dplyr::mutate(pathogen = paste(dplyr::c_across(dplyr::matches('pathogen')),
-                                   collapse = ', ')) |>
-    dplyr::ungroup()
 
   out <- list(measure = measure,
               fit = fitted_model$fit,
@@ -210,9 +125,67 @@ proportion.rw <- function(fitted_model,
   out
 }
 
-# =====================
-# CALCULATION FUNCTION
-# =====================
+#' Generic Computation Engine for porportion calculation
+#'
+#' High-level function that coordinates analysis for single pathogen models
+#'
+#' @param fitted_model Fitted model object
+#' @param use_splines Logical indicating whether to use spline transformation
+#' @param ... Additional arguments passed to calculation functions (e.g., tau_max, gi_dist for Rt)
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#'
+#' @return Data frame with analysis results
+#' @importFrom rstan extract
+#' @examples
+#' \dontrun{
+#' results <- compute_proportion(fitted_model, 1, "growth_rate")
+#' }
+compute_proportion <- function(fitted_model,
+                               use_splines, ...) {
+
+  components <- get_model_components(fitted_model)
+  post <- rstan::extract(components$fit)
+
+  # Transform data if using splines
+  if (use_splines) {
+    B_true <- predict_B_true(components$time_seq, components$knots,
+                             components$spline_degree)
+    a <- transform_posterior_multi(post, B_true, components$num_path,
+                                   components$num_days)
+  } else {
+    a <- post$a
+  }
+
+  extra_args <- list(...)
+
+  # Create results
+  selection_index <- 1:components$num_days
+  time_grid <- data.frame(time_idx = selection_index)
+
+  rep <- extra_args$numerator_idx # if not proportion calc then this will be NULL
+  pathogen_idx_col <- rep(list(rep), nrow(time_grid))
+
+  results <- calc_wrapper(time_grid, time_grid$time_idx,
+                          pathogen_idx_col = pathogen_idx_col,
+                          calc_proportion,
+                          a, post, components, extra_args, threshold = 0)
+
+  measure <- cbind(results,
+                   time = components$time[selection_index])
+
+
+  measure$pathogen <- do.call(rbind, pathogen_idx_col)
+  pathogen_names_vec <- components$pathogen_names
+  measure$pathogen <- apply(measure$pathogen, 1,
+                            function(x) paste(pathogen_names_vec[x],
+                                              collapse = ', ')
+  )
+
+  return(measure)
+}
 
 #' Calculate proportion for Individual Pathogen
 #'
