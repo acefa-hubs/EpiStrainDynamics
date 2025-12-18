@@ -67,22 +67,6 @@ $$P_t = \frac{I_{\text{numerator}}(t)}{I_{\text{denominator}}(t)}$$</p>
 <span>  numerator_combination <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  denominator_combination <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'ps'</span></span>
-<span><span class="fu">proportion</span><span class="op">(</span></span>
-<span>  <span class="va">fitted_model</span>,</span>
-<span>  numerator_combination <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  denominator_combination <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'rw'</span></span>
-<span><span class="fu">proportion</span><span class="op">(</span></span>
-<span>  <span class="va">fitted_model</span>,</span>
-<span>  numerator_combination <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  denominator_combination <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -97,12 +81,12 @@ with <code>multiple</code> or <code>subtyped</code> pathogen structure.</p></dd>
 
 <dt id="arg-numerator-combination">numerator_combination<a class="anchor" aria-label="anchor" href="#arg-numerator-combination"></a></dt>
 <dd><p>Named pathogens or subtypes to be included in
-proportion numerator.</p></dd>
+proportion numerator, or NULL. If NULL, it will use each pathogen.</p></dd>
 
 
 <dt id="arg-denominator-combination">denominator_combination<a class="anchor" aria-label="anchor" href="#arg-denominator-combination"></a></dt>
 <dd><p>Named pathogens or subtypes to be included in
-proportion denominator, or 'all'.</p></dd>
+proportion denominator, or NULL. If NULL, it will use all pathogens.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -167,8 +151,7 @@ Delta + Omicron)</p></li>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># or a unique combination, compared to all pathogens</span></span></span>
 <span class="r-in"><span>  <span class="va">prop2</span> <span class="op">&lt;-</span> <span class="fu">proportion</span><span class="op">(</span><span class="va">fit</span>,</span></span>
-<span class="r-in"><span>    numerator_combination <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'alpha'</span>, <span class="st">'delta'</span>, <span class="st">'omicron'</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    denominator_combination <span class="op">=</span> <span class="st">'all'</span></span></span>
+<span class="r-in"><span>    numerator_combination <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'alpha'</span>, <span class="st">'delta'</span>, <span class="st">'omicron'</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># or a user-specified combination in both numerator and denominator</span></span></span>

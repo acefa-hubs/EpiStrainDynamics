@@ -15,22 +15,6 @@ proportion(
   denominator_combination = NULL,
   ...
 )
-
-# S3 method for class 'ps'
-proportion(
-  fitted_model,
-  numerator_combination = NULL,
-  denominator_combination = NULL,
-  ...
-)
-
-# S3 method for class 'rw'
-proportion(
-  fitted_model,
-  numerator_combination = NULL,
-  denominator_combination = NULL,
-  ...
-)
 ```
 
 ## Arguments
@@ -42,12 +26,13 @@ proportion(
 
 - numerator_combination:
 
-  Named pathogens or subtypes to be included in proportion numerator.
+  Named pathogens or subtypes to be included in proportion numerator, or
+  NULL. If NULL, it will use each pathogen.
 
 - denominator_combination:
 
   Named pathogens or subtypes to be included in proportion denominator,
-  or 'all'.
+  or NULL. If NULL, it will use all pathogens.
 
 - ...:
 
@@ -128,8 +113,7 @@ if (FALSE) { # \dontrun{
 
   # or a unique combination, compared to all pathogens
   prop2 <- proportion(fit,
-    numerator_combination = c('alpha', 'delta', 'omicron'),
-    denominator_combination = 'all'
+    numerator_combination = c('alpha', 'delta', 'omicron')
   )
 
   # or a user-specified combination in both numerator and denominator

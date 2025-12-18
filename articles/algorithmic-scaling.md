@@ -237,10 +237,10 @@ knitr::kable(scaling_results, digits = 3,
 
 | method      | pathogen_structure | scaling_exponent | r_squared |
 |:------------|:-------------------|-----------------:|----------:|
-| p_spline    | multiple           |            0.975 |     0.999 |
-| p_spline    | single             |            0.911 |     0.982 |
-| random_walk | multiple           |            0.923 |     0.996 |
-| random_walk | single             |            0.937 |     0.998 |
+| p_spline    | multiple           |            0.990 |     0.998 |
+| p_spline    | single             |            0.924 |     0.987 |
+| random_walk | multiple           |            0.920 |     0.995 |
+| random_walk | single             |            0.951 |     0.998 |
 
 Scaling exponents: time complexity approximately O(n^exponent)
 
@@ -737,7 +737,7 @@ sessionInfo()
 #>  [7] timechange_0.3.0      evaluate_1.0.5        grid_4.5.2           
 #> [10] RColorBrewer_1.1-3    fastmap_1.2.0         jsonlite_2.0.0       
 #> [13] pkgbuild_1.4.8        gridExtra_2.3         purrr_1.2.0          
-#> [16] QuickJSR_1.8.1        viridisLite_0.4.2     scales_1.4.0         
+#> [16] viridisLite_0.4.2     QuickJSR_1.8.1        scales_1.4.0         
 #> [19] codetools_0.2-20      textshaping_1.0.4     jquerylib_0.1.4      
 #> [22] cli_3.6.5             rlang_1.1.6           ellipsis_0.3.2       
 #> [25] splines_4.5.2         withr_3.0.2           cachem_1.1.0         
@@ -750,8 +750,8 @@ sessionInfo()
 #> [46] pkgdown_2.2.0         RcppParallel_5.1.11-1 pillar_1.11.1        
 #> [49] bslib_0.9.0           gtable_0.3.6          loo_2.8.0            
 #> [52] glue_1.8.0            Rcpp_1.1.0            systemfonts_1.3.1    
-#> [55] xfun_0.54             tibble_3.3.0          tidyselect_1.2.1     
-#> [58] knitr_1.50            farver_2.1.2          htmltools_0.5.9      
-#> [61] labeling_0.4.3        rmarkdown_2.30        compiler_4.5.2       
-#> [64] S7_0.2.1
+#> [55] xfun_0.55             tibble_3.3.0          tidyselect_1.2.1     
+#> [58] knitr_1.50            farver_2.1.2          bayesplot_1.15.0     
+#> [61] htmltools_0.5.9       labeling_0.4.3        rmarkdown_2.30       
+#> [64] compiler_4.5.2        S7_0.2.1
 ```
