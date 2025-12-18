@@ -1,0 +1,203 @@
+# Setup script to generate fixture models for testing
+# Run this once to create test fixtures, or regenerate when needed
+#
+# Usage:
+#   source("tests/testthat/setup-fixtures.R")
+#
+# This will create fixture files in tests/testthat/fixtures/
+
+library(EpiStrainDynamics)
+
+# Create fixtures directory if it doesn't exist
+fixtures_dir <- "tests/testthat/fixtures"
+if (!dir.exists(fixtures_dir)) {
+  dir.create(fixtures_dir, recursive = TRUE)
+}
+
+message("Generating fixture models (this may take a few minutes)...")
+
+# ==============================================================================
+# FIXTURE 1: Random Walk, Single Pathogen
+# ==============================================================================
+
+message("  - Creating fit_rw_single...")
+
+# Use small dataset to keep fixture size manageable
+set.seed(42)
+n_days <- 90
+
+single_df <- data.frame(
+  dates = seq.Date(as.Date("2024-01-01"), by = "day", length.out = n_days),
+  cases = rpois(n_days, lambda = exp(8 + rnorm(n_days, 0, 0.3)))
+)
+
+mod_rw_single <- construct_model(
+  method = random_walk(),
+  pathogen_structure = single(
+    data = single_df,
+    case_timeseries = 'cases',
+    time = 'dates'
+  )
+)
+
+fit_rw_single <- fit_model(mod_rw_single,
+                           n_iter = 1000,
+                           n_chain = 2,
+                           verbose = FALSE)
+
+saveRDS(fit_rw_single, file.path(fixtures_dir, "fit_rw_single.rds"))
+
+# ==============================================================================
+# FIXTURE 2: P-Spline, Single Pathogen
+# ==============================================================================
+
+message("  - Creating fit_ps_single...")
+
+mod_ps_single <- construct_model(
+  method = p_spline(),
+  pathogen_structure = single(
+    data = single_df,
+    case_timeseries = 'cases',
+    time = 'dates'
+  )
+)
+
+fit_ps_single <- fit_model(mod_ps_single,
+                           n_iter = 1000,
+                           n_chain = 2,
+                           verbose = FALSE)
+
+saveRDS(fit_ps_single, file.path(fixtures_dir, "fit_ps_single.rds"))
+
+# ==============================================================================
+# FIXTURE 3: Random Walk, Multiple Pathogens
+# ==============================================================================
+
+message("  - Creating fit_rw_multi...")
+
+# Create synthetic multi-pathogen data
+total_cases <- single_df$cases
+
+# Create proportions that change over time
+prop_alpha <- plogis(seq(2, -2, length.out = n_days))
+prop_delta <- plogis(seq(-2, 2, length.out = n_days)) * 0.7
+prop_omicron <- plogis(seq(-3, 1, length.out = n_days)) * 0.5
+prop_other <- 1 - prop_alpha - prop_delta - prop_omicron
+prop_other[prop_other < 0] <- 0.01
+
+# Normalize
+prop_sum <- prop_alpha + prop_delta + prop_omicron + prop_other
+prop_alpha <- prop_alpha / prop_sum
+prop_delta <- prop_delta / prop_sum
+prop_omicron <- prop_omicron / prop_sum
+prop_other <- prop_other / prop_sum
+
+# Generate component counts
+alpha_cases <- rbinom(n_days, total_cases, prop_alpha)
+delta_cases <- rbinom(n_days, total_cases - alpha_cases,
+                      prop_delta / (1 - prop_alpha))
+omicron_cases <- rbinom(n_days, total_cases - alpha_cases - delta_cases,
+                        prop_omicron / (1 - prop_alpha - prop_delta))
+other_cases <- total_cases - alpha_cases - delta_cases - omicron_cases
+
+multi_df <- data.frame(
+  dates = single_df$dates,
+  total = total_cases,
+  alpha = alpha_cases,
+  delta = delta_cases,
+  omicron = omicron_cases,
+  other = other_cases
+)
+
+mod_rw_multi <- construct_model(
+  method = random_walk(),
+  pathogen_structure = multiple(
+    data = multi_df,
+    case_timeseries = 'total',
+    time = 'dates',
+    component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+  )
+)
+
+fit_rw_multi <- fit_model(mod_rw_multi,
+                          n_iter = 1000,
+                          n_chain = 2,
+                          verbose = FALSE)
+
+saveRDS(fit_rw_multi, file.path(fixtures_dir, "fit_rw_multi.rds"))
+
+# ==============================================================================
+# FIXTURE 4: P-Spline, Multiple Pathogens
+# ==============================================================================
+
+message("  - Creating fit_ps_multi...")
+
+mod_ps_multi <- construct_model(
+  method = p_spline(),
+  pathogen_structure = multiple(
+    data = multi_df,
+    case_timeseries = 'total',
+    time = 'dates',
+    component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+  )
+)
+
+fit_ps_multi <- fit_model(mod_ps_multi,
+                          n_iter = 1000,
+                          n_chain = 2,
+                          verbose = FALSE)
+
+saveRDS(fit_ps_multi, file.path(fixtures_dir, "fit_ps_multi.rds"))
+
+# ==============================================================================
+# GENERATE REFERENCE VALUES FOR REGRESSION TESTS
+# ==============================================================================
+
+message("  - Creating reference values for regression tests...")
+
+# Simple generation interval
+gi_simple <- function(x) {
+  ifelse(x == 0, 0, 4 * x * exp(-2 * x))
+}
+
+# Generate Rt reference
+rt_single <- Rt(fit_rw_single, tau_max = 7, gi_dist = gi_simple)
+saveRDS(rt_single$measure, file.path(fixtures_dir, "expected_rt_single.rds"))
+
+# Generate incidence reference
+inc_multi <- incidence(fit_rw_multi, dow = FALSE)
+saveRDS(inc_multi$measure, file.path(fixtures_dir, "expected_incidence_multi.rds"))
+
+# Generate growth rate reference
+gr_single <- growth_rate(fit_rw_single)
+saveRDS(gr_single$measure, file.path(fixtures_dir, "expected_gr_single.rds"))
+
+# Generate proportion reference
+prop_multi <- proportion(fit_rw_multi)
+saveRDS(prop_multi$measure, file.path(fixtures_dir, "expected_prop_multi.rds"))
+
+# ==============================================================================
+# SUMMARY
+# ==============================================================================
+
+message("\nFixture generation complete!")
+message("Created fixtures:")
+message("  - fit_rw_single.rds")
+message("  - fit_ps_single.rds")
+message("  - fit_rw_multi.rds")
+message("  - fit_ps_multi.rds")
+message("  - expected_rt_single.rds")
+message("  - expected_incidence_multi.rds")
+message("  - expected_gr_single.rds")
+message("  - expected_prop_multi.rds")
+message("\nFixtures saved to: ", fixtures_dir)
+
+# Print fixture sizes
+fixture_files <- list.files(fixtures_dir, pattern = "\\.rds$", full.names = TRUE)
+sizes <- file.info(fixture_files)$size / 1024^2  # Convert to MB
+message("\nFixture sizes:")
+for (i in seq_along(fixture_files)) {
+  message(sprintf("  - %s: %.2f MB",
+                  basename(fixture_files[i]),
+                  sizes[i]))
+}

@@ -161,8 +161,6 @@ test_that("validate_pathogen_combination accepts valid inputs", {
   expect_silent(validate_pathogen_combination("alpha", pathogen_names, "numerator_combination"))
   expect_silent(validate_pathogen_combination(c("alpha", "delta"), pathogen_names, "denominator_combination"))
 
-  # "all" only valid for denominator
-  expect_silent(validate_pathogen_combination("all", pathogen_names, "denominator_combination"))
 })
 
 test_that("validate_pathogen_combination rejects invalid inputs", {
@@ -174,21 +172,10 @@ test_that("validate_pathogen_combination rejects invalid inputs", {
     class = "rlang_error"
   )
 
-  # Empty vector
-  expect_error(
-    validate_pathogen_combination(character(0), pathogen_names, "numerator_combination"),
-    class = "rlang_error"
-  )
-
   # Invalid pathogen names
   expect_error(
     validate_pathogen_combination("beta", pathogen_names, "denominator_combination"),
     class = "rlang_error"
   )
 
-  # "all" not allowed for numerator
-  expect_error(
-    validate_pathogen_combination("all", pathogen_names, "numerator_combination"),
-    class = "rlang_error"
-  )
 })

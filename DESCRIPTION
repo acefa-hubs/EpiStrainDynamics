@@ -25,6 +25,7 @@ Biarch: true
 Depends: 
     R (>= 3.5)
 Imports: 
+    bayesplot,
     cli,
     dplyr,
     ggplot2,
@@ -32,7 +33,7 @@ Imports:
     purrr,
     Rcpp (>= 0.12.0),
     RcppParallel (>= 5.0.1),
-    rlang, 
+    rlang,
     rstan (>= 2.18.1),
     rstantools (>= 2.4.0),
     tsibble,
