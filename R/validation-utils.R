@@ -66,13 +66,13 @@ validate_class_inherits <- function(obj, class_names, require_all = TRUE) {
 
   # Check inheritance for each class
   inheritance_results <- sapply(class_names, function(cls) inherits(obj, cls))
+  obj_class <- class(obj)
 
   if (require_all) {
     # Must inherit from ALL classes
     if (!all(inheritance_results)) {
       missing_classes <- class_names[!inheritance_results]
       if (length(class_names) == 1) {
-        obj_class <- class(obj)
         cli::cli_abort("Input must be of class {class_names} but got class: {obj_class}")
       } else {
         cli::cli_abort(c("Input must inherit from all classes: {class_names}",
@@ -412,51 +412,39 @@ validate_gi_dist <- function(gi_dist) {
 
 #' Validate pathogen combination arguments
 #'
-#' @param combination Vector of pathogen names, 'all' (for denominator only), or NULL
+#' @param combination Vector of pathogen names or NULL
 #' @param pathogen_names Vector of valid pathogen names from the model
 #' @param arg_name Name of the argument being validated (for error messages).
 #'   Must be either "numerator_combination" or "denominator_combination"
 #' @noRd
 validate_pathogen_combination <- function(combination, pathogen_names, arg_name) {
+
   if (is.null(combination)) {
-    return()
-  }
-
-  # Determine if "all" is allowed based on argument name
-  allow_all <- identical(arg_name, "denominator_combination")
-
-  if (!is.character(combination)) {
-    all_msg <- if (allow_all) " or {.val all}" else ""
-    cli::cli_abort(c(
-      "{.arg {arg_name}} must be a character vector{all_msg}",
-      "x" = "You supplied a {.cls {class(combination)}} object"
-    ))
+    idx <- 1:length(pathogen_names)
+    return(idx)
   }
 
   if (length(combination) == 0) {
-    default_msg <- if (allow_all) "{.val all}, or {.code NULL}" else "{.code NULL}"
     cli::cli_abort(c(
       "{.arg {arg_name}} cannot be empty",
-      "i" = "Provide pathogen name{?s}, use {default_msg} for default"
+      "i" = "Provide pathogen name{?s}, use {.code NULL} for default"
     ))
-  }
-
-  # Check if it's exactly "all" (only valid for denominator)
-  if (allow_all && length(combination) == 1 && identical(combination, "all")) {
-    return()
   }
 
   # Validate pathogen names
   invalid_names <- setdiff(combination, pathogen_names)
   if (length(invalid_names) > 0) {
-    extra_msg <- if (allow_all) list("i" = "Or use {.val all} for all pathogens") else NULL
     cli::cli_abort(c(
       "{.arg {arg_name}} contains invalid pathogen name{?s}",
       "x" = "Invalid: {.val {invalid_names}}",
       "i" = "Valid pathogen names: {.val {pathogen_names}}",
-      extra_msg
+      NULL
     ))
   }
 
+  if (!is.null(combination)) {
+    idx <- match(combination, pathogen_names)
+    return(idx)
+  }
   invisible(NULL)
 }

@@ -2,25 +2,9 @@
 % Please edit documentation in R/proportion.R
 \name{proportion}
 \alias{proportion}
-\alias{proportion.ps}
-\alias{proportion.rw}
 \title{Generic Method for proportion Analysis}
 \usage{
 proportion(
-  fitted_model,
-  numerator_combination = NULL,
-  denominator_combination = NULL,
-  ...
-)
-
-\method{proportion}{ps}(
-  fitted_model,
-  numerator_combination = NULL,
-  denominator_combination = NULL,
-  ...
-)
-
-\method{proportion}{rw}(
   fitted_model,
   numerator_combination = NULL,
   denominator_combination = NULL,
@@ -32,10 +16,10 @@ proportion(
 with \code{multiple} or \code{subtyped} pathogen structure.}
 
 \item{numerator_combination}{Named pathogens or subtypes to be included in
-proportion numerator.}
+proportion numerator, or NULL. If NULL, it will use each pathogen.}
 
 \item{denominator_combination}{Named pathogens or subtypes to be included in
-proportion denominator, or 'all'.}
+proportion denominator, or NULL. If NULL, it will use all pathogens.}
 
 \item{...}{Additional arguments passed to metrics calculation}
 }
@@ -102,8 +86,7 @@ This metric function can be run directly on the fitted model output.
 
   # or a unique combination, compared to all pathogens
   prop2 <- proportion(fit,
-    numerator_combination = c('alpha', 'delta', 'omicron'),
-    denominator_combination = 'all'
+    numerator_combination = c('alpha', 'delta', 'omicron')
   )
 
   # or a user-specified combination in both numerator and denominator
