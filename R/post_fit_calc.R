@@ -275,7 +275,7 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
   # Transform data if using splines
   if (use_splines) {
     B_true <- predict_B_true(components$time_seq, components$knots, components$spline_degree)
-    a <- transform_posterior_multi(post, B_true, components$num_path, components$num_days)
+    a <- transform_posterior_single(post, B_true, components$num_days)
   } else {
     a <- post$a
   }
@@ -291,14 +291,12 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
     "incidence" = calc_incidence_single,
     "growth_rate" = calc_growth_single,
     "Rt" = calc_rt_single,
-    "proportion" = calc_proportion,
     {
       cli::cli_abort("Invalid option provided: '{measure}'.")
     }
   )
 
-  rep <- extra_args$numerator_idx # if not proportion calc then this will be NULL
-  pathogen_idx_col <- rep(list(rep), nrow(time_grid))
+  pathogen_idx_col <- rep(list(NULL), nrow(time_grid))
 
   results <- calc_wrapper(time_grid, time_grid$time_idx,
                           pathogen_idx_col = pathogen_idx_col,
@@ -307,18 +305,12 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
 
   measure <- cbind(results,
                    time = components$time[selection_index])
+  measure$pathogen <- components$pathogen_names
 
-  if (is.null(rep)) {
-    measure$pathogen <- components$pathogen_names
-    out <- list(measure = measure,
-                fit = fitted_model$fit,
-                constructed_model = fitted_model$constructed_model)
-    return(out)
-  }
-  else { # for proportion calculation, which will have names
-    measure$pathogen <- do.call(rbind, pathogen_idx_col)
-    return(measure)
-  }
+  out <- list(measure = measure,
+              fit = fitted_model$fit,
+              constructed_model = fitted_model$constructed_model)
+  return(out)
 }
 
 #' Unified Calculation Wrapper
