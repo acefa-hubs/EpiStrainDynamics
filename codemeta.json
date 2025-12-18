@@ -14,7 +14,7 @@
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.4.3 (2025-02-28)",
+  "runtimePlatform": "R version 4.5.1 (2025-06-13)",
   "author": [
     {
       "@type": "Person",
@@ -28,9 +28,7 @@
       "givenName": "Oliver",
       "familyName": "Eales",
       "@id": "https://orcid.org/0000-0002-8086-4495"
-    }
-  ],
-  "contributor": [
+    },
     {
       "@type": "Person",
       "givenName": "James",
@@ -42,7 +40,9 @@
       "givenName": "Freya",
       "familyName": "Shearer",
       "@id": "https://orcid.org/0000-0001-9600-3473"
-    },
+    }
+  ],
+  "contributor": [
     {
       "@type": "Person",
       "givenName": "Milad",
@@ -106,6 +106,30 @@
     },
     "2": {
       "@type": "SoftwareApplication",
+      "identifier": "bayesplot",
+      "name": "bayesplot",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=bayesplot"
+    },
+    "3": {
+      "@type": "SoftwareApplication",
+      "identifier": "cli",
+      "name": "cli",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=cli"
+    },
+    "4": {
+      "@type": "SoftwareApplication",
       "identifier": "dplyr",
       "name": "dplyr",
       "provider": {
@@ -116,7 +140,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=dplyr"
     },
-    "3": {
+    "5": {
       "@type": "SoftwareApplication",
       "identifier": "ggplot2",
       "name": "ggplot2",
@@ -128,12 +152,12 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=ggplot2"
     },
-    "4": {
+    "6": {
       "@type": "SoftwareApplication",
       "identifier": "methods",
       "name": "methods"
     },
-    "5": {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "purrr",
       "name": "purrr",
@@ -145,7 +169,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=purrr"
     },
-    "6": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "Rcpp",
       "name": "Rcpp",
@@ -158,7 +182,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=Rcpp"
     },
-    "7": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "RcppParallel",
       "name": "RcppParallel",
@@ -171,7 +195,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=RcppParallel"
     },
-    "8": {
+    "10": {
       "@type": "SoftwareApplication",
       "identifier": "rlang",
       "name": "rlang",
@@ -183,7 +207,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
     },
-    "9": {
+    "11": {
       "@type": "SoftwareApplication",
       "identifier": "rstan",
       "name": "rstan",
@@ -196,7 +220,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rstan"
     },
-    "10": {
+    "12": {
       "@type": "SoftwareApplication",
       "identifier": "rstantools",
       "name": "rstantools",
@@ -209,7 +233,19 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rstantools"
     },
-    "11": {
+    "13": {
+      "@type": "SoftwareApplication",
+      "identifier": "tsibble",
+      "name": "tsibble",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=tsibble"
+    },
+    "14": {
       "@type": "SoftwareApplication",
       "identifier": "viridis",
       "name": "viridis",
@@ -223,7 +259,7 @@
     },
     "SystemRequirements": "GNU make"
   },
-  "fileSize": "332458.067KB",
+  "fileSize": "376012.884KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
@@ -233,6 +269,16 @@
           "@type": "Person",
           "givenName": "Saras",
           "familyName": "Windecker"
+        },
+        {
+          "@type": "Person",
+          "givenName": "James",
+          "familyName": "McCaw"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Freya",
+          "familyName": "Shearer"
         },
         {
           "@type": "Person",
@@ -285,6 +331,6 @@
     }
   ],
   "readme": "https://github.com/acefa-hubs/EpiStrainDynamics/blob/main/README.md",
-  "contIntegration": "https://app.codecov.io/gh/acefa-hubs/EpiStrainDynamics",
+  "contIntegration": ["https://app.codecov.io/gh/acefa-hubs/EpiStrainDynamics", "https://github.com/acefa-hubs/EpiStrainDynamics/actions/workflows/R-CMD-check.yaml"],
   "developmentStatus": ["https://lifecycle.r-lib.org/articles/stages.html#stable", "https://www.repostatus.org/#active"]
 }
