@@ -8,6 +8,17 @@
 #'
 #' @return list of diagnostic information
 #' @export
+#' @examples
+#' \dontrun{
+#'   mod <- construct_model(
+#'     method = random_walk(),
+#'     pathogen_structure = single(
+#'       case_timeseries = sarscov2$cases,
+#'       time = sarscov2$date))
+#'   fit <- fit_model(mod)
+#'   diagnose(fit)
+#' }
+#'
 diagnose_model <- function(fitted_model,
                            rhat_threshold = 1.1,
                            eff_sample_threshold = 100) {
@@ -15,6 +26,9 @@ diagnose_model <- function(fitted_model,
   if (!inherits(fitted_model, "EpiStrainDynamics.fit")) {
     stop("fitted_model must be an EpiStrainDynamics.fit object")
   }
+
+  validate_rhat_threshold(rhat_threshold)
+  validate_eff_sample_threshold(eff_sample_threshold)
 
   # Get model summary
   fit_summary <- rstan::summary(fitted_model$fit)$summary
