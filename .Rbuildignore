@@ -13,3 +13,4 @@ LICENSE.txt
 paper.md
 ^README\.Rmd$
 ^vignettes/articles$
+^src/.*\.o$
