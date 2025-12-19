@@ -118,14 +118,16 @@ for (i in seq_along(seeds)) {
 # Calculate metrics for each seed
 recovery_metrics_single <- data.frame(
   seed = seeds,
-  correlation = sapply(single_fits, function(x) cor(x$median, true_lambda)),
-  rmse = sapply(single_fits, function(x) sqrt(mean((x$median - true_lambda)^2))),
-  relative_rmse = sapply(single_fits, function(x) {
+  correlation = vapply(single_fits, function(x) cor(x$median, true_lambda), 
+                       FUN.VALUE = numeric(1)),
+  rmse = vapply(single_fits, function(x) sqrt(mean((x$median - true_lambda)^2)), 
+                FUN.VALUE = numeric(1)),
+  relative_rmse = vapply(single_fits, function(x) {
     sqrt(mean((x$median - true_lambda)^2)) / mean(true_lambda)
-  }),
-  coverage_95 = sapply(single_fits, function(x) {
+  }, FUN.VALUE = numeric(1)),
+  coverage_95 = vapply(single_fits, function(x) {
     mean(true_lambda >= x$lower & true_lambda <= x$upper)
-  })
+  }, FUN.VALUE = numeric(1))
 )
 
 knitr::kable(recovery_metrics_single, digits = 4,
