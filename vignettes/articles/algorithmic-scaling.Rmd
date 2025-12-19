@@ -473,12 +473,15 @@ for (noise_level in noise_levels) {
 # Calculate correlation and RMSE for each noise level
 noise_comparison <- data.frame(
   noise_level = noise_levels,
-  correlation = sapply(noise_results, function(x) cor(x, inc_original_total)),
-  rmse = sapply(noise_results, function(x) sqrt(mean((x - inc_original_total)^2))),
-  relative_rmse = sapply(noise_results, function(x) {
+  correlation = vapply(noise_results, function(x) cor(x, inc_original_total), 
+                       FUN.VALUE = numeric(1)),
+  rmse = vapply(noise_results, function(x) sqrt(mean((x - inc_original_total)^2)), 
+                FUN.VALUE = numeric(1)),
+  relative_rmse = vapply(noise_results, function(x) {
     sqrt(mean((x - inc_original_total)^2)) / mean(inc_original_total)
-  }),
-  mean_difference = sapply(noise_results, function(x) mean(abs(x - inc_original_total)))
+  }, FUN.VALUE = numeric(1)),
+  mean_difference = vapply(noise_results, function(x) mean(abs(x - inc_original_total)), 
+                           FUN.VALUE = numeric(1))
 )
 
 knitr::kable(noise_comparison, digits = 4,

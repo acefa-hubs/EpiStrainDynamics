@@ -74,7 +74,7 @@ test_that("plot.incidence() has expected layers", {
   p <- plot(inc_single)
 
   # Get layer information
-  layers <- sapply(p$layers, function(x) class(x$geom)[1])
+  layers <- vapply(p$layers, function(x) class(x$geom)[1], FUN.VALUE = character(1))
 
   # Should have line, ribbons, and points
   expect_true("GeomLine" %in% layers)
@@ -89,7 +89,7 @@ test_that("plot.incidence() has expected layers", {
 test_that("plot.growth_rate() has expected layers", {
   p <- plot(gr_single)
 
-  layers <- sapply(p$layers, function(x) class(x$geom)[1])
+  layers <- vapply(p$layers, function(x) class(x$geom)[1], FUN.VALUE = character(1))
 
   # Should have line, ribbons, and horizontal line
   expect_true("GeomLine" %in% layers)
@@ -103,7 +103,7 @@ test_that("plot.growth_rate() has expected layers", {
 test_that("plot.Rt() has expected layers", {
   p <- plot(rt_single)
 
-  layers <- sapply(p$layers, function(x) class(x$geom)[1])
+  layers <- vapply(p$layers, function(x) class(x$geom)[1], FUN.VALUE = character(1))
 
   # Should have line, ribbons, and horizontal line at 1
   expect_true("GeomLine" %in% layers)
@@ -114,7 +114,7 @@ test_that("plot.Rt() has expected layers", {
 test_that("plot.proportion() has expected layers", {
   p <- plot(prop_multi)
 
-  layers <- sapply(p$layers, function(x) class(x$geom)[1])
+  layers <- vapply(p$layers, function(x) class(x$geom)[1], FUN.VALUE = character(1))
 
   # Should have line, ribbons, and horizontal line
   expect_true("GeomLine" %in% layers)
@@ -260,7 +260,8 @@ test_that("plot.growth_rate() includes horizontal line", {
   p <- plot(gr_single)
 
   # Find hline layer
-  hline_layers <- which(sapply(p$layers, function(x) inherits(x$geom, "GeomHline")))
+  hline_layers <- which(vapply(p$layers, function(x) inherits(x$geom, "GeomHline"),
+                               FUN.VALUE = logical(1)))
   expect_gt(length(hline_layers), 0)
 })
 
@@ -268,7 +269,8 @@ test_that("plot.Rt() includes horizontal line", {
   p <- plot(rt_single)
 
   # Find hline layer
-  hline_layers <- which(sapply(p$layers, function(x) inherits(x$geom, "GeomHline")))
+  hline_layers <- which(vapply(p$layers, function(x) inherits(x$geom, "GeomHline"),
+                               FUN.VALUE = logical(1)))
   expect_gt(length(hline_layers), 0)
 })
 
@@ -276,7 +278,8 @@ test_that("plot.proportion() includes horizontal line", {
   p <- plot(prop_multi)
 
   # Find hline layer
-  hline_layers <- which(sapply(p$layers, function(x) inherits(x$geom, "GeomHline")))
+  hline_layers <- which(vapply(p$layers, function(x) inherits(x$geom, "GeomHline"),
+                               FUN.VALUE = logical(1)))
   expect_gt(length(hline_layers), 0)
 })
 
@@ -321,7 +324,8 @@ test_that("plot.incidence() includes both 50% and 95% credible intervals", {
   p <- plot(inc_single)
 
   # Find ribbon layers
-  ribbon_layers <- which(sapply(p$layers, function(x) inherits(x$geom, "GeomRibbon")))
+  ribbon_layers <- which(vapply(p$layers, function(x) inherits(x$geom, "GeomRibbon"),
+                                FUN.VALUE = logical(1)))
   expect_equal(length(ribbon_layers), 2)
 
   # Check that ribbons have ymin and ymax mappings
@@ -335,21 +339,24 @@ test_that("plot.incidence() includes both 50% and 95% credible intervals", {
 test_that("plot.growth_rate() includes credible intervals", {
   p <- plot(gr_single)
 
-  ribbon_layers <- which(sapply(p$layers, function(x) inherits(x$geom, "GeomRibbon")))
+  ribbon_layers <- which(vapply(p$layers, function(x) inherits(x$geom, "GeomRibbon"),
+                                FUN.VALUE = logical(1)))
   expect_equal(length(ribbon_layers), 2)
 })
 
 test_that("plot.Rt() includes credible intervals", {
   p <- plot(rt_single)
 
-  ribbon_layers <- which(sapply(p$layers, function(x) inherits(x$geom, "GeomRibbon")))
+  ribbon_layers <- which(vapply(p$layers, function(x) inherits(x$geom, "GeomRibbon"),
+                                FUN.VALUE = logical(1)))
   expect_equal(length(ribbon_layers), 2)
 })
 
 test_that("plot.proportion() includes credible intervals", {
   p <- plot(prop_multi)
 
-  ribbon_layers <- which(sapply(p$layers, function(x) inherits(x$geom, "GeomRibbon")))
+  ribbon_layers <- which(vapply(p$layers, function(x) inherits(x$geom, "GeomRibbon"),
+                                FUN.VALUE = logical(1)))
   expect_equal(length(ribbon_layers), 2)
 })
 
@@ -361,7 +368,8 @@ test_that("plot.incidence() includes original data points", {
   p <- plot(inc_single)
 
   # Should have point and line layers for original data
-  layers <- sapply(p$layers, function(x) class(x$geom)[1])
+  layers <- vapply(p$layers, function(x) class(x$geom)[1],
+                   FUN.VALUE = character(1))
 
   # Count points - should have at least one for raw data
   n_points <- sum(layers == "GeomPoint")
