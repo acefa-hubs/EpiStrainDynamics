@@ -11,7 +11,7 @@ df1 <- df1[df1$date >= min_date & df1$date <= max_date, ]
 
 # Combine the data for each nation into one time series
 df <- data.frame()
-for (i in 1:length(unique(df1$date))) {
+for (i in seq_along(unique(df1$date))) {
   tmp_df <- df1[df1$date %in% unique(df1$date)[i], ]
 
   row_df <- data.frame(date = as.Date(unique(df1$date)[i]),
@@ -52,7 +52,7 @@ mat <- matrix(
 rownames(mat) <- uniq_dates
 colnames(mat) <- c(lineages_considered, "Other")
 
-for (i in 1:length(uniq_dates)) {
+for (i in seq_along(uniq_dates)) {
   print(i)
   df_tmp <- df1S[df1S$collection_date %in% uniq_dates[i], ]
   tab <- table(df_tmp$major_lineage, useNA = "always")

@@ -422,7 +422,7 @@ validate_gi_dist <- function(gi_dist) {
 validate_pathogen_combination <- function(combination, pathogen_names, arg_name) {
 
   if (is.null(combination)) {
-    idx <- seq_len(pathogen_names)
+    idx <- seq_along(pathogen_names)
     return(idx)
   }
 
