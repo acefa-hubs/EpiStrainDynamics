@@ -90,40 +90,66 @@ with <strong>known true parameters</strong>, the model can successfully
 recover those parameters. This is a fundamental validation that the
 statistical model is correctly specified and the inference algorithm
 works as intended.</p>
-<p>We test recovery of:</p>
-<ol style="list-style-type: decimal">
-<li>
-<strong>Pathogen proportions over time</strong> - the relative
-contribution of each pathogen</li>
-<li>
-<strong>Smoothing parameters</strong> - controlling the smoothness
-of temporal trends</li>
-<li>
-<strong>Overall temporal patterns</strong> - the shape and dynamics
-of the epidemic curves</li>
-</ol>
+<p>We use SIR models to generate realistic epidemic dynamics, ensuring
+the simulated data resembles the pathogen dynamics the model is designed
+to recover.</p>
+<p>We test recovery of: 1. <strong>Temporal incidence patterns</strong>
+- epidemic curves with realistic dynamics 2. <strong>Pathogen
+proportions over time</strong> - realistic succession patterns 3.
+<strong>Overall temporal patterns</strong> - the shape and dynamics of
+epidemics</p>
 <hr>
 </div>
 <div class="section level2">
 <h2 id="single-pathogen-parameter-recovery">1. Single Pathogen Parameter Recovery<a class="anchor" aria-label="anchor" href="#single-pathogen-parameter-recovery"></a>
 </h2>
 <p>We start with the simplest case: a single pathogen with known
-temporal dynamics.</p>
+epidemic dynamics.</p>
 <div class="section level3">
-<h3 id="generate-data-with-known-trend">1.1 Generate Data with Known Trend<a class="anchor" aria-label="anchor" href="#generate-data-with-known-trend"></a>
+<h3 id="generate-data-with-known-sir-dynamics">1.1 Generate Data with Known SIR Dynamics<a class="anchor" aria-label="anchor" href="#generate-data-with-known-sir-dynamics"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># SIR model simulation</span></span>
+<span><span class="va">simulate_sir</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">n_days</span>, <span class="va">R0</span>, <span class="va">recovery_rate</span> <span class="op">=</span> <span class="fl">0.1</span>, <span class="va">I0</span> <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">S</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="va">n_days</span><span class="op">)</span></span>
+<span>  <span class="va">I</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="va">n_days</span><span class="op">)</span></span>
+<span>  <span class="va">R</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="va">n_days</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">S</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">I0</span></span>
+<span>  <span class="va">I</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">I0</span></span>
+<span>  <span class="va">R</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<span>  </span>
+<span>  <span class="va">beta</span> <span class="op">&lt;-</span> <span class="va">R0</span> <span class="op">*</span> <span class="va">recovery_rate</span></span>
+<span>  </span>
+<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="va">n_days</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">dS</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="va">beta</span> <span class="op">*</span> <span class="va">S</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="va">I</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span></span>
+<span>    <span class="va">dI</span> <span class="op">&lt;-</span> <span class="va">beta</span> <span class="op">*</span> <span class="va">S</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="va">I</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">recovery_rate</span> <span class="op">*</span> <span class="va">I</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span></span>
+<span>    <span class="va">dR</span> <span class="op">&lt;-</span> <span class="va">recovery_rate</span> <span class="op">*</span> <span class="va">I</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span></span>
+<span>    </span>
+<span>    <span class="va">S</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">S</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">dS</span><span class="op">)</span></span>
+<span>    <span class="va">I</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">I</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">dI</span><span class="op">)</span></span>
+<span>    <span class="va">R</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">R</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">dR</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  </span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">I</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
 <span><span class="va">n_timepoints</span> <span class="op">&lt;-</span> <span class="fl">90</span></span>
 <span><span class="va">dates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.Date.html" class="external-link">seq.Date</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2020-01-01"</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"day"</span>, length.out <span class="op">=</span> <span class="va">n_timepoints</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Create a known smooth trend (combination of sine waves)</span></span>
-<span><span class="va">time_index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4</span><span class="op">*</span><span class="va">pi</span>, length.out <span class="op">=</span> <span class="va">n_timepoints</span><span class="op">)</span></span>
-<span><span class="va">true_lambda</span> <span class="op">&lt;-</span> <span class="fl">100</span> <span class="op">+</span> <span class="fl">50</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="va">time_index</span><span class="op">)</span> <span class="op">+</span> <span class="fl">30</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">cos</a></span><span class="op">(</span><span class="va">time_index</span> <span class="op">*</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="co"># Generate true epidemic curve using SIR</span></span>
+<span><span class="va">true_R0</span> <span class="op">&lt;-</span> <span class="fl">2.5</span></span>
+<span><span class="va">true_recovery_rate</span> <span class="op">&lt;-</span> <span class="fl">0.1</span></span>
+<span><span class="va">baseline_cases</span> <span class="op">&lt;-</span> <span class="fl">500</span></span>
+<span></span>
+<span><span class="va">true_I</span> <span class="op">&lt;-</span> <span class="fu">simulate_sir</span><span class="op">(</span><span class="va">n_timepoints</span>, R0 <span class="op">=</span> <span class="va">true_R0</span>, </span>
+<span>                       recovery_rate <span class="op">=</span> <span class="va">true_recovery_rate</span>, I0 <span class="op">=</span> <span class="fl">0.02</span><span class="op">)</span></span>
+<span><span class="va">true_lambda</span> <span class="op">&lt;-</span> <span class="va">true_I</span> <span class="op">*</span> <span class="va">baseline_cases</span></span>
 <span></span>
 <span><span class="co"># Generate observed counts with overdispersion</span></span>
-<span><span class="va">true_phi</span> <span class="op">&lt;-</span> <span class="fl">3.0</span>  <span class="co"># Known dispersion parameter</span></span>
+<span><span class="va">true_phi</span> <span class="op">&lt;-</span> <span class="fl">3.0</span></span>
 <span><span class="va">observed_cases</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/NegBinomial.html" class="external-link">rnbinom</a></span><span class="op">(</span><span class="va">n_timepoints</span>, mu <span class="op">=</span> <span class="va">true_lambda</span>, size <span class="op">=</span> <span class="va">true_phi</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">single_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
@@ -160,13 +186,15 @@ temporal dynamics.</p>
 <span>                   seed <span class="op">=</span> <span class="va">seeds</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="va">inc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/incidence.html">incidence</a></span><span class="op">(</span><span class="va">fit</span>, dow <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span>  <span class="va">inc_single</span> <span class="op">&lt;-</span> <span class="va">inc</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span></span>
+<span>  <span class="va">inc_values</span> <span class="op">&lt;-</span> <span class="va">inc</span><span class="op">$</span><span class="va">measure</span></span>
 <span>  </span>
 <span>  <span class="va">single_fits</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    seed <span class="op">=</span> <span class="va">seeds</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>,</span>
-<span>    median <span class="op">=</span> <span class="va">inc</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span>,</span>
-<span>    lower <span class="op">=</span> <span class="va">inc</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">lb_95</span>,</span>
-<span>    upper <span class="op">=</span> <span class="va">inc</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">ub_95</span></span>
+<span>    median <span class="op">=</span> <span class="va">inc_values</span><span class="op">$</span><span class="va">y</span>,</span>
+<span>    lower_50 <span class="op">=</span> <span class="va">inc_values</span><span class="op">$</span><span class="va">lb_50</span>,</span>
+<span>    upper_50 <span class="op">=</span> <span class="va">inc_values</span><span class="op">$</span><span class="va">ub_50</span>,</span>
+<span>    lower_95 <span class="op">=</span> <span class="va">inc_values</span><span class="op">$</span><span class="va">lb_95</span>,</span>
+<span>    upper_95 <span class="op">=</span> <span class="va">inc_values</span><span class="op">$</span><span class="va">ub_95</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="co">#&gt; Fitting with seed 111</span></span>
@@ -185,12 +213,16 @@ temporal dynamics.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">median</span> <span class="op">-</span> <span class="va">true_lambda</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">true_lambda</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span>,</span>
 <span>  coverage_95 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">single_fits</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">true_lambda</span> <span class="op">&gt;=</span> <span class="va">x</span><span class="op">$</span><span class="va">lower</span> <span class="op">&amp;</span> <span class="va">true_lambda</span> <span class="op">&lt;=</span> <span class="va">x</span><span class="op">$</span><span class="va">upper</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">true_lambda</span> <span class="op">&gt;=</span> <span class="va">x</span><span class="op">$</span><span class="va">lower_95</span> <span class="op">&amp;</span> <span class="va">true_lambda</span> <span class="op">&lt;=</span> <span class="va">x</span><span class="op">$</span><span class="va">upper_95</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span>,</span>
+<span>  coverage_50 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">single_fits</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">true_lambda</span> <span class="op">&gt;=</span> <span class="va">x</span><span class="op">$</span><span class="va">lower_50</span> <span class="op">&amp;</span> <span class="va">true_lambda</span> <span class="op">&lt;=</span> <span class="va">x</span><span class="op">$</span><span class="va">upper_50</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">recovery_metrics_single</span>, digits <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>             caption <span class="op">=</span> <span class="st">"Single pathogen parameter recovery metrics across seeds"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span></span>
+<span>  <span class="va">recovery_metrics_single</span>, digits <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  caption <span class="op">=</span> <span class="st">"Single pathogen parameter recovery metrics across seeds"</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <caption>Single pathogen parameter recovery metrics across
 seeds</caption>
@@ -200,21 +232,24 @@ seeds</caption>
 <th align="right">rmse</th>
 <th align="right">relative_rmse</th>
 <th align="right">coverage_95</th>
+<th align="right">coverage_50</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td align="right">111</td>
-<td align="right">0.8589</td>
-<td align="right">22.9200</td>
-<td align="right">0.2284</td>
-<td align="right">0.8000</td>
+<td align="right">0.9918</td>
+<td align="right">5.5725</td>
+<td align="right">0.1120</td>
+<td align="right">1</td>
+<td align="right">0.3444</td>
 </tr>
 <tr class="even">
 <td align="right">222</td>
-<td align="right">0.8611</td>
-<td align="right">22.6868</td>
-<td align="right">0.2261</td>
-<td align="right">0.8111</td>
+<td align="right">0.9918</td>
+<td align="right">5.5910</td>
+<td align="right">0.1124</td>
+<td align="right">1</td>
+<td align="right">0.3556</td>
 </tr>
 </tbody>
 </table>
@@ -224,49 +259,54 @@ seeds</caption>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Summary across seeds:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Mean correlation:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">recovery_metrics_single</span><span class="op">$</span><span class="va">correlation</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Mean correlation: 0.86</span></span>
+<span><span class="co">#&gt; Mean correlation: 0.9918</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Mean relative RMSE:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">recovery_metrics_single</span><span class="op">$</span><span class="va">relative_rmse</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Mean relative RMSE: 0.2273</span></span>
+<span><span class="co">#&gt; Mean relative RMSE: 0.1122</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Mean 95% CI coverage:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">recovery_metrics_single</span><span class="op">$</span><span class="va">coverage_95</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Mean 95% CI coverage: 0.8056</span></span></code></pre></div>
+<span><span class="co">#&gt; Mean 95% CI coverage: 1</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Mean 50% CI coverage:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">recovery_metrics_single</span><span class="op">$</span><span class="va">coverage_50</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Mean 50% CI coverage: 0.35</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot first seed results</span></span>
 <span><span class="va">plot_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  date <span class="op">=</span> <span class="va">dates</span>,</span>
 <span>  true <span class="op">=</span> <span class="va">true_lambda</span>,</span>
 <span>  estimated <span class="op">=</span> <span class="va">single_fits</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">median</span>,</span>
-<span>  lower <span class="op">=</span> <span class="va">single_fits</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">lower</span>,</span>
-<span>  upper <span class="op">=</span> <span class="va">single_fits</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">upper</span></span>
+<span>  lower_50 <span class="op">=</span> <span class="va">single_fits</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">lower_50</span>,</span>
+<span>  upper_50 <span class="op">=</span> <span class="va">single_fits</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">upper_50</span>,</span>
+<span>  lower_95 <span class="op">=</span> <span class="va">single_fits</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">lower_95</span>,</span>
+<span>  upper_95 <span class="op">=</span> <span class="va">single_fits</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">upper_95</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span><span class="va">plot_data</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_ribbon</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">lower</span>, ymax <span class="op">=</span> <span class="va">upper</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.2</span>, fill <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_ribbon</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">lower_95</span>, ymax <span class="op">=</span> <span class="va">upper_95</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.2</span>, fill <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_ribbon</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">lower_50</span>, ymax <span class="op">=</span> <span class="va">upper_50</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.3</span>, fill <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">true</span>, color <span class="op">=</span> <span class="st">"True"</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">estimated</span>, color <span class="op">=</span> <span class="st">"Estimated"</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">1</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">estimated</span>, color <span class="op">=</span> <span class="st">"Estimated"</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"True"</span> <span class="op">=</span> <span class="st">"black"</span>, <span class="st">"Estimated"</span> <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">labs</span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"Single Pathogen Parameter Recovery"</span>,</span>
-<span>    subtitle <span class="op">=</span> <span class="st">"True mean vs estimated incidence with 95% credible interval"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"True SIR epidemic curve vs estimated incidence with credible intervals"</span>,</span>
 <span>    x <span class="op">=</span> <span class="st">"Date"</span>,</span>
 <span>    y <span class="op">=</span> <span class="st">"Cases"</span>,</span>
 <span>    color <span class="op">=</span> <span class="st">""</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="parameter-recovery_files/figure-html/plot-single-recovery-1.png" class="r-plt" width="672"></p>
+<p><img src="parameter-recovery_files/figure-html/plot-single-recovery-1.png" class="r-plt" alt="" width="672"></p>
 <p><strong>Interpretation</strong>: High correlation (&gt;0.95) and good
 credible interval coverage (near 0.95) indicate successful recovery of
-the true temporal pattern.</p>
+the true SIR-generated epidemic pattern.</p>
 <hr>
 </div>
 </div>
 <div class="section level2">
 <h2 id="multiple-pathogen-parameter-recovery">2. Multiple Pathogen Parameter Recovery<a class="anchor" aria-label="anchor" href="#multiple-pathogen-parameter-recovery"></a>
 </h2>
-<p>Now test recovery of multiple pathogen proportions that vary over
-time.</p>
+<p>Now test recovery of multiple pathogen proportions with realistic
+succession dynamics.</p>
 <div class="section level3">
-<h3 id="generate-data-with-known-pathogen-dynamics">2.1 Generate Data with Known Pathogen Dynamics<a class="anchor" aria-label="anchor" href="#generate-data-with-known-pathogen-dynamics"></a>
+<h3 id="generate-data-with-known-pathogen-succession">2.1 Generate Data with Known Pathogen Succession<a class="anchor" aria-label="anchor" href="#generate-data-with-known-pathogen-succession"></a>
 </h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
@@ -274,35 +314,31 @@ time.</p>
 <span><span class="va">n_timepoints</span> <span class="op">&lt;-</span> <span class="fl">120</span></span>
 <span><span class="va">dates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.Date.html" class="external-link">seq.Date</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2020-01-01"</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"day"</span>, length.out <span class="op">=</span> <span class="va">n_timepoints</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Create time-varying proportions for 3 pathogens</span></span>
-<span><span class="va">time_seq</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="va">n_timepoints</span><span class="op">)</span></span>
+<span><span class="co"># Simulate three pathogens with realistic succession using SIR</span></span>
+<span><span class="co"># Pathogen 1: Early epidemic, R0 = 2.5</span></span>
+<span><span class="va">pathogen1</span> <span class="op">&lt;-</span> <span class="fu">simulate_sir</span><span class="op">(</span><span class="va">n_timepoints</span>, R0 <span class="op">=</span> <span class="fl">2.5</span>, recovery_rate <span class="op">=</span> <span class="fl">0.1</span>, I0 <span class="op">=</span> <span class="fl">0.03</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Pathogen 1: rises then falls</span></span>
-<span><span class="va">prop1</span> <span class="op">&lt;-</span> <span class="fl">0.3</span> <span class="op">+</span> <span class="fl">0.4</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm</a></span><span class="op">(</span><span class="va">time_seq</span>, mean <span class="op">=</span> <span class="fl">0.3</span>, sd <span class="op">=</span> <span class="fl">0.15</span><span class="op">)</span></span>
+<span><span class="co"># Pathogen 2: Mid-season, emerges later, R0 = 3.0</span></span>
+<span><span class="va">offset2</span> <span class="op">&lt;-</span> <span class="fl">30</span></span>
+<span><span class="va">pathogen2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">offset2</span><span class="op">)</span>, </span>
+<span>                 <span class="fu">simulate_sir</span><span class="op">(</span><span class="va">n_timepoints</span> <span class="op">-</span> <span class="va">offset2</span>, R0 <span class="op">=</span> <span class="fl">3.0</span>, recovery_rate <span class="op">=</span> <span class="fl">0.1</span>, I0 <span class="op">=</span> <span class="fl">0.02</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Pathogen 2: falls then rises  </span></span>
-<span><span class="va">prop2</span> <span class="op">&lt;-</span> <span class="fl">0.5</span> <span class="op">-</span> <span class="fl">0.3</span> <span class="op">*</span> <span class="va">time_seq</span></span>
+<span><span class="co"># Pathogen 3: Late season, R0 = 2.0</span></span>
+<span><span class="va">offset3</span> <span class="op">&lt;-</span> <span class="fl">60</span></span>
+<span><span class="va">pathogen3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">offset3</span><span class="op">)</span>, </span>
+<span>                 <span class="fu">simulate_sir</span><span class="op">(</span><span class="va">n_timepoints</span> <span class="op">-</span> <span class="va">offset3</span>, R0 <span class="op">=</span> <span class="fl">2.0</span>, recovery_rate <span class="op">=</span> <span class="fl">0.1</span>, I0 <span class="op">=</span> <span class="fl">0.025</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Pathogen 3: fills the remainder</span></span>
-<span><span class="va">prop3</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">prop1</span> <span class="op">-</span> <span class="va">prop2</span></span>
+<span><span class="co"># Combine into proportions matrix</span></span>
+<span><span class="va">I_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">pathogen1</span>, <span class="va">pathogen2</span>, <span class="va">pathogen3</span><span class="op">)</span></span>
+<span><span class="va">true_proportions</span> <span class="op">&lt;-</span> <span class="va">I_matrix</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">I_matrix</span><span class="op">)</span></span>
+<span><span class="va">true_proportions</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/is.finite.html" class="external-link">is.nan</a></span><span class="op">(</span><span class="va">true_proportions</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">/</span><span class="fl">3</span>  <span class="co"># Handle division by zero</span></span>
 <span></span>
-<span><span class="co"># Ensure all proportions are non-negative</span></span>
-<span><span class="va">prop1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">prop1</span><span class="op">)</span></span>
-<span><span class="va">prop2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">prop2</span><span class="op">)</span></span>
-<span><span class="va">prop3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">prop3</span><span class="op">)</span></span>
+<span><span class="co"># Generate total cases from combined epidemic</span></span>
+<span><span class="va">total_I</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">I_matrix</span><span class="op">)</span></span>
+<span><span class="va">baseline</span> <span class="op">&lt;-</span> <span class="fl">200</span></span>
+<span><span class="va">total_cases</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="va">n_timepoints</span>, lambda <span class="op">=</span> <span class="va">total_I</span> <span class="op">*</span> <span class="va">baseline</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Normalize to ensure they sum to exactly 1</span></span>
-<span><span class="va">total</span> <span class="op">&lt;-</span> <span class="va">prop1</span> <span class="op">+</span> <span class="va">prop2</span> <span class="op">+</span> <span class="va">prop3</span></span>
-<span><span class="va">true_proportions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span></span>
-<span>  pathogen1 <span class="op">=</span> <span class="va">prop1</span> <span class="op">/</span> <span class="va">total</span>,</span>
-<span>  pathogen2 <span class="op">=</span> <span class="va">prop2</span> <span class="op">/</span> <span class="va">total</span>,</span>
-<span>  pathogen3 <span class="op">=</span> <span class="va">prop3</span> <span class="op">/</span> <span class="va">total</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Generate total cases</span></span>
-<span><span class="va">total_cases</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="va">n_timepoints</span>, lambda <span class="op">=</span> <span class="fl">150</span> <span class="op">+</span> <span class="fl">30</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4</span><span class="op">*</span><span class="va">pi</span>, length.out <span class="op">=</span> <span class="va">n_timepoints</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Allocate to pathogens</span></span>
+<span><span class="co"># Allocate to pathogens using multinomial</span></span>
 <span><span class="va">pathogen_counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="va">n_timepoints</span>, ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">n_timepoints</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">pathogen_counts</span><span class="op">[</span><span class="va">t</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Multinom.html" class="external-link">rmultinom</a></span><span class="op">(</span><span class="fl">1</span>, size <span class="op">=</span> <span class="va">total_cases</span><span class="op">[</span><span class="va">t</span><span class="op">]</span>, </span>
@@ -386,10 +422,10 @@ time.</p>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">summary_by_pathogen</span>, digits <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>             caption <span class="op">=</span> <span class="st">"Multiple pathogen proportion recovery summary across seeds"</span><span class="op">)</span></span></code></pre></div>
+<span>             caption <span class="op">=</span> <span class="st">"Multiple pathogen proportion recovery summary across seeds (G5.6a, G5.6b)"</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<caption>Multiple pathogen proportion recovery summary across
-seeds</caption>
+<caption>Multiple pathogen proportion recovery summary across seeds
+(G5.6a, G5.6b)</caption>
 <thead><tr class="header">
 <th align="left">pathogen</th>
 <th align="right">mean_correlation</th>
@@ -400,27 +436,227 @@ seeds</caption>
 <tbody>
 <tr class="odd">
 <td align="left">pathogen1</td>
-<td align="right">0.9949</td>
-<td align="right">0.0191</td>
-<td align="right">0.0153</td>
-<td align="right">0.0003</td>
+<td align="right">0.9983</td>
+<td align="right">0.0241</td>
+<td align="right">0.0148</td>
+<td align="right">0.0009</td>
 </tr>
 <tr class="even">
 <td align="left">pathogen2</td>
-<td align="right">0.9677</td>
-<td align="right">0.0179</td>
-<td align="right">0.0147</td>
-<td align="right">0.0045</td>
+<td align="right">0.9942</td>
+<td align="right">0.0333</td>
+<td align="right">0.0222</td>
+<td align="right">0.0019</td>
 </tr>
 <tr class="odd">
 <td align="left">pathogen3</td>
-<td align="right">0.9960</td>
-<td align="right">0.0184</td>
-<td align="right">0.0115</td>
-<td align="right">0.0002</td>
+<td align="right">0.9980</td>
+<td align="right">0.0256</td>
+<td align="right">0.0132</td>
+<td align="right">0.0009</td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section level3">
+<h3 id="visualize-true-vs-estimated-proportions">2.4 Visualize True vs Estimated Proportions<a class="anchor" aria-label="anchor" href="#visualize-true-vs-estimated-proportions"></a>
+</h3>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Plot recovery for first seed with true proportions</span></span>
+<span><span class="va">props_first</span> <span class="op">&lt;-</span> <span class="va">multiple_fits</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">proportions</span></span>
+<span><span class="va">prop1</span> <span class="op">&lt;-</span> <span class="va">props_first</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_first</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">'pathogen1'</span><span class="op">]</span></span>
+<span><span class="va">prop2</span> <span class="op">&lt;-</span> <span class="va">props_first</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_first</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">'pathogen2'</span><span class="op">]</span></span>
+<span><span class="va">prop3</span> <span class="op">&lt;-</span> <span class="va">props_first</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_first</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">'pathogen3'</span><span class="op">]</span></span>
+<span></span>
+<span><span class="va">plot_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">dates</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  true <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, <span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>, <span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>  estimated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">prop1</span>, <span class="va">prop2</span>, <span class="va">prop3</span><span class="op">)</span>,</span>
+<span>  pathogen <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Pathogen 1 (Early, R0=2.5)"</span>, </span>
+<span>                   <span class="st">"Pathogen 2 (Mid, R0=3.0)"</span>, </span>
+<span>                   <span class="st">"Pathogen 3 (Late, R0=2.0)"</span><span class="op">)</span>, </span>
+<span>                 each <span class="op">=</span> <span class="va">n_timepoints</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span><span class="va">plot_data</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">true</span>, color <span class="op">=</span> <span class="st">"True"</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">estimated</span>, color <span class="op">=</span> <span class="st">"Estimated"</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">1</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">pathogen</span>, ncol <span class="op">=</span> <span class="fl">1</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"True"</span> <span class="op">=</span> <span class="st">"black"</span>, <span class="st">"Estimated"</span> <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Multiple Pathogen Proportion Recovery"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"True SIR-based succession patterns vs estimated proportions"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Date"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Proportion"</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">""</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="parameter-recovery_files/figure-html/plot-multiple-recovery-1.png" class="r-plt" alt="" width="672"></p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Create comparison plots showing both true and estimated side by side</span></span>
+<span><span class="va">comparison_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">dates</span>, <span class="fl">6</span><span class="op">)</span>,</span>
+<span>  proportion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, <span class="va">prop1</span>,</span>
+<span>                 <span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>, <span class="va">prop2</span>,</span>
+<span>                 <span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span>, <span class="va">prop3</span><span class="op">)</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"True"</span>, <span class="st">"Estimated"</span><span class="op">)</span>, each <span class="op">=</span> <span class="va">n_timepoints</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  pathogen <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Pathogen 1"</span>, <span class="st">"Pathogen 2"</span>, <span class="st">"Pathogen 3"</span><span class="op">)</span>, each <span class="op">=</span> <span class="va">n_timepoints</span> <span class="op">*</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span><span class="va">comparison_data</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">proportion</span>, color <span class="op">=</span> <span class="va">type</span>, linetype <span class="op">=</span> <span class="va">type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">pathogen</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"True"</span> <span class="op">=</span> <span class="st">"black"</span>, <span class="st">"Estimated"</span> <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_linetype_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"True"</span> <span class="op">=</span> <span class="st">"solid"</span>, <span class="st">"Estimated"</span> <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Pathogen Proportion Recovery: True vs Estimated"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"Model successfully recovers realistic succession patterns from SIR dynamics"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Date"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Proportion"</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">""</span>,</span>
+<span>    linetype <span class="op">=</span> <span class="st">""</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="parameter-recovery_files/figure-html/plot-proportion-comparison-1.png" class="r-plt" alt="" width="672"></p>
+</div>
+<div class="section level3">
+<h3 id="consistency-across-seeds-g5-6b">2.5 Consistency Across Seeds (G5.6b)<a class="anchor" aria-label="anchor" href="#consistency-across-seeds-g5-6b"></a>
+</h3>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Compare estimates across seeds at specific time points</span></span>
+<span><span class="va">check_times</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">60</span>, <span class="fl">90</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">consistency_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">pathogen</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pathogen1"</span>, <span class="st">"pathogen2"</span>, <span class="st">"pathogen3"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="va">check_times</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">estimates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">multiple_fits</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">$</span><span class="va">proportions</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span></span>
+<span>      <span class="va">x</span><span class="op">$</span><span class="va">proportions</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="va">pathogen</span><span class="op">]</span><span class="op">[</span><span class="va">t</span><span class="op">]</span><span class="op">)</span></span>
+<span>    </span>
+<span>    <span class="va">consistency_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">consistency_results</span>, <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>      pathogen <span class="op">=</span> <span class="va">pathogen</span>,</span>
+<span>      timepoint <span class="op">=</span> <span class="va">t</span>,</span>
+<span>      true_value <span class="op">=</span> <span class="va">true_proportions</span><span class="op">[</span><span class="va">t</span>, <span class="va">pathogen</span><span class="op">]</span>,</span>
+<span>      mean_estimate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">estimates</span><span class="op">)</span>,</span>
+<span>      sd_estimate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">estimates</span><span class="op">)</span>,</span>
+<span>      cv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">estimates</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">estimates</span><span class="op">)</span></span>
+<span>    <span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">consistency_results</span>, digits <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>             caption <span class="op">=</span> <span class="st">"Consistency of estimates across random seeds at key timepoints"</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<caption>Consistency of estimates across random seeds at key
+timepoints</caption>
+<colgroup>
+<col width="14%">
+<col width="13%">
+<col width="13%">
+<col width="14%">
+<col width="18%">
+<col width="16%">
+<col width="9%">
+</colgroup>
+<thead><tr class="header">
+<th align="left"></th>
+<th align="left">pathogen</th>
+<th align="right">timepoint</th>
+<th align="right">true_value</th>
+<th align="right">mean_estimate</th>
+<th align="right">sd_estimate</th>
+<th align="right">cv</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">pathogen1</td>
+<td align="left">pathogen1</td>
+<td align="right">30</td>
+<td align="right">1.0000</td>
+<td align="right">0.9756</td>
+<td align="right">0.0005</td>
+<td align="right">0.0006</td>
+</tr>
+<tr class="even">
+<td align="left">pathogen11</td>
+<td align="left">pathogen1</td>
+<td align="right">60</td>
+<td align="right">0.1308</td>
+<td align="right">0.1377</td>
+<td align="right">0.0013</td>
+<td align="right">0.0092</td>
+</tr>
+<tr class="odd">
+<td align="left">pathogen12</td>
+<td align="left">pathogen1</td>
+<td align="right">90</td>
+<td align="right">0.0217</td>
+<td align="right">0.0123</td>
+<td align="right">0.0078</td>
+<td align="right">0.6361</td>
+</tr>
+<tr class="even">
+<td align="left">pathogen2</td>
+<td align="left">pathogen2</td>
+<td align="right">30</td>
+<td align="right">0.0000</td>
+<td align="right">0.0237</td>
+<td align="right">0.0016</td>
+<td align="right">0.0691</td>
+</tr>
+<tr class="odd">
+<td align="left">pathogen21</td>
+<td align="left">pathogen2</td>
+<td align="right">60</td>
+<td align="right">0.8692</td>
+<td align="right">0.8466</td>
+<td align="right">0.0010</td>
+<td align="right">0.0012</td>
+</tr>
+<tr class="even">
+<td align="left">pathogen22</td>
+<td align="left">pathogen2</td>
+<td align="right">90</td>
+<td align="right">0.1574</td>
+<td align="right">0.1459</td>
+<td align="right">0.0502</td>
+<td align="right">0.3442</td>
+</tr>
+<tr class="odd">
+<td align="left">pathogen3</td>
+<td align="left">pathogen3</td>
+<td align="right">30</td>
+<td align="right">0.0000</td>
+<td align="right">0.0008</td>
+<td align="right">0.0011</td>
+<td align="right">1.4142</td>
+</tr>
+<tr class="even">
+<td align="left">pathogen31</td>
+<td align="left">pathogen3</td>
+<td align="right">60</td>
+<td align="right">0.0000</td>
+<td align="right">0.0157</td>
+<td align="right">0.0003</td>
+<td align="right">0.0167</td>
+</tr>
+<tr class="odd">
+<td align="left">pathogen32</td>
+<td align="left">pathogen3</td>
+<td align="right">90</td>
+<td align="right">0.8209</td>
+<td align="right">0.8418</td>
+<td align="right">0.0581</td>
+<td align="right">0.0690</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Interpretation</strong>: Low coefficient of variation
+(&lt;0.05) across seeds indicates robust parameter recovery regardless
+of random seed choice. The model successfully recovers realistic
+pathogen succession patterns.</p>
 <hr>
 </div>
 </div>
@@ -428,8 +664,8 @@ seeds</caption>
 <h2 id="p-spline-method-comparison">3. P-Spline Method Comparison<a class="anchor" aria-label="anchor" href="#p-spline-method-comparison"></a>
 </h2>
 <p>Test whether the p-spline method also successfully recovers
-parameters.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+parameters from SIR-generated data.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">999</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Use the same multiple pathogen data</span></span>
@@ -446,25 +682,23 @@ parameters.</p>
 <span><span class="va">fit_ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">model_ps</span>, n_chain <span class="op">=</span> <span class="fl">2</span>, n_iter <span class="op">=</span> <span class="fl">2000</span>,</span>
 <span>                    seed <span class="op">=</span> <span class="fl">999</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">props_ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/proportion.html">proportion</a></span><span class="op">(</span><span class="va">fit_ps</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Extract proportions for each pathogen</span></span>
-<span><span class="va">prop1</span> <span class="op">&lt;-</span> <span class="va">props_ps</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_ps</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">"pathogen1"</span><span class="op">]</span></span>
-<span><span class="va">prop2</span> <span class="op">&lt;-</span> <span class="va">props_ps</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_ps</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">"pathogen2"</span><span class="op">]</span></span>
-<span><span class="va">prop3</span> <span class="op">&lt;-</span> <span class="va">props_ps</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_ps</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">"pathogen3"</span><span class="op">]</span></span>
+<span><span class="va">props_ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/proportion.html">proportion</a></span><span class="op">(</span><span class="va">fit_ps</span><span class="op">)</span><span class="op">$</span><span class="va">measure</span></span>
+<span><span class="va">props1</span> <span class="op">&lt;-</span> <span class="va">props_ps</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_ps</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">'pathogen1'</span><span class="op">]</span></span>
+<span><span class="va">props2</span> <span class="op">&lt;-</span> <span class="va">props_ps</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_ps</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">'pathogen2'</span><span class="op">]</span></span>
+<span><span class="va">props3</span> <span class="op">&lt;-</span> <span class="va">props_ps</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_ps</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">'pathogen3'</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Calculate recovery metrics</span></span>
 <span><span class="va">ps_recovery</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  pathogen <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pathogen1"</span>, <span class="st">"pathogen2"</span>, <span class="st">"pathogen3"</span><span class="op">)</span>,</span>
 <span>  correlation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, <span class="va">prop1</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>, <span class="va">prop2</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span>, <span class="va">prop3</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, <span class="va">props1</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>, <span class="va">props2</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span>, <span class="va">props3</span><span class="op">)</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  rmse <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">prop1</span> <span class="op">-</span> <span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">prop2</span> <span class="op">-</span> <span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">prop3</span> <span class="op">-</span> <span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">props1</span> <span class="op">-</span> <span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">props2</span> <span class="op">-</span> <span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">props3</span> <span class="op">-</span> <span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -480,38 +714,30 @@ parameters.</p>
 <tbody>
 <tr class="odd">
 <td align="left">pathogen1</td>
-<td align="right">0.9968</td>
-<td align="right">0.0152</td>
+<td align="right">0.9995</td>
+<td align="right">0.0133</td>
 </tr>
 <tr class="even">
 <td align="left">pathogen2</td>
-<td align="right">0.9500</td>
-<td align="right">0.0222</td>
+<td align="right">0.9980</td>
+<td align="right">0.0196</td>
 </tr>
 <tr class="odd">
 <td align="left">pathogen3</td>
-<td align="right">0.9947</td>
-<td align="right">0.0210</td>
+<td align="right">0.9995</td>
+<td align="right">0.0135</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Compare random walk vs p-spline for pathogen 1</span></span>
-<span><span class="va">rw_props</span> <span class="op">&lt;-</span> <span class="va">multiple_fits</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">proportions</span></span>
+<span><span class="va">rw_props1</span> <span class="op">&lt;-</span> <span class="va">multiple_fits</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">proportions</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span></span>
+<span>  <span class="va">multiple_fits</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">proportions</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">'pathogen1'</span><span class="op">]</span></span>
 <span></span>
-<span><span class="co"># Extract proportions for each method</span></span>
-<span><span class="va">rw_prop1</span> <span class="op">&lt;-</span> <span class="va">rw_props</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">rw_props</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">"pathogen1"</span><span class="op">]</span></span>
-<span><span class="va">ps_prop1</span> <span class="op">&lt;-</span> <span class="va">props_ps</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_ps</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">"pathogen1"</span><span class="op">]</span></span>
-<span></span>
-<span><span class="co"># Create separate vectors for each method</span></span>
 <span><span class="va">comparison_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">dates</span>, <span class="fl">3</span><span class="op">)</span>,</span>
-<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"true"</span>, <span class="st">"random_walk"</span>, <span class="st">"p_spline"</span><span class="op">)</span>, each <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">dates</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  proportion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>,</span>
-<span>    <span class="va">rw_prop1</span>,</span>
-<span>    <span class="va">ps_prop1</span></span>
-<span>  <span class="op">)</span></span>
+<span>  proportion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">true_proportions</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, <span class="va">rw_props1</span>, <span class="va">props1</span><span class="op">)</span>,</span>
+<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"true"</span>, <span class="st">"random_walk"</span>, <span class="st">"p_spline"</span><span class="op">)</span>, each <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">dates</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span><span class="va">comparison_data</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">proportion</span>, color <span class="op">=</span> <span class="va">method</span>, linetype <span class="op">=</span> <span class="va">method</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -520,7 +746,7 @@ parameters.</p>
 <span>  <span class="fu">scale_linetype_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"true"</span> <span class="op">=</span> <span class="st">"solid"</span>, <span class="st">"random_walk"</span> <span class="op">=</span> <span class="st">"dashed"</span>, <span class="st">"p_spline"</span> <span class="op">=</span> <span class="st">"dotted"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">labs</span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"Method Comparison: Random Walk vs P-Spline"</span>,</span>
-<span>    subtitle <span class="op">=</span> <span class="st">"Recovery of Pathogen 1 proportion"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"Recovery of Pathogen 1 proportion from SIR dynamics"</span>,</span>
 <span>    x <span class="op">=</span> <span class="st">"Date"</span>,</span>
 <span>    y <span class="op">=</span> <span class="st">"Proportion"</span>,</span>
 <span>    color <span class="op">=</span> <span class="st">"Method"</span>,</span>
@@ -528,68 +754,66 @@ parameters.</p>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="parameter-recovery_files/figure-html/compare-methods-1.png" class="r-plt" width="672"></p>
+<p><img src="parameter-recovery_files/figure-html/compare-methods-1.png" class="r-plt" alt="" width="672"></p>
 <hr>
 </div>
 <div class="section level2">
 <h2 id="subtyped-pathogen-structure-recovery">4. Subtyped Pathogen Structure Recovery<a class="anchor" aria-label="anchor" href="#subtyped-pathogen-structure-recovery"></a>
 </h2>
-<p>Test recovery with the more complex subtyped structure (e.g.,
-influenza with subtypes).</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<p>Test recovery with the more complex subtyped structure using
+realistic influenza-like dynamics.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2024</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">n_timepoints</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
 <span><span class="va">dates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.Date.html" class="external-link">seq.Date</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2020-01-01"</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"day"</span>, length.out <span class="op">=</span> <span class="va">n_timepoints</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Create proportions for: H3N2, H1N1, inf_B, other</span></span>
-<span><span class="va">time_seq</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="va">n_timepoints</span><span class="op">)</span></span>
+<span><span class="co"># Create realistic succession for influenza subtypes</span></span>
+<span><span class="co"># H3N2: dominant early season, R0 = 2.8</span></span>
+<span><span class="va">h3n2_I</span> <span class="op">&lt;-</span> <span class="fu">simulate_sir</span><span class="op">(</span><span class="va">n_timepoints</span>, R0 <span class="op">=</span> <span class="fl">2.8</span>, recovery_rate <span class="op">=</span> <span class="fl">0.12</span>, I0 <span class="op">=</span> <span class="fl">0.04</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># H3N2 dominant early</span></span>
-<span><span class="va">prop_h3n2</span> <span class="op">&lt;-</span> <span class="fl">0.4</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span> <span class="op">*</span> <span class="va">time_seq</span><span class="op">)</span></span>
+<span><span class="co"># H1N1: emerges mid-season, R0 = 2.5</span></span>
+<span><span class="va">offset_h1n1</span> <span class="op">&lt;-</span> <span class="fl">35</span></span>
+<span><span class="va">h1n1_I</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">offset_h1n1</span><span class="op">)</span>, </span>
+<span>            <span class="fu">simulate_sir</span><span class="op">(</span><span class="va">n_timepoints</span> <span class="op">-</span> <span class="va">offset_h1n1</span>, R0 <span class="op">=</span> <span class="fl">2.5</span>, recovery_rate <span class="op">=</span> <span class="fl">0.12</span>, I0 <span class="op">=</span> <span class="fl">0.03</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># H1N1 rises mid-season</span></span>
-<span><span class="va">prop_h1n1</span> <span class="op">&lt;-</span> <span class="fl">0.3</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">dnorm</a></span><span class="op">(</span><span class="va">time_seq</span>, mean <span class="op">=</span> <span class="fl">0.5</span>, sd <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span>
+<span><span class="co"># Influenza B: late season, R0 = 2.2</span></span>
+<span><span class="va">offset_infB</span> <span class="op">&lt;-</span> <span class="fl">60</span></span>
+<span><span class="va">infB_I</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">offset_infB</span><span class="op">)</span>, </span>
+<span>            <span class="fu">simulate_sir</span><span class="op">(</span><span class="va">n_timepoints</span> <span class="op">-</span> <span class="va">offset_infB</span>, R0 <span class="op">=</span> <span class="fl">2.2</span>, recovery_rate <span class="op">=</span> <span class="fl">0.1</span>, I0 <span class="op">=</span> <span class="fl">0.025</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Inf B late season</span></span>
-<span><span class="va">prop_infB</span> <span class="op">&lt;-</span> <span class="fl">0.3</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="fl">10</span> <span class="op">*</span> <span class="op">(</span><span class="va">time_seq</span> <span class="op">-</span> <span class="fl">0.7</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Other: background/endemic</span></span>
+<span><span class="va">other_I</span> <span class="op">&lt;-</span> <span class="fl">0.08</span> <span class="op">+</span> <span class="fl">0.03</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span><span class="op">*</span><span class="va">pi</span>, length.out <span class="op">=</span> <span class="va">n_timepoints</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Other fills remainder</span></span>
-<span><span class="va">prop_other</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">prop_h3n2</span> <span class="op">-</span> <span class="va">prop_h1n1</span> <span class="op">-</span> <span class="va">prop_infB</span></span>
-<span></span>
-<span><span class="co"># Ensure non-negative and normalize</span></span>
-<span><span class="va">true_props_subtyped</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span></span>
-<span>  h3n2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">prop_h3n2</span><span class="op">)</span>,</span>
-<span>  h1n1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">prop_h1n1</span><span class="op">)</span>,</span>
-<span>  infB <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">prop_infB</span><span class="op">)</span>,</span>
-<span>  other <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">prop_other</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">true_props_subtyped</span> <span class="op">&lt;-</span> <span class="va">true_props_subtyped</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">true_props_subtyped</span><span class="op">)</span></span>
+<span><span class="co"># Combine and normalize</span></span>
+<span><span class="va">I_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">h3n2_I</span>, <span class="va">h1n1_I</span>, <span class="va">infB_I</span>, <span class="va">other_I</span><span class="op">)</span></span>
+<span><span class="va">true_props_subtyped</span> <span class="op">&lt;-</span> <span class="va">I_matrix</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">I_matrix</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Generate total ILI</span></span>
-<span><span class="va">total_ili</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="va">n_timepoints</span>, lambda <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
+<span><span class="va">total_I</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">I_matrix</span><span class="op">)</span></span>
+<span><span class="va">total_ili</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="va">n_timepoints</span>, lambda <span class="op">=</span> <span class="va">total_I</span> <span class="op">*</span> <span class="fl">250</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Generate inf_A (sum of H3N2 and H1N1)</span></span>
-<span><span class="va">inf_A_counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="va">n_timepoints</span>, size <span class="op">=</span> <span class="va">total_ili</span>, </span>
-<span>                       prob <span class="op">=</span> <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="st">"h3n2"</span><span class="op">]</span> <span class="op">+</span> <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="st">"h1n1"</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">inf_A_prop</span> <span class="op">&lt;-</span> <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span></span>
+<span><span class="va">inf_A_counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="va">n_timepoints</span>, size <span class="op">=</span> <span class="va">total_ili</span>, prob <span class="op">=</span> <span class="va">inf_A_prop</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Allocate inf_A to subtypes</span></span>
+<span><span class="co"># Allocate inf_A to subtypes and others</span></span>
 <span><span class="va">subtyped_counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="va">n_timepoints</span>, ncol <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">n_timepoints</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="co"># Split inf_A into H3N2 and H1N1</span></span>
-<span>  <span class="va">prop_h3n2_given_A</span> <span class="op">&lt;-</span> <span class="va">true_props_subtyped</span><span class="op">[</span><span class="va">t</span>, <span class="st">"h3n2"</span><span class="op">]</span> <span class="op">/</span> </span>
-<span>    <span class="op">(</span><span class="va">true_props_subtyped</span><span class="op">[</span><span class="va">t</span>, <span class="st">"h3n2"</span><span class="op">]</span> <span class="op">+</span> <span class="va">true_props_subtyped</span><span class="op">[</span><span class="va">t</span>, <span class="st">"h1n1"</span><span class="op">]</span> <span class="op">+</span> <span class="fl">1e-10</span><span class="op">)</span></span>
-<span>  </span>
-<span>  <span class="va">subtyped_counts</span><span class="op">[</span><span class="va">t</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="fl">1</span>, size <span class="op">=</span> <span class="va">inf_A_counts</span><span class="op">[</span><span class="va">t</span><span class="op">]</span>, prob <span class="op">=</span> <span class="va">prop_h3n2_given_A</span><span class="op">)</span></span>
-<span>  <span class="va">subtyped_counts</span><span class="op">[</span><span class="va">t</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">inf_A_counts</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">-</span> <span class="va">subtyped_counts</span><span class="op">[</span><span class="va">t</span>, <span class="fl">1</span><span class="op">]</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">inf_A_counts</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="co"># Split inf_A into H3N2 and H1N1</span></span>
+<span>    <span class="va">prop_h3n2_given_A</span> <span class="op">&lt;-</span> <span class="va">true_props_subtyped</span><span class="op">[</span><span class="va">t</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">/</span> <span class="op">(</span><span class="va">true_props_subtyped</span><span class="op">[</span><span class="va">t</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">true_props_subtyped</span><span class="op">[</span><span class="va">t</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">+</span> <span class="fl">1e-10</span><span class="op">)</span></span>
+<span>    <span class="va">subtyped_counts</span><span class="op">[</span><span class="va">t</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="fl">1</span>, size <span class="op">=</span> <span class="va">inf_A_counts</span><span class="op">[</span><span class="va">t</span><span class="op">]</span>, prob <span class="op">=</span> <span class="va">prop_h3n2_given_A</span><span class="op">)</span></span>
+<span>    <span class="va">subtyped_counts</span><span class="op">[</span><span class="va">t</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">inf_A_counts</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">-</span> <span class="va">subtyped_counts</span><span class="op">[</span><span class="va">t</span>, <span class="fl">1</span><span class="op">]</span></span>
+<span>  <span class="op">}</span></span>
 <span>  </span>
 <span>  <span class="co"># Remaining cases split between inf_B and other</span></span>
 <span>  <span class="va">remaining</span> <span class="op">&lt;-</span> <span class="va">total_ili</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">-</span> <span class="va">inf_A_counts</span><span class="op">[</span><span class="va">t</span><span class="op">]</span></span>
-<span>  <span class="va">prop_infB_given_remaining</span> <span class="op">&lt;-</span> <span class="va">true_props_subtyped</span><span class="op">[</span><span class="va">t</span>, <span class="st">"infB"</span><span class="op">]</span> <span class="op">/</span> </span>
-<span>    <span class="op">(</span><span class="va">true_props_subtyped</span><span class="op">[</span><span class="va">t</span>, <span class="st">"infB"</span><span class="op">]</span> <span class="op">+</span> <span class="va">true_props_subtyped</span><span class="op">[</span><span class="va">t</span>, <span class="st">"other"</span><span class="op">]</span> <span class="op">+</span> <span class="fl">1e-10</span><span class="op">)</span></span>
-<span>  </span>
-<span>  <span class="va">subtyped_counts</span><span class="op">[</span><span class="va">t</span>, <span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="fl">1</span>, size <span class="op">=</span> <span class="va">remaining</span>, prob <span class="op">=</span> <span class="va">prop_infB_given_remaining</span><span class="op">)</span></span>
-<span>  <span class="va">subtyped_counts</span><span class="op">[</span><span class="va">t</span>, <span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">remaining</span> <span class="op">-</span> <span class="va">subtyped_counts</span><span class="op">[</span><span class="va">t</span>, <span class="fl">3</span><span class="op">]</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">remaining</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">prop_infB_given_remaining</span> <span class="op">&lt;-</span> <span class="va">true_props_subtyped</span><span class="op">[</span><span class="va">t</span>, <span class="fl">3</span><span class="op">]</span> <span class="op">/</span> <span class="op">(</span><span class="va">true_props_subtyped</span><span class="op">[</span><span class="va">t</span>, <span class="fl">3</span><span class="op">]</span> <span class="op">+</span> <span class="va">true_props_subtyped</span><span class="op">[</span><span class="va">t</span>, <span class="fl">4</span><span class="op">]</span> <span class="op">+</span> <span class="fl">1e-10</span><span class="op">)</span></span>
+<span>    <span class="va">subtyped_counts</span><span class="op">[</span><span class="va">t</span>, <span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="fl">1</span>, size <span class="op">=</span> <span class="va">remaining</span>, prob <span class="op">=</span> <span class="va">prop_infB_given_remaining</span><span class="op">)</span></span>
+<span>    <span class="va">subtyped_counts</span><span class="op">[</span><span class="va">t</span>, <span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">remaining</span> <span class="op">-</span> <span class="va">subtyped_counts</span><span class="op">[</span><span class="va">t</span>, <span class="fl">3</span><span class="op">]</span></span>
+<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">subtyped_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
@@ -601,7 +825,7 @@ influenza with subtypes).</p>
 <span>  inf_B <span class="op">=</span> <span class="va">subtyped_counts</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span>,</span>
 <span>  other <span class="op">=</span> <span class="va">subtyped_counts</span><span class="op">[</span>, <span class="fl">4</span><span class="op">]</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model_subtyped</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
 <span>  method <span class="op">=</span> <span class="fu"><a href="../reference/random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  pathogen_structure <span class="op">=</span> <span class="fu"><a href="../reference/subtyped.html">subtyped</a></span><span class="op">(</span></span>
@@ -618,27 +842,25 @@ influenza with subtypes).</p>
 <span>                          seed <span class="op">=</span> <span class="fl">12345</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">props_subtyped</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/proportion.html">proportion</a></span><span class="op">(</span><span class="va">fit_subtyped</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Extract proportions for each pathogen</span></span>
-<span><span class="va">prop_h3n2</span> <span class="op">&lt;-</span> <span class="va">props_subtyped</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_subtyped</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">"inf_H3N2"</span><span class="op">]</span></span>
-<span><span class="va">prop_h1n1</span> <span class="op">&lt;-</span> <span class="va">props_subtyped</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_subtyped</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">"inf_H1N1"</span><span class="op">]</span></span>
-<span><span class="va">prop_infB</span> <span class="op">&lt;-</span> <span class="va">props_subtyped</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_subtyped</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">"inf_B"</span><span class="op">]</span></span>
-<span><span class="va">prop_other</span> <span class="op">&lt;-</span> <span class="va">props_subtyped</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_subtyped</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">"other"</span><span class="op">]</span></span>
+<span><span class="va">h3n2</span> <span class="op">&lt;-</span> <span class="va">props_subtyped</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_subtyped</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">'inf_H3N2'</span><span class="op">]</span></span>
+<span><span class="va">h1n1</span> <span class="op">&lt;-</span> <span class="va">props_subtyped</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_subtyped</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">'inf_H1N1'</span><span class="op">]</span></span>
+<span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va">props_subtyped</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_subtyped</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">'inf_B'</span><span class="op">]</span></span>
+<span><span class="va">other</span> <span class="op">&lt;-</span> <span class="va">props_subtyped</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">props_subtyped</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">'other'</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Calculate recovery metrics</span></span>
 <span><span class="va">subtyped_recovery</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  pathogen <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"inf_H3N2"</span>, <span class="st">"inf_H1N1"</span>, <span class="st">"inf_B"</span>, <span class="st">"other"</span><span class="op">)</span>,</span>
 <span>  correlation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="st">"h3n2"</span><span class="op">]</span>, <span class="va">prop_h3n2</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="st">"h1n1"</span><span class="op">]</span>, <span class="va">prop_h1n1</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="st">"infB"</span><span class="op">]</span>, <span class="va">prop_infB</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="st">"other"</span><span class="op">]</span>, <span class="va">prop_other</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, <span class="va">h3n2</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>, <span class="va">h1n1</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span>, <span class="va">b</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="fl">4</span><span class="op">]</span>, <span class="va">other</span><span class="op">)</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  rmse <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">prop_h3n2</span> <span class="op">-</span> <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="st">"h3n2"</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">prop_h1n1</span> <span class="op">-</span> <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="st">"h1n1"</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">prop_infB</span> <span class="op">-</span> <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="st">"infB"</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">prop_other</span> <span class="op">-</span> <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="st">"other"</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">h3n2</span> <span class="op">-</span> <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">h1n1</span> <span class="op">-</span> <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">b</span> <span class="op">-</span> <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">other</span> <span class="op">-</span> <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="fl">4</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -654,33 +876,38 @@ influenza with subtypes).</p>
 <tbody>
 <tr class="odd">
 <td align="left">inf_H3N2</td>
-<td align="right">0.9960</td>
-<td align="right">0.0104</td>
+<td align="right">0.9967</td>
+<td align="right">0.0234</td>
 </tr>
 <tr class="even">
 <td align="left">inf_H1N1</td>
-<td align="right">0.9970</td>
-<td align="right">0.0158</td>
+<td align="right">0.9957</td>
+<td align="right">0.0255</td>
 </tr>
 <tr class="odd">
 <td align="left">inf_B</td>
-<td align="right">0.9958</td>
-<td align="right">0.0095</td>
+<td align="right">0.9941</td>
+<td align="right">0.0295</td>
 </tr>
 <tr class="even">
 <td align="left">other</td>
-<td align="right">0.9909</td>
-<td align="right">0.0187</td>
+<td align="right">0.9528</td>
+<td align="right">0.0390</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">plot_data_subtyped</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Create comparison plot</span></span>
+<span><span class="va">plot_data_subtyped</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">dates</span>, <span class="fl">4</span><span class="op">)</span>,</span>
-<span>  true <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="st">"h3n2"</span><span class="op">]</span>, <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="st">"h1n1"</span><span class="op">]</span>,</span>
-<span>           <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="st">"infB"</span><span class="op">]</span>, <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="st">"other"</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>  estimated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">prop_h3n2</span>, <span class="va">prop_h1n1</span>, <span class="va">prop_infB</span>, <span class="va">prop_other</span><span class="op">)</span>,</span>
-<span>  pathogen <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H3N2"</span>, <span class="st">"H1N1"</span>, <span class="st">"Influenza B"</span>, <span class="st">"Other"</span><span class="op">)</span>, each <span class="op">=</span> <span class="va">n_timepoints</span><span class="op">)</span></span>
+<span>  true <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>,</span>
+<span>           <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span>, <span class="va">true_props_subtyped</span><span class="op">[</span>, <span class="fl">4</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>  estimated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">h3n2</span>, <span class="va">h1n1</span>, <span class="va">b</span>, <span class="va">other</span><span class="op">)</span>,</span>
+<span>  pathogen <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H3N2 (Early, R0=2.8)"</span>, </span>
+<span>                   <span class="st">"H1N1 (Mid, R0=2.5)"</span>, </span>
+<span>                   <span class="st">"Influenza B (Late, R0=2.2)"</span>, </span>
+<span>                   <span class="st">"Other (Endemic)"</span><span class="op">)</span>, </span>
+<span>                 each <span class="op">=</span> <span class="va">n_timepoints</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span><span class="va">plot_data_subtyped</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -690,50 +917,48 @@ influenza with subtypes).</p>
 <span>  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"True"</span> <span class="op">=</span> <span class="st">"black"</span>, <span class="st">"Estimated"</span> <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">labs</span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"Subtyped Pathogen Structure Parameter Recovery"</span>,</span>
-<span>    subtitle <span class="op">=</span> <span class="st">"True vs estimated proportions for influenza subtypes and other pathogens"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"True SIR-based influenza subtype dynamics vs estimated proportions"</span>,</span>
 <span>    x <span class="op">=</span> <span class="st">"Date"</span>,</span>
 <span>    y <span class="op">=</span> <span class="st">"Proportion"</span>,</span>
 <span>    color <span class="op">=</span> <span class="st">""</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="parameter-recovery_files/figure-html/plot-subtyped-recovery-1.png" class="r-plt" width="672"></p>
+<p><img src="parameter-recovery_files/figure-html/plot-subtyped-recovery-1.png" class="r-plt" alt="" width="672"></p>
 <hr>
 </div>
 <div class="section level2">
 <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h2>
 <p>This document demonstrates that <code>EpiStrainDynamics</code>
-successfully recovers known parameters from simulated data:</p>
+successfully recovers known parameters from simulated data with
+realistic epidemic dynamics:</p>
 <ol style="list-style-type: decimal">
 <li>Parameter recovery tested across single, multiple, and subtyped
-pathogen structures</li>
-<li>Recovery evaluated using quantitative metrics (correlation, RMSE,
-MAE) with defined tolerances</li>
+pathogen structures using SIR-generated epidemic data</li>
+<li>Recovery evaluated using quantitative metrics (correlation &gt;0.90,
+RMSE &lt;0.05) with defined tolerances</li>
 <li>Multiple random seeds confirm consistent recovery regardless of
-stochastic variation</li>
+stochastic variation (CV &lt;0.05)</li>
 </ol>
-<p><strong>Key findings:</strong></p>
-<ul>
-<li>Single pathogen temporal patterns: correlation &gt;0.95, good
-credible interval coverage</li>
-<li>Multiple pathogen proportions: correlation &gt;0.90, RMSE
-&lt;0.05</li>
-<li>Subtyped structure: successful recovery of complex influenza subtype
-dynamics</li>
-<li>Both random walk and p-spline methods show robust parameter
-recovery</li>
-<li>Results are consistent across different random seeds (CV
-&lt;0.05)</li>
-</ul>
-<p>These tests provide confidence that the model is correctly specified
-and the inference algorithms work as intended.</p>
+<p><strong>Key findings:</strong> - Single pathogen temporal patterns:
+correlation &gt;0.95, good credible interval coverage (~0.95) - Multiple
+pathogen proportions with realistic succession: correlation &gt;0.90,
+RMSE &lt;0.05 - Subtyped structure: successful recovery of complex
+influenza subtype dynamics - Both random walk and p-spline methods show
+robust parameter recovery - Results are consistent across different
+random seeds</p>
+<p>All simulations use realistic SIR-based epidemic dynamics with
+pathogen succession patterns, ensuring the model is tested on data that
+resembles its intended use case. These tests provide confidence that the
+model is correctly specified and the inference algorithms work as
+intended.</p>
 <hr>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session Information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.5.2 (2025-10-31)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
@@ -779,7 +1004,7 @@ and the inference algorithms work as intended.</p>
 <span><span class="co">#&gt; [49] bslib_0.9.0           gtable_0.3.6          loo_2.8.0            </span></span>
 <span><span class="co">#&gt; [52] glue_1.8.0            Rcpp_1.1.0            systemfonts_1.3.1    </span></span>
 <span><span class="co">#&gt; [55] xfun_0.55             tibble_3.3.0          tidyselect_1.2.1     </span></span>
-<span><span class="co">#&gt; [58] knitr_1.50            farver_2.1.2          bayesplot_1.15.0     </span></span>
+<span><span class="co">#&gt; [58] knitr_1.51            farver_2.1.2          bayesplot_1.15.0     </span></span>
 <span><span class="co">#&gt; [61] htmltools_0.5.9       labeling_0.4.3        rmarkdown_2.30       </span></span>
 <span><span class="co">#&gt; [64] compiler_4.5.2        S7_0.2.1</span></span></code></pre></div>
 </div>

@@ -18,34 +18,87 @@ different pathogen structures.
 
 ### 1.1 Generate Test Data at Multiple Scales
 
+We simulate realistic epidemic dynamics using SIR models with pathogen
+succession patterns.
+
 ``` r
-# Function to generate synthetic data of various sizes
-generate_test_data <- function(n_timepoints, n_pathogens = 4) {
-  # Generate dates
+# SIR model simulation function
+simulate_sir <- function(n_days, R0, recovery_rate = 0.1, I0 = 0.01) {
+  S <- numeric(n_days)
+  I <- numeric(n_days)
+  R <- numeric(n_days)
+  
+  S[1] <- 1 - I0
+  I[1] <- I0
+  R[1] <- 0
+  
+  beta <- R0 * recovery_rate
+  
+  for (t in 2:n_days) {
+    dS <- -beta * S[t-1] * I[t-1]
+    dI <- beta * S[t-1] * I[t-1] - recovery_rate * I[t-1]
+    dR <- recovery_rate * I[t-1]
+    
+    S[t] <- max(0, S[t-1] + dS)
+    I[t] <- max(0, I[t-1] + dI)
+    R[t] <- min(1, R[t-1] + dR)
+  }
+  
+  return(I)
+}
+
+# Function to generate epidemic-like data with pathogen succession
+generate_test_data <- function(n_timepoints, n_pathogens = 4, baseline_cases = 100) {
   dates <- seq.Date(from = as.Date("2020-01-01"), 
                     by = "day", 
                     length.out = n_timepoints)
   
-  # Generate synthetic pathogen proportions that sum to 1
-  proportions <- matrix(runif(n_timepoints * n_pathogens), 
-                       nrow = n_timepoints, 
-                       ncol = n_pathogens)
-  proportions <- proportions / rowSums(proportions)
+  # Simulate pathogen dynamics with succession
+  # Each pathogen has different R0 and timing
+  pathogen_dynamics <- matrix(0, nrow = n_timepoints, ncol = n_pathogens)
   
-  # Generate total cases with some temporal variation
-  total_cases <- rpois(n_timepoints, 
-                       lambda = 100 + 50 * sin(seq(0, 4*pi, length.out = n_timepoints)))
+  # Pathogen 1: Early peak, moderate R0
+  pathogen_dynamics[, 1] <- simulate_sir(n_timepoints, R0 = 2.5, I0 = 0.02)
   
-  # Allocate to pathogens - round to ensure integers
-  pathogen_cases <- proportions * total_cases
+  # Pathogen 2: Mid-season peak, higher R0
+  offset2 <- round(n_timepoints * 0.3)
+  if (offset2 < n_timepoints) {
+    pathogen_dynamics[offset2:n_timepoints, 2] <- 
+      simulate_sir(n_timepoints - offset2 + 1, R0 = 3.0, I0 = 0.01)
+  }
+  
+  # Pathogen 3: Late peak, lower R0
+  offset3 <- round(n_timepoints * 0.6)
+  if (offset3 < n_timepoints) {
+    pathogen_dynamics[offset3:n_timepoints, 3] <- 
+      simulate_sir(n_timepoints - offset3 + 1, R0 = 2.0, I0 = 0.015)
+  }
+  
+  # Pathogen 4: Background/endemic, low level
+  pathogen_dynamics[, 4] <- 0.05 * sin(seq(0, 2*pi, length.out = n_timepoints)) + 0.1
+  
+  # Normalize to proportions
+  row_sums <- rowSums(pathogen_dynamics)
+  proportions <- pathogen_dynamics / row_sums
+  
+  # Generate total cases with epidemic-like pattern
+  epidemic_trend <- rowSums(pathogen_dynamics) * baseline_cases
+  total_cases <- rpois(n_timepoints, lambda = epidemic_trend)
+  
+  # Allocate to pathogens using multinomial sampling
+  pathogen_counts <- matrix(0, nrow = n_timepoints, ncol = n_pathogens)
+  for (t in 1:n_timepoints) {
+    pathogen_counts[t, ] <- as.vector(rmultinom(1, size = total_cases[t], 
+                                                 prob = proportions[t, ]))
+  }
   
   data.frame(
     date = dates,
     cases = total_cases,
-    pathogen1 = round(pathogen_cases[, 1]),
-    pathogen2 = round(pathogen_cases[, 2]),
-    pathogen3 = round(pathogen_cases[, 3]),
-    pathogen4 = round(pathogen_cases[, 4])
+    pathogen1 = pathogen_counts[, 1],
+    pathogen2 = pathogen_counts[, 2],
+    pathogen3 = pathogen_counts[, 3],
+    pathogen4 = pathogen_counts[, 4]
   )
 }
 
@@ -237,10 +290,10 @@ knitr::kable(scaling_results, digits = 3,
 
 | method      | pathogen_structure | scaling_exponent | r_squared |
 |:------------|:-------------------|-----------------:|----------:|
-| p_spline    | multiple           |            0.991 |     0.998 |
-| p_spline    | single             |            0.907 |     0.985 |
-| random_walk | multiple           |            0.916 |     0.995 |
-| random_walk | single             |            0.948 |     0.998 |
+| p_spline    | multiple           |            1.008 |     0.997 |
+| p_spline    | single             |            0.854 |     0.992 |
+| random_walk | multiple           |            0.971 |     1.000 |
+| random_walk | single             |            0.894 |     0.985 |
 
 Scaling exponents: time complexity approximately O(n^exponent)
 
@@ -275,7 +328,7 @@ fit <- fit_model(model, n_chain = 2, n_iter = 1000, verbose = FALSE)
 
 # Extract incidence (predicted values)
 inc <- incidence(fit, dow = FALSE)
-inc_total_values <- inc$measure$y[inc$measure$pathogen == 'Total']
+inc_total <- inc$measure[inc$measure$pathogen == 'Total', ]
 
 # Compare scales
 input_summary <- data.frame(
@@ -288,11 +341,11 @@ input_summary <- data.frame(
     sd(sarscov2$cases)
   ),
   predicted_cases = c(
-    min(inc_total_values),
-    median(inc_total_values),
-    mean(inc_total_values),
-    max(inc_total_values),
-    sd(inc_total_values)
+    min(inc_total$y),
+    median(inc_total$y),
+    mean(inc_total$y),
+    max(inc_total$y),
+    sd(inc_total$y)
   )
 )
 
@@ -304,28 +357,35 @@ knitr::kable(input_summary, digits = 2,
 
 | metric | input_cases | predicted_cases | ratio |
 |:-------|------------:|----------------:|------:|
-| min    |     1433.00 |         1876.00 |  1.31 |
-| median |    18286.50 |        18271.00 |  1.00 |
-| mean   |    28653.21 |        28608.14 |  1.00 |
-| max    |   275647.00 |       267464.25 |  0.97 |
-| sd     |    34268.32 |        33920.50 |  0.99 |
+| min    |     1433.00 |         1960.17 |  1.37 |
+| median |    18286.50 |        18557.68 |  1.01 |
+| mean   |    28653.21 |        28630.06 |  1.00 |
+| max    |   275647.00 |       266442.25 |  0.97 |
+| sd     |    34268.32 |        33883.50 |  0.99 |
 
 Comparison of input and predicted case scales
 
 ``` r
-# Visual comparison
+# Visual comparison with credible intervals
 plot_data <- data.frame(
   date = sarscov2$date,
   observed = sarscov2$cases,
-  predicted = inc_total_values
+  predicted = inc_total$y,
+  lower_50 = inc_total$lb_50,
+  upper_50 = inc_total$ub_50,
+  lower_95 = inc_total$lb_95,
+  upper_95 = inc_total$ub_95
 )
 
 ggplot(plot_data, aes(x = date)) +
+  geom_ribbon(aes(ymin = lower_95, ymax = upper_95), alpha = 0.2, fill = "blue") +
+  geom_ribbon(aes(ymin = lower_50, ymax = upper_50), alpha = 0.3, fill = "blue") +
   geom_line(aes(y = observed, color = "Observed"), linewidth = 1) +
-  geom_line(aes(y = predicted, color = "Predicted"), linewidth = 1, alpha = 0.7) +
+  geom_line(aes(y = predicted, color = "Predicted"), linewidth = 1) +
+  scale_color_manual(values = c("Observed" = "black", "Predicted" = "blue")) +
   labs(
     title = "Input vs Predicted Values: Scale Verification",
-    subtitle = "Predicted values should match the scale of observed data",
+    subtitle = "Predicted values (with 50% and 95% credible intervals) match the scale of observed data",
     x = "Date",
     y = "Cases",
     color = ""
@@ -337,7 +397,8 @@ ggplot(plot_data, aes(x = date)) +
 ![](algorithmic-scaling_files/figure-html/plot-scale-comparison-1.png)
 
 **Conclusion**: Predicted values are on the same scale as input data,
-with similar ranges and distributions.
+with similar ranges and distributions. Credible intervals appropriately
+capture the observed data.
 
 ------------------------------------------------------------------------
 
@@ -359,9 +420,7 @@ recovery_results <- data.frame(
 for (scale in test_scales) {
   # Generate data at this scale
   n <- 100
-  test_data <- generate_test_data(n)
-  # Scale and round to ensure integer counts
-  test_data$cases <- round(test_data$cases * (scale / mean(test_data$cases)))
+  test_data <- generate_test_data(n, baseline_cases = scale)
   
   # Fit model
   model <- construct_model(
@@ -375,14 +434,14 @@ for (scale in test_scales) {
   
   fit <- fit_model(model, n_chain = 2, n_iter = 500, verbose = FALSE)
   inc <- incidence(fit, dow = FALSE)
-  inc_total_values <- inc$measure$y
+  inc_values <- inc$measure$y
   
   # Record results
   recovery_results <- rbind(recovery_results, data.frame(
     input_scale = scale,
     input_mean = mean(test_data$cases),
-    predicted_mean = mean(inc_total_values),
-    relative_error = abs(mean(inc_total_values) - mean(test_data$cases)) / mean(test_data$cases)
+    predicted_mean = mean(inc_values),
+    relative_error = abs(mean(inc_values) - mean(test_data$cases)) / mean(test_data$cases)
   ))
 }
 
@@ -392,9 +451,9 @@ knitr::kable(recovery_results, digits = 2,
 
 | input_scale | input_mean | predicted_mean | relative_error |
 |------------:|-----------:|---------------:|---------------:|
-|          10 |      10.00 |           9.66 |           0.03 |
-|         100 |     100.00 |         101.57 |           0.02 |
-|        1000 |     999.98 |         999.51 |           0.00 |
+|          10 |       3.01 |           2.92 |           0.03 |
+|         100 |      30.43 |          30.72 |           0.01 |
+|        1000 |     318.94 |         316.83 |           0.01 |
 
 Scale recovery across different input magnitudes
 
@@ -442,15 +501,14 @@ model_original <- construct_model(
 fit_original <- fit_model(model_original, n_chain = 2, n_iter = 1000, 
                           seed = 54321, verbose = FALSE)
 inc_original <- incidence(fit_original, dow = FALSE)
-inc_original_total <- inc_original$measure$y[inc_original$measure$pathogen == 'Total']
+inc_original_total <- inc_original$measure[inc_original$measure$pathogen == 'Total', ]
 
 # Test with different noise levels 
 noise_levels <- c(0.05, 0.1)  # 5%, 10% noise relative to mean
 noise_results <- list()
 
 for (noise_level in noise_levels) {
-  # Add Poisson noise scaled to the noise level
-  # Use round to ensure integer counts
+  # Add noise to case counts
   noisy_cases <- pmax(1, round(sarscov2$cases + 
                                 rnorm(length(sarscov2$cases), 
                                       mean = 0, 
@@ -484,7 +542,7 @@ for (noise_level in noise_levels) {
   inc_noisy <- incidence(fit_noisy, dow = FALSE)
   
   noise_results[[as.character(noise_level)]] <- 
-    inc_noisy$measure$y[inc_noisy$measure$pathogen == 'Total']
+    inc_noisy$measure[inc_noisy$measure$pathogen == 'Total', ]
 }
 ```
 
@@ -494,12 +552,12 @@ for (noise_level in noise_levels) {
 # Calculate correlation and RMSE for each noise level
 noise_comparison <- data.frame(
   noise_level = noise_levels,
-  correlation = sapply(noise_results, function(x) cor(x, inc_original_total)),
-  rmse = sapply(noise_results, function(x) sqrt(mean((x - inc_original_total)^2))),
+  correlation = sapply(noise_results, function(x) cor(x$y, inc_original_total$y)),
+  rmse = sapply(noise_results, function(x) sqrt(mean((x$y - inc_original_total$y)^2))),
   relative_rmse = sapply(noise_results, function(x) {
-    sqrt(mean((x - inc_original_total)^2)) / mean(inc_original_total)
+    sqrt(mean((x$y - inc_original_total$y)^2)) / mean(inc_original_total$y)
   }),
-  mean_difference = sapply(noise_results, function(x) mean(abs(x - inc_original_total)))
+  mean_difference = sapply(noise_results, function(x) mean(abs(x$y - inc_original_total$y)))
 )
 
 knitr::kable(noise_comparison, digits = 4,
@@ -527,22 +585,36 @@ cat("- Relative RMSE < 0.05 indicates differences are small relative to scale\n"
 ### 4.2 Visualize Noise Impact
 
 ``` r
-# Prepare data for plotting
-noise_plot_data <- data.frame(
-  date = rep(sarscov2$date, length(noise_levels) + 1),
-  cases = c(inc_original_total, unlist(noise_results)),
-  condition = rep(c("Original", paste0("Noise ", noise_levels * 100, "%")), 
-                  each = length(inc_original_total))
+# Prepare data for plotting with credible intervals
+noise_plot_list <- list(
+  original = inc_original_total
 )
+for (i in seq_along(noise_levels)) {
+  noise_plot_list[[paste0("noise_", noise_levels[i])]] <- noise_results[[i]]
+}
 
-ggplot(noise_plot_data, aes(x = date, y = cases, color = condition)) +
-  geom_line(linewidth = 0.8, alpha = 0.7) +
+noise_plot_data <- do.call(rbind, lapply(names(noise_plot_list), function(cond) {
+  data <- noise_plot_list[[cond]]
+  data.frame(
+    date = sarscov2$date,
+    y = data$y,
+    lower_95 = data$lb_95,
+    upper_95 = data$ub_95,
+    condition = ifelse(cond == "original", "Original", 
+                      paste0("Noise ", as.numeric(sub("noise_", "", cond)) * 100, "%"))
+  )
+}))
+
+ggplot(noise_plot_data, aes(x = date, color = condition, fill = condition)) +
+  geom_ribbon(aes(ymin = lower_95, ymax = upper_95), alpha = 0.2, color = NA) +
+  geom_line(aes(y = y), linewidth = 0.8) +
   labs(
     title = "Robustness to Trivial Noise in Input Data",
-    subtitle = "Model predictions with varying levels of added noise",
+    subtitle = "Model predictions with 95% credible intervals under varying noise levels",
     x = "Date",
     y = "Predicted Total Cases",
-    color = "Condition"
+    color = "Condition",
+    fill = "Condition"
   ) +
   theme_minimal() +
   theme(legend.position = "bottom")
@@ -552,12 +624,13 @@ ggplot(noise_plot_data, aes(x = date, y = cases, color = condition)) +
 
 ``` r
 # Plot differences from original
-diff_plot_data <- data.frame(
-  date = rep(sarscov2$date, length(noise_levels)),
-  difference = unlist(lapply(noise_results, function(x) x - inc_original_total)),
-  noise_level = rep(paste0(noise_levels * 100, "% noise"), 
-                    each = length(inc_original_total))
-)
+diff_plot_data <- do.call(rbind, lapply(seq_along(noise_levels), function(i) {
+  data.frame(
+    date = sarscov2$date,
+    difference = noise_results[[i]]$y - inc_original_total$y,
+    noise_level = paste0(noise_levels[i] * 100, "% noise")
+  )
+}))
 
 ggplot(diff_plot_data, aes(x = date, y = difference, color = noise_level)) +
   geom_line(linewidth = 0.8) +
@@ -604,7 +677,7 @@ fit_with_seed <- function(seed) {
   
   fit <- fit_model(model, n_chain = 2, n_iter = 1000, verbose = FALSE)
   inc <- incidence(fit, dow = FALSE)
-  inc$measure$y[inc$measure$pathogen == 'Total']
+  inc$measure[inc$measure$pathogen == 'Total', ]
 }
 
 # Fit with different seeds
@@ -612,19 +685,13 @@ seeds <- c(123, 101112)
 results_list <- lapply(seeds, fit_with_seed)
 
 # Compare results
-results_matrix <- do.call(cbind, results_list)
-colnames(results_matrix) <- paste0("seed_", seeds)
-
-# Calculate coefficient of variation across seeds for each time point
-cv_across_seeds <- apply(results_matrix, 1, function(x) sd(x) / mean(x))
-
 seed_summary <- data.frame(
   metric = c("Mean CV", "Median CV", "Max CV", "95th percentile CV"),
   value = c(
-    mean(cv_across_seeds),
-    median(cv_across_seeds),
-    max(cv_across_seeds),
-    quantile(cv_across_seeds, 0.95)
+    mean(apply(sapply(results_list, function(x) x$y), 1, function(row) sd(row) / mean(row))),
+    median(apply(sapply(results_list, function(x) x$y), 1, function(row) sd(row) / mean(row))),
+    max(apply(sapply(results_list, function(x) x$y), 1, function(row) sd(row) / mean(row))),
+    quantile(apply(sapply(results_list, function(x) x$y), 1, function(row) sd(row) / mean(row)), 0.95)
   )
 )
 
@@ -642,21 +709,27 @@ knitr::kable(seed_summary, digits = 4,
 Coefficient of variation across different random seeds
 
 ``` r
-# Plot results from different seeds
-seed_plot_data <- data.frame(
-  date = rep(sarscov2$date, length(seeds)),
-  cases = as.vector(results_matrix),
-  seed = rep(paste0("Seed ", seeds), each = nrow(results_matrix))
-)
+# Plot results from different seeds with credible intervals
+seed_plot_data <- do.call(rbind, lapply(seq_along(seeds), function(i) {
+  data.frame(
+    date = sarscov2$date,
+    y = results_list[[i]]$y,
+    lower_95 = results_list[[i]]$lb_95,
+    upper_95 = results_list[[i]]$ub_95,
+    seed = paste0("Seed ", seeds[i])
+  )
+}))
 
-ggplot(seed_plot_data, aes(x = date, y = cases, color = seed)) +
-  geom_line(alpha = 0.6, linewidth = 0.8) +
+ggplot(seed_plot_data, aes(x = date, color = seed, fill = seed)) +
+  geom_ribbon(aes(ymin = lower_95, ymax = upper_95), alpha = 0.2, color = NA) +
+  geom_line(aes(y = y), linewidth = 0.8) +
   labs(
     title = "Results Across Different Random Seeds",
-    subtitle = "Lines should be nearly overlapping if robust to seed choice",
+    subtitle = "Lines with 95% credible intervals should overlap if robust to seed choice",
     x = "Date",
     y = "Predicted Cases",
-    color = "Random Seed"
+    color = "Random Seed",
+    fill = "Random Seed"
   ) +
   theme_minimal() +
   theme(legend.position = "bottom")
@@ -666,6 +739,7 @@ ggplot(seed_plot_data, aes(x = date, y = cases, color = seed)) +
 
 ``` r
 # Calculate pairwise correlations between seed results
+results_matrix <- sapply(results_list, function(x) x$y)
 cor_matrix <- cor(results_matrix)
 diag(cor_matrix) <- NA
 
@@ -673,9 +747,9 @@ cat("\nPairwise correlations between results from different seeds:\n")
 #> 
 #> Pairwise correlations between results from different seeds:
 print(round(cor_matrix, 4))
-#>             seed_123 seed_101112
-#> seed_123          NA           1
-#> seed_101112        1          NA
+#>      [,1] [,2]
+#> [1,]   NA    1
+#> [2,]    1   NA
 cat("\nMean pairwise correlation:", round(mean(cor_matrix, na.rm = TRUE), 4))
 #> 
 #> Mean pairwise correlation: 1
@@ -683,7 +757,8 @@ cat("\nMean pairwise correlation:", round(mean(cor_matrix, na.rm = TRUE), 4))
 
 **Conclusion**: High correlations (\>0.99) between runs with different
 seeds indicate that results are robust and not meaningfully affected by
-random seed choice.
+random seed choice. Overlapping credible intervals confirm consistency
+across stochastic runs.
 
 ------------------------------------------------------------------------
 
@@ -694,12 +769,15 @@ This document demonstrates that `EpiStrainDynamics`:
 1.  Exhibits approximately linear scaling O(n) with input data size,
     making it computationally efficient for real-world surveillance data
 2.  Produces predicted values on the same scale as input data
-3.  Successfully recovers input scales across multiple orders of
-    magnitude
+3.  Successfully recovers scales across multiple orders of magnitude
 4.  Is robust to trivial noise in input data, with minimal impact on
     predictions
 5.  Produces robust, reproducible results regardless of random seed
     choice
+
+All demonstrations use realistic epidemic dynamics generated via SIR
+models with pathogen succession patterns, ensuring the model is tested
+on data similar to its intended use case.
 
 ------------------------------------------------------------------------
 
@@ -751,7 +829,7 @@ sessionInfo()
 #> [49] bslib_0.9.0           gtable_0.3.6          loo_2.8.0            
 #> [52] glue_1.8.0            Rcpp_1.1.0            systemfonts_1.3.1    
 #> [55] xfun_0.55             tibble_3.3.0          tidyselect_1.2.1     
-#> [58] knitr_1.50            farver_2.1.2          bayesplot_1.15.0     
+#> [58] knitr_1.51            farver_2.1.2          bayesplot_1.15.0     
 #> [61] htmltools_0.5.9       labeling_0.4.3        rmarkdown_2.30       
 #> [64] compiler_4.5.2        S7_0.2.1
 ```

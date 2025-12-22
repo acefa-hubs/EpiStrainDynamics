@@ -25,3 +25,17 @@ diagnose_model(fitted_model, rhat_threshold = 1.1, eff_sample_threshold = 100)
 ## Value
 
 list of diagnostic information
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+  mod <- construct_model(
+    method = random_walk(),
+    pathogen_structure = single(
+      case_timeseries = sarscov2$cases,
+      time = sarscov2$date))
+  fit <- fit_model(mod)
+  diagnose(fit)
+} # }
+```
