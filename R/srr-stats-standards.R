@@ -10,6 +10,19 @@
 #' @srrstatsVerbose TRUE
 #'
 #' @srrstats {G1.2} a Life Cycle Statement is available in `CONTRIBUTING.md`
+#' @srrstats {BS1.1} Descriptions in text and with code examples of how to
+#'   enter both simple and more complex data are in vignette
+#'   `Using-EpiStrainDynamics.Rmd` in 'Step 1: Construct model'.
+#' @srrstats {BS1.2, BS1.2b} Modification of priors described in vignette
+#'   `Using-EpiStrainDynamics.Rmd`.
+#' @srrstats {BS1.4, BS4.3, BS4.5} Examples of convergence checkers are
+#'   described and troubleshooting tips offered in vignette
+#'   `Using-EpiStrainDynamics.Rmd`.
+#' @srrstats {BS6.1} All calculated epidemiological metrics can be plotted with
+#'   a default plot function. The stan fit object can be plotted using helper
+#'   packages as described in vignette `Using-EpiStrainDynamics.Rmd`.
+#' @srrstats {BS6.2, BS6.3, BS6.5} Options for visualising posterior samples are
+#'   described in vignette `Using-EpiStrainDynamics.Rmd`.
 #' @noRd
 NULL
 
@@ -66,8 +79,8 @@ NULL
 #'  sampling algorithms
 #' @srrstatsNA {BS4.2, BS7.2} The only way to validate the posterior estimates would
 #'  be to compare against an analytical solution, which we don't have.
-#' @srrstatsNA {BS4.4} This software uses `rstan`'s `sampling`, and there does
-#'   not appear to yet be a mechanism of stopping the chain upon convergence
+#' @srrstatsNA {BS4.4} This software uses `rstan`'s `sampling`, and there
+#'   does not appear to yet be a mechanism of stopping the chain upon convergence
 #' @srrstatsNA {BS4.6, BS4.7, BS5.3, BS5.4} No separate convergence
 #'   checker is implemented. Stan software returns some convergence warnings
 #'   itself and the README illustrates other options.
