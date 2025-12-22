@@ -1,6 +1,7 @@
 # Tests for fit_model() function
 # Focus: fitting process, parameter validation, output structure
 # Note: Detailed metric calculations are tested in test-metrics.R
+#' @srrstats {G5.4, G5.5} Correctness tests with fixed test data + fixed seed
 
 # Prevent browser from opening during tests (rstan diagnostics)
 options(browser = function(...) {})
