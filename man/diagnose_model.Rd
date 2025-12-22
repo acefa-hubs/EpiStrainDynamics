@@ -19,3 +19,15 @@ list of diagnostic information
 \description{
 Diagnose model convergence and fit
 }
+\examples{
+\dontrun{
+  mod <- construct_model(
+    method = random_walk(),
+    pathogen_structure = single(
+      case_timeseries = sarscov2$cases,
+      time = sarscov2$date))
+  fit <- fit_model(mod)
+  diagnose(fit)
+}
+
+}
