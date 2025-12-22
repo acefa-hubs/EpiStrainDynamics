@@ -127,7 +127,7 @@ predict_B_true <- function(time_seq, knots, spline_degree) {
 #'
 transform_posterior_single <- function(post, B_true, num_days) {
   a <- array(data = NA, dim = c(nrow(post$a), num_days))
-  for(k in seq_along(post$a)) {
+  for(k in seq_len(nrow(post$a))) {
     a[k,] <- as.array(post$a[k,]) %*% B_true
   }
   a
@@ -151,7 +151,7 @@ transform_posterior_single <- function(post, B_true, num_days) {
 transform_posterior_multi <- function(post, B_true, num_path, num_days) {
   a <- array(data = NA, dim = c(nrow(post$a), num_path, num_days))
   for(j in 1:num_path) {
-    for(k in seq_along(post$a)) {
+    for(k in seq_len(nrow(post$a))) {
       a[k,j,] <- as.array(post$a[k,j,]) %*% B_true
     }
   }
