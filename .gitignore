@@ -11,3 +11,4 @@ vignettes/**/*_files/
 vignettes/cache/
 vignettes/figure/
 src/*.o
+src/*.so
