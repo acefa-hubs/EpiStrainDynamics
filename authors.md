@@ -16,7 +16,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/acefa-hubs/EpiStrainDynamics/blob/v1.0_ROpenSci-submission/inst/CITATION)
+[`inst/CITATION`](https://github.com/acefa-hubs/EpiStrainDynamics/blob/main/inst/CITATION)
 
 Windecker S, McCaw J, Shearer F, Eales O (2025). *Infer temporal trends
 of multiple pathogens*. R package,

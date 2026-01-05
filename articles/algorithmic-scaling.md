@@ -290,10 +290,10 @@ knitr::kable(scaling_results, digits = 3,
 
 | method      | pathogen_structure | scaling_exponent | r_squared |
 |:------------|:-------------------|-----------------:|----------:|
-| p_spline    | multiple           |            1.010 |     0.997 |
-| p_spline    | single             |            0.856 |     0.990 |
-| random_walk | multiple           |            0.968 |     0.999 |
-| random_walk | single             |            0.875 |     0.980 |
+| p_spline    | multiple           |            1.008 |     0.997 |
+| p_spline    | single             |            0.852 |     0.989 |
+| random_walk | multiple           |            0.962 |     0.999 |
+| random_walk | single             |            0.889 |     0.983 |
 
 Scaling exponents: time complexity approximately O(n^exponent)
 
@@ -826,7 +826,7 @@ sessionInfo()
 #> [40] stats4_4.5.2          lifecycle_1.0.4       fs_1.6.6             
 #> [43] ragg_1.5.0            pkgconfig_2.0.3       desc_1.4.3           
 #> [46] pkgdown_2.2.0         RcppParallel_5.1.11-1 pillar_1.11.1        
-#> [49] bslib_0.9.0           gtable_0.3.6          loo_2.8.0            
+#> [49] bslib_0.9.0           gtable_0.3.6          loo_2.9.0            
 #> [52] glue_1.8.0            Rcpp_1.1.0            systemfonts_1.3.1    
 #> [55] xfun_0.55             tibble_3.3.0          tidyselect_1.2.1     
 #> [58] knitr_1.51            farver_2.1.2          bayesplot_1.15.0     
