@@ -290,10 +290,10 @@ knitr::kable(scaling_results, digits = 3,
 
 | method      | pathogen_structure | scaling_exponent | r_squared |
 |:------------|:-------------------|-----------------:|----------:|
-| p_spline    | multiple           |            1.008 |     0.997 |
-| p_spline    | single             |            0.852 |     0.989 |
-| random_walk | multiple           |            0.962 |     0.999 |
-| random_walk | single             |            0.889 |     0.983 |
+| p_spline    | multiple           |            1.014 |     0.997 |
+| p_spline    | single             |            0.855 |     0.991 |
+| random_walk | multiple           |            0.964 |     0.999 |
+| random_walk | single             |            0.890 |     0.985 |
 
 Scaling exponents: time complexity approximately O(n^exponent)
 
@@ -807,7 +807,7 @@ sessionInfo()
 #> 
 #> other attached packages:
 #> [1] dplyr_1.1.4                  ggplot2_4.0.1               
-#> [3] EpiStrainDynamics_0.0.0.9000
+#> [3] EpiStrainDynamics_0.0.1.0000
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] viridis_0.6.5         sass_0.4.10           generics_0.1.4       

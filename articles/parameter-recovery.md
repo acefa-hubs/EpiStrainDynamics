@@ -751,7 +751,7 @@ sessionInfo()
 #> 
 #> other attached packages:
 #> [1] dplyr_1.1.4                  ggplot2_4.0.1               
-#> [3] EpiStrainDynamics_0.0.0.9000
+#> [3] EpiStrainDynamics_0.0.1.0000
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] viridis_0.6.5         sass_0.4.10           generics_0.1.4       
