@@ -4,17 +4,20 @@
 \alias{single}
 \title{Single pathogen structure}
 \usage{
-single(data, case_timeseries, time)
+single(data, case_timeseries, time = NULL)
 }
 \arguments{
-\item{data}{dataframe containing columns with all relevant data}
+\item{data}{dataframe containing columns with all relevant data, or a time
+series object (ts, xts, zoo, tsibble, etc.)}
 
-\item{case_timeseries}{name of column with total case data, this name will be
-used as the name of the pathogen}
+\item{case_timeseries}{Column name containing case counts. Must be numeric
+or a \code{units} object from the \pkg{units} package.}
 
-\item{time}{name of column with time data. flexible format - can be date,
-index, or others, accepted as \code{index} identifiers in the \code{tsibble} time
-format.}
+\item{time}{name of column with time data. Required for non-time-series
+input data. Flexible format - can be date, index, or others, accepted
+as \code{index} identifiers in the \code{tsibble} time format. Optional when
+\code{data} is a time series class object (ts, mts, xts, zoo, zooreg, tsibble)
+as the time index will be automatically detected.}
 }
 \value{
 formatted list with pathogen structure and data of class
@@ -24,11 +27,21 @@ formatted list with pathogen structure and data of class
 Single pathogen structure
 }
 \examples{
+# Using a data frame
 single(
   data = sarscov2,
   case_timeseries = 'cases',
   time = 'date'
 )
+
+# Using a time series object (time argument is optional)
+\dontrun{
+sarscov2_xts <- xts::xts(sarscov2[, c("cases", "alpha")], order.by = sarscov2$date)
+single(
+  data = sarscov2_xts,
+  case_timeseries = 'cases'
+)
+}
 
 }
 \seealso{

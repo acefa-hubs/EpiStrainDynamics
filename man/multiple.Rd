@@ -4,20 +4,24 @@
 \alias{multiple}
 \title{Multiple pathogen structure}
 \usage{
-multiple(data, case_timeseries, time, component_pathogen_timeseries)
+multiple(data, case_timeseries, time = NULL, component_pathogen_timeseries)
 }
 \arguments{
-\item{data}{dataframe containing columns with all relevant data}
+\item{data}{dataframe containing columns with all relevant data, or a time
+series object (ts, xts, zoo, tsibble, etc.)}
 
-\item{case_timeseries}{name of column with total case data, this name will be
-used as the name of the pathogen}
+\item{case_timeseries}{Column name containing case counts. Must be numeric
+or a \code{units} object from the \pkg{units} package.}
 
-\item{time}{name of column with time data. flexible format - can be date,
-index, or others, accepted as \code{index} identifiers in the \code{tsibble} time
-format.}
+\item{time}{name of column with time data. Required for non-time-series
+input data. Flexible format - can be date, index, or others, accepted
+as \code{index} identifiers in the \code{tsibble} time format. Optional when
+\code{data} is a time series class object (ts, mts, xts, zoo, zooreg, tsibble)
+as the time index will be automatically detected.}
 
 \item{component_pathogen_timeseries}{vector of column names with additional
-pathogen case count timeseries to model}
+pathogen case count timeseries to model. Must be numeric or a \code{units}
+object from the \pkg{units} package.}
 }
 \value{
 named list including pathogen_structure, pathogen_names, and data
@@ -27,12 +31,26 @@ of class \code{EpiStrainDynamics.pathogen_structure}
 Multiple pathogen structure
 }
 \examples{
+# Using a data frame
 multiple(
   data = sarscov2,
   case_timeseries = 'cases',
   time = 'date',
   component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
 )
+
+# Using a time series object (time argument is optional)
+\dontrun{
+sarscov2_xts <- xts::xts(
+  sarscov2[, c("cases", "alpha", "delta", "omicron", "other")],
+  order.by = sarscov2$date
+)
+multiple(
+  data = sarscov2_xts,
+  case_timeseries = 'cases',
+  component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+)
+}
 
 }
 \seealso{

@@ -7,30 +7,36 @@
 subtyped(
   data,
   case_timeseries,
-  time,
+  time = NULL,
   influenzaA_unsubtyped_timeseries,
   influenzaA_subtyped_timeseries,
   other_pathogen_timeseries
 )
 }
 \arguments{
-\item{data}{dataframe containing columns with all relevant data}
+\item{data}{dataframe containing columns with all relevant data, or a time
+series object (ts, xts, zoo, tsibble, etc.)}
 
-\item{case_timeseries}{name of column with total case data, this name will be
-used as the name of the pathogen}
+\item{case_timeseries}{Column name containing case counts. Must be numeric
+or a \code{units} object from the \pkg{units} package.}
 
-\item{time}{name of column with time data. flexible format - can be date,
-index, or others, accepted as \code{index} identifiers in the \code{tsibble} time
-format.}
+\item{time}{name of column with time data. Required for non-time-series
+input data. Flexible format - can be date, index, or others, accepted
+as \code{index} identifiers in the \code{tsibble} time format. Optional when
+\code{data} is a time series class object (ts, mts, xts, zoo, zooreg, tsibble)
+as the time index will be automatically detected.}
 
 \item{influenzaA_unsubtyped_timeseries}{vector of column names with additional
-unsubtyped influenzaA case count timeseries}
+unsubtyped influenzaA case count timeseries. Must be numeric or a
+\code{units} object from the \pkg{units} package.}
 
 \item{influenzaA_subtyped_timeseries}{vector of column names with additional
-subtyped influenzaA case count timeseries}
+subtyped influenzaA case count timeseries. Must be numeric or a
+\code{units} object from the \pkg{units} package.}
 
 \item{other_pathogen_timeseries}{vector of column names with additional
-pathogen case count timeseries to model}
+pathogen case count timeseries to model. Must be numeric or a \code{units}
+object from the \pkg{units} package.}
 }
 \value{
 named list including pathogen_structure, pathogen_names, and data
@@ -40,6 +46,7 @@ of class \code{EpiStrainDynamics.pathogen_structure}
 Subtyped pathogen structure
 }
 \examples{
+# Using a data frame
 subtyped(
   data = influenza,
   case_timeseries = 'ili',
@@ -48,6 +55,21 @@ subtyped(
   influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
   other_pathogen_timeseries = c('inf_B', 'other')
 )
+
+# Using a time series object (time argument is optional)
+\dontrun{
+influenza_xts <- xts::xts(
+  influenza[, c("ili", "inf_A", "inf_H3N2", "inf_H1N1", "inf_B", "other")],
+  order.by = influenza$week
+)
+subtyped(
+  data = influenza_xts,
+  case_timeseries = 'ili',
+  influenzaA_unsubtyped_timeseries = 'inf_A',
+  influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
+  other_pathogen_timeseries = c('inf_B', 'other')
+)
+}
 
 }
 \seealso{

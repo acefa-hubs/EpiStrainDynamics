@@ -233,18 +233,34 @@ validate_smoothing_structure <- function(smoothing_obj, pathogen_names = NULL,
 
 # Helper: Validate column exists in data
 #' @noRd
-check_column_exists <- function(data, col_name, arg_name) {
-  if (!col_name %in% names(data)) {
-    stop(sprintf("Column '%s' specified in %s not found in data", col_name, arg_name))
+check_column_exists <- function(data, col_name) {
+  if (!col_name %in% colnames(data)) {
+    stop(sprintf("Column '%s' not found in data", col_name))
   }
 }
 
-# Helper: Validate column is numeric
+#' Helper: Detect if data is a time series class
+#'
+#' @param data input data object
+#'
+#' @returns logical indicating if data is a time series class
 #' @noRd
-check_column_numeric <- function(data, col_name, arg_name) {
-  if (!is.numeric(data[[col_name]])) {
-    stop(sprintf("Column '%s' specified in %s must be numeric, but is %s",
-                 col_name, arg_name, class(data[[col_name]])[1]))
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+is_timeseries_class <- function(data) {
+  ts_classes <- c("ts", "mts", "xts", "zoo", "zooreg", "tsibble", "tbl_ts",
+                  "tibbletime", "tbl_time", "timeSeries", "irts", "tis")
+  any(class(data) %in% ts_classes)
+}
+
+# Helper: Validate column is numeric
+#' @srrstats {TS1.7} accommodate potential units data input
+#' @noRd
+check_column_numeric <- function(data, col_name) {
+  if (!is.numeric(data[[col_name]]) && !inherits(data[[col_name]], "units")) {
+    stop(sprintf("Column '%s' specified must be numeric or have units,
+                 but is %s",
+                 col_name, class(data[[col_name]])[1]))
   }
 }
 
@@ -291,48 +307,193 @@ check_missing_data <- function(data, columns, context) {
   invisible(NULL)
 }
 
-#' Helper: Create and validate tsibble from dataframe
+#' Helper: Convert time series objects to tsibble
 #'
-#' @param data input dataset to check time formatting
-#' @param columns column names with data to include in the validated df
-#' @param time_col the column name with time data to validate
+#' @param ts_obj time series object (ts, mts, xts, zoo, etc.)
+#'
+#' @importFrom timetk tk_tbl
+#'
+#' @returns tsibble object in wide format
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+convert_ts_to_tsibble <- function(ts_obj) {
+
+  # Handle xts and zoo objects using timetk (best practice for these classes)
+  if (inherits(ts_obj, c("xts", "zoo", "zooreg"))) {
+
+    # Check if timetk is available
+    if (!requireNamespace("timetk", quietly = TRUE)) {
+      cli::cli_abort(
+        c(
+          "The {.pkg timetk} package is required to handle
+          {.cls {class(ts_obj)[1]}} objects.",
+          "i" = "Install it with: install.packages('timetk')"
+        )
+      )
+    }
+
+    # Convert xts/zoo to tibble using timetk (preserves wide format)
+    temp_tbl <- timetk::tk_tbl(ts_obj, preserve_index = TRUE, rename_index = "index")
+
+    # Convert to tsibble
+    temp_tsbl <- tryCatch({
+      tsibble::as_tsibble(temp_tbl, index = .data$index)
+    }, error = function(e) {
+      cli::cli_abort(
+        "Error converting {.cls {class(ts_obj)[1]}} to tsibble: {e$message}"
+      )
+    })
+
+    return(temp_tsbl)
+  }
+
+  # Handle ts and mts objects using tsibble's built-in conversion
+  if (inherits(ts_obj, c("ts", "mts"))) {
+    temp_tsbl <- tryCatch({
+      if (is.matrix(ts_obj)) {
+        # Multivariate time series - keep wide format
+        tsibble::as_tsibble(ts_obj, pivot_longer = FALSE)
+      } else {
+        # Univariate time series
+        tsibble::as_tsibble(ts_obj)
+      }
+    }, error = function(e) {
+      cli::cli_abort(
+        "Error converting {.cls {class(ts_obj)[1]}} to tsibble: {e$message}"
+      )
+    })
+
+    return(temp_tsbl)
+  }
+
+  # Handle tsibble objects (already in correct format)
+  if (inherits(ts_obj, c("tsibble", "tbl_ts"))) {
+    return(ts_obj)
+  }
+
+  # Try tsibble's as_tsibble for other time series classes
+  temp_tsbl <- tryCatch({
+    tsibble::as_tsibble(ts_obj)
+  }, error = function(e) {
+    # If that fails, provide a helpful error message
+    cli::cli_abort(
+      c(
+        "Unable to convert time series object of class {.cls {class(ts_obj)}} to tsibble.",
+        "i" = "Supported classes are: ts, mts, xts, zoo, zooreg, tsibble.",
+        "i" = "For xts/zoo objects, the {.pkg timetk} package is required."
+      )
+    )
+  })
+
+  return(temp_tsbl)
+}
+
+#' Helper: Create and validate tsibble from various data formats
+#'
+#' @param data input dataset - can be data frame, tibble, data.table, or time series object
+#' @param columns column names with data to include in the validated tsibble
+#' @param time_col the column name with time data to validate (optional for ts classes)
 #'
 #' @noRd
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #' @srrstats {G1.4a} internal function specified with `@noRd`
 #' @srrstats {G5.2a} every error statement is unique
-create_validated_tsibble <- function(data, columns, time_col) {
-  # Subset to only the columns we need
-  temp_df <- data[, columns, drop = FALSE]
+#' @srrstats {TS1.1, TS1.2, TS1.3, TS1.4, TS1.5, TS1.6, TS2.0, TS2.1a} all
+#'   three data ingest functions (in `pathogen_structure.R`) allow for any
+#'   kind of timeseries class input or non-time-series input. This validation
+#'   function converts them to a consistent format and run checks, including
+#'   checking ordering (and reporting violations), and checking gaps in the
+#'   time sequence (explicit missing values). NA values (implicit missing
+#'   values) are not allowed due to the nature of the models.
+create_validated_timeseries <- function(data, columns, time_col = NULL) {
 
-  # Check for NA values before tsibble conversion
-  check_missing_data(temp_df, columns, "input data")
+  # Step 1: Handle time series objects
+  if (is_timeseries_class(data)) {
+    if (!is.null(time_col)) {
+      cli::cli_warn(
+        "The {.arg time} argument is ignored when data is a time series object.
+        The time index will be extracted automatically."
+      )
+    }
 
-  # Create tsibble
-  temp_tsbl <- tryCatch({
-    tsibble::tsibble(temp_df, index = !!rlang::sym(time_col))
-  }, error = function(e) {
-    cli::cli_abort("Error creating tsibble: {e$message}")
-  })
+    # Convert time series to tsibble, which will be in wide format
+    temp_tsbl <- convert_ts_to_tsibble(data)
+
+    # Get the time column name from the tsibble
+    time_col <- as.character(tsibble::index_var(temp_tsbl))
+
+    # Subset to required columns
+    temp_tsbl <- temp_tsbl[, c(time_col, columns)]
+
+    #' @srrstats {G2.4, G2.4b} ensure consistent numeric handling
+    #' @srrstats {TS1.7} accommodate units data input
+    for (col in columns) {
+      check_column_numeric(temp_tsbl, col)
+
+      if (inherits(temp_tsbl[[col]], "units")) {
+        temp_tsbl[[col]] <- as.numeric(temp_tsbl[[col]])
+      }
+    }
+
+  } else {
+    # Step 2: Handle data frame-like objects
+    if (is.null(time_col)) {
+      cli::cli_abort(
+        "When {.arg time} is not specified, data must be a time series class
+        object (ts, xts, zoo, tsibble, etc.)."
+      )
+    }
+
+    # Convert to data frame if needed
+    temp_df <- as.data.frame(data)
+
+    # Subset to only the columns we need
+    temp_df <- temp_df[, c(time_col, columns), drop = FALSE]
+
+    #' @srrstats {G2.4, G2.4b} ensure consistent numeric handling
+    #' @srrstats {TS1.7} accommodate units data input
+    for (col in columns) {
+      check_column_numeric(temp_df, col)
+
+      if (inherits(temp_df[[col]], "units")) {
+        temp_df[[col]] <- as.numeric(temp_df[[col]])
+      }
+    }
+
+    check_missing_data(temp_df, columns, "input data")
+
+    # Check ordering BEFORE creating tsibble (tsibble auto-sorts, hiding the issue)
+    if (is.unsorted(temp_df[[time_col]])) {
+      cli::cli_abort(
+        "Time series is not ordered. Please sort the data in chronological order."
+      )
+    }
+
+    # Create tsibble
+    temp_tsbl <- tryCatch({
+      tsibble::tsibble(temp_df, index = !!rlang::sym(time_col))
+    }, error = function(e) {
+      cli::cli_abort("Error creating tsibble: {e$message}")
+    })
+  }
+
+  # Step 3: Validate tsibble properties (same for both paths)
 
   # Check for gaps
   if (tsibble::has_gaps(temp_tsbl)$.gaps) {
-    cli::cli_abort("Time series has gaps. All time points must be present with no missing time periods.")
+    cli::cli_abort(
+      "Time series has gaps. All time points must be present with no missing
+      time periods."
+    )
   }
 
   # Check regularity
   if (!tsibble::is_regular(temp_tsbl)) {
-    cli::cli_abort("Time series is irregular. The model requires regularly spaced time intervals.")
-  }
-
-  # Check ordering
-  if (!tsibble::is_ordered(temp_tsbl)) {
-    cli::cli_abort("Time series is not ordered. Please sort the data in chronological order.")
-  }
-
-  # Check for empty data
-  if (NROW(temp_tsbl) == 0) {
-    cli::cli_abort("There is no data to model. Please provide a dataset with at least one observation.")
+    cli::cli_abort(
+      "Time series is irregular. The model requires regularly spaced time
+      intervals."
+    )
   }
 
   return(temp_tsbl)
