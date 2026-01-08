@@ -36,6 +36,7 @@ Imports:
     rlang,
     rstan (>= 2.18.1),
     rstantools (>= 2.4.0),
+    timetk,
     tsibble,
     viridis
 LinkingTo: 
@@ -47,9 +48,15 @@ LinkingTo:
     StanHeaders (>= 2.18.0)
 SystemRequirements: GNU make
 Suggests: 
+    data.table,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tibble,
+    tibbletime,
+    units,
+    xts,
+    zoo
 Config/testthat/edition: 3
 LazyData: true
 VignetteBuilder: knitr
