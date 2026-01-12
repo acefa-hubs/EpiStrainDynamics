@@ -8,19 +8,21 @@
 \alias{plot.proportion}
 \title{Generic Method for plotting metrics calculation outputs}
 \usage{
-plot(df, ...)
+plot(df, xlab = "Time", ...)
 
-\method{plot}{incidence}(df)
+\method{plot}{incidence}(df, xlab = "Time", ...)
 
-\method{plot}{growth_rate}(df)
+\method{plot}{growth_rate}(df, xlab = "Time", ...)
 
-\method{plot}{Rt}(df)
+\method{plot}{Rt}(df, xlab = "Time", ...)
 
-\method{plot}{proportion}(df)
+\method{plot}{proportion}(df, xlab = "Time", ...)
 }
 \arguments{
 \item{df}{Metrics calculation output of class \code{EpiStrainDynamics.metric}
 from either \code{incidence()}, \code{growth_rate()}, \code{Rt()}, or \code{proportion()}.}
+
+\item{xlab}{Time label for x axis, defaults to "Time"}
 
 \item{...}{Additional arguments passed to plot}
 }

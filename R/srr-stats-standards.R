@@ -77,8 +77,8 @@ NULL
 #'   risk of collinear response and predictor variables
 #' @srrstatsNA {BS4.0, BS4.1} This software does not implement internal
 #'  sampling algorithms
-#' @srrstatsNA {BS4.2, BS7.2} The only way to validate the posterior estimates would
-#'  be to compare against an analytical solution, which we don't have.
+#' @srrstatsNA {BS4.2, BS7.2} The only way to validate the posterior estimates
+#'  would be to compare against an analytical solution, which we don't have.
 #' @srrstatsNA {BS4.4} This software uses `rstan`'s `sampling`, and there
 #'   does not appear to yet be a mechanism of stopping the chain upon convergence
 #' @srrstatsNA {BS4.6, BS4.7, BS5.3, BS5.4} No separate convergence
@@ -102,5 +102,25 @@ NULL
 #'   implemented because the methods implemented in these stan models have
 #'   been well tested previously in the literature. See README for full
 #'   list of citations.
+#' @srrstatsNA {TS1.0} the package DOES allow for non-time-series data, by
+#'   converting them to tsibbles to check for gaps, irregularity, and date
+#'   ordering
+#' @srrstatsNA {TS1.8} the only requirement is for consistency across entries,
+#'   which is checked in the validation function
+#' @srrstatsNA {TS2.1, TS2.1b, TS2.1c, TS5.5} missing values not handled by the
+#'   models so warnings or imputation options not provided
+#' @srrstatsNA {TS2.2, TS2.3, TS2.4, TS2.4a, TS2.4b} no functions rely on
+#'   stationarity
+#' @srrstatsNA {TS2.5, TS2.6} auto-covariance matrices not constructed
+#' @srrstatsNA {TS3.0, TS3.1, TS3.2, TS3.3, TS3.3a, TS3.3b, TS4.6, TS4.6a,
+#'   TS4.6b, TS4.6c, TS4.7, TS4.7a, TS4.7b, TS4.7c, TS5.6, TS5.7, TS5.8}
+#'   forecasting not conducted
+#' @srrstatsNA {TS4.0a} Return values are not same class as input, they are
+#'   in unified class
+#' @srrstatsNA {TS4.1} It is not currently set up to retain unit attributes
+#'   should be in provided in the input.
+#' @srrstatsNA {TS4.4, TS4.5, TS4.5a, TS4.5b, TS4.5c} no transformations to
+#'   achieve stationarity are conducted
+#' @srrstatsNA {TS5.4} no frequency visualisation implemented
 #' @noRd
 NULL
