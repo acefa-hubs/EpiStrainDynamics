@@ -25,8 +25,13 @@
 #' This metric function can be run directly on the fitted model output.
 #'
 #' @param fitted_model Fitted model object with class `EpiStrainDynamics.fit`
-#' @param dow Logical whether or not to include day-of-week in incidence calc
+#' @param dow Logical indicating whether to include day-of-week effects.
+#'   If \code{NULL} or \code{NA} (default), uses the day-of-week setting from
+#'   the fitted model. If \code{TRUE}, includes day-of-week effects (model must
+#'   have been fitted with \code{dow_effect = TRUE}). If \code{FALSE}, excludes
+#'   day-of-week effects.
 #' @param ... Additional arguments passed to metrics calculation
+#'
 #' @return named list of class `EpiStrainDynamics.metric` containing a dataframe
 #'  of the calculated metric outcome (`$measure`), the fit object (`$fit`), and the
 #'  constructed model object (`$constructed_model`). The `measure` data frame
@@ -34,6 +39,7 @@
 #'  interval of the quantity (`lb_50` & `ub_50`), the 95% credible interval
 #'  (`lb_95` & `ub_95`), the proportion greater than a defined threshold value
 #'  (`prop`), the pathogen name (`pathogen`), and the time label (`time`).
+#'
 #' @family metrics
 #' @export
 #'
@@ -49,21 +55,27 @@
 #'       time = sarscov2$date))
 #'
 #'   fit <- fit_model(mod)
-#'   inc <- incidence(fit, dow = TRUE)
+#'
+#'   # Use model's dow setting (default)
+#'   inc <- incidence(fit)
+#'
+#'   # Explicitly exclude dow effects
+#'   inc_no_dow <- incidence(fit, dow = FALSE)
+#'
+#'   # Explicitly include dow effects (if model has them)
+#'   inc_with_dow <- incidence(fit, dow = TRUE)
 #' }
-incidence <- function(fitted_model, dow, ...) {
+incidence <- function(fitted_model, dow = NULL, ...) {
   validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')
-  if (dow & !fitted_model$constructed_model$dow_effect) {
-    cli::cli_abort(
-      "dow effects can't be incorporated into incidence as it was not specified in the model"
-    )
-  }
   UseMethod("incidence")
 }
 
 #' @rdname incidence
 #' @export
-incidence.ps <- function(fitted_model, dow, ...) {
+incidence.ps <- function(fitted_model, dow = NULL, ...) {
+  # Resolve and validate dow
+  dow <- resolve_dow(fitted_model, dow)
+
   out <- compute_multi_pathogen(fitted_model, 1, 'incidence',
                                 threshold = 0, use_splines = TRUE, dow)
   class(out) <- c('incidence', 'EpiStrainDynamics.metric', class(out))
@@ -72,7 +84,10 @@ incidence.ps <- function(fitted_model, dow, ...) {
 
 #' @rdname incidence
 #' @export
-incidence.rw <- function(fitted_model, dow, ...) {
+incidence.rw <- function(fitted_model, dow = NULL, ...) {
+  # Resolve and validate dow
+  dow <- resolve_dow(fitted_model, dow)
+
   out <- compute_multi_pathogen(fitted_model, 1, 'incidence',
                                 threshold = 0, use_splines = FALSE, dow)
   class(out) <- c('incidence', 'EpiStrainDynamics.metric', class(out))
@@ -81,7 +96,10 @@ incidence.rw <- function(fitted_model, dow, ...) {
 
 #' @rdname incidence
 #' @export
-incidence.ps_single <- function(fitted_model, dow, ...) {
+incidence.ps_single <- function(fitted_model, dow = NULL, ...) {
+  # Resolve and validate dow
+  dow <- resolve_dow(fitted_model, dow)
+
   out <- compute_single_pathogen(fitted_model, 1, 'incidence',
                                  threshold = 0, use_splines = TRUE, dow)
   class(out) <- c('incidence', 'EpiStrainDynamics.metric', class(out))
@@ -90,16 +108,55 @@ incidence.ps_single <- function(fitted_model, dow, ...) {
 
 #' @rdname incidence
 #' @export
-incidence.rw_single <- function(fitted_model, dow, ...) {
+incidence.rw_single <- function(fitted_model, dow = NULL, ...) {
+  # Resolve and validate dow
+  dow <- resolve_dow(fitted_model, dow)
+
   out <- compute_single_pathogen(fitted_model, 1, 'incidence',
                                  threshold = 0, use_splines = FALSE, dow)
   class(out) <- c('incidence', 'EpiStrainDynamics.metric', class(out))
   out
 }
 
-# =====================
-# CALCULATION FUNCTIONS
-# =====================
+#' Resolve and validate dow argument
+#'
+#' Helper function to handle dow argument defaults and validation.
+#' Used by metric functions to ensure consistent dow handling.
+#'
+#' @param fitted_model Fitted model object with dow_effect in constructed_model
+#' @param dow User-provided dow value (NULL, NA, TRUE, or FALSE)
+#'
+#' @return Logical value for dow (TRUE or FALSE)
+#' @noRd
+#'
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+resolve_dow <- function(fitted_model, dow) {
+  # Validate type
+  if (!is.null(dow) && !is.logical(dow)) {
+    cli::cli_abort(
+      "{.arg dow} must be {.code NULL} or a logical value ({.code TRUE}/{.code FALSE})."
+    )
+  }
+
+  # Set default if NULL or NA
+  if (is.null(dow) || isTRUE(is.na(dow))) {
+    dow <- fitted_model$constructed_model$dow_effect
+    cli::cli_inform(
+      "Using day-of-week setting from model: {.val {dow}}"
+    )
+  }
+
+  # Validate compatibility
+  if (dow && !fitted_model$constructed_model$dow_effect) {
+    cli::cli_abort(
+      "Day-of-week effects cannot be incorporated because the model was not
+      fitted with {.code dow_effect = TRUE}."
+    )
+  }
+
+  return(dow)
+}
 
 #' Calculate Incidence for Single Pathogen Model (with DOW adjustment)
 #'
@@ -124,7 +181,8 @@ calc_incidence_single <- function(a, time_idx, pathogen_idx,
 
   # Apply DOW effect if required
   if (dow_effect) {
-    incidence <- incidence * components$week_effect * post$day_of_week_simplex[, components$DOW[time_idx]]
+    incidence <- incidence * components$week_effect *
+      post$day_of_week_simplex[, components$DOW[time_idx]]
   }
 
   incidence

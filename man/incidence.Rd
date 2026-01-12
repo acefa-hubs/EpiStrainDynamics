@@ -8,20 +8,24 @@
 \alias{incidence.rw_single}
 \title{Generic Method for Incidence Analysis}
 \usage{
-incidence(fitted_model, dow, ...)
+incidence(fitted_model, dow = NULL, ...)
 
-\method{incidence}{ps}(fitted_model, dow, ...)
+\method{incidence}{ps}(fitted_model, dow = NULL, ...)
 
-\method{incidence}{rw}(fitted_model, dow, ...)
+\method{incidence}{rw}(fitted_model, dow = NULL, ...)
 
-\method{incidence}{ps_single}(fitted_model, dow, ...)
+\method{incidence}{ps_single}(fitted_model, dow = NULL, ...)
 
-\method{incidence}{rw_single}(fitted_model, dow, ...)
+\method{incidence}{rw_single}(fitted_model, dow = NULL, ...)
 }
 \arguments{
 \item{fitted_model}{Fitted model object with class \code{EpiStrainDynamics.fit}}
 
-\item{dow}{Logical whether or not to include day-of-week in incidence calc}
+\item{dow}{Logical indicating whether to include day-of-week effects.
+If \code{NULL} or \code{NA} (default), uses the day-of-week setting from
+the fitted model. If \code{TRUE}, includes day-of-week effects (model must
+have been fitted with \code{dow_effect = TRUE}). If \code{FALSE}, excludes
+day-of-week effects.}
 
 \item{...}{Additional arguments passed to metrics calculation}
 }
@@ -69,7 +73,15 @@ This metric function can be run directly on the fitted model output.
       time = sarscov2$date))
 
   fit <- fit_model(mod)
-  inc <- incidence(fit, dow = TRUE)
+
+  # Use model's dow setting (default)
+  inc <- incidence(fit)
+
+  # Explicitly exclude dow effects
+  inc_no_dow <- incidence(fit, dow = FALSE)
+
+  # Explicitly include dow effects (if model has them)
+  inc_with_dow <- incidence(fit, dow = TRUE)
 }
 }
 \seealso{

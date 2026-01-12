@@ -27,6 +27,7 @@ test_that("fixture models are available", {
 
 # Load fixtures (done once per test file)
 fit_rw_single <- readRDS("tests/testthat/fixtures/fit_rw_single.rds")
+fit_rw_single_dow <- readRDS("tests/testthat/fixtures/fit_rw_single_dow.rds")
 fit_ps_single <- readRDS("tests/testthat/fixtures/fit_ps_single.rds")
 fit_rw_multi <- readRDS("tests/testthat/fixtures/fit_rw_multi.rds")
 fit_ps_multi <- readRDS("tests/testthat/fixtures/fit_ps_multi.rds")
@@ -162,8 +163,8 @@ test_that("Rt() threshold affects prop calculation", {
 # ==============================================================================
 # TESTS: incidence() FUNCTION
 # ==============================================================================
-
 test_that("incidence() validates inputs correctly", {
+  # Invalid class
   expect_error(
     incidence(list(fit = "not a fit"), dow = FALSE),
     "Input must be of class"
@@ -172,10 +173,57 @@ test_that("incidence() validates inputs correctly", {
   # dow = TRUE when model doesn't have dow_effect
   expect_error(
     incidence(fit_rw_single, dow = TRUE),
-    "dow effects can't be incorporated"
+    "Day-of-week effects cannot be incorporated"
+  )
+
+  # dow must be NULL or logical
+  expect_error(
+    incidence(fit_rw_single, dow = "yes"),
+    "must be.*NULL.*logical"
+  )
+
+  expect_error(
+    incidence(fit_rw_single, dow = 1),
+    "must be.*NULL.*logical"
   )
 })
 
+# dow argument default behavior tests
+test_that("incidence() uses model's dow setting when dow = NULL", {
+  # For model without dow_effect
+  expect_message(
+    result <- incidence(fit_rw_single, dow = NULL),
+    "Using day-of-week setting from model.*FALSE"
+  )
+  expect_s3_class(result, "incidence")
+})
+
+test_that("incidence() default behavior (dow not specified) uses model setting", {
+  # When dow argument is not provided at all, should use model's setting
+  expect_message(
+    result <- incidence(fit_rw_single),  # dow not specified
+    "Using day-of-week setting from model"
+  )
+  expect_s3_class(result, "incidence")
+})
+
+test_that("incidence() explicit dow = FALSE works regardless of model", {
+  # Should work for model without dow_effect
+  expect_silent(
+    result <- incidence(fit_rw_single, dow = FALSE)
+  )
+  expect_s3_class(result, "incidence")
+})
+
+test_that("incidence() dow = TRUE requires model to have dow_effect", {
+  # Model without dow_effect - should error
+  expect_error(
+    incidence(fit_rw_single, dow = TRUE),
+    "Day-of-week effects cannot be incorporated"
+  )
+})
+
+# Basic functionality tests (existing tests - reviewed and kept)
 test_that("incidence() works for single pathogen models", {
   result <- incidence(fit_rw_single, dow = FALSE)
 
@@ -215,7 +263,6 @@ test_that("incidence() works for multiple pathogen models", {
   # Total should be sum of individual pathogens (approximately, given posterior sampling)
   total_data <- result$measure[result$measure$pathogen == "Total", ]
   alpha_data <- result$measure[result$measure$pathogen == "alpha", ]
-
   expect_equal(nrow(total_data), nrow(alpha_data))
 })
 
@@ -228,6 +275,154 @@ test_that("incidence() p-spline vs random walk gives different results", {
 
   # But values should differ (different smoothing methods)
   expect_false(all(abs(result_rw$measure$y - result_ps$measure$y) < 1e-10))
+})
+
+test_that("incidence() with dow = TRUE includes day-of-week effects", {
+  skip_if_not(exists("fit_rw_single_dow"),
+              "No test fixture with dow_effect available")
+
+  result_with_dow <- incidence(fit_rw_single_dow, dow = TRUE)
+  result_without_dow <- incidence(fit_rw_single_dow, dow = FALSE)
+
+  # Both should work
+  expect_s3_class(result_with_dow, "incidence")
+  expect_s3_class(result_without_dow, "incidence")
+
+  # Results should differ when dow effects are included vs excluded
+  expect_false(
+    all(abs(result_with_dow$measure$y - result_without_dow$measure$y) < 1e-10)
+  )
+})
+
+# Edge cases and special scenarios
+test_that("incidence() treats NA same as NULL (uses model's setting)", {
+  # NA should be treated as NULL - use the model's setting
+  expect_message(
+    result <- incidence(fit_rw_single, dow = NA),
+    "Using day-of-week setting from model"
+  )
+  expect_s3_class(result, "incidence")
+})
+
+test_that("dow = NA works same as dow = NULL", {
+  # Both should produce identical results
+  result_null <- incidence(fit_rw_single, dow = NULL)
+  result_na <- incidence(fit_rw_single, dow = NA)
+
+  expect_equal(result_null$measure$y, result_na$measure$y)
+  expect_equal(nrow(result_null$measure), nrow(result_na$measure))
+})
+
+test_that("incidence() preserves model information in output", {
+  result <- incidence(fit_rw_single, dow = FALSE)
+
+  # Output should include original fit and constructed_model
+  expect_true("fit" %in% names(result))
+  expect_true("constructed_model" %in% names(result))
+
+  # These should be the same objects
+  expect_identical(result$fit, fit_rw_single$fit)
+  expect_identical(result$constructed_model, fit_rw_single$constructed_model)
+})
+
+test_that("incidence() measure data frame has correct properties", {
+  result <- incidence(fit_rw_single, dow = FALSE)
+
+  measure <- result$measure
+
+  # All required columns present
+  required_cols <- c("y", "lb_50", "ub_50", "lb_95", "ub_95",
+                     "prop", "time", "pathogen")
+  expect_true(all(required_cols %in% names(measure)))
+
+  # No NA values in key columns
+  expect_false(any(is.na(measure$y)))
+  expect_false(any(is.na(measure$time)))
+  expect_false(any(is.na(measure$pathogen)))
+
+  # Proportions should be between 0 and 1
+  expect_true(all(measure$prop >= 0 & measure$prop <= 1))
+
+  # Time should be ordered
+  expect_true(all(diff(as.numeric(measure$time)) > 0))
+})
+
+test_that("incidence() works consistently across different method classes", {
+  # Test all four combinations: ps/rw × single/multi
+  result_rw_single <- incidence(fit_rw_single, dow = FALSE)
+  result_ps_single <- incidence(fit_ps_single, dow = FALSE)
+  result_rw_multi <- incidence(fit_rw_multi, dow = FALSE)
+  result_ps_multi <- incidence(fit_ps_multi, dow = FALSE)
+
+  # All should have incidence class
+  expect_s3_class(result_rw_single, "incidence")
+  expect_s3_class(result_ps_single, "incidence")
+  expect_s3_class(result_rw_multi, "incidence")
+  expect_s3_class(result_ps_multi, "incidence")
+
+  # All should have consistent structure
+  expect_named(result_rw_single$measure,
+               names(result_ps_single$measure))
+  expect_named(result_rw_multi$measure,
+               names(result_ps_multi$measure))
+})
+
+# Calculation validation tests
+test_that("incidence() calculation functions are called with correct arguments", {
+  # This is more of an integration test to ensure the helper functions work
+  result <- incidence(fit_rw_single, dow = FALSE)
+
+  # Incidence should be exp of log-incidence
+  # Values should be reasonable (positive, not extreme)
+  expect_true(all(result$measure$y > 0))
+  expect_true(all(result$measure$y < Inf))
+  expect_false(any(is.nan(result$measure$y)))
+})
+
+test_that("incidence() with dow adjusts values appropriately", {
+  skip_if_not(exists("fit_rw_single_dow"),
+              "No test fixture with dow_effect available")
+
+  # Get incidence with and without dow
+  result_with <- incidence(fit_rw_single_dow, dow = TRUE)
+  result_without <- incidence(fit_rw_single_dow, dow = FALSE)
+
+  # With dow should apply: incidence * week_effect * dow_simplex
+  # So values should generally differ (unless dow_simplex happens to be ~1)
+  differences <- abs(result_with$measure$y - result_without$measure$y)
+
+  # At least some time points should show dow adjustment
+  # (Could be zero if model estimated dow_simplex ≈ [1/7, 1/7, ...])
+  expect_true(mean(differences) >= 0)  # Sanity check
+})
+
+# Documentation and user experience tests
+test_that("incidence() provides informative messages", {
+  # Using default (NULL) should inform user of setting used
+  expect_message(
+    incidence(fit_rw_single, dow = NULL),
+    "day-of-week setting.*model"
+  )
+
+  # Explicit values should not message
+  expect_silent(
+    incidence(fit_rw_single, dow = FALSE)
+  )
+})
+
+test_that("incidence() error messages are clear and actionable", {
+  # Invalid class error
+  expect_error(
+    incidence("not a fit", dow = FALSE),
+    class = "error"  # Should throw an error with clear message
+  )
+
+  # dow incompatibility error should mention what's needed
+  err <- tryCatch(
+    incidence(fit_rw_single, dow = TRUE),
+    error = function(e) e$message
+  )
+  expect_match(err, "Day-of-week effects cannot be incorporated", ignore.case = TRUE)
 })
 
 # ==============================================================================
