@@ -145,15 +145,10 @@ construct_model <- function(method,
     )
   }
 
-  # Prepare data list
-  data <- c(
-    list(time_seq = time_seq),
-    pathogen_structure$data
-  )
-
   # Construct final model input list
   model_input <- list(
-    data = data,
+    data = pathogen_structure$data,#data,
+    validated_tsbl = pathogen_structure$validated_tsbl,
     standata = standata,
     pathogen_names = pathogen_structure$pathogen_names,
     dow_effect = dow_effect

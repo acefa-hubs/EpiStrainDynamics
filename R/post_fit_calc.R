@@ -43,13 +43,13 @@ calc_stats <- function(values, threshold = 0) {
 #' @srrstats {G1.4a} internal function specified with `@noRd`
 #'
 get_model_components <- function(fitted_model) {
+  tsbl <- fitted_model$constructed_model$validated_tsbl
   list(
     fit = fitted_model$fit,
     pathogen_names = fitted_model$constructed_model$pathogen_names %||% NULL,
     num_path = length(fitted_model$constructed_model$pathogen_names %||% 1),
-    time_seq = fitted_model$constructed_model$data$time_seq,
-    time = fitted_model$constructed_model$data$time,
-    num_days = length(fitted_model$constructed_model$data$time_seq),
+    time = tsbl[[tsibble::index(tsbl)]],
+    num_days = nrow(tsbl),
     knots = fitted_model$constructed_model$standata$knots %||% NULL,
     spline_degree = fitted_model$constructed_model$standata$spline_degree %||% NULL,
     DOW = fitted_model$constructed_model$standata$DOW %||% NULL,
@@ -192,7 +192,8 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
 
   # Transform data if using splines
   if (use_splines) {
-    B_true <- predict_B_true(components$time_seq, components$knots,
+    time_seq <- seq_len(components$num_days)
+    B_true <- predict_B_true(time_seq, components$knots,
                              components$spline_degree)
     a <- transform_posterior_multi(post, B_true, components$num_path,
                                    components$num_days)
@@ -240,7 +241,14 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
     dplyr::arrange(.data$pathogen != "Total", .data$pathogen) |>
     cbind(time = components$time[selection_index])
 
-  out <- list(measure = measure_out,
+  #' @srrstats {TS4.0, TS4.0b, TS4.2, TS4.3} Return values are in unified class,
+  #' which is documented.
+  tsbl_measure <- tsibble::as_tsibble(
+    measure_out,
+    index = time
+  )
+
+  out <- list(measure = tsbl_measure,
               fit = fitted_model$fit,
               constructed_model = fitted_model$constructed_model)
 }
@@ -274,7 +282,8 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
 
   # Transform data if using splines
   if (use_splines) {
-    B_true <- predict_B_true(components$time_seq, components$knots, components$spline_degree)
+    time_seq <- seq_len(components$num_days)
+    B_true <- predict_B_true(time_seq, components$knots, components$spline_degree)
     a <- transform_posterior_single(post, B_true, components$num_days)
   } else {
     a <- post$a
@@ -303,11 +312,17 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
                           calc_single_pathogen_fn,
                           a, post, components, extra_args, threshold)
 
-  measure <- cbind(results,
-                   time = components$time[selection_index])
-  measure$pathogen <- components$pathogen_names
+  results$pathogen <- components$pathogen_names
 
-  out <- list(measure = measure,
+  #' @srrstats {TS4.0, TS4.0b, TS4.2, TS4.3} Return values are in unified class,
+  #' which is documented.
+  tsbl_measure <- tsibble::tsibble(
+    time = components$time[selection_index],
+    results,
+    index = time
+  )
+
+  out <- list(measure = tsbl_measure,
               fit = fitted_model$fit,
               constructed_model = fitted_model$constructed_model)
   return(out)

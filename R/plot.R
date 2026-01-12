@@ -4,6 +4,7 @@
 #'
 #' @param df Metrics calculation output of class `EpiStrainDynamics.metric`
 #'  from either `incidence()`, `growth_rate()`, `Rt()`, or `proportion()`.
+#' @param xlab Time label for x axis, defaults to "Time"
 #' @param ... Additional arguments passed to plot
 #' @importFrom viridis viridis
 #' @importFrom stats setNames
@@ -16,6 +17,8 @@
 #' @srrstats {BS6.1} All calculated epidemiological metrics can be plotted with
 #'   a default plot function.
 #' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {TS5.0} default plot methods implemented
+#' @srrstats {TS5.1, TS5.2, TS5.3} Time on x axis with units printed
 #'
 #' @examples
 #' \dontrun{
@@ -29,14 +32,14 @@
 #'   gr <- growth_rate(mod)
 #'   plot(gr)
 #' }
-plot <- function(df, ...) {
+plot <- function(df, xlab = 'Time', ...) {
   validate_class_inherits(df, 'EpiStrainDynamics.metric')
   UseMethod("plot")
 }
 
 #' @rdname plot
 #' @export
-plot.incidence <- function(df) {
+plot.incidence <- function(df, xlab = 'Time', ...) {
 
   measure_df <- df$measure
 
@@ -49,8 +52,10 @@ plot.incidence <- function(df) {
     setNames(viridis::viridis(length(other_levels)), other_levels)
   )
 
-  input_data <- data.frame(time = df$constructed_model$data$time,
-                           case_timeseries = df$constructed_model$data$case_timeseries)
+  tsbl <- inc$constructed_model$validated_tsbl
+  time_col <- tsibble::index_var(tsbl)
+  input_data <- tsbl[, c(time_col, 'case_timeseries')]
+
   ggplot(measure_df) +
     geom_line(aes(x = .data$time, y = .data$y, color = .data$pathogen)) +
     geom_ribbon(aes(x = .data$time, y = .data$y,
@@ -63,24 +68,24 @@ plot.incidence <- function(df) {
                 alpha = 0.2) +
     theme_bw(base_size = 14) +
     geom_point(data = input_data,
-               aes(x = .data$time, y = .data$case_timeseries),
+               aes(x = .data[[time_col]], y = .data$case_timeseries),
                size = 0.8) +
     geom_line(data = input_data,
-              aes(x = .data$time, y = .data$case_timeseries),
+              aes(x = .data[[time_col]], y = .data$case_timeseries),
               linewidth = 0.2) +
     scale_colour_manual(
       values = colors,
       aesthetics = c("colour", "fill")
     ) +
     ylab("Modelled influenza cases") +
-    theme(legend.title = element_blank(),
-          axis.title.x = element_blank())
+    theme(legend.title = element_blank()) +
+    xlab(xlab)
 
 }
 
 #' @rdname plot
 #' @export
-plot.growth_rate <- function(df) {
+plot.growth_rate <- function(df, xlab = 'Time', ...) {
 
   measure_df <- df$measure
 
@@ -109,8 +114,8 @@ plot.growth_rate <- function(df) {
       aesthetics = c("colour", "fill")) +
     geom_hline(yintercept = 0, linetype = "dashed") +
     ylab("Growth rate") +
-    theme(legend.title = element_blank(),
-          axis.title.x = element_blank())
+    theme(legend.title = element_blank()) +
+    xlab(xlab)
 
   # Get the y-axis range from the built plot
   y_range <- ggplot_build(p)$layout$panel_params[[1]]$y.range
@@ -137,7 +142,7 @@ plot.growth_rate <- function(df) {
 
 #' @rdname plot
 #' @export
-plot.Rt <- function(df) {
+plot.Rt <- function(df, xlab = 'Time', ...) {
 
   measure_df <- df$measure
 
@@ -166,14 +171,14 @@ plot.Rt <- function(df) {
       aesthetics = c("colour", "fill")) +
     geom_hline(yintercept = 1, linetype = "dashed") +
     ylab("Effective reproduction number") +
-    theme(legend.title = element_blank(),
-          axis.title.x = element_blank())
+    theme(legend.title = element_blank()) +
+    xlab(xlab)
 
 }
 
 #' @rdname plot
 #' @export
-plot.proportion <- function(df) {
+plot.proportion <- function(df, xlab = 'Time', ...) {
 
   measure_df <- df$measure
 
@@ -196,7 +201,7 @@ plot.proportion <- function(df) {
       aesthetics = c("colour", "fill")) +
     geom_hline(yintercept = 1, linetype = "dashed") +
     ylab("Modelled proportion of cases") +
-    theme(legend.title = element_blank(),
-          axis.title.x = element_blank())
+    theme(legend.title = element_blank()) +
+    xlab(xlab)
 
 }

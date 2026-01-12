@@ -54,9 +54,8 @@ single <- function(data,
   #' @srrstats {G2.13, G2.14, G2.14a} check for missing data, error if found
   #' @srrstats {G2.15, BS3.0} Data prep does not assume non-missingness
   validated_tsbl <- create_validated_timeseries(data, case_timeseries, time)
-
-  # Extract time column name from the validated tsibble
-  time_col_name <- as.character(tsibble::index_var(validated_tsbl))
+  colnames(validated_tsbl)[colnames(validated_tsbl) == case_timeseries] <-
+    "case_timeseries"
 
   #' @srrstats {G5.3} data objects are returns with no missing values. this
   #'   is validated through conversion to tsibble in `create_validated_timeseries`
@@ -65,9 +64,9 @@ single <- function(data,
   model_inputs <- list(
     pathogen_structure = 'single',
     pathogen_names = case_timeseries,
+    validated_tsbl = validated_tsbl,
     data = list(
-      case_timeseries = validated_tsbl[[case_timeseries]],
-      time = validated_tsbl[[time_col_name]]
+      case_timeseries = validated_tsbl$case_timeseries
     )
   )
 
@@ -144,16 +143,15 @@ multiple <- function(data,
   #' @srrstats {G2.13, G2.14, G2.14a} check for missing data, error if found
   #' @srrstats {G2.15, BS3.0} Data prep does not assume non-missingness
   validated_tsbl <- create_validated_timeseries(data, ts_cols, time)
-
-  # Extract time column name from the validated tsibble
-  time_col_name <- as.character(tsibble::index_var(validated_tsbl))
+  colnames(validated_tsbl)[colnames(validated_tsbl) == case_timeseries] <-
+    "case_timeseries"
 
   # Create matrix from validated tsibble
   component_pathogens <- t(as.matrix(
     validated_tsbl[, component_pathogen_timeseries])
   )
 
-  #' @srrstats {G5.3} data objects are returns with no missing values.
+  #' @srrstats {G5.3} data objects are returned with no missing values.
   #'   this is validated through conversion to tsibble in
   #'   `create_validated_timeseries`
   #' @srrstats {G2.10} extraction of single columns happens after conversion
@@ -161,9 +159,9 @@ multiple <- function(data,
   model_inputs <- list(
     pathogen_structure = 'multiple',
     pathogen_names = component_pathogen_timeseries,
+    validated_tsbl = validated_tsbl,
     data = list(
-      case_timeseries = validated_tsbl[[case_timeseries]],
-      time = validated_tsbl[[time_col_name]],
+      case_timeseries = validated_tsbl$case_timeseries,
       component_pathogens = component_pathogens
     )
   )
@@ -253,9 +251,8 @@ subtyped <- function(data,
   #' @srrstats {G2.13, G2.14, G2.14a} check for missing data, error if found
   #' @srrstats {G2.15, BS3.0} Data prep does not assume non-missingness
   validated_tsbl <- create_validated_timeseries(data, ts_cols, time)
-
-  # Extract time column name from the validated tsibble
-  time_col_name <- as.character(tsibble::index_var(validated_tsbl))
+  colnames(validated_tsbl)[colnames(validated_tsbl) == case_timeseries] <-
+    "case_timeseries"
 
   # Create pathogen names
   pathogen_names <- c(influenzaA_subtyped_timeseries, other_pathogen_timeseries)
@@ -277,9 +274,9 @@ subtyped <- function(data,
   model_inputs <- list(
     pathogen_structure = 'subtyped',
     pathogen_names = pathogen_names,
+    validated_tsbl = validated_tsbl,
     data = list(
-      case_timeseries = validated_tsbl[[case_timeseries]],
-      time = validated_tsbl[[time_col_name]],
+      case_timeseries = validated_tsbl$case_timeseries,
       component_pathogens = component_pathogens,
       influenzaA_subtyped = influenzaA_subtyped
     )
