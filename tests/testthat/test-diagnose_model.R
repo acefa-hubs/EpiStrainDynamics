@@ -6,16 +6,16 @@
 # ==============================================================================
 
 test_that("fixtures are available for diagnose_model tests", {
-  skip_if_not(file.exists("tests/testthat/fixtures/fit_rw_single.rds"),
+  skip_if_not(file.exists(test_path("fixtures/fit_rw_single.rds")),
               "Fixtures not available")
-  expect_true(file.exists("tests/testthat/fixtures/fit_rw_single.rds"))
+  expect_true(file.exists(test_path("fixtures/fit_rw_single.rds")))
 })
 
 # Load fixtures (reuse from test-metrics.R)
-fit_rw_single <- readRDS("tests/testthat/fixtures/fit_rw_single.rds")
-fit_ps_single <- readRDS("tests/testthat/fixtures/fit_ps_single.rds")
-fit_rw_multi <- readRDS("tests/testthat/fixtures/fit_rw_multi.rds")
-fit_ps_multi <- readRDS("tests/testthat/fixtures/fit_ps_multi.rds")
+fit_rw_single <- readRDS(test_path("fixtures/fit_rw_single.rds"))
+fit_ps_single <- readRDS(test_path("fixtures/fit_ps_single.rds"))
+fit_rw_multi <- readRDS(test_path("fixtures/fit_rw_multi.rds"))
+fit_ps_multi <- readRDS(test_path("fixtures/fit_ps_multi.rds"))
 
 # ==============================================================================
 # TESTS: INPUT VALIDATION

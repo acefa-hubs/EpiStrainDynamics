@@ -6,11 +6,11 @@
 # ==============================================================================
 
 # Load fixtures (reuse from test-metrics.R)
-skip_if_not(file.exists("tests/testthat/fixtures/fit_rw_single.rds"),
+skip_if_not(file.exists(test_path("fixtures/fit_rw_single.rds")),
             "Fixtures not available")
 
-fit_rw_single <- readRDS("tests/testthat/fixtures/fit_rw_single.rds")
-fit_rw_multi <- readRDS("tests/testthat/fixtures/fit_rw_multi.rds")
+fit_rw_single <- readRDS(test_path("fixtures/fit_rw_single.rds"))
+fit_rw_multi <- readRDS(test_path("fixtures/fit_rw_multi.rds"))
 
 # Helper function for generation interval
 gi_simple <- function(x) {
@@ -423,3 +423,4 @@ test_that("plots handle missing pathogen names", {
   expect_no_error(p <- plot(bad_metric))
   expect_s3_class(p, "ggplot")
 })
+

@@ -9,28 +9,28 @@ test_that("fixture models are available", {
   # These should be created once and saved as .rds files
   # See setup-fixtures.R for generation code
 
-  skip_if_not(file.exists("tests/testthat/fixtures/fit_rw_single.rds"),
+  skip_if_not(file.exists(test_path("fixtures/fit_rw_single.rds")),
               "Fixture fit_rw_single.rds not found")
-  skip_if_not(file.exists("tests/testthat/fixtures/fit_ps_single.rds"),
+  skip_if_not(file.exists(test_path("fixtures/fit_ps_single.rds")),
               "Fixture fit_ps_single.rds not found")
-  skip_if_not(file.exists("tests/testthat/fixtures/fit_rw_multi.rds"),
+  skip_if_not(file.exists(test_path("fixtures/fit_rw_multi.rds")),
               "Fixture fit_rw_multi.rds not found")
-  skip_if_not(file.exists("tests/testthat/fixtures/fit_ps_multi.rds"),
+  skip_if_not(file.exists(test_path("fixtures/fit_ps_multi.rds")),
               "Fixture fit_ps_multi.rds not found")
 
   # If we get here, all fixtures exist
-  expect_true(file.exists("tests/testthat/fixtures/fit_rw_single.rds"))
-  expect_true(file.exists("tests/testthat/fixtures/fit_ps_single.rds"))
-  expect_true(file.exists("tests/testthat/fixtures/fit_rw_multi.rds"))
-  expect_true(file.exists("tests/testthat/fixtures/fit_ps_multi.rds"))
+  expect_true(file.exists(test_path("fixtures/fit_rw_single.rds")))
+  expect_true(file.exists(test_path("fixtures/fit_ps_single.rds")))
+  expect_true(file.exists(test_path("fixtures/fit_rw_multi.rds")))
+  expect_true(file.exists(test_path("fixtures/fit_ps_multi.rds")))
 })
 
 # Load fixtures (done once per test file)
-fit_rw_single <- readRDS("tests/testthat/fixtures/fit_rw_single.rds")
-fit_rw_single_dow <- readRDS("tests/testthat/fixtures/fit_rw_single_dow.rds")
-fit_ps_single <- readRDS("tests/testthat/fixtures/fit_ps_single.rds")
-fit_rw_multi <- readRDS("tests/testthat/fixtures/fit_rw_multi.rds")
-fit_ps_multi <- readRDS("tests/testthat/fixtures/fit_ps_multi.rds")
+fit_rw_single <- readRDS(test_path("fixtures/fit_rw_single.rds"))
+fit_rw_single_dow <- readRDS(test_path("fixtures/fit_rw_single_dow.rds"))
+fit_ps_single <- readRDS(test_path("fixtures/fit_ps_single.rds"))
+fit_rw_multi <- readRDS(test_path("fixtures/fit_rw_multi.rds"))
+fit_ps_multi <- readRDS(test_path("fixtures/fit_ps_multi.rds"))
 
 # Helper function for generation interval
 gi_simple <- function(x) {
@@ -83,11 +83,11 @@ test_that("Rt() works for single pathogen random walk model", {
   # Check measure data frame
   expect_s3_class(result$measure, "data.frame")
   expect_named(result$measure,
-               c("y", "lb_50", "ub_50", "lb_95",
-                 "ub_95", "prop", "time", "pathogen"))
+               c("time", "y", "lb_50", "ub_50", "lb_95",
+                 "ub_95", "prop", "pathogen"))
 
   # Check dimensions - should start from time index = tau_max
-  n_days <- length(fit_rw_single$constructed_model$data$time)
+  n_days <- nrow(fit_rw_single$constructed_model$validated_tsbl)
   expected_rows <- n_days - 7 + 1
   expect_equal(nrow(result$measure), expected_rows)
 
@@ -111,7 +111,8 @@ test_that("Rt() works for single pathogen p-spline model", {
   expect_s3_class(result, "Rt")
   expect_s3_class(result$measure, "data.frame")
 
-  n_days <- length(fit_ps_single$constructed_model$data$time)
+  # Check dimensions - should start from time index = tau_max
+  n_days <- nrow(fit_ps_single$constructed_model$validated_tsbl)
   expected_rows <- n_days - 7 + 1
   expect_equal(nrow(result$measure), expected_rows)
 
@@ -128,7 +129,7 @@ test_that("Rt() works for multiple pathogen models", {
   expect_true("Total" %in% pathogen_names)
   expect_true(all(c("alpha", "delta", "omicron", "other") %in% pathogen_names))
 
-  n_days <- length(fit_rw_multi$constructed_model$data$time)
+  n_days <- nrow(fit_rw_multi$constructed_model$validated_tsbl)
   expected_rows_per_pathogen <- n_days - 7 + 1
   expect_equal(nrow(result$measure), expected_rows_per_pathogen * 5)  # 4 pathogens + Total
 
@@ -232,11 +233,11 @@ test_that("incidence() works for single pathogen models", {
 
   # Check structure
   expect_named(result$measure,
-               c("y", "lb_50", "ub_50", "lb_95", "ub_95",
-                 "prop", "time", "pathogen"))
+               c("time", "y", "lb_50", "ub_50", "lb_95", "ub_95",
+                 "prop", "pathogen"))
 
   # Incidence should start from time index 1
-  n_days <- length(fit_rw_single$constructed_model$data$time)
+  n_days <- nrow(fit_rw_single$constructed_model$validated_tsbl)
   expect_equal(nrow(result$measure), n_days)
 
   # Incidence should be positive
@@ -443,7 +444,7 @@ test_that("growth_rate() works for single pathogen models", {
   expect_s3_class(result, "EpiStrainDynamics.metric")
 
   # Growth rate starts from time index 2 (needs previous day)
-  n_days <- length(fit_rw_single$constructed_model$data$time)
+  n_days <- nrow(fit_rw_single$constructed_model$validated_tsbl)
   expected_rows <- n_days - 2 + 1
   expect_equal(nrow(result$measure), expected_rows)
 
@@ -501,7 +502,7 @@ test_that("proportion() works with default (all individual pathogens)", {
   expect_s3_class(result, "EpiStrainDynamics.metric")
 
   # Should have one row per pathogen per time point (no Total for proportion)
-  n_days <- length(fit_rw_multi$constructed_model$data$time)
+  n_days <- nrow(fit_rw_multi$constructed_model$validated_tsbl)
   n_pathogens <- 4
   expected_rows <- n_days * n_pathogens
   expect_equal(nrow(result$measure), expected_rows)
@@ -526,7 +527,7 @@ test_that("proportion() works with custom numerator and denominator", {
   expect_s3_class(result, "proportion")
 
   # Should have one proportion per time point
-  n_days <- length(fit_rw_multi$constructed_model$data$time)
+  n_days <- nrow(fit_rw_multi$constructed_model$validated_tsbl)
   expect_equal(nrow(result$measure), n_days)
 
   # Proportion can be > 1 if denominator excludes some of numerator
@@ -575,7 +576,7 @@ test_that("calc_stats computes correct quantiles", {
 test_that("get_model_components extracts correct structure", {
   components <- get_model_components(fit_rw_single)
 
-  expect_named(components, c("fit", "pathogen_names", "num_path", "time_seq",
+  expect_named(components, c("fit", "pathogen_names", "num_path",
                              "time", "num_days", "knots", "spline_degree",
                              "DOW", "week_effect", "dow_effect"))
 
@@ -602,22 +603,22 @@ test_that("expand_pathogen_grid creates correct combinations", {
 # ==============================================================================
 
 test_that("Rt calculation matches saved reference values", {
-  skip_if_not(file.exists("tests/testthat/fixtures/expected_rt_single.rds"),
+  skip_if_not(file.exists(test_path("fixtures/expected_rt_single.rds")),
               "Reference values not available")
 
   result <- Rt(fit_rw_single, tau_max = 7, gi_dist = gi_simple)
-  expected <- readRDS("tests/testthat/fixtures/expected_rt_single.rds")
+  expected <- readRDS(test_path("fixtures/expected_rt_single.rds"))
 
   # Check that medians are very close (allow small numerical differences)
   expect_equal(result$measure$y, expected$y, tolerance = 0.001)
 })
 
 test_that("incidence calculation matches saved reference values", {
-  skip_if_not(file.exists("tests/testthat/fixtures/expected_incidence_multi.rds"),
+  skip_if_not(file.exists(test_path("fixtures/expected_incidence_multi.rds")),
               "Reference values not available")
 
   result <- incidence(fit_rw_multi, dow = FALSE)
-  expected <- readRDS("tests/testthat/fixtures/expected_incidence_multi.rds")
+  expected <- readRDS(test_path("fixtures/expected_incidence_multi.rds"))
 
   expect_equal(result$measure$y, expected$y, tolerance = 0.001)
 })
@@ -635,3 +636,4 @@ test_that("metrics handle missing values appropriately", {
   expect_false(any(is.na(result$measure$lb_95)))
   expect_false(any(is.na(result$measure$ub_95)))
 })
+
