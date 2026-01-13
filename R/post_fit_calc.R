@@ -245,7 +245,8 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
   #' which is documented.
   tsbl_measure <- tsibble::as_tsibble(
     measure_out,
-    index = time
+    index = .data$time,
+    key = .data$pathogen
   )
 
   out <- list(measure = tsbl_measure,
@@ -319,7 +320,7 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
   tsbl_measure <- tsibble::tsibble(
     time = components$time[selection_index],
     results,
-    index = time
+    index = .data$time
   )
 
   out <- list(measure = tsbl_measure,
