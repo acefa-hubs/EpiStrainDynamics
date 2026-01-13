@@ -52,7 +52,7 @@ plot.incidence <- function(df, xlab = 'Time', ...) {
     setNames(viridis::viridis(length(other_levels)), other_levels)
   )
 
-  tsbl <- inc$constructed_model$validated_tsbl
+  tsbl <- df$constructed_model$validated_tsbl
   time_col <- tsibble::index_var(tsbl)
   input_data <- tsbl[, c(time_col, 'case_timeseries')]
 
