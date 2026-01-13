@@ -292,28 +292,44 @@ test_that("plot.incidence() can be rendered", {
 
   # Should not error when building/printing
   expect_no_error(ggplot_build(p))
+
+  # Suppress plot output during testing
+  pdf(NULL)
   expect_no_error(print(p))
+  dev.off()
 })
 
 test_that("plot.growth_rate() can be rendered", {
   p <- plot(gr_single)
 
   expect_no_error(ggplot_build(p))
+
+  # Suppress plot output during testing
+  pdf(NULL)
   expect_no_error(print(p))
+  dev.off()
 })
 
 test_that("plot.Rt() can be rendered", {
   p <- plot(rt_single)
 
   expect_no_error(ggplot_build(p))
+
+  # Suppress plot output during testing
+  pdf(NULL)
   expect_no_error(print(p))
+  dev.off()
 })
 
 test_that("plot.proportion() can be rendered", {
   p <- plot(prop_multi)
 
   expect_no_error(ggplot_build(p))
+
+  # Suppress plot output during testing
+  pdf(NULL)
   expect_no_error(print(p))
+  dev.off()
 })
 
 # ==============================================================================
