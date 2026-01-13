@@ -1,10 +1,6 @@
 #' Generic Method for fitting model
 #'
 #' S3 generic for fitted models from constructed model object
-#' describe how to set up inits.
-#'
-#' @srrstats {BS2.7, BS2.11} Starting values can be specified with the
-#'   `initial_values` argument.
 #'
 #' @param constructed_model prepared model object of class
 #'  `EpiStrainDynamics.model`
@@ -16,7 +12,7 @@
 #' @param multi_cores A logical value indicating whether to parallelize chains with multiple cores, default is TRUE and uses all available cores - 1.
 #' @param verbose Logical value controlling the verbosity of output (i.e., warnings, messages, progress bar), default is TRUE.
 #' @param seed A positive integer seed used for random number generation in MCMC. Default is NULL, which means the seed is generated from 1 to the maximum integer supported by R.
-#' @param ... additional arguments to `rstan::sampling()`
+#' @param ... additional arguments to `rstan::sampling()`, such as `init`
 #'
 #' @returns fit model of class `EpiStrainDynamics.fit`
 #' @export
@@ -25,16 +21,16 @@
 #' @srrstats {G1.3, BS1.3} Arguments `n_chain`, `n_warmup`, `n_iter`, `thin`, and
 #'   `adapt_delta` control the computational process and are described clearly
 #'   in the documentation.
+#' @srrstats {BS2.7, BS2.11} Starting values can be specified with the
+#'   `init` argument to `rstan::sampling()` specified optionally here.
 #' @srrstats {BS2.12} Argument `verbose`, which defaults to `TRUE` controls the
 #'   verbosity of the stan sampling output.
 #' @srrstats {BS2.15} checks that data has been input in correct form, and
 #'   provides an informative error message if not
-#' @srrstats {BS5.0} *Return values should include starting value(s) or seed(s), including values for each sequence where multiple sequences are included*
 #' @srrstats {BS5.1} Returned list is of class `EpiStrainDynamics.fit`, and
 #'   includes the fit object of class `stanfit` and the pre-specified
 #'   constructed model object of class `EpiStrainDynamics.model`. The
 #'   model object itself includes the input data.
-
 #'
 #' @examples
 #' \dontrun{
@@ -104,15 +100,10 @@ fit_model.rw_subtyped <- function (constructed_model,
     ...
   )
 
-  # add chain names to init list
-  # names(inits) <- paste0("chain", seq(1, n_chain, 1))
-
-  #' @srrstats {BS5.0} function returns initial values used in computation
   #' @srrstats {BS5.5} the `model` return object is of class `stanfit`, which
   #'   includes information about convergence
   out <- list(fit = fit_object,
-                      # inits = inits,
-                      constructed_model = constructed_model)
+              constructed_model = constructed_model)
 
   class(out) <- c('rw', 'EpiStrainDynamics.fit', class(out))
   return(out)
