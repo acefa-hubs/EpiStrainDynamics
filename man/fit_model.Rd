@@ -121,14 +121,13 @@ fit_model(
 
 \item{seed}{A positive integer seed used for random number generation in MCMC. Default is NULL, which means the seed is generated from 1 to the maximum integer supported by R.}
 
-\item{...}{additional arguments to \code{rstan::sampling()}}
+\item{...}{additional arguments to \code{rstan::sampling()}, such as \code{init}}
 }
 \value{
 fit model of class \code{EpiStrainDynamics.fit}
 }
 \description{
 S3 generic for fitted models from constructed model object
-describe how to set up inits.
 }
 \examples{
 \dontrun{
