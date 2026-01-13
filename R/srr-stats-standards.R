@@ -84,6 +84,8 @@ NULL
 #' @srrstatsNA {BS4.6, BS4.7, BS5.3, BS5.4} No separate convergence
 #'   checker is implemented. Stan software returns some convergence warnings
 #'   itself and the README illustrates other options.
+#' @srrstatsNA {BS5.0} Stan has inbuilt methods for extracting starting value(s)
+#'   and seed(s) from model objects.
 #' @srrstatsNA {BS6.0} The fitting function, `fit_model()`, returns a list of
 #'   class `EpiStrainDynamics.fit` as well as a class for the family of pathogen
 #'   structure used (`ps`, `rw`, `ps_single`, or `rw_single`). The first item
