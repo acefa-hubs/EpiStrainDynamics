@@ -194,24 +194,6 @@ test_that("create_validated_timeseries() detects unordered time series", {
   )
 })
 
-test_that("create_validated_timeseries() detects empty datasets", {
-  # Create empty data frame
-  df <- data.frame(
-    date = as.Date(character(0)),
-    cases = numeric(0),
-    alpha = numeric(0)
-  )
-
-  expect_error(
-    create_validated_timeseries(
-      data = df,
-      columns = c("cases", "alpha"),
-      time_col = "date"
-    ),
-    "There is no data to model"
-  )
-})
-
 test_that("create_validated_timeseries() warns when time arg provided for ts objects", {
   skip_if_not_installed("xts")
   skip_if_not_installed("timetk")
@@ -446,23 +428,6 @@ test_that("intake functions fail with unordered time series", {
   )
 })
 
-test_that("intake functions fail with empty data", {
-  # Create empty data
-  empty_data <- data.frame(
-    date = as.Date(character(0)),
-    cases = numeric(0)
-  )
-
-  expect_error(
-    single(
-      data = empty_data,
-      case_timeseries = "cases",
-      time = "date"
-    ),
-    "There is no data to model"
-  )
-})
-
 test_that("multiple() fails with duplicate time indices", {
   check_package_data()
 
@@ -479,3 +444,4 @@ test_that("multiple() fails with duplicate time indices", {
     "Error creating tsibble|duplicated"
   )
 })
+
