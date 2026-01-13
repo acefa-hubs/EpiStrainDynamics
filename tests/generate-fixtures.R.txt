@@ -2,7 +2,7 @@
 # Run this once to create test fixtures, or regenerate when needed
 #
 # Usage:
-#   source("tests/testthat/setup-fixtures.R")
+#   source("tests/generate-fixtures.R")
 #
 # This will create fixture files in tests/testthat/fixtures/
 
@@ -17,7 +17,7 @@ if (!dir.exists(fixtures_dir)) {
 message("Generating fixture models (this may take a few minutes)...")
 
 # ==============================================================================
-# FIXTURE 1: Random Walk, Single Pathogen
+# FIXTURE 1a: Random Walk, Single Pathogen
 # ==============================================================================
 
 message("  - Creating fit_rw_single...")
@@ -46,6 +46,29 @@ fit_rw_single <- fit_model(mod_rw_single,
                            verbose = FALSE)
 
 saveRDS(fit_rw_single, file.path(fixtures_dir, "fit_rw_single.rds"))
+
+# ==============================================================================
+# FIXTURE 1b: Random Walk, Single Pathogen, dow = TRUE
+# ==============================================================================
+
+message("  - Creating fit_rw_single_dow...")
+
+mod_rw_single_dow <- construct_model(
+  method = random_walk(),
+  pathogen_structure = single(
+    data = single_df,
+    case_timeseries = 'cases',
+    time = 'dates'
+  ),
+  dow = TRUE
+)
+
+fit_rw_single_dow <- fit_model(mod_rw_single_dow,
+                               n_iter = 1000,
+                               n_chain = 2,
+                               verbose = FALSE)
+
+saveRDS(fit_rw_single_dow, file.path(fixtures_dir, "fit_rw_single_dow.rds"))
 
 # ==============================================================================
 # FIXTURE 2: P-Spline, Single Pathogen
