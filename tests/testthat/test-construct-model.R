@@ -15,12 +15,12 @@ test_that("construct_model() works with all standard model configurations", {
 
     # Test structure and classes
     expect_type(result, "list")
-    expect_named(result, c("data", "standata", "pathogen_names", "dow_effect"))
+    expect_named(result, c("data", "validated_tsbl", "standata",
+                           "pathogen_names", "dow_effect"))
     expect_s3_class(result, c(model_name, "EpiStrainDynamics.model"))
 
     # Test data structure
-    expect_named(result$data, c("time_seq", "case_timeseries", "time"))
-    expect_equal(result$data$time_seq, 1:expected_lengths$sarscov2_length)
+    expect_named(result$data, c("case_timeseries"))
     expect_equal(length(result$data$case_timeseries), expected_lengths$sarscov2_length)
   }
 
@@ -379,7 +379,6 @@ test_that("Full integration: all model combinations work correctly", {
     } else {
       expected_lengths$influenza_length
     }
-    expect_equal(length(model$data$time_seq), expected_length)
 
     # Test method-specific features in standata
     if (startsWith(test_case$name, "ps_")) {
@@ -423,4 +422,3 @@ test_that("Custom model construction with specific parameters", {
   expect_equal(result$pathogen_names, c('alpha', 'delta', 'omicron'))
   expect_true(result$dow_effect)
 })
-
