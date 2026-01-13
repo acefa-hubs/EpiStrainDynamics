@@ -14,9 +14,7 @@ test_that("single() creates correct structure", {
   expect_equal(result$pathogen_structure, "single")
   expect_equal(result$pathogen_names, "cases")
   expect_equal(length(result$data$case_timeseries), nrow(sarscov2))
-  expect_equal(length(result$data$time), nrow(sarscov2))
   expect_type(result$data$case_timeseries, "double")
-  expect_s3_class(result$data$time, "Date")
 })
 
 test_that("single() validates column existence and types", {
@@ -61,7 +59,6 @@ test_that("multiple() creates correct structure", {
 
   # Test data structure
   expect_equal(length(result$data$case_timeseries), nrow(sarscov2))
-  expect_equal(length(result$data$time), nrow(sarscov2))
   expect_equal(nrow(result$data$component_pathogens), 4)
   expect_equal(ncol(result$data$component_pathogens), nrow(sarscov2))
 
@@ -158,7 +155,6 @@ test_that("subtyped() creates correct structure", {
 
   # Test data structure
   expect_equal(length(result$data$case_timeseries), nrow(influenza))
-  expect_equal(length(result$data$time), nrow(influenza))
   expect_equal(nrow(result$data$component_pathogens), 3) # inf_A + inf_B + other
   expect_equal(ncol(result$data$component_pathogens), nrow(influenza))
   expect_equal(nrow(result$data$influenzaA_subtyped), 2) # H3N2 + H1N1
@@ -352,8 +348,9 @@ test_that("all pathogen structure functions return required components", {
     time = 'date'
   )
 
-  expect_true(all(c("pathogen_structure", "pathogen_names", "data") %in% names(single_result)))
-  expect_true(all(c("case_timeseries", "time") %in% names(single_result$data)))
+  expect_true(all(c("pathogen_structure", "pathogen_names", "validated_tsbl",
+                    "data") %in% names(single_result)))
+  expect_true(all(c("case_timeseries") %in% names(single_result$data)))
   expect_s3_class(single_result, "EpiStrainDynamics.pathogen_structure")
 
   # Test multiple() components
@@ -364,8 +361,10 @@ test_that("all pathogen structure functions return required components", {
     component_pathogen_timeseries = c('alpha', 'delta')
   )
 
-  expect_true(all(c("pathogen_structure", "pathogen_names", "data") %in% names(multiple_result)))
-  expect_true(all(c("case_timeseries", "time", "component_pathogens") %in% names(multiple_result$data)))
+  expect_true(all(c("pathogen_structure", "pathogen_names", "validated_tsbl",
+                    "data") %in% names(multiple_result)))
+  expect_true(all(c("case_timeseries", "component_pathogens") %in%
+                    names(multiple_result$data)))
   expect_s3_class(multiple_result, "EpiStrainDynamics.pathogen_structure")
 
   # Test subtyped() components
@@ -378,8 +377,10 @@ test_that("all pathogen structure functions return required components", {
     other_pathogen_timeseries = c('inf_B')
   )
 
-  expect_true(all(c("pathogen_structure", "pathogen_names", "data") %in% names(subtyped_result)))
-  expect_true(all(c("case_timeseries", "time", "component_pathogens", "influenzaA_subtyped") %in% names(subtyped_result$data)))
+  expect_true(all(c("pathogen_structure", "pathogen_names", "validated_tsbl",
+                    "data") %in% names(subtyped_result)))
+  expect_true(all(c("case_timeseries", "component_pathogens",
+                    "influenzaA_subtyped") %in% names(subtyped_result$data)))
   expect_s3_class(subtyped_result, "EpiStrainDynamics.pathogen_structure")
 })
 
@@ -411,3 +412,4 @@ test_that("pathogen structure functions handle edge cases correctly", {
   expect_equal(ncol(result_multiple$data$component_pathogens), 5)
   expect_equal(nrow(result_multiple$data$component_pathogens), 2)
 })
+

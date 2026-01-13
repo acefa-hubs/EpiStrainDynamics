@@ -140,9 +140,8 @@ test_that("single() returns expected structure with all classes", {
   expect_equal(result_df$pathogen_structure, "single")
   expect_equal(result_df$pathogen_names, "cases")
   expect_type(result_df$data, "list")
-  expect_named(result_df$data, c("case_timeseries", "time"))
+  expect_named(result_df$data, c("case_timeseries"))
   expect_length(result_df$data$case_timeseries, 100)
-  expect_length(result_df$data$time, 100)
 
   # Test with time series object (time optional)
   if (requireNamespace("xts", quietly = TRUE)) {
@@ -156,7 +155,6 @@ test_that("single() returns expected structure with all classes", {
     expect_equal(result_xts$pathogen_structure, "single")
     expect_equal(result_xts$pathogen_names, "cases")
     expect_length(result_xts$data$case_timeseries, 100)
-    expect_length(result_xts$data$time, 100)
   }
 })
 
@@ -225,9 +223,8 @@ test_that("multiple() returns expected structure with all classes", {
   expect_equal(result_df$pathogen_structure, "multiple")
   expect_equal(result_df$pathogen_names, c("alpha", "delta", "omicron", "other"))
   expect_type(result_df$data, "list")
-  expect_named(result_df$data, c("case_timeseries", "time", "component_pathogens"))
+  expect_named(result_df$data, c("case_timeseries", "component_pathogens"))
   expect_length(result_df$data$case_timeseries, 100)
-  expect_length(result_df$data$time, 100)
   expect_equal(dim(result_df$data$component_pathogens), c(4, 100))
 
   # Test with time series object (time optional)
@@ -388,9 +385,8 @@ test_that("subtyped() returns expected structure with all classes", {
   expect_equal(result_df$pathogen_structure, "subtyped")
   expect_equal(result_df$pathogen_names, c("inf_H1N1", "inf_H3N2", "inf_B", "other"))
   expect_type(result_df$data, "list")
-  expect_named(result_df$data, c("case_timeseries", "time", "component_pathogens", "influenzaA_subtyped"))
+  expect_named(result_df$data, c("case_timeseries", "component_pathogens", "influenzaA_subtyped"))
   expect_length(result_df$data$case_timeseries, 100)
-  expect_length(result_df$data$time, 100)
   expect_equal(dim(result_df$data$component_pathogens), c(3, 100))
   expect_equal(dim(result_df$data$influenzaA_subtyped), c(2, 100))
 
@@ -519,12 +515,6 @@ test_that("intake functions preserve data integrity across conversions", {
       info = paste("Values should be preserved for", class_type)
     )
 
-    # Check time values are preserved
-    expect_equal(
-      as.Date(result$data$time),
-      original_df$date,
-      info = paste("Time values should be preserved for", class_type)
-    )
   }
 
   # Test with time series object
@@ -541,13 +531,6 @@ test_that("intake functions preserve data integrity across conversions", {
       result_xts$data$case_timeseries,
       original_df$cases,
       info = "Values should be preserved for xts"
-    )
-
-    # Check time values are preserved
-    expect_equal(
-      as.Date(result_xts$data$time),
-      original_df$date,
-      info = "Time values should be preserved for xts"
     )
   }
 })
@@ -568,7 +551,6 @@ test_that("time series objects work correctly without time argument", {
     # Test single()
     result_single <- single(data = test_xts, case_timeseries = "cases")
     expect_length(result_single$data$case_timeseries, 30)
-    expect_length(result_single$data$time, 30)
 
     # Test multiple()
     result_multiple <- multiple(
