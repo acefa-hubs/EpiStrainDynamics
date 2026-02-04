@@ -19,6 +19,7 @@ fit_model(
   adapt_delta = 0.9,
   multi_cores = TRUE,
   verbose = TRUE,
+  suppress_warnings = FALSE,
   seed = NULL,
   ...
 )
@@ -32,6 +33,7 @@ fit_model(
   adapt_delta = 0.9,
   multi_cores = TRUE,
   verbose = TRUE,
+  suppress_warnings = FALSE,
   seed = NULL,
   ...
 )
@@ -45,6 +47,7 @@ fit_model(
   adapt_delta = 0.9,
   multi_cores = TRUE,
   verbose = TRUE,
+  suppress_warnings = FALSE,
   seed = NULL,
   ...
 )
@@ -58,6 +61,7 @@ fit_model(
   adapt_delta = 0.9,
   multi_cores = TRUE,
   verbose = TRUE,
+  suppress_warnings = FALSE,
   seed = NULL,
   ...
 )
@@ -71,6 +75,7 @@ fit_model(
   adapt_delta = 0.9,
   multi_cores = TRUE,
   verbose = TRUE,
+  suppress_warnings = FALSE,
   seed = NULL,
   ...
 )
@@ -84,6 +89,7 @@ fit_model(
   adapt_delta = 0.9,
   multi_cores = TRUE,
   verbose = TRUE,
+  suppress_warnings = FALSE,
   seed = NULL,
   ...
 )
@@ -97,6 +103,7 @@ fit_model(
   adapt_delta = 0.9,
   multi_cores = TRUE,
   verbose = TRUE,
+  suppress_warnings = FALSE,
   seed = NULL,
   ...
 )
@@ -113,18 +120,24 @@ fit_model(
 
 \item{thin}{A positive integer specifying the period for saving samples, default value is 1.}
 
-\item{adapt_delta}{Numeric value between 0 and 1 indicating target average acceptance probability used in \code{rstan::sampling}. Default value is 0.8.}
+\item{adapt_delta}{Numeric value between 0 and 1 indicating target average acceptance probability used in \code{rstan::sampling}. Default value is 0.9.}
 
 \item{multi_cores}{A logical value indicating whether to parallelize chains with multiple cores, default is TRUE and uses all available cores - 1.}
 
-\item{verbose}{Logical value controlling the verbosity of output (i.e., warnings, messages, progress bar), default is TRUE.}
+\item{verbose}{Logical value controlling the verbosity of output. When TRUE (default),
+shows all messages, warnings, errors, and progress indicators. When FALSE, suppresses
+messages and progress while retaining warnings and errors.}
+
+\item{suppress_warnings}{Logical value indicating whether to suppress warnings from Stan.
+Default is FALSE. When TRUE, warnings are suppressed but errors are still raised.}
 
 \item{seed}{A positive integer seed used for random number generation in MCMC. Default is NULL, which means the seed is generated from 1 to the maximum integer supported by R.}
 
 \item{...}{additional arguments to \code{rstan::sampling()}, such as \code{init}}
 }
 \value{
-fit model of class \code{EpiStrainDynamics.fit}
+fit model of class \code{EpiStrainDynamics.fit}, or if fitting fails,
+an error is raised that can be caught and inspected.
 }
 \description{
 S3 generic for fitted models from constructed model object
@@ -139,10 +152,21 @@ S3 generic for fitted models from constructed model object
 
   fit <- fit_model(mod)
 
-  # or specify additional mcmc parameters
-  fit <- fit_model(
-    mod, iter = 3000, warmup = 2000, chains = 4
+  # Suppress progress and messages but keep warnings/errors
+  fit <- fit_model(mod, verbose = FALSE)
+
+  # Suppress warnings too
+  fit <- fit_model(mod, verbose = FALSE, suppress_warnings = TRUE)
+
+  # Catch errors and inspect
+  result <- tryCatch(
+    fit_model(mod),
+    error = function(e) e
   )
+  if (inherits(result, "EpiStrainDynamics.fit.error")) {
+    cat("Fitting failed:", result$message, "\n")
+    # Can still access the model: result$constructed_model
+  }
 }
 
 }
