@@ -21,7 +21,8 @@
 #' @srrstats {G2.7, G2.8} data argument accepts standard tabular forms, which
 #'   are then post-processed internally to ensure subsequent functions receive
 #'   standard inputs
-#' @srrstats {TS1.7} accommodate units data input
+#' @srrstats {TS1.7, G2.11} accommodate data.frame-like tabular objects with
+#'   non-standard class attributes, including `units` package
 #'
 #' @examples
 #' # Using a data frame
