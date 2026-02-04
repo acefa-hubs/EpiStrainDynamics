@@ -6,7 +6,7 @@
 #'
 #' @importFrom rstan summary
 #'
-#' @srrstats {BS4.3} implements a convergence checker
+#' @srrstats {BS4.3, BS5.3, BS5.4} implements a convergence checker
 #'
 #' @return list of diagnostic information
 #' @export
