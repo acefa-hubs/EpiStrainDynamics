@@ -19,10 +19,11 @@
 #'   each pathogen or can provide a unique prior for each pathogen). Prior for
 #'   tau for `correlated` smoothing type is not currently supported.
 #' @param tau_sd Numeric vector specifying the prior standard deviation(s)
-#'   for tau parameter. Can be provided for `shared` (single value) and `independent`
-#'   smoothing types (can provide a single value which will be repeated for
-#'   each pathogen or can provide a unique prior for each pathogen). Prior for
-#'   tau for `correlated` smoothing type is not currently supported.
+#'   for tau parameter. Can be provided for `shared` (single value) and
+#'   `independent` smoothing types (can provide a single value which will be
+#'   repeated for each pathogen or can provide a unique prior for each
+#'   pathogen). Prior for tau for `correlated` smoothing type is not currently
+#'   supported.
 #'
 #' @return An object of class `EpiStrainDynamics.smoothing` containing:
 #'   \item{smoothing_type}{The specified smoothing structure type}
@@ -61,7 +62,8 @@ smoothing_structure <- function(smoothing_type = 'shared',
   # Handle priors based on structure type
   if (smoothing_type == "correlated") {
     if (!is.null(tau_mean) || !is.null(tau_sd)) {
-      cli::cli_alert("{.var {tau_mean}} and {.var {tau_sd}} are ignored for 'correlated' smoothing type")
+      cli::cli_alert("{.var {tau_mean}} and {.var {tau_sd}} are ignored for
+                     'correlated' smoothing type")
     }
     tau_priors <- list(mean = numeric(0), sd = numeric(0))
     priors_provided <- 1

@@ -25,10 +25,11 @@ each pathogen or can provide a unique prior for each pathogen). Prior for
 tau for \code{correlated} smoothing type is not currently supported.}
 
 \item{tau_sd}{Numeric vector specifying the prior standard deviation(s)
-for tau parameter. Can be provided for \code{shared} (single value) and \code{independent}
-smoothing types (can provide a single value which will be repeated for
-each pathogen or can provide a unique prior for each pathogen). Prior for
-tau for \code{correlated} smoothing type is not currently supported.}
+for tau parameter. Can be provided for \code{shared} (single value) and
+\code{independent} smoothing types (can provide a single value which will be
+repeated for each pathogen or can provide a unique prior for each
+pathogen). Prior for tau for \code{correlated} smoothing type is not currently
+supported.}
 }
 \value{
 An object of class \code{EpiStrainDynamics.smoothing} containing:
