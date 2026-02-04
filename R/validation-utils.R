@@ -102,6 +102,7 @@ validate_class_inherits <- function(obj, class_names, require_all = TRUE) {
 #' @noRd
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G2.6} one dimensional values are pre-processed regardless of class
 #' @srrstats {G5.2a} every error statement is unique
 #' @srrstats {G5.8, G5.8a} checks for zero length
 #' @srrstats {BS2.3, BS2.4, BS2.5} checks priors for length, appropriate
@@ -389,6 +390,64 @@ convert_ts_to_tsibble <- function(ts_obj) {
   return(temp_tsbl)
 }
 
+#' Check for list columns in data
+#'
+#' @param data A data.frame or data.frame-like object
+#' @param relevant_cols Character vector of column names that will be used
+#'
+#' @returns NULL (invisibly) if no list columns found, otherwise throws error
+#' @keywords internal
+#' @noRd
+#'
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G2.12} Check for list columns in data.frame-like objects and
+#'   provide informative error message
+#' @srrstats {G5.2a} every error statement is unique
+check_list_columns <- function(data, relevant_cols) {
+
+  # For time series objects, this check will happen after conversion to data.frame
+  # So we can safely assume data is data.frame-like here
+  if (!is.data.frame(data)) {
+    # Try to coerce to data.frame for checking
+    data <- tryCatch(
+      as.data.frame(data),
+      error = function(e) {
+        # If we can't convert to check, skip the check
+        # (will be handled by other validation)
+        return(NULL)
+      }
+    )
+    if (is.null(data)) return(invisible(NULL))
+  }
+
+  # Get columns that exist in the data
+  existing_cols <- intersect(relevant_cols, names(data))
+
+  if (length(existing_cols) == 0) {
+    return(invisible(NULL))
+  }
+
+  # Check for list columns among relevant columns
+  # Exclude data.frames (they are technically lists but have different semantics)
+  list_cols <- vapply(existing_cols, function(col) {
+    is.list(data[[col]]) && !is.data.frame(data[[col]])
+  }, logical(1))
+
+  if (any(list_cols)) {
+    list_col_names <- names(list_cols)[list_cols]
+
+    cli::cli_abort(c(
+      "List columns detected: {.val {list_col_names}}",
+      "x" = "List columns are not supported for time series analysis",
+      "i" = "Please convert these columns to appropriate vector types (numeric, character, etc.) or remove them from your data",
+      "i" = "You can use {.code unlist()} or extract specific elements if the list contains single values"
+    ))
+  }
+
+  invisible(NULL)
+}
+
 #' Helper: Create and validate tsibble from various data formats
 #'
 #' @param data input dataset - can be data frame, tibble, data.table, or time series object
@@ -399,6 +458,7 @@ convert_ts_to_tsibble <- function(ts_obj) {
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #' @srrstats {G1.4a} internal function specified with `@noRd`
 #' @srrstats {G5.2a} every error statement is unique
+#' @srrstats {G2.12} Validates and rejects list columns in data.frame objects
 #' @srrstats {TS1.1, TS1.2, TS1.3, TS1.4, TS1.5, TS1.6, TS2.0, TS2.1a} all
 #'   three data ingest functions (in `pathogen_structure.R`) allow for any
 #'   kind of timeseries class input or non-time-series input. This validation
@@ -426,6 +486,10 @@ create_validated_timeseries <- function(data, columns, time_col = NULL) {
     # Subset to required columns
     temp_tsbl <- temp_tsbl[, c(time_col, columns)]
 
+    # Check for list columns after conversion to data.frame format
+    # (tsibbles are data.frames, so this works)
+    check_list_columns(temp_tsbl, columns)
+
     #' @srrstats {G2.4, G2.4b} ensure consistent numeric handling
     #' @srrstats {TS1.7} accommodate units data input
     for (col in columns) {
@@ -447,6 +511,10 @@ create_validated_timeseries <- function(data, columns, time_col = NULL) {
 
     # Convert to data frame if needed
     temp_df <- as.data.frame(data)
+
+    # Check for list columns BEFORE subsetting and processing
+    # Include both time_col and data columns in the check
+    check_list_columns(temp_df, c(time_col, columns))
 
     # Subset to only the columns we need
     temp_df <- temp_df[, c(time_col, columns), drop = FALSE]
@@ -705,6 +773,311 @@ validate_eff_sample_threshold <- function(eff_sample_threshold) {
       "!" = "This threshold may be difficult to achieve",
       "i" = "Consider using a value between 100 and 1000"
     ))
+  }
+
+  invisible(NULL)
+}
+
+#' Validate MCMC Chain Parameter
+#'
+#' Validates that n_chain is a positive integer
+#'
+#' @param n_chain The number of MCMC chains
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
+#'
+#' @return NULL (invisibly) if validation passes, otherwise stops with error
+validate_n_chain <- function(n_chain) {
+  if (!is.numeric(n_chain)) {
+    cli::cli_abort("{.arg n_chain} must be numeric, got {.cls {class(n_chain)}}")
+  }
+
+  if (length(n_chain) != 1) {
+    cli::cli_abort("{.arg n_chain} must be a single value, got length {length(n_chain)}")
+  }
+
+  if (!is.finite(n_chain)) {
+    cli::cli_abort("{.arg n_chain} must be a finite number")
+  }
+
+  if (n_chain != as.integer(n_chain)) {
+    cli::cli_abort("{.arg n_chain} must be a whole number, got {n_chain}")
+  }
+
+  if (n_chain <= 0) {
+    cli::cli_abort("{.arg n_chain} must be positive, got {n_chain}")
+  }
+
+  invisible(NULL)
+}
+
+#' Validate MCMC Iteration Parameter
+#'
+#' Validates that n_iter is a positive integer
+#'
+#' @param n_iter The number of MCMC iterations
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
+#'
+#' @return NULL (invisibly) if validation passes, otherwise stops with error
+validate_n_iter <- function(n_iter) {
+  if (!is.numeric(n_iter)) {
+    cli::cli_abort("{.arg n_iter} must be numeric, got {.cls {class(n_iter)}}")
+  }
+
+  if (length(n_iter) != 1) {
+    cli::cli_abort("{.arg n_iter} must be a single value, got length {length(n_iter)}")
+  }
+
+  if (!is.finite(n_iter)) {
+    cli::cli_abort("{.arg n_iter} must be a finite number")
+  }
+
+  if (n_iter != as.integer(n_iter)) {
+    cli::cli_abort("{.arg n_iter} must be a whole number, got {n_iter}")
+  }
+
+  if (n_iter <= 0) {
+    cli::cli_abort("{.arg n_iter} must be positive, got {n_iter}")
+  }
+
+  invisible(NULL)
+}
+
+#' Validate MCMC Warmup Parameter
+#'
+#' Validates that n_warmup is a non-negative integer
+#'
+#' @param n_warmup The number of warmup iterations
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
+#'
+#' @return NULL (invisibly) if validation passes, otherwise stops with error
+validate_n_warmup <- function(n_warmup) {
+  if (!is.numeric(n_warmup)) {
+    cli::cli_abort("{.arg n_warmup} must be numeric, got {.cls {class(n_warmup)}}")
+  }
+
+  if (length(n_warmup) != 1) {
+    cli::cli_abort("{.arg n_warmup} must be a single value, got length {length(n_warmup)}")
+  }
+
+  if (!is.finite(n_warmup)) {
+    cli::cli_abort("{.arg n_warmup} must be a finite number")
+  }
+
+  if (n_warmup != as.integer(n_warmup)) {
+    cli::cli_abort("{.arg n_warmup} must be a whole number, got {n_warmup}")
+  }
+
+  if (n_warmup < 0) {
+    cli::cli_abort("{.arg n_warmup} cannot be negative, got {n_warmup}")
+  }
+
+  invisible(NULL)
+}
+
+#' Validate MCMC Thinning Parameter
+#'
+#' Validates that thin is a positive integer
+#'
+#' @param thin The thinning interval
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
+#'
+#' @return NULL (invisibly) if validation passes, otherwise stops with error
+validate_thin <- function(thin) {
+  if (!is.numeric(thin)) {
+    cli::cli_abort("{.arg thin} must be numeric, got {.cls {class(thin)}}")
+  }
+
+  if (length(thin) != 1) {
+    cli::cli_abort("{.arg thin} must be a single value, got length {length(thin)}")
+  }
+
+  if (!is.finite(thin)) {
+    cli::cli_abort("{.arg thin} must be a finite number")
+  }
+
+  if (thin != as.integer(thin)) {
+    cli::cli_abort("{.arg thin} must be a whole number, got {thin}")
+  }
+
+  if (thin <= 0) {
+    cli::cli_abort("{.arg thin} must be positive, got {thin}")
+  }
+
+  invisible(NULL)
+}
+
+#' Validate adapt_delta Parameter
+#'
+#' Validates that adapt_delta is between 0 and 1
+#'
+#' @param adapt_delta The target acceptance probability
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
+#'
+#' @return NULL (invisibly) if validation passes, otherwise stops with error
+validate_adapt_delta <- function(adapt_delta) {
+  if (!is.numeric(adapt_delta)) {
+    cli::cli_abort("{.arg adapt_delta} must be numeric, got {.cls {class(adapt_delta)}}")
+  }
+
+  if (length(adapt_delta) != 1) {
+    cli::cli_abort("{.arg adapt_delta} must be a single value, got length {length(adapt_delta)}")
+  }
+
+  if (!is.finite(adapt_delta)) {
+    cli::cli_abort("{.arg adapt_delta} must be a finite number")
+  }
+
+  if (adapt_delta <= 0 || adapt_delta >= 1) {
+    cli::cli_abort("{.arg adapt_delta} must be between 0 and 1, got {adapt_delta}")
+  }
+
+  invisible(NULL)
+}
+
+#' Validate seed Parameter
+#'
+#' Validates that seed is NULL or a positive integer
+#'
+#' @param seed The random seed
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
+#'
+#' @return NULL (invisibly) if validation passes, otherwise stops with error
+validate_seed <- function(seed) {
+  if (is.null(seed)) {
+    return(invisible(NULL))
+  }
+
+  if (!is.numeric(seed)) {
+    cli::cli_abort("{.arg seed} must be numeric or NULL, got {.cls {class(seed)}}")
+  }
+
+  if (length(seed) != 1) {
+    cli::cli_abort("{.arg seed} must be a single value, got length {length(seed)}")
+  }
+
+  if (!is.finite(seed)) {
+    cli::cli_abort("{.arg seed} must be a finite number")
+  }
+
+  if (seed != as.integer(seed)) {
+    cli::cli_abort("{.arg seed} must be a whole number, got {seed}")
+  }
+
+  if (seed <= 0) {
+    cli::cli_abort("{.arg seed} must be positive, got {seed}")
+  }
+
+  invisible(NULL)
+}
+
+#' Validate verbose Parameter
+#'
+#' Validates that verbose is a logical value
+#'
+#' @param verbose The verbosity flag
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
+#'
+#' @return NULL (invisibly) if validation passes, otherwise stops with error
+validate_verbose <- function(verbose) {
+  if (!is.logical(verbose)) {
+    cli::cli_abort("{.arg verbose} must be logical (TRUE/FALSE), got {.cls {class(verbose)}}")
+  }
+
+  if (length(verbose) != 1) {
+    cli::cli_abort("{.arg verbose} must be a single value, got length {length(verbose)}")
+  }
+
+  if (is.na(verbose)) {
+    cli::cli_abort("{.arg verbose} cannot be NA")
+  }
+
+  invisible(NULL)
+}
+
+#' Validate multi_cores Parameter
+#'
+#' Validates that multi_cores is a logical value
+#'
+#' @param multi_cores The parallel processing flag
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
+#'
+#' @return NULL (invisibly) if validation passes, otherwise stops with error
+validate_multi_cores <- function(multi_cores) {
+  if (!is.logical(multi_cores)) {
+    cli::cli_abort("{.arg multi_cores} must be logical (TRUE/FALSE),
+                   got {.cls {class(multi_cores)}}")
+  }
+
+  if (length(multi_cores) != 1) {
+    cli::cli_abort("{.arg multi_cores} must be a single value, got length
+                   {length(multi_cores)}")
+  }
+
+  if (is.na(multi_cores)) {
+    cli::cli_abort("{.arg multi_cores} cannot be NA")
+  }
+
+  invisible(NULL)
+}
+
+#' Validate suppress_warnings Parameter
+#'
+#' Validates that suppress_warnings is a single logical value
+#'
+#' @param suppress_warnings The suppress_warnings parameter value
+#'
+#' @noRd
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
+#' @srrstats {BS2.14} validates suppress_warnings parameter
+#'
+#' @return NULL (invisibly) if validation passes, otherwise stops with error
+validate_suppress_warnings <- function(suppress_warnings) {
+  if (!is.logical(suppress_warnings)) {
+    cli::cli_abort("{.arg suppress_warnings} must be logical (TRUE or FALSE),
+                   got {.cls {class(suppress_warnings)}}")
+  }
+
+  if (length(suppress_warnings) != 1) {
+    cli::cli_abort("{.arg suppress_warnings} must be a single value, got
+                   length {length(suppress_warnings)}")
+  }
+
+  if (is.na(suppress_warnings)) {
+    cli::cli_abort("{.arg suppress_warnings} cannot be NA")
   }
 
   invisible(NULL)
