@@ -20,8 +20,10 @@ knitr::opts_chunk$set(
 ```
 
 ```{r srr-tags, eval = FALSE, echo = FALSE}
-#' @srrstats {G5.6, G5.6a, G5.6b} Parameter recovery with data of known properties,
-#'   recovery within defined tolerance, and consistency across multiple random seeds
+#' @srrstats {G5.6, G5.6a, G5.6b} Parameter recovery with data of known 
+#'   properties, recovery within defined tolerance, and consistency across 
+#'   multiple random seeds
+#'   
 ```
 
 This document demonstrates parameter recovery properties of `EpiStrainDynamics` models, addressing the following statistical software standards:
