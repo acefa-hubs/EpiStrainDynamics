@@ -26,8 +26,12 @@
 #' @srrstats {G1.3, BS1.3} Arguments `n_chain`, `n_warmup`, `n_iter`, `thin`, and
 #'   `adapt_delta` control the computational process and are described clearly
 #'   in the documentation.
+#' @srrstats {BS1.3a, BS2.8} To use parameter values from a previous fit as
+#'   starting points for a new fit, they can be passed via the \code{init}
+#'   parameter. See \code{?rstan::sampling} for details.
 #' @srrstats {BS2.7, BS2.11} Starting values can be specified with the
 #'   `init` argument to `rstan::sampling()` specified optionally here.
+#' @srrstats {BS2.9, BS2.10} Stan uses random seeds that are different per chain
 #' @srrstats {BS2.12} Argument `verbose`, which defaults to `TRUE`, controls the
 #'   verbosity of output, showing all messages, warnings, errors, and progress
 #'   indicators.
@@ -45,8 +49,17 @@
 #'   includes the fit object of class `stanfit` and the pre-specified
 #'   constructed model object of class `EpiStrainDynamics.model`. The
 #'   model object itself includes the input data.
+#' @srrstats {BS5.0} Return values include mcmc components, including
+#'   starting value(s) and seed(s).
 #' @srrstats {BS6.4} `rstan` built-in summary methods can be used on the
 #'   fitted model object
+#' @srrstats {BS6.0} The fitting function, `fit_model()`, returns a list of
+#'   class `EpiStrainDynamics.fit` as well as a class for the family of pathogen
+#'   structure used (`ps`, `rw`, `ps_single`, or `rw_single`). The first item
+#'   in the list is the stan output of class `stanfit`, which can be printed
+#'   using default `rstan` print methods. By default the list is output to the
+#'   console. A user can further interrogate the fit itself, or calculate
+#'   epidemiological metrics using the `metrics` family of functions.
 #'
 #' @examples
 #' \dontrun{
@@ -97,6 +110,7 @@ fit_model <- function (constructed_model,
   validate_verbose(verbose)
   validate_suppress_warnings(suppress_warnings)
   validate_multi_cores(multi_cores)
+  validate_mcmc_params_collective(n_iter, n_warmup, n_chain, thin, seed)
 
   UseMethod("fit_model")
 }
@@ -165,7 +179,8 @@ fit_model.rw_subtyped <- function (constructed_model,
   if (!inherits(fit_object, "stanfit") ||
       length(fit_object@sim$samples) == 0) {
     error_obj <- list(
-      message = "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
+      message = "Stan sampling failed to produce valid samples. Check for
+      initialization failures or data issues.",
       call = sys.call(),
       constructed_model = constructed_model,
       error_type = "stan_failure"
@@ -177,7 +192,16 @@ fit_model.rw_subtyped <- function (constructed_model,
   #' @srrstats {BS5.5} the `model` return object is of class `stanfit`, which
   #'   includes information about convergence
   out <- list(fit = fit_object,
-              constructed_model = constructed_model)
+              constructed_model = constructed_model,
+              mcmc_info = list(
+                seed = seed,
+                chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
+                init = rstan::get_inits(fit_object),
+                n_chain = n_chain,
+                n_iter = n_iter,
+                n_warmup = n_warmup,
+                thin = thin
+              ))
 
   class(out) <- c('rw', 'EpiStrainDynamics.fit', class(out))
   return(out)
@@ -244,7 +268,16 @@ fit_model.ps_subtyped <- function (constructed_model,
   }
 
   out <- list(fit = fit_object,
-              constructed_model = constructed_model)
+              constructed_model = constructed_model,
+              mcmc_info = list(
+                seed = seed,
+                chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
+                init = rstan::get_inits(fit_object),
+                n_chain = n_chain,
+                n_iter = n_iter,
+                n_warmup = n_warmup,
+                thin = thin
+              ))
 
   class(out) <- c('ps', 'EpiStrainDynamics.fit', class(out))
 
@@ -312,7 +345,16 @@ fit_model.rw_multiple <- function (constructed_model,
   }
 
   out <- list(fit = fit_object,
-              constructed_model = constructed_model)
+              constructed_model = constructed_model,
+              mcmc_info = list(
+                seed = seed,
+                chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
+                init = rstan::get_inits(fit_object),
+                n_chain = n_chain,
+                n_iter = n_iter,
+                n_warmup = n_warmup,
+                thin = thin
+              ))
 
   class(out) <- c('rw', 'EpiStrainDynamics.fit', class(out))
   return(out)
@@ -379,7 +421,16 @@ fit_model.ps_multiple <- function (constructed_model,
   }
 
   out <- list(fit = fit_object,
-              constructed_model = constructed_model)
+              constructed_model = constructed_model,
+              mcmc_info = list(
+                seed = seed,
+                chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
+                init = rstan::get_inits(fit_object),
+                n_chain = n_chain,
+                n_iter = n_iter,
+                n_warmup = n_warmup,
+                thin = thin
+              ))
 
   class(out) <- c('ps', 'EpiStrainDynamics.fit', class(out))
   return(out)
@@ -446,7 +497,16 @@ fit_model.rw_single <- function (constructed_model,
   }
 
   out <- list(fit = fit_object,
-              constructed_model = constructed_model)
+              constructed_model = constructed_model,
+              mcmc_info = list(
+                seed = seed,
+                chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
+                init = rstan::get_inits(fit_object),
+                n_chain = n_chain,
+                n_iter = n_iter,
+                n_warmup = n_warmup,
+                thin = thin
+              ))
 
   class(out) <- c('rw_single', 'EpiStrainDynamics.fit', class(out))
   return(out)
@@ -513,7 +573,16 @@ fit_model.ps_single <- function (constructed_model,
   }
 
   out <- list(fit = fit_object,
-              constructed_model = constructed_model)
+              constructed_model = constructed_model,
+              mcmc_info = list(
+                seed = seed,
+                chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
+                init = rstan::get_inits(fit_object),
+                n_chain = n_chain,
+                n_iter = n_iter,
+                n_warmup = n_warmup,
+                thin = thin
+              ))
 
   class(out) <- c('ps_single', 'EpiStrainDynamics.fit', class(out))
   return(out)
