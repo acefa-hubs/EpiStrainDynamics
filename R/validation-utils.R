@@ -459,8 +459,8 @@ check_list_columns <- function(data, relevant_cols) {
 #' @srrstats {G1.4a} internal function specified with `@noRd`
 #' @srrstats {G5.2a} every error statement is unique
 #' @srrstats {G2.12} Validates and rejects list columns in data.frame objects
-#' @srrstats {TS1.1, TS1.2, TS1.3, TS1.4, TS1.5, TS1.6, TS2.0, TS2.1a} all
-#'   three data ingest functions (in `pathogen_structure.R`) allow for any
+#' @srrstats {TS1.1, TS1.2, TS1.3, TS1.4, TS1.5, TS1.6, TS2.0, TS2.1, TS2.1a}
+#'   all three data ingest functions (in `pathogen_structure.R`) allow for any
 #'   kind of timeseries class input or non-time-series input. This validation
 #'   function converts them to a consistent format and run checks, including
 #'   checking ordering (and reporting violations), and checking gaps in the
@@ -1047,6 +1047,115 @@ validate_multi_cores <- function(multi_cores) {
 
   if (is.na(multi_cores)) {
     cli::cli_abort("{.arg multi_cores} cannot be NA")
+  }
+
+  invisible(NULL)
+}
+
+#' Validate MCMC Parameters Collectively
+#'
+#' Performs cross-parameter validation and checks for extreme values that may
+#' lead to long computation times or resource issues.
+#'
+#' @param n_iter The number of MCMC iterations
+#' @param n_warmup The number of warmup iterations
+#' @param n_chain The number of MCMC chains
+#' @param thin The thinning interval
+#' @param seed Random seed (optional)
+#'
+#' @noRd
+#' @srrstats {BS2.6} Check that values for computational parameters lie within
+#'   plausible ranges, including cross-parameter validation and warnings for
+#'   extreme values that may cause long computation times
+#' @srrstats {G1.4} uses `Roxygen2` documentation
+#' @srrstats {G1.4a} internal function specified with `@noRd`
+#' @srrstats {G5.2a} every error statement is unique
+#'
+#' @return NULL (invisibly) if validation passes, otherwise stops with error
+#'   or issues warnings
+validate_mcmc_params_collective <- function(n_iter, n_warmup,
+                                            n_chain, thin = 1, seed = NULL) {
+
+  # BS2.6: Cross-parameter validation - warmup must be less than total iterations
+  if (n_warmup >= n_iter) {
+    cli::cli_abort(
+      c(
+        "{.arg n_warmup} must be less than {.arg n_iter}",
+        "x" = "Got {.arg n_warmup} = {n_warmup} and {.arg n_iter} = {n_iter}"
+      )
+    )
+  }
+
+  # BS2.6: Validate that thinning doesn't eliminate too many samples
+  effective_samples <- floor((n_iter - n_warmup) / thin) * n_chain
+  if (effective_samples < 100) {
+    cli::cli_warn(
+      c(
+        "Very few effective samples will be retained after thinning",
+        "i" = "With {.arg n_iter} = {n_iter}, {.arg n_warmup} = {n_warmup}, {.arg thin} = {thin}, and {.arg n_chain} = {n_chain}",
+        "i" = "Only {effective_samples} samples will be retained",
+        "i" = "Consider reducing {.arg thin} or increasing {.arg n_iter}"
+      )
+    )
+  }
+
+  # BS2.6: Warn about extremely large iteration counts (long computation time)
+  if (n_iter > 20000) {
+    cli::cli_warn(
+      c(
+        "Large {.arg n_iter} may result in long computation times",
+        "i" = "Requested {n_iter} iterations",
+        "i" = "Consider starting with fewer iterations to assess computational burden"
+      )
+    )
+  }
+
+  # BS2.6: Warn if requesting more chains than available cores
+  n_cores <- parallel::detectCores(logical = FALSE)
+  if (!is.na(n_cores) && n_chain > n_cores) {
+    cli::cli_warn(
+      c(
+        "{.arg n_chain} exceeds available CPU cores",
+        "i" = "Requested {n_chain} chains but only {n_cores} cores detected",
+        "i" = "This may slow computation. Consider reducing {.arg n_chain} to {n_cores} or fewer"
+      )
+    )
+  }
+
+  # BS2.6: Warn about very large chain counts
+  if (n_chain > 8) {
+    cli::cli_warn(
+      c(
+        "Large number of chains requested",
+        "i" = "Requested {n_chain} chains",
+        "i" = "Typical values are 2-4 chains. More chains increase memory usage."
+      )
+    )
+  }
+
+  # BS2.6: Validate seed if provided
+  if (!is.null(seed)) {
+    if (!is.numeric(seed) || length(seed) != 1) {
+      cli::cli_abort(
+        c(
+          "{.arg seed} must be a single numeric value or NULL",
+          "x" = "Got {.cls {class(seed)}} of length {length(seed)}"
+        )
+      )
+    }
+
+    if (!is.finite(seed)) {
+      cli::cli_abort("{.arg seed} must be a finite number")
+    }
+
+    if (seed != as.integer(seed)) {
+      cli::cli_warn(
+        c(
+          "{.arg seed} is not an integer and will be coerced",
+          "i" = "Got {seed}, will use {as.integer(seed)}"
+        )
+      )
+    }
   }
 
   invisible(NULL)

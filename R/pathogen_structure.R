@@ -23,6 +23,10 @@
 #'   standard inputs
 #' @srrstats {TS1.7, G2.11} accommodate data.frame-like tabular objects with
 #'   non-standard class attributes, including `units` package
+#' @srrstats {TS1.0} the package allows for time-series class input data. It
+#'   internally converts them to tsibbles to check for gaps, irregularity,
+#'   and date ordering. Non-time-series class input is also accepted and then
+#'   subjected to these checks.
 #'
 #' @examples
 #' # Using a data frame
