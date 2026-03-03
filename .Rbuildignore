@@ -14,3 +14,5 @@ paper.md
 ^README\.Rmd$
 ^vignettes/articles$
 ^src/.*\.o$
+^doc$
+^Meta$

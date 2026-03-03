@@ -12,3 +12,5 @@ vignettes/cache/
 vignettes/figure/
 src/*.o
 src/*.so
+/doc/
+/Meta/
