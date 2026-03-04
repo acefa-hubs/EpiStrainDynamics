@@ -2,31 +2,6 @@
 # Focus: plot structure, layers, aesthetics
 
 # ==============================================================================
-# SETUP: Load fixtures and create metrics
-# ==============================================================================
-
-# Load fixtures (reuse from test-metrics.R)
-skip_if_not(file.exists(test_path("fixtures/fit_rw_single.rds")),
-            "Fixtures not available")
-
-fit_rw_single <- readRDS(test_path("fixtures/fit_rw_single.rds"))
-fit_rw_multi <- readRDS(test_path("fixtures/fit_rw_multi.rds"))
-
-# Helper function for generation interval
-gi_simple <- function(x) {
-  ifelse(x == 0, 0, 4 * x * exp(-2 * x))
-}
-
-# Create metric outputs for testing
-inc_single <- incidence(fit_rw_single, dow = FALSE)
-inc_multi <- incidence(fit_rw_multi, dow = FALSE)
-gr_single <- growth_rate(fit_rw_single)
-gr_multi <- growth_rate(fit_rw_multi)
-rt_single <- Rt(fit_rw_single, tau_max = 7, gi_dist = gi_simple)
-rt_multi <- Rt(fit_rw_multi, tau_max = 7, gi_dist = gi_simple)
-prop_multi <- proportion(fit_rw_multi)
-
-# ==============================================================================
 # TESTS: INPUT VALIDATION
 # ==============================================================================
 
@@ -62,7 +37,7 @@ test_that("plot.Rt() returns ggplot object", {
 })
 
 test_that("plot.proportion() returns ggplot object", {
-  p <- plot(prop_multi)
+  p <- plot(prop)
   expect_s3_class(p, "ggplot")
 })
 
@@ -112,7 +87,7 @@ test_that("plot.Rt() has expected layers", {
 })
 
 test_that("plot.proportion() has expected layers", {
-  p <- plot(prop_multi)
+  p <- plot(prop)
 
   layers <- vapply(p$layers, function(x) class(x$geom)[1], FUN.VALUE = character(1))
 
@@ -161,7 +136,7 @@ test_that("plot.Rt() maps aesthetics correctly", {
 })
 
 test_that("plot.proportion() maps aesthetics correctly", {
-  p <- plot(prop_multi)
+  p <- plot(prop)
 
   line_layer <- p$layers[[1]]
   line_mapping <- line_layer$mapping
@@ -206,7 +181,7 @@ test_that("plot.Rt() handles multiple pathogens", {
 })
 
 test_that("plot.proportion() uses distinct colors for combinations", {
-  p <- plot(prop_multi)
+  p <- plot(prop)
 
   # Check color scale
   color_scale <- p$scales$get_scales("colour")
@@ -246,7 +221,7 @@ test_that("plot.Rt() has appropriate axis labels", {
 })
 
 test_that("plot.proportion() has appropriate axis labels", {
-  p <- plot(prop_multi)
+  p <- plot(prop)
 
   # Check y-axis label
   expect_match(p$labels$y, "proportion", ignore.case = TRUE)
@@ -275,7 +250,7 @@ test_that("plot.Rt() includes horizontal line", {
 })
 
 test_that("plot.proportion() includes horizontal line", {
-  p <- plot(prop_multi)
+  p <- plot(prop)
 
   # Find hline layer
   hline_layers <- which(vapply(p$layers, function(x) inherits(x$geom, "GeomHline"),
@@ -322,7 +297,7 @@ test_that("plot.Rt() can be rendered", {
 })
 
 test_that("plot.proportion() can be rendered", {
-  p <- plot(prop_multi)
+  p <- plot(prop)
 
   expect_no_error(ggplot_build(p))
 
@@ -369,7 +344,7 @@ test_that("plot.Rt() includes credible intervals", {
 })
 
 test_that("plot.proportion() includes credible intervals", {
-  p <- plot(prop_multi)
+  p <- plot(prop)
 
   ribbon_layers <- which(vapply(p$layers, function(x) inherits(x$geom, "GeomRibbon"),
                                 FUN.VALUE = logical(1)))
@@ -422,7 +397,7 @@ test_that("plot.incidence() includes original data points", {
 #
 # test_that("plot.proportion() visual appearance", {
 #   skip_if_not_installed("vdiffr")
-#   p <- plot(prop_multi)
+#   p <- plot(prop)
 #   vdiffr::expect_doppelganger("proportion_multi", p)
 # })
 

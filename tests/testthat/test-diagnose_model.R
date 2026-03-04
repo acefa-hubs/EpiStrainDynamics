@@ -2,22 +2,6 @@
 # Uses same fixtures as test-metrics.R to avoid duplication
 
 # ==============================================================================
-# SETUP: Load fixtures
-# ==============================================================================
-
-test_that("fixtures are available for diagnose_model tests", {
-  skip_if_not(file.exists(test_path("fixtures/fit_rw_single.rds")),
-              "Fixtures not available")
-  expect_true(file.exists(test_path("fixtures/fit_rw_single.rds")))
-})
-
-# Load fixtures (reuse from test-metrics.R)
-fit_rw_single <- readRDS(test_path("fixtures/fit_rw_single.rds"))
-fit_ps_single <- readRDS(test_path("fixtures/fit_ps_single.rds"))
-fit_rw_multi <- readRDS(test_path("fixtures/fit_rw_multi.rds"))
-fit_ps_multi <- readRDS(test_path("fixtures/fit_ps_multi.rds"))
-
-# ==============================================================================
 # TESTS: INPUT VALIDATION
 # ==============================================================================
 
@@ -39,6 +23,8 @@ test_that("diagnose_model() validates input class", {
 })
 
 test_that("diagnose_model() validates threshold parameters", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   # rhat_threshold should be numeric
   expect_error(
     diagnose_model(fit_rw_single, rhat_threshold = "bad"),
@@ -88,6 +74,8 @@ test_that("diagnose_model() validates threshold parameters", {
 })
 
 test_that("diagnose_model() warns about unusual threshold values", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   # Very high rhat_threshold should warn
   expect_warning(
     diagnose_model(fit_rw_single, rhat_threshold = 5.0),
@@ -112,6 +100,8 @@ test_that("diagnose_model() warns about unusual threshold values", {
 # ==============================================================================
 
 test_that("diagnose_model() returns correct structure", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   diag <- diagnose_model(fit_rw_single)
 
   # Should return a list
@@ -123,6 +113,8 @@ test_that("diagnose_model() returns correct structure", {
 })
 
 test_that("diagnose_model() convergence is logical", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   diag <- diagnose_model(fit_rw_single)
 
   expect_type(diag$convergence, "logical")
@@ -131,6 +123,8 @@ test_that("diagnose_model() convergence is logical", {
 })
 
 test_that("diagnose_model() issues are character vectors", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   diag <- diagnose_model(fit_rw_single)
 
   expect_type(diag$rhat_issues, "character")
@@ -142,6 +136,8 @@ test_that("diagnose_model() issues are character vectors", {
 })
 
 test_that("diagnose_model() max_rhat and min_neff are numeric", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   diag <- diagnose_model(fit_rw_single)
 
   expect_type(diag$max_rhat, "double")
@@ -155,6 +151,8 @@ test_that("diagnose_model() max_rhat and min_neff are numeric", {
 })
 
 test_that("diagnose_model() summary is a matrix", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   diag <- diagnose_model(fit_rw_single)
 
   expect_true(is.matrix(diag$summary))
@@ -170,6 +168,8 @@ test_that("diagnose_model() summary is a matrix", {
 # ==============================================================================
 
 test_that("diagnose_model() convergence logic is correct", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   diag <- diagnose_model(fit_rw_single, rhat_threshold = 1.1,
                          eff_sample_threshold = 100)
 
@@ -191,24 +191,32 @@ test_that("diagnose_model() convergence logic is correct", {
 # ==============================================================================
 
 test_that("diagnose_model() works with single pathogen random walk", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   expect_no_error(diag <- diagnose_model(fit_rw_single))
   expect_type(diag, "list")
   expect_type(diag$convergence, "logical")
 })
 
 test_that("diagnose_model() works with single pathogen p-spline", {
+  skip_if_not(exists("fit_ps_single"), "Cached fitted models not available")
+
   expect_no_error(diag <- diagnose_model(fit_ps_single))
   expect_type(diag, "list")
   expect_type(diag$convergence, "logical")
 })
 
 test_that("diagnose_model() works with multiple pathogen random walk", {
+  skip_if_not(exists("fit_rw_multi"), "Cached fitted models not available")
+
   expect_no_error(diag <- diagnose_model(fit_rw_multi))
   expect_type(diag, "list")
   expect_type(diag$convergence, "logical")
 })
 
 test_that("diagnose_model() works with multiple pathogen p-spline", {
+  skip_if_not(exists("fit_ps_multi"), "Cached fitted models not available")
+
   expect_no_error(diag <- diagnose_model(fit_ps_multi))
   expect_type(diag, "list")
   expect_type(diag$convergence, "logical")
@@ -219,6 +227,8 @@ test_that("diagnose_model() works with multiple pathogen p-spline", {
 # ==============================================================================
 
 test_that("diagnose_model() max_rhat is >= 1", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   diag <- diagnose_model(fit_rw_single)
 
   # R-hat should always be >= 1 by definition
@@ -226,6 +236,8 @@ test_that("diagnose_model() max_rhat is >= 1", {
 })
 
 test_that("diagnose_model() min_neff is positive", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   diag <- diagnose_model(fit_rw_single)
 
   # Effective sample size should be positive
@@ -233,6 +245,8 @@ test_that("diagnose_model() min_neff is positive", {
 })
 
 test_that("diagnose_model() identifies parameter names in issues", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   diag <- diagnose_model(fit_rw_single, rhat_threshold = 1.01,
                          eff_sample_threshold = 500)
 
@@ -255,6 +269,8 @@ test_that("diagnose_model() identifies parameter names in issues", {
 # ==============================================================================
 
 test_that("diagnose_model() prints summary to console", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   output <- capture.output(diag <- diagnose_model(fit_rw_single))
 
   # Should have printed something
@@ -268,6 +284,8 @@ test_that("diagnose_model() prints summary to console", {
 })
 
 test_that("diagnose_model() shows GOOD or ISSUES DETECTED", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   output <- capture.output(diag <- diagnose_model(fit_rw_single))
 
   # Should contain either GOOD or ISSUES DETECTED
@@ -276,6 +294,8 @@ test_that("diagnose_model() shows GOOD or ISSUES DETECTED", {
 })
 
 test_that("diagnose_model() console output matches convergence status", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   output <- capture.output(diag <- diagnose_model(fit_rw_single))
   output_text <- paste(output, collapse = " ")
 
@@ -291,6 +311,8 @@ test_that("diagnose_model() console output matches convergence status", {
 # ==============================================================================
 
 test_that("diagnose_model() returns invisibly", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   # The function should return invisible
   # We can't directly test invisibility, but we can check that
   # assigning doesn't print
@@ -307,6 +329,8 @@ test_that("diagnose_model() returns invisibly", {
 # ==============================================================================
 
 test_that("diagnose_model() produces consistent output across model types", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   diag_rw_single <- diagnose_model(fit_rw_single)
   diag_ps_single <- diagnose_model(fit_ps_single)
   diag_rw_multi <- diagnose_model(fit_rw_multi)
@@ -322,7 +346,9 @@ test_that("diagnose_model() produces consistent output across model types", {
   expect_named(diag_ps_multi, expected_names)
 })
 
-test_that("diagnose_model() summary has more parameters for multi-pathogen models", {
+test_that("diagnose_model() summary has more parameters for multi models", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   diag_single <- diagnose_model(fit_rw_single)
   diag_multi <- diagnose_model(fit_rw_multi)
 
@@ -338,6 +364,8 @@ test_that("diagnose_model() summary has more parameters for multi-pathogen model
 # ==============================================================================
 
 test_that("diagnose_model() max_rhat matches Stan summary", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   diag <- diagnose_model(fit_rw_single)
 
   # Get R-hat values directly from Stan
@@ -350,6 +378,8 @@ test_that("diagnose_model() max_rhat matches Stan summary", {
 })
 
 test_that("diagnose_model() min_neff matches Stan summary", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+
   diag <- diagnose_model(fit_rw_single)
 
   # Get n_eff values directly from Stan
@@ -360,4 +390,3 @@ test_that("diagnose_model() min_neff matches Stan summary", {
   # Should match
   expect_equal(diag$min_neff, stan_min_neff)
 })
-
