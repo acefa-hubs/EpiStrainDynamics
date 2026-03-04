@@ -28,10 +28,6 @@ NULL
 
 #' NA_standards
 #'
-#' Any non-applicable standards can have their tags changed from `@srrstatsTODO`
-#' to `@srrstatsNA`, and placed together in this block, along with explanations
-#' for why each of these standards have been deemed not applicable.
-#' (These comments may also be deleted at any time.)
 #' @srrstatsNA {G1.6} This software makes no performance claims.
 #' @srrstatsNA {G2.4c} no conversion to character object
 #' @srrstatsNA {G2.4d, G2.4e, G2.5} no use of factor type objects
@@ -65,25 +61,17 @@ NULL
 #' @srrstatsNA {BS4.4, BS4.6, BS4.7} This software uses `rstan`'s `sampling`,
 #'   and there does not appear to yet be a mechanism of stopping the chain upon
 #'   convergence
-#' @srrstatsNA {BS6.0} The fitting function, `fit_model()`, returns a list of
-#'   class `EpiStrainDynamics.fit` as well as a class for the family of pathogen
-#'   structure used (`ps`, `rw`, `ps_single`, or `rw_single`). The first item
-#'   in the list is the stan output of class `stanfit`, which can be printed
-#'   using default `rstan` print methods. By default the list is output to the
-#'   console. A user can further interrogate the fit itself, or calculate
-#'   epidemiological metrics using the `metrics` family of functions.
 #' @srrstatsNA {BS7.0, BS7.1} Recovery of parametric estimates of the prior
 #'   distributions are not scientifically relevant to this type of analysis.
 #'   The priors are mainly implemented to improve sampling efficiency of the
 #'   No-U-Turns Sampler in Stan and they are not related to the outcomes a user
 #'   would be interested in evaluating.
-#' @srrstatsNA {TS1.0} the package DOES allow for non-time-series data, by
-#'   converting them to tsibbles to check for gaps, irregularity, and date
-#'   ordering
 #' @srrstatsNA {TS1.8} the only requirement is for consistency across entries,
 #'   which is checked in the validation function
-#' @srrstatsNA {TS2.1, TS2.1b, TS2.1c, TS5.5} missing values not handled by the
-#'   models so warnings or imputation options not provided
+#' @srrstatsNA {TS2.1b, TS2.1c, TS5.5} irregular data are not handled by the
+#'   models so warnings would not be sufficient and plotting options not
+#'   needed. Imputation options have not been developed and tested at this
+#'   point in time.
 #' @srrstatsNA {TS2.2, TS2.3, TS2.4, TS2.4a, TS2.4b} no functions rely on
 #'   stationarity
 #' @srrstatsNA {TS2.5, TS2.6} auto-covariance matrices not constructed
