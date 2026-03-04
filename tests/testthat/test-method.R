@@ -1,28 +1,5 @@
-# Tests for method constructor functions - simplified version
+# Tests for method constructor functions
 #' @srrstats {G3.0} comparisons made between appropriate values
-
-# Helper function for method validation tests (add to helper script)
-test_method_structure <- function(result, expected_method, expected_params = NULL) {
-  # Test basic structure
-  expect_type(result, "list")
-  expect_s3_class(result, "EpiStrainDynamics.method")
-  expect_equal(result$method, expected_method)
-  expect_true("method" %in% names(result))
-  expect_type(result$method, "character")
-
-  # Test parameters if expected
-  if (!is.null(expected_params)) {
-    expect_true("model_params" %in% names(result))
-    expect_type(result$model_params, "list")
-    expect_named(result$model_params, names(expected_params))
-
-    for (param_name in names(expected_params)) {
-      expect_equal(result$model_params[[param_name]], expected_params[[param_name]])
-    }
-  } else {
-    expect_length(result, 1)
-  }
-}
 
 # Tests for random_walk() function
 test_that("random_walk() returns correct structure and class", {
@@ -82,7 +59,7 @@ test_that("Both method constructors return compatible objects", {
   expect_s3_class(ps_result, "EpiStrainDynamics.method")
 })
 
-# Validation tests - these stay mostly the same as they test specific validation logic
+# Validation tests
 test_that("p_spline() validates numeric inputs correctly", {
   # Non-numeric inputs
   expect_error(p_spline(spline_degree = "3", days_per_knot = 3),
