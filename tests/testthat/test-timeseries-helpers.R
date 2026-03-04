@@ -1,10 +1,6 @@
 # Tests for timeseries helper functions
 # These tests focus on validation checks and edge cases in the helper functions
 
-# ==============================================================================
-# Tests for is_timeseries_class()
-# ==============================================================================
-
 test_that("is_timeseries_class() correctly identifies time series objects", {
   # Test with data.frame (should be FALSE)
   df <- data.frame(x = 1:10, y = 1:10)
@@ -46,10 +42,6 @@ test_that("is_timeseries_class() correctly identifies time series objects", {
     expect_true(is_timeseries_class(tsbl_obj))
   }
 })
-
-# ==============================================================================
-# Tests for convert_ts_to_tsibble()
-# ==============================================================================
 
 test_that("convert_ts_to_tsibble() handles xts objects correctly", {
   skip_if_not_installed("xts")
@@ -136,9 +128,7 @@ test_that("convert_ts_to_tsibble() errors on unsupported classes", {
   )
 })
 
-# ==============================================================================
-# Tests for create_validated_timeseries() - tsibble validation checks
-# ==============================================================================
+# tsibble validation checks
 
 test_that("create_validated_timeseries() detects time series with gaps", {
   # Create data with gaps
@@ -161,7 +151,7 @@ test_that("create_validated_timeseries() detects time series with gaps", {
 test_that("create_validated_timeseries() detects irregular time series", {
   # Create irregularly spaced data
   df <- data.frame(
-    date = as.Date(c("2020-01-01", "2020-01-02", "2020-01-04", "2020-01-08")), # Irregular spacing
+    date = as.Date(c("2020-01-01", "2020-01-02", "2020-01-04", "2020-01-08")),
     cases = c(10, 15, 20, 25),
     alpha = c(5, 8, 10, 12)
   )
@@ -179,7 +169,7 @@ test_that("create_validated_timeseries() detects irregular time series", {
 test_that("create_validated_timeseries() detects unordered time series", {
   # Create unordered data
   df <- data.frame(
-    date = as.Date(c("2020-01-01", "2020-01-03", "2020-01-02", "2020-01-04")), # Out of order
+    date = as.Date(c("2020-01-01", "2020-01-03", "2020-01-02", "2020-01-04")),
     cases = c(10, 15, 20, 25),
     alpha = c(5, 8, 10, 12)
   )
@@ -194,7 +184,9 @@ test_that("create_validated_timeseries() detects unordered time series", {
   )
 })
 
-test_that("create_validated_timeseries() warns when time arg provided for ts objects", {
+test_that("create_validated_timeseries() warns when time arg provided for
+          ts objects", {
+
   skip_if_not_installed("xts")
   skip_if_not_installed("timetk")
 
@@ -215,7 +207,7 @@ test_that("create_validated_timeseries() warns when time arg provided for ts obj
   )
 })
 
-test_that("create_validated_timeseries() returns valid tsibble for correct data", {
+test_that("create_validated_timeseries() returns valid tsibble", {
   # Create valid data
   df <- data.frame(
     date = seq.Date(as.Date("2020-01-01"), by = "day", length.out = 10),
@@ -327,14 +319,12 @@ test_that("create_validated_timeseries() subsets to only required columns", {
   expect_false("extra2" %in% names(result))
 })
 
-# ==============================================================================
-# Tests for error handling in tsibble creation
-# ==============================================================================
+# Tests for error handling
 
 test_that("create_validated_timeseries() handles duplicate time indices", {
   # Create data with duplicate dates
   df <- data.frame(
-    date = as.Date(c("2020-01-01", "2020-01-02", "2020-01-02", "2020-01-03")), # Duplicate
+    date = as.Date(c("2020-01-01", "2020-01-02", "2020-01-02", "2020-01-03")),
     cases = 1:4,
     alpha = 5:8
   )
@@ -349,11 +339,9 @@ test_that("create_validated_timeseries() handles duplicate time indices", {
   )
 })
 
-# ==============================================================================
 # Tests for numeric column validation
-# ==============================================================================
 
-test_that("create_validated_timeseries() validates numeric columns for data frames", {
+test_that("create_validated_timeseries() validates numeric columns in dfs", {
   df <- data.frame(
     date = seq.Date(as.Date("2020-01-01"), by = "day", length.out = 10),
     cases = 1:10,
@@ -370,7 +358,7 @@ test_that("create_validated_timeseries() validates numeric columns for data fram
   )
 })
 
-test_that("create_validated_timeseries() validates numeric columns for tsibble objects", {
+test_that("create_validated_timeseries() validates num. columns for tsibbles", {
   skip_if_not_installed("tsibble")
 
   # Create tsibble with character column
@@ -392,9 +380,7 @@ test_that("create_validated_timeseries() validates numeric columns for tsibble o
   )
 })
 
-# ==============================================================================
-# Integration tests with actual intake functions
-# ==============================================================================
+# Integration tests
 
 test_that("intake functions fail with gaps in time series", {
   check_package_data()
@@ -444,4 +430,3 @@ test_that("multiple() fails with duplicate time indices", {
     "Error creating tsibble|duplicated"
   )
 })
-
