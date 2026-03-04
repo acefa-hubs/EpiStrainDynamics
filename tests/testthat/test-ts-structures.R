@@ -1,6 +1,6 @@
 # Test tsbox compatibility for EpiStrainDynamics intake functions
 # Test that single(), multiple(), and subtyped() can accept any data.frame-like
-# object handled by tsbox package, with optional time argument for time series classes
+# object handled by tsbox package, with optional time argument
 
 # Helper function to create test data in different formats
 create_test_ts_data <- function(class_type = "data.frame") {
@@ -84,10 +84,6 @@ create_test_ts_data <- function(class_type = "data.frame") {
 dataframe_classes <- c("data.frame", "data.table", "tibble")
 timeseries_classes <- c("mts", "xts", "zoo", "zooreg", "tsibble", "tibbletime")
 
-# ==============================================================================
-# Tests for single() function
-# ==============================================================================
-
 test_that("single() accepts time series objects with optional time argument", {
   for (class_type in timeseries_classes) {
     test_data <- create_test_ts_data(class_type)
@@ -158,10 +154,6 @@ test_that("single() returns expected structure with all classes", {
   }
 })
 
-# ==============================================================================
-# Tests for multiple() function
-# ==============================================================================
-
 test_that("multiple() accepts data.frame-like objects with time argument", {
   for (class_type in dataframe_classes) {
     test_data <- create_test_ts_data(class_type)
@@ -178,7 +170,7 @@ test_that("multiple() accepts data.frame-like objects with time argument", {
   }
 })
 
-test_that("multiple() accepts time series objects with optional time argument", {
+test_that("multiple() accepts time series objs with optional time argument", {
   for (class_type in timeseries_classes) {
     test_data <- create_test_ts_data(class_type)
 
@@ -221,7 +213,8 @@ test_that("multiple() returns expected structure with all classes", {
 
   expect_s3_class(result_df, "EpiStrainDynamics.pathogen_structure")
   expect_equal(result_df$pathogen_structure, "multiple")
-  expect_equal(result_df$pathogen_names, c("alpha", "delta", "omicron", "other"))
+  expect_equal(result_df$pathogen_names,
+               c("alpha", "delta", "omicron", "other"))
   expect_type(result_df$data, "list")
   expect_named(result_df$data, c("case_timeseries", "component_pathogens"))
   expect_length(result_df$data$case_timeseries, 100)
@@ -238,14 +231,11 @@ test_that("multiple() returns expected structure with all classes", {
 
     expect_s3_class(result_xts, "EpiStrainDynamics.pathogen_structure")
     expect_equal(result_xts$pathogen_structure, "multiple")
-    expect_equal(result_xts$pathogen_names, c("alpha", "delta", "omicron", "other"))
+    expect_equal(result_xts$pathogen_names,
+                 c("alpha", "delta", "omicron", "other"))
     expect_equal(dim(result_xts$data$component_pathogens), c(4, 100))
   }
 })
-
-# ==============================================================================
-# Tests for subtyped() function
-# ==============================================================================
 
 # Helper to create subtyped test data
 create_subtyped_test_data <- function(class_type = "data.frame") {
@@ -334,7 +324,7 @@ test_that("subtyped() accepts data.frame-like objects with time argument", {
   }
 })
 
-test_that("subtyped() accepts time series objects with optional time argument", {
+test_that("subtyped() accepts time series objects with optional time arg", {
   for (class_type in timeseries_classes) {
     test_data <- create_subtyped_test_data(class_type)
 
@@ -383,7 +373,8 @@ test_that("subtyped() returns expected structure with all classes", {
 
   expect_s3_class(result_df, "EpiStrainDynamics.pathogen_structure")
   expect_equal(result_df$pathogen_structure, "subtyped")
-  expect_equal(result_df$pathogen_names, c("inf_H1N1", "inf_H3N2", "inf_B", "other"))
+  expect_equal(result_df$pathogen_names,
+               c("inf_H1N1", "inf_H3N2", "inf_B", "other"))
   expect_type(result_df$data, "list")
   expect_named(result_df$data, c("case_timeseries", "component_pathogens", "influenzaA_subtyped"))
   expect_length(result_df$data$case_timeseries, 100)
@@ -403,17 +394,16 @@ test_that("subtyped() returns expected structure with all classes", {
 
     expect_s3_class(result_xts, "EpiStrainDynamics.pathogen_structure")
     expect_equal(result_xts$pathogen_structure, "subtyped")
-    expect_equal(result_xts$pathogen_names, c("inf_H1N1", "inf_H3N2", "inf_B", "other"))
+    expect_equal(result_xts$pathogen_names,
+                 c("inf_H1N1", "inf_H3N2", "inf_B", "other"))
     expect_equal(dim(result_xts$data$component_pathogens), c(3, 100))
     expect_equal(dim(result_xts$data$influenzaA_subtyped), c(2, 100))
   }
 })
 
-# ==============================================================================
 # Integration tests with construct_model()
-# ==============================================================================
 
-test_that("intake functions work with construct_model() using various classes", {
+test_that("intake functions work with construct_model()", {
   # Test a subset of classes for integration (to keep tests fast)
   integration_classes <- c("data.frame", "tibble")
 
@@ -432,7 +422,8 @@ test_that("intake functions work with construct_model() using various classes", 
           data = test_data,
           case_timeseries = "cases",
           time = "date",
-          component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
+          component_pathogen_timeseries = c("alpha", "delta",
+                                            "omicron", "other")
         ),
         smoothing_params = smoothing_structure(
           'independent',
@@ -456,7 +447,8 @@ test_that("intake functions work with construct_model() using various classes", 
         pathogen_structure = multiple(
           data = test_xts,
           case_timeseries = "cases",
-          component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
+          component_pathogen_timeseries = c("alpha", "delta",
+                                            "omicron", "other")
         ),
         smoothing_params = smoothing_structure(
           'independent',
@@ -471,9 +463,7 @@ test_that("intake functions work with construct_model() using various classes", 
   }
 })
 
-# ==============================================================================
 # Data integrity tests
-# ==============================================================================
 
 test_that("intake functions preserve data integrity across conversions", {
   # Create original data
@@ -519,7 +509,8 @@ test_that("intake functions preserve data integrity across conversions", {
 
   # Test with time series object
   if (requireNamespace("xts", quietly = TRUE)) {
-    test_xts <- xts::xts(original_df[, c("cases", "alpha")], order.by = original_df$date)
+    test_xts <- xts::xts(original_df[, c("cases", "alpha")],
+                         order.by = original_df$date)
 
     result_xts <- single(
       data = test_xts,
