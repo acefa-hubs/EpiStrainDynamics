@@ -179,3 +179,127 @@ test_that("validate_pathogen_combination rejects invalid inputs", {
   )
 
 })
+
+# Tests for collective MCMC parameter validation
+
+test_that("validate_mcmc_params_collective checks n_warmup < n_iter ", {
+  expect_error(
+    validate_mcmc_params_collective(n_iter = 100, n_warmup = 100, n_chain = 1),
+    "n_warmup.*must be less than.*n_iter"
+  )
+
+  expect_error(
+    validate_mcmc_params_collective(n_iter = 100, n_warmup = 150, n_chain = 1),
+    "n_warmup.*must be less than.*n_iter"
+  )
+})
+
+test_that("validate_mcmc_params_collective warns about large n_iter", {
+  expect_warning(
+    validate_mcmc_params_collective(n_iter = 25000, n_warmup = 1000, n_chain = 1),
+    "Large.*n_iter.*long computation"
+  )
+
+  # Should not warn for reasonable values
+  expect_silent(
+    validate_mcmc_params_collective(n_iter = 2000, n_warmup = 1000, n_chain = 1)
+  )
+})
+
+test_that("validate_mcmc_params_collective warns about large n_chain", {
+  expect_warning(
+    validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = 20),
+    "Large number of chains"
+  )
+
+  # Should not warn for reasonable values
+  expect_silent(
+    validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = 4)
+  )
+})
+
+test_that("validate_mcmc_params_collective warns when n_chain exceeds cores", {
+  n_cores <- parallel::detectCores(logical = FALSE)
+
+  if (!is.na(n_cores)) {
+    expect_warning(
+      validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = n_cores + 2),
+      "exceeds available CPU cores"
+    )
+  }
+})
+
+test_that("validate_mcmc_params_collective warns about excessive thinning", {
+  # This will result in only 10 samples: (100 - 50) / 5 * 1 = 10
+  expect_warning(
+    validate_mcmc_params_collective(n_iter = 100, n_warmup = 50, n_chain = 1, thin = 5),
+    "Very few effective samples.*thinning"
+  )
+
+  # Should not warn when enough samples retained
+  expect_silent(
+    validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = 4, thin = 1)
+  )
+})
+
+test_that("validate_mcmc_params_collective validates seed parameter", {
+  # NULL seed should pass
+  expect_silent(
+    validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = 1, seed = NULL)
+  )
+
+  # Single numeric should pass
+  expect_silent(
+    validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = 1, seed = 123)
+  )
+
+  # Non-numeric should error
+  expect_error(
+    validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = 1, seed = "abc"),
+    "seed.*must be a single numeric value"
+  )
+
+  # Multiple values should error
+  expect_error(
+    validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = 1, seed = c(1, 2)),
+    "seed.*must be a single numeric value"
+  )
+
+  # Non-integer should warn
+  expect_warning(
+    validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = 1, seed = 123.5),
+    "seed.*not an integer"
+  )
+})
+
+test_that("validate_mcmc_params_collective passes for reasonable parameters", {
+  # Typical usage should pass silently
+  expect_silent(
+    validate_mcmc_params_collective(
+      n_iter = 2000,
+      n_warmup = 1000,
+      n_chain = 4,
+      thin = 1,
+      seed = 42
+    )
+  )
+})
+
+test_that("fit_model uses collective validation", {
+  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
+  check_package_data()
+
+  models <- create_test_models()
+
+  # Should error when n_warmup >= n_iter
+  expect_error(
+    fit_model(models$rw_single, n_iter = 100, n_warmup = 100, n_chain = 1, verbose = FALSE),
+    "n_warmup.*must be less than.*n_iter"
+  )
+
+  # Should warn with large n_iter
+  expect_warning(
+    fit_model(models$rw_single, n_iter = 25000, n_chain = 1, verbose = FALSE),
+    "Large.*n_iter"
+  )
+})
