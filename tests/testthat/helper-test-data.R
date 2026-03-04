@@ -10,29 +10,6 @@ check_package_data <- function() {
   }
 }
 
-# Helper function for testing method constructor structure
-test_method_structure <- function(result, expected_method, expected_params = NULL) {
-  # Test basic structure
-  expect_type(result, "list")
-  expect_s3_class(result, "EpiStrainDynamics.method")
-  expect_equal(result$method, expected_method)
-  expect_true("method" %in% names(result))
-  expect_type(result$method, "character")
-
-  # Test parameters if expected
-  if (!is.null(expected_params)) {
-    expect_true("model_params" %in% names(result))
-    expect_type(result$model_params, "list")
-    expect_named(result$model_params, names(expected_params))
-
-    for (param_name in names(expected_params)) {
-      expect_equal(result$model_params[[param_name]], expected_params[[param_name]])
-    }
-  } else {
-    expect_length(result, 1)
-  }
-}
-
 # Create standard test models using package datasets with various parameter combinations
 create_test_models <- function() {
   check_package_data()
