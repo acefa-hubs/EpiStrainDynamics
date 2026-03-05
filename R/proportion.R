@@ -151,7 +151,8 @@ compute_proportion <- function(fitted_model,
 
   # Transform data if using splines
   if (use_splines) {
-    B_true <- predict_B_true(components$time_seq, components$knots,
+    time_seq <- seq_len(components$num_days)
+    B_true <- predict_B_true(time_seq, components$knots,
                              components$spline_degree)
     a <- transform_posterior_multi(post, B_true, components$num_path,
                                    components$num_days)
