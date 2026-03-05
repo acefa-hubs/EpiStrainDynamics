@@ -1122,17 +1122,6 @@ validate_mcmc_params_collective <- function(n_iter, n_warmup,
     )
   }
 
-  # BS2.6: Warn about very large chain counts
-  if (n_chain > 8) {
-    cli::cli_warn(
-      c(
-        "Large number of chains requested",
-        "i" = "Requested {n_chain} chains",
-        "i" = "Typical values are 2-4 chains. More chains increase memory usage."
-      )
-    )
-  }
-
   # BS2.6: Validate seed if provided
   if (!is.null(seed)) {
     if (!is.numeric(seed) || length(seed) != 1) {

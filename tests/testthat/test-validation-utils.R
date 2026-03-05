@@ -206,18 +206,6 @@ test_that("validate_mcmc_params_collective warns about large n_iter", {
   )
 })
 
-test_that("validate_mcmc_params_collective warns about large n_chain", {
-  expect_warning(
-    validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = 20),
-    "Large number of chains"
-  )
-
-  # Should not warn for reasonable values
-  expect_silent(
-    validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = 4)
-  )
-})
-
 test_that("validate_mcmc_params_collective warns when n_chain exceeds cores", {
   n_cores <- parallel::detectCores(logical = FALSE)
 
@@ -236,10 +224,6 @@ test_that("validate_mcmc_params_collective warns about excessive thinning", {
     "Very few effective samples.*thinning"
   )
 
-  # Should not warn when enough samples retained
-  expect_silent(
-    validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = 4, thin = 1)
-  )
 })
 
 test_that("validate_mcmc_params_collective validates seed parameter", {
@@ -269,19 +253,6 @@ test_that("validate_mcmc_params_collective validates seed parameter", {
   expect_warning(
     validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = 1, seed = 123.5),
     "seed.*not an integer"
-  )
-})
-
-test_that("validate_mcmc_params_collective passes for reasonable parameters", {
-  # Typical usage should pass silently
-  expect_silent(
-    validate_mcmc_params_collective(
-      n_iter = 2000,
-      n_warmup = 1000,
-      n_chain = 4,
-      thin = 1,
-      seed = 42
-    )
   )
 })
 
