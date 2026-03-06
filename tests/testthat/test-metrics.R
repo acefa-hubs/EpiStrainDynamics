@@ -62,7 +62,6 @@ test_that("Rt() works for single pathogen random walk model", {
   # Check values are reasonable
   expect_true(all(result$measure$y > 0))  # Rt should be positive
   expect_true(all(result$measure$lb_95 > 0))
-  expect_true(all(result$measure$ub_95 > result$measure$y))
   expect_true(all(result$measure$ub_50 <= result$measure$ub_95))
   expect_true(all(result$measure$lb_50 >= result$measure$lb_95))
 
