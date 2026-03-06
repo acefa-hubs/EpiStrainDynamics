@@ -1,7 +1,6 @@
 # Generic Method for fitting model
 
-S3 generic for fitted models from constructed model object describe how
-to set up inits.
+S3 generic for fitted models from constructed model object
 
 ## Usage
 
@@ -15,6 +14,7 @@ fit_model(
   adapt_delta = 0.9,
   multi_cores = TRUE,
   verbose = TRUE,
+  suppress_warnings = FALSE,
   seed = NULL,
   ...
 )
@@ -29,6 +29,7 @@ fit_model(
   adapt_delta = 0.9,
   multi_cores = TRUE,
   verbose = TRUE,
+  suppress_warnings = FALSE,
   seed = NULL,
   ...
 )
@@ -43,6 +44,7 @@ fit_model(
   adapt_delta = 0.9,
   multi_cores = TRUE,
   verbose = TRUE,
+  suppress_warnings = FALSE,
   seed = NULL,
   ...
 )
@@ -57,6 +59,7 @@ fit_model(
   adapt_delta = 0.9,
   multi_cores = TRUE,
   verbose = TRUE,
+  suppress_warnings = FALSE,
   seed = NULL,
   ...
 )
@@ -71,6 +74,7 @@ fit_model(
   adapt_delta = 0.9,
   multi_cores = TRUE,
   verbose = TRUE,
+  suppress_warnings = FALSE,
   seed = NULL,
   ...
 )
@@ -85,6 +89,7 @@ fit_model(
   adapt_delta = 0.9,
   multi_cores = TRUE,
   verbose = TRUE,
+  suppress_warnings = FALSE,
   seed = NULL,
   ...
 )
@@ -99,6 +104,7 @@ fit_model(
   adapt_delta = 0.9,
   multi_cores = TRUE,
   verbose = TRUE,
+  suppress_warnings = FALSE,
   seed = NULL,
   ...
 )
@@ -134,7 +140,7 @@ fit_model(
   Numeric value between 0 and 1 indicating target average acceptance
   probability used in
   [`rstan::sampling`](https://mc-stan.org/rstan/reference/stanmodel-method-sampling.html).
-  Default value is 0.8.
+  Default value is 0.9.
 
 - multi_cores:
 
@@ -143,8 +149,16 @@ fit_model(
 
 - verbose:
 
-  Logical value controlling the verbosity of output (i.e., warnings,
-  messages, progress bar), default is TRUE.
+  Logical value controlling the verbosity of output. When TRUE
+  (default), shows all messages, warnings, errors, and progress
+  indicators. When FALSE, suppresses messages and progress while
+  retaining warnings and errors.
+
+- suppress_warnings:
+
+  Logical value indicating whether to suppress warnings from Stan.
+  Default is FALSE. When TRUE, warnings are suppressed but errors are
+  still raised.
 
 - seed:
 
@@ -155,11 +169,13 @@ fit_model(
 - ...:
 
   additional arguments to
-  [`rstan::sampling()`](https://mc-stan.org/rstan/reference/stanmodel-method-sampling.html)
+  [`rstan::sampling()`](https://mc-stan.org/rstan/reference/stanmodel-method-sampling.html),
+  such as `init`
 
 ## Value
 
-fit model of class `EpiStrainDynamics.fit`
+fit model of class `EpiStrainDynamics.fit`, or if fitting fails, an
+error is raised that can be caught and inspected.
 
 ## Examples
 
@@ -173,9 +189,20 @@ if (FALSE) { # \dontrun{
 
   fit <- fit_model(mod)
 
-  # or specify additional mcmc parameters
-  fit <- fit_model(
-    mod, iter = 3000, warmup = 2000, chains = 4
+  # Suppress progress and messages but keep warnings/errors
+  fit <- fit_model(mod, verbose = FALSE)
+
+  # Suppress warnings too
+  fit <- fit_model(mod, verbose = FALSE, suppress_warnings = TRUE)
+
+  # Catch errors and inspect
+  result <- tryCatch(
+    fit_model(mod),
+    error = function(e) e
   )
+  if (inherits(result, "EpiStrainDynamics.fit.error")) {
+    cat("Fitting failed:", result$message, "\n")
+    # Can still access the model: result$constructed_model
+  }
 } # }
 ```

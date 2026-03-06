@@ -8,19 +8,19 @@ log-incidence estimates from the fitted model: \$\$I_t =
 ## Usage
 
 ``` r
-incidence(fitted_model, dow, ...)
+incidence(fitted_model, dow = NULL, ...)
 
 # S3 method for class 'ps'
-incidence(fitted_model, dow, ...)
+incidence(fitted_model, dow = NULL, ...)
 
 # S3 method for class 'rw'
-incidence(fitted_model, dow, ...)
+incidence(fitted_model, dow = NULL, ...)
 
 # S3 method for class 'ps_single'
-incidence(fitted_model, dow, ...)
+incidence(fitted_model, dow = NULL, ...)
 
 # S3 method for class 'rw_single'
-incidence(fitted_model, dow, ...)
+incidence(fitted_model, dow = NULL, ...)
 ```
 
 ## Arguments
@@ -31,7 +31,10 @@ incidence(fitted_model, dow, ...)
 
 - dow:
 
-  Logical whether or not to include day-of-week in incidence calc
+  Logical indicating whether to include day-of-week effects. If `NULL`
+  or `NA` (default), uses the day-of-week setting from the fitted model.
+  If `TRUE`, includes day-of-week effects (model must have been fitted
+  with `dow_effect = TRUE`). If `FALSE`, excludes day-of-week effects.
 
 - ...:
 
@@ -90,6 +93,14 @@ if (FALSE) { # \dontrun{
       time = sarscov2$date))
 
   fit <- fit_model(mod)
-  inc <- incidence(fit, dow = TRUE)
+
+  # Use model's dow setting (default)
+  inc <- incidence(fit)
+
+  # Explicitly exclude dow effects
+  inc_no_dow <- incidence(fit, dow = FALSE)
+
+  # Explicitly include dow effects (if model has them)
+  inc_with_dow <- incidence(fit, dow = TRUE)
 } # }
 ```

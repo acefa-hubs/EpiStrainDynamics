@@ -50,7 +50,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">single</span><span class="op">(</span><span class="va">data</span>, <span class="va">case_timeseries</span>, <span class="va">time</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">single</span><span class="op">(</span><span class="va">data</span>, <span class="va">case_timeseries</span>, time <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -58,18 +58,21 @@
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>dataframe containing columns with all relevant data</p></dd>
+<dd><p>dataframe containing columns with all relevant data, or a time
+series object (ts, xts, zoo, tsibble, etc.)</p></dd>
 
 
 <dt id="arg-case-timeseries">case_timeseries<a class="anchor" aria-label="anchor" href="#arg-case-timeseries"></a></dt>
-<dd><p>name of column with total case data, this name will be
-used as the name of the pathogen</p></dd>
+<dd><p>Column name containing case counts. Must be numeric
+or a <code>units</code> object from the <span class="pkg">units</span> package.</p></dd>
 
 
 <dt id="arg-time">time<a class="anchor" aria-label="anchor" href="#arg-time"></a></dt>
-<dd><p>name of column with time data. flexible format - can be date,
-index, or others, accepted as <code>index</code> identifiers in the <code>tsibble</code> time
-format.</p></dd>
+<dd><p>name of column with time data. Required for non-time-series
+input data. Flexible format - can be date, index, or others, accepted
+as <code>index</code> identifiers in the <code>tsibble</code> time format. Optional when
+<code>data</code> is a time series class object (ts, mts, xts, zoo, zooreg, tsibble)
+as the time index will be automatically detected.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -86,7 +89,8 @@ format.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">single</span><span class="op">(</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Using a data frame</span></span></span>
+<span class="r-in"><span><span class="fu">single</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  data <span class="op">=</span> <span class="va">sarscov2</span>,</span></span>
 <span class="r-in"><span>  case_timeseries <span class="op">=</span> <span class="st">'cases'</span>,</span></span>
 <span class="r-in"><span>  time <span class="op">=</span> <span class="st">'date'</span></span></span>
@@ -96,6 +100,22 @@ format.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $pathogen_names</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "cases"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $validated_tsbl</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tsibble: 830 x 2 [1D]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    date       case_timeseries</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 2020-09-23            <span style="text-decoration: underline;">7</span>096</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 2020-09-24            <span style="text-decoration: underline;">7</span>682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 2020-09-25            <span style="text-decoration: underline;">7</span>318</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 2020-09-26            <span style="text-decoration: underline;">6</span>810</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 2020-09-27            <span style="text-decoration: underline;">7</span>023</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 2020-09-28            <span style="text-decoration: underline;">9</span>983</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 2020-09-29           <span style="text-decoration: underline;">10</span>366</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 2020-09-30           <span style="text-decoration: underline;">12</span>717</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 2020-10-01           <span style="text-decoration: underline;">13</span>357</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 2020-10-02           <span style="text-decoration: underline;">13</span>854</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 820 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $data</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $data$case_timeseries</span>
@@ -183,178 +203,19 @@ format.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [811]   6986   7111   6533   6094   6084   4743   5772   9073   8631   7802</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [821]   6877   5741   4132   3694   4950   6605   8419   7718   6126   4287</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $data$time</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [1] "2020-09-23" "2020-09-24" "2020-09-25" "2020-09-26" "2020-09-27"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [6] "2020-09-28" "2020-09-29" "2020-09-30" "2020-10-01" "2020-10-02"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [11] "2020-10-03" "2020-10-04" "2020-10-05" "2020-10-06" "2020-10-07"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [16] "2020-10-08" "2020-10-09" "2020-10-10" "2020-10-11" "2020-10-12"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [21] "2020-10-13" "2020-10-14" "2020-10-15" "2020-10-16" "2020-10-17"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [26] "2020-10-18" "2020-10-19" "2020-10-20" "2020-10-21" "2020-10-22"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [31] "2020-10-23" "2020-10-24" "2020-10-25" "2020-10-26" "2020-10-27"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [36] "2020-10-28" "2020-10-29" "2020-10-30" "2020-10-31" "2020-11-01"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [41] "2020-11-02" "2020-11-03" "2020-11-04" "2020-11-05" "2020-11-06"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [46] "2020-11-07" "2020-11-08" "2020-11-09" "2020-11-10" "2020-11-11"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [51] "2020-11-12" "2020-11-13" "2020-11-14" "2020-11-15" "2020-11-16"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [56] "2020-11-17" "2020-11-18" "2020-11-19" "2020-11-20" "2020-11-21"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [61] "2020-11-22" "2020-11-23" "2020-11-24" "2020-11-25" "2020-11-26"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [66] "2020-11-27" "2020-11-28" "2020-11-29" "2020-11-30" "2020-12-01"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [71] "2020-12-02" "2020-12-03" "2020-12-04" "2020-12-05" "2020-12-06"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [76] "2020-12-07" "2020-12-08" "2020-12-09" "2020-12-10" "2020-12-11"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [81] "2020-12-12" "2020-12-13" "2020-12-14" "2020-12-15" "2020-12-16"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [86] "2020-12-17" "2020-12-18" "2020-12-19" "2020-12-20" "2020-12-21"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [91] "2020-12-22" "2020-12-23" "2020-12-24" "2020-12-25" "2020-12-26"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [96] "2020-12-27" "2020-12-28" "2020-12-29" "2020-12-30" "2020-12-31"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [101] "2021-01-01" "2021-01-02" "2021-01-03" "2021-01-04" "2021-01-05"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [106] "2021-01-06" "2021-01-07" "2021-01-08" "2021-01-09" "2021-01-10"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [111] "2021-01-11" "2021-01-12" "2021-01-13" "2021-01-14" "2021-01-15"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [116] "2021-01-16" "2021-01-17" "2021-01-18" "2021-01-19" "2021-01-20"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [121] "2021-01-21" "2021-01-22" "2021-01-23" "2021-01-24" "2021-01-25"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [126] "2021-01-26" "2021-01-27" "2021-01-28" "2021-01-29" "2021-01-30"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [131] "2021-01-31" "2021-02-01" "2021-02-02" "2021-02-03" "2021-02-04"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [136] "2021-02-05" "2021-02-06" "2021-02-07" "2021-02-08" "2021-02-09"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [141] "2021-02-10" "2021-02-11" "2021-02-12" "2021-02-13" "2021-02-14"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [146] "2021-02-15" "2021-02-16" "2021-02-17" "2021-02-18" "2021-02-19"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [151] "2021-02-20" "2021-02-21" "2021-02-22" "2021-02-23" "2021-02-24"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [156] "2021-02-25" "2021-02-26" "2021-02-27" "2021-02-28" "2021-03-01"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [161] "2021-03-02" "2021-03-03" "2021-03-04" "2021-03-05" "2021-03-06"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [166] "2021-03-07" "2021-03-08" "2021-03-09" "2021-03-10" "2021-03-11"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [171] "2021-03-12" "2021-03-13" "2021-03-14" "2021-03-15" "2021-03-16"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [176] "2021-03-17" "2021-03-18" "2021-03-19" "2021-03-20" "2021-03-21"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [181] "2021-03-22" "2021-03-23" "2021-03-24" "2021-03-25" "2021-03-26"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [186] "2021-03-27" "2021-03-28" "2021-03-29" "2021-03-30" "2021-03-31"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [191] "2021-04-01" "2021-04-02" "2021-04-03" "2021-04-04" "2021-04-05"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [196] "2021-04-06" "2021-04-07" "2021-04-08" "2021-04-09" "2021-04-10"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [201] "2021-04-11" "2021-04-12" "2021-04-13" "2021-04-14" "2021-04-15"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [206] "2021-04-16" "2021-04-17" "2021-04-18" "2021-04-19" "2021-04-20"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [211] "2021-04-21" "2021-04-22" "2021-04-23" "2021-04-24" "2021-04-25"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [216] "2021-04-26" "2021-04-27" "2021-04-28" "2021-04-29" "2021-04-30"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [221] "2021-05-01" "2021-05-02" "2021-05-03" "2021-05-04" "2021-05-05"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [226] "2021-05-06" "2021-05-07" "2021-05-08" "2021-05-09" "2021-05-10"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [231] "2021-05-11" "2021-05-12" "2021-05-13" "2021-05-14" "2021-05-15"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [236] "2021-05-16" "2021-05-17" "2021-05-18" "2021-05-19" "2021-05-20"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [241] "2021-05-21" "2021-05-22" "2021-05-23" "2021-05-24" "2021-05-25"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [246] "2021-05-26" "2021-05-27" "2021-05-28" "2021-05-29" "2021-05-30"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [251] "2021-05-31" "2021-06-01" "2021-06-02" "2021-06-03" "2021-06-04"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [256] "2021-06-05" "2021-06-06" "2021-06-07" "2021-06-08" "2021-06-09"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [261] "2021-06-10" "2021-06-11" "2021-06-12" "2021-06-13" "2021-06-14"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [266] "2021-06-15" "2021-06-16" "2021-06-17" "2021-06-18" "2021-06-19"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [271] "2021-06-20" "2021-06-21" "2021-06-22" "2021-06-23" "2021-06-24"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [276] "2021-06-25" "2021-06-26" "2021-06-27" "2021-06-28" "2021-06-29"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [281] "2021-06-30" "2021-07-01" "2021-07-02" "2021-07-03" "2021-07-04"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [286] "2021-07-05" "2021-07-06" "2021-07-07" "2021-07-08" "2021-07-09"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [291] "2021-07-10" "2021-07-11" "2021-07-12" "2021-07-13" "2021-07-14"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [296] "2021-07-15" "2021-07-16" "2021-07-17" "2021-07-18" "2021-07-19"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [301] "2021-07-20" "2021-07-21" "2021-07-22" "2021-07-23" "2021-07-24"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [306] "2021-07-25" "2021-07-26" "2021-07-27" "2021-07-28" "2021-07-29"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [311] "2021-07-30" "2021-07-31" "2021-08-01" "2021-08-02" "2021-08-03"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [316] "2021-08-04" "2021-08-05" "2021-08-06" "2021-08-07" "2021-08-08"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [321] "2021-08-09" "2021-08-10" "2021-08-11" "2021-08-12" "2021-08-13"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [326] "2021-08-14" "2021-08-15" "2021-08-16" "2021-08-17" "2021-08-18"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [331] "2021-08-19" "2021-08-20" "2021-08-21" "2021-08-22" "2021-08-23"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [336] "2021-08-24" "2021-08-25" "2021-08-26" "2021-08-27" "2021-08-28"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [341] "2021-08-29" "2021-08-30" "2021-08-31" "2021-09-01" "2021-09-02"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [346] "2021-09-03" "2021-09-04" "2021-09-05" "2021-09-06" "2021-09-07"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [351] "2021-09-08" "2021-09-09" "2021-09-10" "2021-09-11" "2021-09-12"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [356] "2021-09-13" "2021-09-14" "2021-09-15" "2021-09-16" "2021-09-17"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [361] "2021-09-18" "2021-09-19" "2021-09-20" "2021-09-21" "2021-09-22"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [366] "2021-09-23" "2021-09-24" "2021-09-25" "2021-09-26" "2021-09-27"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [371] "2021-09-28" "2021-09-29" "2021-09-30" "2021-10-01" "2021-10-02"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [376] "2021-10-03" "2021-10-04" "2021-10-05" "2021-10-06" "2021-10-07"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [381] "2021-10-08" "2021-10-09" "2021-10-10" "2021-10-11" "2021-10-12"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [386] "2021-10-13" "2021-10-14" "2021-10-15" "2021-10-16" "2021-10-17"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [391] "2021-10-18" "2021-10-19" "2021-10-20" "2021-10-21" "2021-10-22"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [396] "2021-10-23" "2021-10-24" "2021-10-25" "2021-10-26" "2021-10-27"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [401] "2021-10-28" "2021-10-29" "2021-10-30" "2021-10-31" "2021-11-01"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [406] "2021-11-02" "2021-11-03" "2021-11-04" "2021-11-05" "2021-11-06"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [411] "2021-11-07" "2021-11-08" "2021-11-09" "2021-11-10" "2021-11-11"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [416] "2021-11-12" "2021-11-13" "2021-11-14" "2021-11-15" "2021-11-16"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [421] "2021-11-17" "2021-11-18" "2021-11-19" "2021-11-20" "2021-11-21"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [426] "2021-11-22" "2021-11-23" "2021-11-24" "2021-11-25" "2021-11-26"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [431] "2021-11-27" "2021-11-28" "2021-11-29" "2021-11-30" "2021-12-01"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [436] "2021-12-02" "2021-12-03" "2021-12-04" "2021-12-05" "2021-12-06"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [441] "2021-12-07" "2021-12-08" "2021-12-09" "2021-12-10" "2021-12-11"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [446] "2021-12-12" "2021-12-13" "2021-12-14" "2021-12-15" "2021-12-16"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [451] "2021-12-17" "2021-12-18" "2021-12-19" "2021-12-20" "2021-12-21"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [456] "2021-12-22" "2021-12-23" "2021-12-24" "2021-12-25" "2021-12-26"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [461] "2021-12-27" "2021-12-28" "2021-12-29" "2021-12-30" "2021-12-31"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [466] "2022-01-01" "2022-01-02" "2022-01-03" "2022-01-04" "2022-01-05"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [471] "2022-01-06" "2022-01-07" "2022-01-08" "2022-01-09" "2022-01-10"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [476] "2022-01-11" "2022-01-12" "2022-01-13" "2022-01-14" "2022-01-15"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [481] "2022-01-16" "2022-01-17" "2022-01-18" "2022-01-19" "2022-01-20"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [486] "2022-01-21" "2022-01-22" "2022-01-23" "2022-01-24" "2022-01-25"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [491] "2022-01-26" "2022-01-27" "2022-01-28" "2022-01-29" "2022-01-30"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [496] "2022-01-31" "2022-02-01" "2022-02-02" "2022-02-03" "2022-02-04"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [501] "2022-02-05" "2022-02-06" "2022-02-07" "2022-02-08" "2022-02-09"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [506] "2022-02-10" "2022-02-11" "2022-02-12" "2022-02-13" "2022-02-14"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [511] "2022-02-15" "2022-02-16" "2022-02-17" "2022-02-18" "2022-02-19"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [516] "2022-02-20" "2022-02-21" "2022-02-22" "2022-02-23" "2022-02-24"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [521] "2022-02-25" "2022-02-26" "2022-02-27" "2022-02-28" "2022-03-01"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [526] "2022-03-02" "2022-03-03" "2022-03-04" "2022-03-05" "2022-03-06"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [531] "2022-03-07" "2022-03-08" "2022-03-09" "2022-03-10" "2022-03-11"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [536] "2022-03-12" "2022-03-13" "2022-03-14" "2022-03-15" "2022-03-16"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [541] "2022-03-17" "2022-03-18" "2022-03-19" "2022-03-20" "2022-03-21"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [546] "2022-03-22" "2022-03-23" "2022-03-24" "2022-03-25" "2022-03-26"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [551] "2022-03-27" "2022-03-28" "2022-03-29" "2022-03-30" "2022-03-31"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [556] "2022-04-01" "2022-04-02" "2022-04-03" "2022-04-04" "2022-04-05"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [561] "2022-04-06" "2022-04-07" "2022-04-08" "2022-04-09" "2022-04-10"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [566] "2022-04-11" "2022-04-12" "2022-04-13" "2022-04-14" "2022-04-15"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [571] "2022-04-16" "2022-04-17" "2022-04-18" "2022-04-19" "2022-04-20"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [576] "2022-04-21" "2022-04-22" "2022-04-23" "2022-04-24" "2022-04-25"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [581] "2022-04-26" "2022-04-27" "2022-04-28" "2022-04-29" "2022-04-30"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [586] "2022-05-01" "2022-05-02" "2022-05-03" "2022-05-04" "2022-05-05"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [591] "2022-05-06" "2022-05-07" "2022-05-08" "2022-05-09" "2022-05-10"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [596] "2022-05-11" "2022-05-12" "2022-05-13" "2022-05-14" "2022-05-15"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [601] "2022-05-16" "2022-05-17" "2022-05-18" "2022-05-19" "2022-05-20"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [606] "2022-05-21" "2022-05-22" "2022-05-23" "2022-05-24" "2022-05-25"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [611] "2022-05-26" "2022-05-27" "2022-05-28" "2022-05-29" "2022-05-30"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [616] "2022-05-31" "2022-06-01" "2022-06-02" "2022-06-03" "2022-06-04"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [621] "2022-06-05" "2022-06-06" "2022-06-07" "2022-06-08" "2022-06-09"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [626] "2022-06-10" "2022-06-11" "2022-06-12" "2022-06-13" "2022-06-14"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [631] "2022-06-15" "2022-06-16" "2022-06-17" "2022-06-18" "2022-06-19"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [636] "2022-06-20" "2022-06-21" "2022-06-22" "2022-06-23" "2022-06-24"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [641] "2022-06-25" "2022-06-26" "2022-06-27" "2022-06-28" "2022-06-29"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [646] "2022-06-30" "2022-07-01" "2022-07-02" "2022-07-03" "2022-07-04"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [651] "2022-07-05" "2022-07-06" "2022-07-07" "2022-07-08" "2022-07-09"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [656] "2022-07-10" "2022-07-11" "2022-07-12" "2022-07-13" "2022-07-14"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [661] "2022-07-15" "2022-07-16" "2022-07-17" "2022-07-18" "2022-07-19"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [666] "2022-07-20" "2022-07-21" "2022-07-22" "2022-07-23" "2022-07-24"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [671] "2022-07-25" "2022-07-26" "2022-07-27" "2022-07-28" "2022-07-29"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [676] "2022-07-30" "2022-07-31" "2022-08-01" "2022-08-02" "2022-08-03"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [681] "2022-08-04" "2022-08-05" "2022-08-06" "2022-08-07" "2022-08-08"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [686] "2022-08-09" "2022-08-10" "2022-08-11" "2022-08-12" "2022-08-13"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [691] "2022-08-14" "2022-08-15" "2022-08-16" "2022-08-17" "2022-08-18"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [696] "2022-08-19" "2022-08-20" "2022-08-21" "2022-08-22" "2022-08-23"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [701] "2022-08-24" "2022-08-25" "2022-08-26" "2022-08-27" "2022-08-28"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [706] "2022-08-29" "2022-08-30" "2022-08-31" "2022-09-01" "2022-09-02"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [711] "2022-09-03" "2022-09-04" "2022-09-05" "2022-09-06" "2022-09-07"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [716] "2022-09-08" "2022-09-09" "2022-09-10" "2022-09-11" "2022-09-12"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [721] "2022-09-13" "2022-09-14" "2022-09-15" "2022-09-16" "2022-09-17"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [726] "2022-09-18" "2022-09-19" "2022-09-20" "2022-09-21" "2022-09-22"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [731] "2022-09-23" "2022-09-24" "2022-09-25" "2022-09-26" "2022-09-27"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [736] "2022-09-28" "2022-09-29" "2022-09-30" "2022-10-01" "2022-10-02"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [741] "2022-10-03" "2022-10-04" "2022-10-05" "2022-10-06" "2022-10-07"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [746] "2022-10-08" "2022-10-09" "2022-10-10" "2022-10-11" "2022-10-12"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [751] "2022-10-13" "2022-10-14" "2022-10-15" "2022-10-16" "2022-10-17"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [756] "2022-10-18" "2022-10-19" "2022-10-20" "2022-10-21" "2022-10-22"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [761] "2022-10-23" "2022-10-24" "2022-10-25" "2022-10-26" "2022-10-27"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [766] "2022-10-28" "2022-10-29" "2022-10-30" "2022-10-31" "2022-11-01"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [771] "2022-11-02" "2022-11-03" "2022-11-04" "2022-11-05" "2022-11-06"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [776] "2022-11-07" "2022-11-08" "2022-11-09" "2022-11-10" "2022-11-11"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [781] "2022-11-12" "2022-11-13" "2022-11-14" "2022-11-15" "2022-11-16"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [786] "2022-11-17" "2022-11-18" "2022-11-19" "2022-11-20" "2022-11-21"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [791] "2022-11-22" "2022-11-23" "2022-11-24" "2022-11-25" "2022-11-26"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [796] "2022-11-27" "2022-11-28" "2022-11-29" "2022-11-30" "2022-12-01"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [801] "2022-12-02" "2022-12-03" "2022-12-04" "2022-12-05" "2022-12-06"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [806] "2022-12-07" "2022-12-08" "2022-12-09" "2022-12-10" "2022-12-11"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [811] "2022-12-12" "2022-12-13" "2022-12-14" "2022-12-15" "2022-12-16"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [816] "2022-12-17" "2022-12-18" "2022-12-19" "2022-12-20" "2022-12-21"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [821] "2022-12-22" "2022-12-23" "2022-12-24" "2022-12-25" "2022-12-26"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [826] "2022-12-27" "2022-12-28" "2022-12-29" "2022-12-30" "2022-12-31"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EpiStrainDynamics.pathogen_structure"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2] "list"                                </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Using a time series object (time argument is optional)</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="va">sarscov2_xts</span> <span class="op">&lt;-</span> <span class="fu">xts</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xts/man/xts.html" class="external-link">xts</a></span><span class="op">(</span><span class="va">sarscov2</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cases"</span>, <span class="st">"alpha"</span><span class="op">)</span><span class="op">]</span>, order.by <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">date</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">single</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">sarscov2_xts</span>,</span></span>
+<span class="r-in"><span>  case_timeseries <span class="op">=</span> <span class="st">'cases'</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

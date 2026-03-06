@@ -56,16 +56,22 @@ There are three main types of pathogen structure available to model:
 and
 [`subtyped()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/subtyped.md).
 These functions require the name of the dataset itself and the column
-names for different data elements.
+names for different data elements. These can also ingest timeseries
+class objects, which would then make the `time` column specification
+optional. The models are not currently equipped to handle missing values
+or irregular date sequences. Timeseries checks are run internally on
+data frame or any time of timeseries class input that is handled by the
+[`tsbox`
+package](https://docs.ropensci.org/tsbox/reference/tsbox-package.html).
 
 The
 [`single()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/single.md)
 pathogen structure is the simplest and models a single pathogen
 timeseries. The name of the dataframe is passed to argument `data`, the
 name of the column with total case data is passed to `case_timeseries`,
-and the name of the column of time data is passed to `time`. It can be
-specified as follows, illustrated using data provided with the package
-`sarscov2`:
+and the name of the column of time data is passed to `time` (optional if
+input dataset is a timeseries class). It can be specified as follows,
+illustrated using data provided with the package `sarscov2`:
 
     pathogen_structure = single(
       data = sarscov2,                    # dataframe
@@ -76,9 +82,10 @@ specified as follows, illustrated using data provided with the package
 The
 [`multiple()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/multiple.md)
 pathogen structure allows modelling of different component pathogens. In
-addition to specifying `data`, `case_timeseries`, and `time`, these
-additional pathogens are specified as a vector of column names with the
-argument `component_pathogen_timeseries`. Example pathogen structure
+addition to specifying `data`, `case_timeseries`, and `time` (optional
+if input dataset is a timeseries class), these additional pathogens are
+specified as a vector of column names with the argument
+`component_pathogen_timeseries`. Example pathogen structure
 specification for multiple pathogens model using the `sarscov2` dataset:
 
     pathogen_structure = multiple(
@@ -188,12 +195,15 @@ mod <- construct_model(
 
 ### Output
 
-The constructed model object is a named list containing input data,
-accessed with `$data`, parameter values (such as smoothing structure,
-observation noise, and penalised spline parameters, if appropriate),
-accessed with `model_params`, names of provided pathogens, accessed with
-`pathogen_names`, and record of whether day of week effect has been
-selected, accessed with `dow_effect`.
+The constructed model object is a named list containing the formatted
+data to be modelled, accessed with `$data`, a timeseries object of class
+`tsibble` that has been validated for gaps and regularity, accessed with
+`$validated_tsbl`, parameter values structured for the stan interface
+(such as smoothing structure, observation noise, and penalised spline
+parameters, if appropriate), accessed with `model_params`, names of
+provided pathogens, accessed with `pathogen_names`, and record of
+whether day of week effect has been selected, accessed with
+`dow_effect`.
 
 ## Step 2: Fit model
 
@@ -227,8 +237,8 @@ diagnose_model(fit)
 #> Model Convergence Diagnostics
 #> =============================
 #> Overall convergence: GOOD 
-#> Maximum R-hat: 1.008 
-#> Minimum n_eff: 874
+#> Maximum R-hat: 1.006 
+#> Minimum n_eff: 976
 ```
 
 Beyond this summary, the stan fit object can be interrogated with any
@@ -276,13 +286,13 @@ Some quick tips:
 
 The package provides helper functions to calculate a number of useful
 epidemiological quantities. The output of these methods functions are a
-named list containing a data frame of the outcome quantity (`$measure`),
+named list containing a tsibble of the outcome quantity (`$measure`),
 the fit object (`$fit`), and the constructed model object
-(`$constructed_model`). `measure` is a data frame containing the median
-of the epidemiological quantity (`y`), the 50% credible interval of the
+(`$constructed_model`). `measure` is a tsibble containing the median of
+the epidemiological quantity (`y`), the 50% credible interval of the
 quantity (`lb_50` & `ub_50`), the 95% credible interval (`lb_95` &
 `ub_95`), the proportion greater than a defined threshold value
-(`prop`), the pathogen name (`pathogen`), and the time label (`time`).
+(`prop`), the pathogen name (`pathogen`), and the time index (`time`).
 
 Calculate epidemic growth rate with
 [`growth_rate()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/growth_rate.md):
@@ -290,13 +300,16 @@ Calculate epidemic growth rate with
 ``` r
 gr <- growth_rate(fit)
 head(gr$measure)
-#>   pathogen pathogen_idx          y        lb_50      ub_50       lb_95      ub_95    prop       time
-#> 1    Total           NA 0.04552230 -0.002160192 0.09401148 -0.09664472 0.18780924 0.73925 2012-01-09
-#> 2    Total           NA 0.04417341  0.004999661 0.08391639 -0.07008781 0.16589208 0.77500 2012-01-16
-#> 3    Total           NA 0.03965408  0.009552417 0.07121986 -0.04894106 0.13380498 0.81600 2012-01-23
-#> 4    Total           NA 0.03467169  0.008956640 0.05852156 -0.03655224 0.10717362 0.82175 2012-01-30
-#> 5    Total           NA 0.02929409  0.005570549 0.05305710 -0.04097867 0.09992797 0.79125 2012-02-06
-#> 6    Total           NA 0.02630190  0.003437642 0.04828049 -0.03788355 0.09086272 0.78250 2012-02-13
+#> # A tsibble: 6 x 9 [7D]
+#> # Key:       pathogen [1]
+#>   pathogen pathogen_idx      y    lb_50  ub_50   lb_95  ub_95  prop time      
+#>   <chr>           <int>  <dbl>    <dbl>  <dbl>   <dbl>  <dbl> <dbl> <date>    
+#> 1 Total              NA 0.0422 -0.00574 0.0879 -0.0936 0.184  0.722 2012-01-09
+#> 2 Total              NA 0.0411  0.00408 0.0803 -0.0692 0.157  0.774 2012-01-16
+#> 3 Total              NA 0.0378  0.00858 0.0698 -0.0472 0.132  0.807 2012-01-23
+#> 4 Total              NA 0.0343  0.00676 0.0599 -0.0382 0.112  0.808 2012-01-30
+#> 5 Total              NA 0.0306  0.00430 0.0546 -0.0421 0.105  0.788 2012-02-06
+#> 6 Total              NA 0.0268  0.00451 0.0500 -0.0374 0.0941 0.788 2012-02-13
 plot(gr)
 ```
 
@@ -324,12 +337,8 @@ Calculate incidence with or without a day of week effect with
 ``` r
 inc_dow <- incidence(fit, dow = TRUE)
 plot(inc_dow)
+#> Error in plot.incidence(inc_dow): object 'inc' not found
 ```
-
-![plot of chunk
-incidence](articles/figures/Using-EpiStrainDynamics-incidence-1.png)
-
-plot of chunk incidence
 
 Calculate proportions of different combinations of cases attributable to
 different pathogens/subtypes using
@@ -348,10 +357,7 @@ named lists provided to
 
 ``` r
 prop <- proportion(fit)
+#> Error in splineDesign(Aknots, x, ord): length of 'derivs' is larger than length of 'x'
 plot(prop)
+#> Error: object 'prop' not found
 ```
-
-![plot of chunk
-proportion](articles/figures/Using-EpiStrainDynamics-proportion-1.png)
-
-plot of chunk proportion

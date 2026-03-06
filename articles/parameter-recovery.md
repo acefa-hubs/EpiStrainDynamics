@@ -750,30 +750,39 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] dplyr_1.1.4                  ggplot2_4.0.1               
+#> [1] dplyr_1.2.0                  ggplot2_4.0.2               
 #> [3] EpiStrainDynamics_0.0.1.0000
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] viridis_0.6.5         sass_0.4.10           generics_0.1.4       
-#>  [4] anytime_0.3.12        digest_0.6.39         magrittr_2.0.4       
-#>  [7] timechange_0.3.0      evaluate_1.0.5        grid_4.5.2           
-#> [10] RColorBrewer_1.1-3    fastmap_1.2.0         jsonlite_2.0.0       
-#> [13] pkgbuild_1.4.8        gridExtra_2.3         purrr_1.2.0          
-#> [16] viridisLite_0.4.2     QuickJSR_1.8.1        scales_1.4.0         
-#> [19] codetools_0.2-20      textshaping_1.0.4     jquerylib_0.1.4      
-#> [22] cli_3.6.5             rlang_1.1.6           ellipsis_0.3.2       
-#> [25] splines_4.5.2         withr_3.0.2           cachem_1.1.0         
-#> [28] yaml_2.3.12           StanHeaders_2.32.10   tools_4.5.2          
-#> [31] rstan_2.32.7          inline_0.3.21         parallel_4.5.2       
-#> [34] rstantools_2.5.0      tsibble_1.1.6         vctrs_0.6.5          
-#> [37] R6_2.6.1              lubridate_1.9.4       matrixStats_1.5.0    
-#> [40] stats4_4.5.2          lifecycle_1.0.4       fs_1.6.6             
-#> [43] ragg_1.5.0            pkgconfig_2.0.3       desc_1.4.3           
-#> [46] pkgdown_2.2.0         RcppParallel_5.1.11-1 pillar_1.11.1        
-#> [49] bslib_0.9.0           gtable_0.3.6          loo_2.9.0            
-#> [52] glue_1.8.0            Rcpp_1.1.0            systemfonts_1.3.1    
-#> [55] xfun_0.55             tibble_3.3.0          tidyselect_1.2.1     
-#> [58] knitr_1.51            farver_2.1.2          bayesplot_1.15.0     
-#> [61] htmltools_0.5.9       labeling_0.4.3        rmarkdown_2.30       
-#> [64] compiler_4.5.2        S7_0.2.1
+#>  [1] tidyselect_1.2.1      viridisLite_0.4.3     timeDate_4052.112    
+#>  [4] farver_2.1.2          viridis_0.6.5         loo_2.9.0            
+#>  [7] S7_0.2.1              fastmap_1.2.0         digest_0.6.39        
+#> [10] rpart_4.1.24          timechange_0.4.0      lifecycle_1.0.5      
+#> [13] StanHeaders_2.32.10   survival_3.8-3        magrittr_2.0.4       
+#> [16] compiler_4.5.2        rlang_1.1.7           sass_0.4.10          
+#> [19] tools_4.5.2           yaml_2.3.12           data.table_1.18.2.1  
+#> [22] knitr_1.51            labeling_0.4.3        htmlwidgets_1.6.4    
+#> [25] pkgbuild_1.4.8        RColorBrewer_1.1-3    withr_3.0.2          
+#> [28] purrr_1.2.1           desc_1.4.3            nnet_7.3-20          
+#> [31] grid_4.5.2            stats4_4.5.2          timetk_2.9.1         
+#> [34] xts_0.14.2            future_1.69.0         inline_0.3.21        
+#> [37] globals_0.19.0        scales_1.4.0          MASS_7.3-65          
+#> [40] anytime_0.3.12        cli_3.6.5             rmarkdown_2.30       
+#> [43] ragg_1.5.0            generics_0.1.4        otel_0.2.0           
+#> [46] RcppParallel_5.1.11-1 future.apply_1.20.2   cachem_1.1.0         
+#> [49] rstan_2.32.7          splines_4.5.2         bayesplot_1.15.0     
+#> [52] parallel_4.5.2        matrixStats_1.5.0     vctrs_0.7.1          
+#> [55] hardhat_1.4.2         Matrix_1.7-4          jsonlite_2.0.0       
+#> [58] listenv_0.10.0        systemfonts_1.3.1     gower_1.0.2          
+#> [61] jquerylib_0.1.4       tidyr_1.3.2           recipes_1.3.1        
+#> [64] glue_1.8.0            parallelly_1.46.1     pkgdown_2.2.0        
+#> [67] codetools_0.2-20      rsample_1.3.2         lubridate_1.9.5      
+#> [70] gtable_0.3.6          QuickJSR_1.9.0        tibble_3.3.1         
+#> [73] pillar_1.11.1         furrr_0.3.1           htmltools_0.5.9      
+#> [76] ipred_0.9-15          lava_1.8.2            R6_2.6.1             
+#> [79] textshaping_1.0.4     evaluate_1.0.5        lattice_0.22-7       
+#> [82] tsibble_1.2.0         bslib_0.10.0          rstantools_2.6.0     
+#> [85] class_7.3-23          Rcpp_1.1.1            gridExtra_2.3        
+#> [88] prodlim_2025.04.28    xfun_0.56             fs_1.6.6             
+#> [91] zoo_1.8-15            pkgconfig_2.0.3
 ```

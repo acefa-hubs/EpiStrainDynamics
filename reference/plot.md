@@ -5,19 +5,19 @@ S3 generic for plotting
 ## Usage
 
 ``` r
-plot(df, ...)
+plot(df, xlab = "Time", ...)
 
 # S3 method for class 'incidence'
-plot(df)
+plot(df, xlab = "Time", ...)
 
 # S3 method for class 'growth_rate'
-plot(df)
+plot(df, xlab = "Time", ...)
 
 # S3 method for class 'Rt'
-plot(df)
+plot(df, xlab = "Time", ...)
 
 # S3 method for class 'proportion'
-plot(df)
+plot(df, xlab = "Time", ...)
 ```
 
 ## Arguments
@@ -31,6 +31,10 @@ plot(df)
   [`Rt()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/Rt.md),
   or
   [`proportion()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/proportion.md).
+
+- xlab:
+
+  Time label for x axis, defaults to "Time"
 
 - ...:
 

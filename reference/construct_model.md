@@ -83,8 +83,5 @@ mod <- construct_model(
    pathogen_noise = FALSE,
    dow_effect = TRUE
 )
-#> Registered S3 method overwritten by 'tsibble':
-#>   method               from 
-#>   as_tibble.grouped_df dplyr
 
 ```
