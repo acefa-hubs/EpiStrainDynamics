@@ -290,10 +290,10 @@ knitr::kable(scaling_results, digits = 3,
 
 | method      | pathogen_structure | scaling_exponent | r_squared |
 |:------------|:-------------------|-----------------:|----------:|
-| p_spline    | multiple           |            1.010 |     0.996 |
-| p_spline    | single             |            0.853 |     0.991 |
-| random_walk | multiple           |            0.967 |     0.999 |
-| random_walk | single             |            0.887 |     0.985 |
+| p_spline    | multiple           |            1.009 |     0.995 |
+| p_spline    | single             |            0.845 |     0.993 |
+| random_walk | multiple           |            0.963 |     0.999 |
+| random_walk | single             |            0.869 |     0.980 |
 
 Scaling exponents: time complexity approximately O(n^exponent)
 
@@ -825,11 +825,11 @@ sessionInfo()
 #> [37] globals_0.19.0        scales_1.4.0          MASS_7.3-65          
 #> [40] anytime_0.3.12        cli_3.6.5             rmarkdown_2.30       
 #> [43] ragg_1.5.0            generics_0.1.4        otel_0.2.0           
-#> [46] RcppParallel_5.1.11-1 future.apply_1.20.2   cachem_1.1.0         
+#> [46] RcppParallel_5.1.11-2 future.apply_1.20.2   cachem_1.1.0         
 #> [49] rstan_2.32.7          splines_4.5.2         bayesplot_1.15.0     
 #> [52] parallel_4.5.2        matrixStats_1.5.0     vctrs_0.7.1          
 #> [55] hardhat_1.4.2         Matrix_1.7-4          jsonlite_2.0.0       
-#> [58] listenv_0.10.0        systemfonts_1.3.1     gower_1.0.2          
+#> [58] listenv_0.10.0        systemfonts_1.3.2     gower_1.0.2          
 #> [61] jquerylib_0.1.4       tidyr_1.3.2           recipes_1.3.1        
 #> [64] glue_1.8.0            parallelly_1.46.1     pkgdown_2.2.0        
 #> [67] codetools_0.2-20      rsample_1.3.2         lubridate_1.9.5      
