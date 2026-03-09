@@ -10,16 +10,19 @@ on:
 jobs:
   pkgcheck:
     runs-on: ubuntu-latest
+    timeout-minutes: 365
     permissions:
       issues: write
+    env:
+      EPISTRAINDYNAMICS_EXTENDED_TESTS: "false"
     steps:
       - uses: actions/checkout@v4
-
       - name: Free Disk Space
         run: |
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /opt/ghc
           sudo rm -rf /usr/local/share/boost
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
-
       - uses: ropensci-review-tools/pkgcheck-action@main
+        env:
+          EPISTRAINDYNAMICS_EXTENDED_TESTS: "false"

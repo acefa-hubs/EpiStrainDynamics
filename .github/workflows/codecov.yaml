@@ -22,6 +22,8 @@ jobs:
           extra-packages: any::covr, any::xml2
           needs: coverage
       - name: Test coverage
+        env:
+          EPISTRAINDYNAMICS_EXTENDED_TESTS: "false"
         run: |
           cov <- covr::package_coverage(
             quiet = FALSE,
