@@ -290,10 +290,10 @@ knitr::kable(scaling_results, digits = 3,
 
 | method      | pathogen_structure | scaling_exponent | r_squared |
 |:------------|:-------------------|-----------------:|----------:|
-| p_spline    | multiple           |            1.009 |     0.996 |
-| p_spline    | single             |            0.851 |     0.991 |
-| random_walk | multiple           |            0.967 |     0.999 |
-| random_walk | single             |            0.885 |     0.981 |
+| p_spline    | multiple           |            1.001 |     0.996 |
+| p_spline    | single             |            0.837 |     0.991 |
+| random_walk | multiple           |            0.963 |     1.000 |
+| random_walk | single             |            0.883 |     0.982 |
 
 Scaling exponents: time complexity approximately O(n^exponent)
 
