@@ -290,10 +290,10 @@ knitr::kable(scaling_results, digits = 3,
 
 | method      | pathogen_structure | scaling_exponent | r_squared |
 |:------------|:-------------------|-----------------:|----------:|
-| p_spline    | multiple           |            1.001 |     0.996 |
-| p_spline    | single             |            0.837 |     0.991 |
-| random_walk | multiple           |            0.963 |     1.000 |
-| random_walk | single             |            0.883 |     0.982 |
+| p_spline    | multiple           |            1.005 |     0.996 |
+| p_spline    | single             |            0.842 |     0.991 |
+| random_walk | multiple           |            0.964 |     0.999 |
+| random_walk | single             |            0.874 |     0.980 |
 
 Scaling exponents: time complexity approximately O(n^exponent)
 
@@ -785,7 +785,7 @@ on data similar to its intended use case.
 
 ``` r
 sessionInfo()
-#> R version 4.5.2 (2025-10-31)
+#> R version 4.5.3 (2026-03-11)
 #> Platform: x86_64-pc-linux-gnu
 #> Running under: Ubuntu 24.04.3 LTS
 #> 
@@ -814,31 +814,31 @@ sessionInfo()
 #>  [4] farver_2.1.2          viridis_0.6.5         loo_2.9.0            
 #>  [7] S7_0.2.1              fastmap_1.2.0         digest_0.6.39        
 #> [10] rpart_4.1.24          timechange_0.4.0      lifecycle_1.0.5      
-#> [13] StanHeaders_2.32.10   survival_3.8-3        magrittr_2.0.4       
-#> [16] compiler_4.5.2        rlang_1.1.7           sass_0.4.10          
-#> [19] tools_4.5.2           yaml_2.3.12           data.table_1.18.2.1  
+#> [13] StanHeaders_2.32.10   survival_3.8-6        magrittr_2.0.4       
+#> [16] compiler_4.5.3        rlang_1.1.7           sass_0.4.10          
+#> [19] tools_4.5.3           yaml_2.3.12           data.table_1.18.2.1  
 #> [22] knitr_1.51            labeling_0.4.3        htmlwidgets_1.6.4    
 #> [25] pkgbuild_1.4.8        RColorBrewer_1.1-3    withr_3.0.2          
 #> [28] purrr_1.2.1           desc_1.4.3            nnet_7.3-20          
-#> [31] grid_4.5.2            stats4_4.5.2          timetk_2.9.1         
-#> [34] xts_0.14.2            future_1.69.0         inline_0.3.21        
-#> [37] globals_0.19.0        scales_1.4.0          MASS_7.3-65          
+#> [31] grid_4.5.3            stats4_4.5.3          timetk_2.9.1         
+#> [34] xts_0.14.2            future_1.70.0         inline_0.3.21        
+#> [37] globals_0.19.1        scales_1.4.0          MASS_7.3-65          
 #> [40] anytime_0.3.12        cli_3.6.5             rmarkdown_2.30       
 #> [43] ragg_1.5.1            generics_0.1.4        otel_0.2.0           
 #> [46] RcppParallel_5.1.11-2 future.apply_1.20.2   cachem_1.1.0         
-#> [49] rstan_2.32.7          splines_4.5.2         bayesplot_1.15.0     
-#> [52] parallel_4.5.2        matrixStats_1.5.0     vctrs_0.7.1          
+#> [49] rstan_2.32.7          splines_4.5.3         bayesplot_1.15.0     
+#> [52] parallel_4.5.3        matrixStats_1.5.0     vctrs_0.7.1          
 #> [55] hardhat_1.4.2         Matrix_1.7-4          jsonlite_2.0.0       
-#> [58] listenv_0.10.0        systemfonts_1.3.2     gower_1.0.2          
+#> [58] listenv_0.10.1        systemfonts_1.3.2     gower_1.0.2          
 #> [61] jquerylib_0.1.4       tidyr_1.3.2           recipes_1.3.1        
 #> [64] glue_1.8.0            parallelly_1.46.1     pkgdown_2.2.0        
 #> [67] codetools_0.2-20      rsample_1.3.2         lubridate_1.9.5      
 #> [70] gtable_0.3.6          QuickJSR_1.9.0        tibble_3.3.1         
 #> [73] pillar_1.11.1         furrr_0.3.1           htmltools_0.5.9      
 #> [76] ipred_0.9-15          lava_1.8.2            R6_2.6.1             
-#> [79] textshaping_1.0.5     evaluate_1.0.5        lattice_0.22-7       
+#> [79] textshaping_1.0.5     evaluate_1.0.5        lattice_0.22-9       
 #> [82] tsibble_1.2.0         bslib_0.10.0          rstantools_2.6.0     
 #> [85] class_7.3-23          Rcpp_1.1.1            gridExtra_2.3        
-#> [88] prodlim_2025.04.28    xfun_0.56             fs_1.6.7             
+#> [88] prodlim_2026.03.11    xfun_0.56             fs_1.6.7             
 #> [91] zoo_1.8-15            pkgconfig_2.0.3
 ```
