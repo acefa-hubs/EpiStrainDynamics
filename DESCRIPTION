@@ -50,6 +50,7 @@ SystemRequirements: GNU make
 Suggests: 
     data.table,
     knitr,
+    piggyback,
     rmarkdown,
     testthat (>= 3.0.0),
     tibble,

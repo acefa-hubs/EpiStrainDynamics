@@ -1,6 +1,4 @@
-# tests/testthat/helper-fixtures.R
 # Downloads pre-fitted model fixtures from GitHub Release via piggyback.
-# This file is sourced automatically by testthat before tests run.
 # Files that use these: test-fit-model.R, test-diagnose-model.R,
 # test-metrics.R, test-plot.R, test-extended-regression.R
 
@@ -15,6 +13,11 @@ message("EpiStrainDynamics: downloading test fixtures via piggyback...")
 
 fixture_dir <- file.path(tempdir(), "testfixtures")
 dir.create(fixture_dir, showWarnings = FALSE)
+
+if (!requireNamespace("piggyback", quietly = TRUE)) {
+  skip("Package 'piggyback' is required to download test fixtures. Install
+       with install.packages('piggyback').")
+}
 
 download_ok <- tryCatch({
   piggyback::pb_download(
