@@ -10,8 +10,30 @@ check_package_data <- function() {
   }
 }
 
-# Create standard test models using package datasets with various parameter
-# combinations
+# Helper function for testing method constructor structure
+test_method_structure <- function(result, expected_method, expected_params = NULL) {
+  # Test basic structure
+  expect_type(result, "list")
+  expect_s3_class(result, "EpiStrainDynamics.method")
+  expect_equal(result$method, expected_method)
+  expect_true("method" %in% names(result))
+  expect_type(result$method, "character")
+
+  # Test parameters if expected
+  if (!is.null(expected_params)) {
+    expect_true("model_params" %in% names(result))
+    expect_type(result$model_params, "list")
+    expect_named(result$model_params, names(expected_params))
+
+    for (param_name in names(expected_params)) {
+      expect_equal(result$model_params[[param_name]], expected_params[[param_name]])
+    }
+  } else {
+    expect_length(result, 1)
+  }
+}
+
+# Create standard test models using package datasets with various parameter combinations
 create_test_models <- function() {
   check_package_data()
 
@@ -194,54 +216,4 @@ get_expected_pathogen_names <- function() {
     sarscov2_multiple = c("alpha", "delta", "omicron", "other"),
     influenza_subtyped = c("inf_H3N2", "inf_H1N1", "inf_B", "other")
   )
-}
-
-# Helper function for method validation tests
-test_method_structure <- function(result, expected_method,
-                                  expected_params = NULL) {
-  # Test basic structure
-  expect_type(result, "list")
-  expect_s3_class(result, "EpiStrainDynamics.method")
-  expect_equal(result$method, expected_method)
-  expect_true("method" %in% names(result))
-  expect_type(result$method, "character")
-
-  # Test parameters if expected
-  if (!is.null(expected_params)) {
-    expect_true("model_params" %in% names(result))
-    expect_type(result$model_params, "list")
-    expect_named(result$model_params, names(expected_params))
-
-    for (param_name in names(expected_params)) {
-      expect_equal(result$model_params[[param_name]],
-                   expected_params[[param_name]])
-    }
-  } else {
-    expect_length(result, 1)
-  }
-}
-
-# Helper function for testing method constructor structure
-test_method_structure <- function(result, expected_method,
-                                  expected_params = NULL) {
-  # Test basic structure
-  expect_type(result, "list")
-  expect_s3_class(result, "EpiStrainDynamics.method")
-  expect_equal(result$method, expected_method)
-  expect_true("method" %in% names(result))
-  expect_type(result$method, "character")
-
-  # Test parameters if expected
-  if (!is.null(expected_params)) {
-    expect_true("model_params" %in% names(result))
-    expect_type(result$model_params, "list")
-    expect_named(result$model_params, names(expected_params))
-
-    for (param_name in names(expected_params)) {
-      expect_equal(result$model_params[[param_name]],
-                   expected_params[[param_name]])
-    }
-  } else {
-    expect_length(result, 1)
-  }
 }
