@@ -3,6 +3,8 @@
 # Note: Detailed metric calculations are tested in test-metrics.R
 # Note: Verbosity and error handling (BS2.12-BS2.15) tested in test-verbosity.R
 #' @srrstats {G5.4, G5.5} Correctness tests with fixed test data + fixed seed
+#' @srrstats {G5.11, G5.11a} Extended fixtures downloaded by piggybank. Tests
+#'   skip if download fails.
 
 # Prevent browser from opening during tests (rstan diagnostics)
 options(browser = function(...) {})

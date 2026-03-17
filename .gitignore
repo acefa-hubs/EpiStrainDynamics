@@ -14,3 +14,4 @@ src/*.o
 src/*.so
 /doc/
 /Meta/
+inst/testfixtures/
