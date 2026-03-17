@@ -13,16 +13,15 @@ fitted model fixtures are pre-generated locally and stored in a GitHub Release.
 They are downloaded automatically at the start of each test session via
 [piggyback](https://docs.ropensci.org/piggyback/).
 
-Two sets of fixtures are used:
+Two sets of fixtures are used, aided by `helper-fixtures.R`:
 
-- **Regular fixtures** (`helper-fixtures.R`): small data subsets, minimal MCMC
-  settings (500 iterations, 1 chain). Used by `test-fit-model.R`,
-  `test-diagnose-model.R`, `test-metrics.R`, and `test-plot.R`.
-- **Extended fixtures** (`helper-extended-fixtures.R`): full package datasets,
-  thorough MCMC settings (2000 iterations, 4 chains). Used by
-  `test-extended-regression.R`.
+- **Regular fixtures**: small data subsets, minimal MCMC settings (500 
+  iterations, 1 chain). Used by `test-fit-model.R`, `test-diagnose-model.R`,   
+  `test-metrics.R`, and `test-plot.R`.
+- **Extended fixtures**: full package datasets, thorough MCMC settings (2000
+  iterations, 4 chains). Used by `test-extended-regression.R`.
 
-Both helpers are sourced automatically by testthat before any tests run.
+The helper file is sourced automatically by testthat before any tests run.
 Fixtures live in memory for the duration of the test session and are discarded
 afterwards.
 
@@ -37,21 +36,14 @@ source("inst/scripts/generate-test-fixtures.R")
 
 This fits all regular and extended fixtures locally, saves them to
 `inst/testfixtures/`, and uploads them to the GitHub Release. Bump the tag
-(e.g. `test-fixtures-v2`) and update the tag name in both helper files and the
-generate script when doing so.
+(e.g. `test-fixtures-v2`) in the script and update the tag name in the helper 
+file when doing so.
 
 ## Adding new tests
 
-### Standard tests
 Add test cases to the appropriate `test-*.R` file. If the test needs a new
 fitted model, add it to `inst/scripts/generate-test-fixtures.R`, regenerate,
 and load it in `helper-fixtures.R`.
-
-### Extended regression tests
-Add test cases to `test-extended-regression.R` (or a new `test-extended-*.R`
-file). If the tests need a new fitted model, add it to the extended fixtures
-section of `inst/scripts/generate-test-fixtures.R`, regenerate, and load it in
-`helper-extended-fixtures.R`.
 
 ## Requirements
 
