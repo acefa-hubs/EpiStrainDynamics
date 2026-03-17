@@ -151,7 +151,7 @@ test_that("fit_model catches Stan failures and provides informative output", {
 
   # Now it should throw an actual error
   expect_error(
-    fit_model(mod, n_iter = 100, n_chain = 1, verbose = FALSE),
+    fit_model(mod, n_iter = 500, n_chain = 1, verbose = FALSE),
     "Stan sampling failed"
   )
 })
@@ -177,7 +177,7 @@ test_that("fit_model errors can be caught and inspected", {
 
   # Catch the error
   result <- tryCatch(
-    fit_model(mod, n_iter = 100, n_chain = 1, verbose = FALSE),
+    fit_model(mod, n_iter = 500, n_chain = 1, verbose = FALSE),
     error = function(e) e
   )
 
@@ -211,7 +211,7 @@ test_that("fit_model errors contain the constructed model for inspection", {
   mod$standata <- NULL
 
   result <- tryCatch(
-    fit_model(mod, n_iter = 100, n_chain = 1, verbose = FALSE),
+    fit_model(mod, n_iter = 500, n_chain = 1, verbose = FALSE),
     error = function(e) e
   )
 
