@@ -237,7 +237,7 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
   total_results$pathogen <- "Total"
 
   measure_out <- dplyr::bind_rows(pathogen_results, total_results) |>
-    dplyr::arrange(pathogen != "Total", pathogen) |>
+    dplyr::arrange(.data$pathogen != "Total", .data$pathogen) |>
     cbind(time = components$time[selection_index])
 
   #' @srrstats {TS4.0, TS4.0b, TS4.2, TS4.3} Return values are in unified class,
