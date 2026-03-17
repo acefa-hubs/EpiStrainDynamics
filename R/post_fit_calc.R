@@ -177,7 +177,6 @@ transform_posterior_multi <- function(post, B_true, num_path, num_days) {
 #' @return Data frame with results for individual pathogens and totals
 #' @importFrom rstan extract
 #' @importFrom dplyr bind_rows arrange
-#' @importFrom rlang .data
 #'
 #' @examples
 #' \dontrun{
@@ -238,15 +237,15 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
   total_results$pathogen <- "Total"
 
   measure_out <- dplyr::bind_rows(pathogen_results, total_results) |>
-    dplyr::arrange(.data$pathogen != "Total", .data$pathogen) |>
+    dplyr::arrange(pathogen != "Total", pathogen) |>
     cbind(time = components$time[selection_index])
 
   #' @srrstats {TS4.0, TS4.0b, TS4.2, TS4.3} Return values are in unified class,
   #' which is documented.
   tsbl_measure <- tsibble::as_tsibble(
     measure_out,
-    index = .data$time,
-    key = .data$pathogen
+    index = "time",
+    key = "pathogen"
   )
 
   out <- list(measure = tsbl_measure,
@@ -320,7 +319,7 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
   tsbl_measure <- tsibble::tsibble(
     time = components$time[selection_index],
     results,
-    index = .data$time
+    index = "time"
   )
 
   out <- list(measure = tsbl_measure,
