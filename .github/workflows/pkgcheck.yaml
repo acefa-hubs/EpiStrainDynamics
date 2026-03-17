@@ -25,10 +25,4 @@ jobs:
         with:
           r-version: '4.5.2'
           use-public-rspm: true
-      - name: Clear R package cache
-        run: rm -rf ${{ env.R_LIBS_USER }}
-        shell: bash
-      - name: Install piggyback
-        run: sudo Rscript -e 'install.packages("piggyback", repos = "https://cloud.r-project.org")'
-        shell: bash
       - uses: ropensci-review-tools/pkgcheck-action@main
