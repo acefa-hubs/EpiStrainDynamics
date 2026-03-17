@@ -29,6 +29,6 @@ jobs:
         run: rm -rf ${{ env.R_LIBS_USER }}
         shell: bash
       - name: Install piggyback
-        run: install.packages("piggyback")
-        shell: Rscript {0}
+        run: sudo Rscript -e 'install.packages("piggyback", repos = "https://cloud.r-project.org")'
+        shell: bash
       - uses: ropensci-review-tools/pkgcheck-action@main
