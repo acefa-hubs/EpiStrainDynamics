@@ -1074,8 +1074,8 @@ validate_multi_cores <- function(multi_cores) {
 #' @return NULL (invisibly) if validation passes, otherwise stops with error
 #'   or issues warnings
 validate_mcmc_params_collective <- function(n_iter, n_warmup,
-                                            n_chain, thin = 1, seed = NULL) {
-
+                                            n_chain, thin = 1, seed = NULL,
+                                            suppress_warnings = FALSE) {
   # BS2.6: Cross-parameter validation - warmup must be less than total iterations
   if (n_warmup >= n_iter) {
     cli::cli_abort(
@@ -1086,43 +1086,46 @@ validate_mcmc_params_collective <- function(n_iter, n_warmup,
     )
   }
 
-  # BS2.6: Validate that thinning doesn't eliminate too many samples
-  effective_samples <- floor((n_iter - n_warmup) / thin) * n_chain
-  if (effective_samples < 100) {
-    cli::cli_warn(
-      c(
-        "Very few effective samples will be retained after thinning",
-        "i" = "With {.arg n_iter} = {n_iter}, {.arg n_warmup} = {n_warmup}, {.arg thin} = {thin}, and {.arg n_chain} = {n_chain}",
-        "i" = "Only {effective_samples} samples will be retained",
-        "i" = "Consider reducing {.arg thin} or increasing {.arg n_iter}"
+  if (!suppress_warnings) {
+    # BS2.6: Validate that thinning doesn't eliminate too many samples
+    effective_samples <- floor((n_iter - n_warmup) / thin) * n_chain
+    if (effective_samples < 100) {
+      cli::cli_warn(
+        c(
+          "Very few effective samples will be retained after thinning",
+          "i" = "With {.arg n_iter} = {n_iter}, {.arg n_warmup} = {n_warmup}, {.arg thin} = {thin}, and {.arg n_chain} = {n_chain}",
+          "i" = "Only {effective_samples} samples will be retained",
+          "i" = "Consider reducing {.arg thin} or increasing {.arg n_iter}"
+        )
       )
-    )
+    }
+
+    # BS2.6: Warn about extremely large iteration counts (long computation time)
+    if (n_iter > 20000) {
+      cli::cli_warn(
+        c(
+          "Large {.arg n_iter} may result in long computation times",
+          "i" = "Requested {n_iter} iterations",
+          "i" = "Consider starting with fewer iterations to assess computational burden"
+        )
+      )
+    }
+
+    # BS2.6: Warn if requesting more chains than available cores
+    n_cores <- parallel::detectCores(logical = FALSE)
+    if (!is.na(n_cores) && n_chain > n_cores) {
+      cli::cli_warn(
+        c(
+          "{.arg n_chain} exceeds available CPU cores",
+          "i" = "Requested {n_chain} chains but only {n_cores} cores detected",
+          "i" = "This may slow computation. Consider reducing {.arg n_chain} to {n_cores} or fewer"
+        )
+      )
+    }
   }
 
-  # BS2.6: Warn about extremely large iteration counts (long computation time)
-  if (n_iter > 20000) {
-    cli::cli_warn(
-      c(
-        "Large {.arg n_iter} may result in long computation times",
-        "i" = "Requested {n_iter} iterations",
-        "i" = "Consider starting with fewer iterations to assess computational burden"
-      )
-    )
-  }
-
-  # BS2.6: Warn if requesting more chains than available cores
-  n_cores <- parallel::detectCores(logical = FALSE)
-  if (!is.na(n_cores) && n_chain > n_cores) {
-    cli::cli_warn(
-      c(
-        "{.arg n_chain} exceeds available CPU cores",
-        "i" = "Requested {n_chain} chains but only {n_cores} cores detected",
-        "i" = "This may slow computation. Consider reducing {.arg n_chain} to {n_cores} or fewer"
-      )
-    )
-  }
-
-  # BS2.6: Validate seed if provided
+  # BS2.6: Validate seed if provided — errors and coercion warnings kept
+  # regardless of suppress_warnings since these indicate data issues
   if (!is.null(seed)) {
     if (!is.numeric(seed) || length(seed) != 1) {
       cli::cli_abort(
@@ -1132,11 +1135,9 @@ validate_mcmc_params_collective <- function(n_iter, n_warmup,
         )
       )
     }
-
     if (!is.finite(seed)) {
       cli::cli_abort("{.arg seed} must be a finite number")
     }
-
     if (seed != as.integer(seed)) {
       cli::cli_warn(
         c(

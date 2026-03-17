@@ -110,7 +110,8 @@ fit_model <- function (constructed_model,
   validate_verbose(verbose)
   validate_suppress_warnings(suppress_warnings)
   validate_multi_cores(multi_cores)
-  validate_mcmc_params_collective(n_iter, n_warmup, n_chain, thin, seed)
+  validate_mcmc_params_collective(n_iter, n_warmup, n_chain, thin, seed,
+                                  suppress_warnings = suppress_warnings)
 
   UseMethod("fit_model")
 }
