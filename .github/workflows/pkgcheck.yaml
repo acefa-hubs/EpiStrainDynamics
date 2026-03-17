@@ -14,7 +14,7 @@ jobs:
     permissions:
       issues: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Free Disk Space
         run: |
           sudo rm -rf /usr/share/dotnet
@@ -23,7 +23,11 @@ jobs:
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
       - uses: r-lib/actions/setup-r@v2
         with:
+          r-version: '4.5.2'
           use-public-rspm: true
+      - name: Clear R package cache
+        run: rm -rf ${{ env.R_LIBS_USER }}
+        shell: bash
       - name: Install piggyback
         run: install.packages("piggyback")
         shell: Rscript {0}
