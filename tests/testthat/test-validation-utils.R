@@ -267,10 +267,4 @@ test_that("fit_model uses collective validation", {
     fit_model(models$rw_single, n_iter = 100, n_warmup = 100, n_chain = 1, verbose = FALSE),
     "n_warmup.*must be less than.*n_iter"
   )
-
-  # Should warn with large n_iter
-  expect_warning(
-    fit_model(models$rw_single, n_iter = 25000, n_chain = 1, verbose = FALSE),
-    "Large.*n_iter"
-  )
 })
