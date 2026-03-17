@@ -161,74 +161,94 @@ validate_priors <- function(mean, sd) {
 #' @srrstats {G5.8, G5.8a} checks for zero length
 validate_smoothing_structure <- function(smoothing_obj, pathogen_names = NULL,
                                          pathogen_str) {
-  # Check if object has correct class
   if (!inherits(smoothing_obj, "EpiStrainDynamics.smoothing")) {
     stop("smoothing_params must be created using the smoothing_structure() function")
   }
 
-  if (pathogen_str == 'single' & smoothing_obj$smoothing_type != 'shared') {
-    smoothing_obj$smoothing_type <- 'shared'
+  smoothing_obj <- validate_smoothing_for_single(smoothing_obj, pathogen_str)
+  smoothing_obj <- validate_smoothing_independent(smoothing_obj, pathogen_names)
+  smoothing_obj <- validate_smoothing_shared(smoothing_obj)
+  smoothing_obj <- validate_smoothing_correlated(smoothing_obj)
+
+  return(smoothing_obj)
+}
+
+#' @noRd
+validate_smoothing_for_single <- function(smoothing_obj, pathogen_str) {
+  if (pathogen_str != "single") return(smoothing_obj)
+
+  if (smoothing_obj$smoothing_type != "shared") {
+    smoothing_obj$smoothing_type <- "shared"
     cli::cli_alert('smoothing_type can only be "shared" for "single" pathogen_type')
   }
-  if (pathogen_str == 'single' & is.null(smoothing_obj$tau_priors$mean)){
+  if (is.null(smoothing_obj$tau_priors$mean)) {
     smoothing_obj$tau_priors$mean <- 0.0
     smoothing_obj$tau_priors$sd <- 1.0
-    return(smoothing_obj)
   }
+  return(smoothing_obj)
+}
 
-  # For independent structure, validate and adjust dimensions
-  if (smoothing_obj$smoothing_type == "independent") {
-    if (is.null(pathogen_names)) {
-      stop("pathogen_names is required for 'independent' smoothing structure")
-    }
+#' @noRd
+validate_smoothing_independent <- function(smoothing_obj, pathogen_names) {
+  if (smoothing_obj$smoothing_type != "independent") return(smoothing_obj)
 
-    expected_dim <- length(pathogen_names)
-
-    # If no priors were provided (priors_provided = 1), create dummy values with correct dimensions
-    if (smoothing_obj$priors_provided == 1) {
-      smoothing_obj$tau_priors$mean <- rep(0.0, expected_dim)
-      smoothing_obj$tau_priors$sd <- rep(1.0, expected_dim)
-    } else {
-      # If priors were provided, validate and adjust dimensions
-      # Validate and adjust dimensions for mean
-      mean_dim <- length(smoothing_obj$tau_priors$mean)
-      if (mean_dim == 1 && expected_dim > 1) {
-        smoothing_obj$tau_priors$mean <- rep(smoothing_obj$tau_priors$mean, expected_dim)
-      } else if (mean_dim != expected_dim && mean_dim > 1) {
-        stop(sprintf(
-          "Length of tau_mean (%d) does not match number of pathogens (%d)",
-          mean_dim, expected_dim
-        ))
-      }
-
-      # Validate and adjust dimensions for sd
-      sd_dim <- length(smoothing_obj$tau_priors$sd)
-      if (sd_dim == 1 && expected_dim > 1) {
-        smoothing_obj$tau_priors$sd <- rep(smoothing_obj$tau_priors$sd, expected_dim)
-      } else if (sd_dim != expected_dim && sd_dim > 1) {
-        stop(sprintf(
-          "Length of tau_sd (%d) does not match number of pathogens (%d)",
-          sd_dim, expected_dim
-        ))
-      }
-    }
+  if (is.null(pathogen_names)) {
+    stop("pathogen_names is required for 'independent' smoothing structure")
   }
+  expected_dim <- length(pathogen_names)
 
-  # For shared structure with no priors, ensure values are 1-element arrays
-  if (smoothing_obj$smoothing_type == "shared" && smoothing_obj$priors_provided == 1) {
-    if (is.null(smoothing_obj$tau_priors$mean) || length(smoothing_obj$tau_priors$mean) == 0) {
-      smoothing_obj$tau_priors$mean <- array(0.0, dim = 1)
-      smoothing_obj$tau_priors$sd <- array(1.0, dim = 1)
-    }
+  if (smoothing_obj$priors_provided == 1) {
+    smoothing_obj$tau_priors$mean <- rep(0.0, expected_dim)
+    smoothing_obj$tau_priors$sd   <- rep(1.0, expected_dim)
+  } else {
+    smoothing_obj$tau_priors$mean <- validate_smoothing_dim(
+      smoothing_obj$tau_priors$mean, expected_dim, "tau_mean"
+    )
+    smoothing_obj$tau_priors$sd <- validate_smoothing_dim(
+      smoothing_obj$tau_priors$sd, expected_dim, "tau_sd"
+    )
   }
+  return(smoothing_obj)
+}
 
-  if (smoothing_obj$smoothing_type == "correlated" && smoothing_obj$priors_provided == 1) {
-    if (is.null(smoothing_obj$tau_priors$mean) || length(smoothing_obj$tau_priors$mean) == 0) {
-      smoothing_obj$tau_priors$mean <- numeric(0)
-      smoothing_obj$tau_priors$sd <- numeric(0)
-    }
+#' @noRd
+validate_smoothing_dim <- function(values, expected_dim, name) {
+  actual_dim <- length(values)
+  if (actual_dim == 1 && expected_dim > 1) {
+    return(rep(values, expected_dim))
   }
+  if (actual_dim != expected_dim && actual_dim > 1) {
+    stop(sprintf(
+      "Length of %s (%d) does not match number of pathogens (%d)",
+      name, actual_dim, expected_dim
+    ))
+  }
+  return(values)
+}
 
+#' @noRd
+validate_smoothing_shared <- function(smoothing_obj) {
+  if (smoothing_obj$smoothing_type != "shared") return(smoothing_obj)
+  if (smoothing_obj$priors_provided != 1) return(smoothing_obj)
+
+  if (is.null(smoothing_obj$tau_priors$mean) ||
+      length(smoothing_obj$tau_priors$mean) == 0) {
+    smoothing_obj$tau_priors$mean <- array(0.0, dim = 1)
+    smoothing_obj$tau_priors$sd   <- array(1.0, dim = 1)
+  }
+  return(smoothing_obj)
+}
+
+#' @noRd
+validate_smoothing_correlated <- function(smoothing_obj) {
+  if (smoothing_obj$smoothing_type != "correlated") return(smoothing_obj)
+  if (smoothing_obj$priors_provided != 1) return(smoothing_obj)
+
+  if (is.null(smoothing_obj$tau_priors$mean) ||
+      length(smoothing_obj$tau_priors$mean) == 0) {
+    smoothing_obj$tau_priors$mean <- numeric(0)
+    smoothing_obj$tau_priors$sd   <- numeric(0)
+  }
   return(smoothing_obj)
 }
 
