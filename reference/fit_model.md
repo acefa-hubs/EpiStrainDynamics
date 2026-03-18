@@ -139,7 +139,7 @@ fit_model(
 
   Numeric value between 0 and 1 indicating target average acceptance
   probability used in
-  [`rstan::sampling`](https://mc-stan.org/rstan/reference/stanmodel-method-sampling.html).
+  [`rstan::sampling`](https://rdrr.io/pkg/rstan/man/stanmodel-method-sampling.html).
   Default value is 0.9.
 
 - multi_cores:
@@ -169,7 +169,7 @@ fit_model(
 - ...:
 
   additional arguments to
-  [`rstan::sampling()`](https://mc-stan.org/rstan/reference/stanmodel-method-sampling.html),
+  [`rstan::sampling()`](https://rdrr.io/pkg/rstan/man/stanmodel-method-sampling.html),
   such as `init`
 
 ## Value
