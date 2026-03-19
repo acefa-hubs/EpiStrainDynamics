@@ -18,7 +18,10 @@ if (!requireNamespace("piggyback", quietly = TRUE)) {
   skip("Package 'piggyback' is required to download test fixtures. Install
        with install.packages('piggyback').")
 }
-
+# Bridge GITHUB_TOKEN to GITHUB_PAT for piggyback authentication
+if (nchar(Sys.getenv("GITHUB_TOKEN")) > 0 && nchar(Sys.getenv("GITHUB_PAT")) == 0) {
+  Sys.setenv(GITHUB_PAT = Sys.getenv("GITHUB_TOKEN"))
+}
 download_ok <- tryCatch({
   piggyback::pb_download(
     repo = "acefa-hubs/epistraindynamics",
