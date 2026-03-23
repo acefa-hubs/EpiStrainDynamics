@@ -114,24 +114,33 @@ fit_model(
 
 \item{n_chain}{number of MCMC chains, defaults to 4}
 
-\item{n_iter}{A positive integer specifying the number of iterations for each chain, default value is  2000}
+\item{n_iter}{A positive integer specifying the number of iterations for each
+chain, default value is 2000}
 
-\item{n_warmup}{A positive integer specifying the number of warmup iterations, default value is half the number of iterations}
+\item{n_warmup}{A positive integer specifying the number of warmup
+iterations,default value is half the number of iterations}
 
-\item{thin}{A positive integer specifying the period for saving samples, default value is 1.}
+\item{thin}{A positive integer specifying the period for saving samples,
+default value is 1.}
 
-\item{adapt_delta}{Numeric value between 0 and 1 indicating target average acceptance probability used in \code{rstan::sampling}. Default value is 0.9.}
+\item{adapt_delta}{Numeric value between 0 and 1 indicating target average
+acceptance probability used in \code{rstan::sampling}. Default value is 0.9.}
 
-\item{multi_cores}{A logical value indicating whether to parallelize chains with multiple cores, default is TRUE and uses all available cores - 1.}
+\item{multi_cores}{A logical value indicating whether to parallelize chains
+with multiple cores, default is TRUE and uses all available cores - 1.}
 
-\item{verbose}{Logical value controlling the verbosity of output. When TRUE (default),
-shows all messages, warnings, errors, and progress indicators. When FALSE, suppresses
-messages and progress while retaining warnings and errors.}
+\item{verbose}{Logical value controlling the verbosity of output. When TRUE
+(default), shows all messages, warnings, errors, and progress indicators.
+When FALSE, suppresses messages and progress while retaining warnings and
+errors.}
 
-\item{suppress_warnings}{Logical value indicating whether to suppress warnings from Stan.
-Default is FALSE. When TRUE, warnings are suppressed but errors are still raised.}
+\item{suppress_warnings}{Logical value indicating whether to suppress
+warnings from Stan. Default is FALSE. When TRUE, warnings are suppressed
+but errors are still raised.}
 
-\item{seed}{A positive integer seed used for random number generation in MCMC. Default is NULL, which means the seed is generated from 1 to the maximum integer supported by R.}
+\item{seed}{A positive integer seed used for random number generation in
+MCMC. Default is NULL, which means the seed is generated from 1 to the
+maximum integer supported by R.}
 
 \item{...}{additional arguments to \code{rstan::sampling()}, such as \code{init}}
 }
