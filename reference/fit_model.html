@@ -169,38 +169,47 @@
 
 
 <dt id="arg-n-iter">n_iter<a class="anchor" aria-label="anchor" href="#arg-n-iter"></a></dt>
-<dd><p>A positive integer specifying the number of iterations for each chain, default value is  2000</p></dd>
+<dd><p>A positive integer specifying the number of iterations for each
+chain, default value is 2000</p></dd>
 
 
 <dt id="arg-n-warmup">n_warmup<a class="anchor" aria-label="anchor" href="#arg-n-warmup"></a></dt>
-<dd><p>A positive integer specifying the number of warmup iterations, default value is half the number of iterations</p></dd>
+<dd><p>A positive integer specifying the number of warmup
+iterations,default value is half the number of iterations</p></dd>
 
 
 <dt id="arg-thin">thin<a class="anchor" aria-label="anchor" href="#arg-thin"></a></dt>
-<dd><p>A positive integer specifying the period for saving samples, default value is 1.</p></dd>
+<dd><p>A positive integer specifying the period for saving samples,
+default value is 1.</p></dd>
 
 
 <dt id="arg-adapt-delta">adapt_delta<a class="anchor" aria-label="anchor" href="#arg-adapt-delta"></a></dt>
-<dd><p>Numeric value between 0 and 1 indicating target average acceptance probability used in <code><a href="https://mc-stan.org/rstan/reference/stanmodel-method-sampling.html" class="external-link">rstan::sampling</a></code>. Default value is 0.9.</p></dd>
+<dd><p>Numeric value between 0 and 1 indicating target average
+acceptance probability used in <code><a href="https://mc-stan.org/rstan/reference/stanmodel-method-sampling.html" class="external-link">rstan::sampling</a></code>. Default value is 0.9.</p></dd>
 
 
 <dt id="arg-multi-cores">multi_cores<a class="anchor" aria-label="anchor" href="#arg-multi-cores"></a></dt>
-<dd><p>A logical value indicating whether to parallelize chains with multiple cores, default is TRUE and uses all available cores - 1.</p></dd>
+<dd><p>A logical value indicating whether to parallelize chains
+with multiple cores, default is TRUE and uses all available cores - 1.</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
-<dd><p>Logical value controlling the verbosity of output. When TRUE (default),
-shows all messages, warnings, errors, and progress indicators. When FALSE, suppresses
-messages and progress while retaining warnings and errors.</p></dd>
+<dd><p>Logical value controlling the verbosity of output. When TRUE
+(default), shows all messages, warnings, errors, and progress indicators.
+When FALSE, suppresses messages and progress while retaining warnings and
+errors.</p></dd>
 
 
 <dt id="arg-suppress-warnings">suppress_warnings<a class="anchor" aria-label="anchor" href="#arg-suppress-warnings"></a></dt>
-<dd><p>Logical value indicating whether to suppress warnings from Stan.
-Default is FALSE. When TRUE, warnings are suppressed but errors are still raised.</p></dd>
+<dd><p>Logical value indicating whether to suppress
+warnings from Stan. Default is FALSE. When TRUE, warnings are suppressed
+but errors are still raised.</p></dd>
 
 
 <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
-<dd><p>A positive integer seed used for random number generation in MCMC. Default is NULL, which means the seed is generated from 1 to the maximum integer supported by R.</p></dd>
+<dd><p>A positive integer seed used for random number generation in
+MCMC. Default is NULL, which means the seed is generated from 1 to the
+maximum integer supported by R.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

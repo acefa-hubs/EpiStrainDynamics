@@ -127,7 +127,7 @@ fit_model(
 
 - n_warmup:
 
-  A positive integer specifying the number of warmup iterations, default
+  A positive integer specifying the number of warmup iterations,default
   value is half the number of iterations
 
 - thin:

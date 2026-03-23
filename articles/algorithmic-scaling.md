@@ -290,10 +290,10 @@ knitr::kable(scaling_results, digits = 3,
 
 | method      | pathogen_structure | scaling_exponent | r_squared |
 |:------------|:-------------------|-----------------:|----------:|
-| p_spline    | multiple           |            1.008 |     0.996 |
-| p_spline    | single             |            0.844 |     0.991 |
-| random_walk | multiple           |            0.968 |     0.999 |
-| random_walk | single             |            0.875 |     0.981 |
+| p_spline    | multiple           |            1.019 |     0.997 |
+| p_spline    | single             |            0.846 |     0.991 |
+| random_walk | multiple           |            0.966 |     0.999 |
+| random_walk | single             |            0.878 |     0.982 |
 
 Scaling exponents: time complexity approximately O(n^exponent)
 
@@ -827,7 +827,7 @@ sessionInfo()
 #> [43] ragg_1.5.1            generics_0.1.4        otel_0.2.0           
 #> [46] RcppParallel_5.1.11-2 future.apply_1.20.2   cachem_1.1.0         
 #> [49] rstan_2.32.7          splines_4.5.3         bayesplot_1.15.0     
-#> [52] parallel_4.5.3        matrixStats_1.5.0     vctrs_0.7.1          
+#> [52] parallel_4.5.3        matrixStats_1.5.0     vctrs_0.7.2          
 #> [55] hardhat_1.4.2         Matrix_1.7-4          jsonlite_2.0.0       
 #> [58] listenv_0.10.1        systemfonts_1.3.2     gower_1.0.2          
 #> [61] jquerylib_0.1.4       tidyr_1.3.2           recipes_1.3.1        
@@ -839,6 +839,6 @@ sessionInfo()
 #> [79] textshaping_1.0.5     evaluate_1.0.5        lattice_0.22-9       
 #> [82] tsibble_1.2.0         bslib_0.10.0          rstantools_2.6.0     
 #> [85] class_7.3-23          Rcpp_1.1.1            gridExtra_2.3        
-#> [88] prodlim_2026.03.11    xfun_0.56             fs_1.6.7             
+#> [88] prodlim_2026.03.11    xfun_0.57             fs_2.0.0             
 #> [91] zoo_1.8-15            pkgconfig_2.0.3
 ```
