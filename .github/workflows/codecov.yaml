@@ -27,7 +27,8 @@ jobs:
             quiet = FALSE,
             type = 'tests',
             clean = FALSE,
-            install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package")
+            install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package"),
+            env_vars = c(GITHUB_PAT = Sys.getenv("GITHUB_PAT"))
           )
           covr::to_cobertura(cov)
         shell: Rscript {0}
