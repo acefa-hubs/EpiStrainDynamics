@@ -6,8 +6,8 @@ test_that("single() creates correct structure", {
 
   result <- single(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date'
+    case_timeseries = "cases",
+    time = "date"
   )
 
   expect_s3_class(result, "EpiStrainDynamics.pathogen_structure")
@@ -22,13 +22,13 @@ test_that("single() validates column existence and types", {
 
   # Test non-existent time column
   expect_error(
-    single(data = sarscov2, case_timeseries = 'cases', time = 'nonexistent'),
+    single(data = sarscov2, case_timeseries = "cases", time = "nonexistent"),
     "Column 'nonexistent' not found in data"
   )
 
   # Test non-existent case column
   expect_error(
-    single(data = sarscov2, case_timeseries = 'nonexistent', time = 'date'),
+    single(data = sarscov2, case_timeseries = "nonexistent", time = "date"),
     "Column 'nonexistent' not found in data"
   )
 
@@ -36,7 +36,7 @@ test_that("single() validates column existence and types", {
   test_data <- sarscov2
   test_data$text_col <- as.character(test_data$cases)
   expect_error(
-    single(data = test_data, case_timeseries = 'text_col', time = 'date'),
+    single(data = test_data, case_timeseries = "text_col", time = "date"),
     "numeric"
   )
 })
@@ -47,15 +47,15 @@ test_that("multiple() creates correct structure", {
 
   result <- multiple(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
   )
 
   # Test basic structure
   expect_s3_class(result, "EpiStrainDynamics.pathogen_structure")
   expect_equal(result$pathogen_structure, "multiple")
-  expect_equal(result$pathogen_names, c('alpha', 'delta', 'omicron', 'other'))
+  expect_equal(result$pathogen_names, c("alpha", "delta", "omicron", "other"))
 
   # Test data structure
   expect_equal(length(result$data$case_timeseries), nrow(sarscov2))
@@ -74,12 +74,12 @@ test_that("multiple() handles single component pathogen", {
 
   result <- multiple(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('alpha')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("alpha")
   )
 
-  expect_equal(result$pathogen_names, 'alpha')
+  expect_equal(result$pathogen_names, "alpha")
   expect_equal(nrow(result$data$component_pathogens), 1)
   expect_equal(ncol(result$data$component_pathogens), nrow(sarscov2))
   expect_equal(result$data$component_pathogens[1, ], sarscov2$alpha)
@@ -92,9 +92,9 @@ test_that("multiple() validates column existence and types", {
   expect_error(
     multiple(
       data = sarscov2,
-      case_timeseries = 'cases',
-      time = 'nonexistent',
-      component_pathogen_timeseries = c('alpha')
+      case_timeseries = "cases",
+      time = "nonexistent",
+      component_pathogen_timeseries = c("alpha")
     ),
     "Column 'nonexistent' not found in data"
   )
@@ -103,9 +103,9 @@ test_that("multiple() validates column existence and types", {
   expect_error(
     multiple(
       data = sarscov2,
-      case_timeseries = 'nonexistent',
-      time = 'date',
-      component_pathogen_timeseries = c('alpha')
+      case_timeseries = "nonexistent",
+      time = "date",
+      component_pathogen_timeseries = c("alpha")
     ),
     "Column 'nonexistent' not found in data"
   )
@@ -114,9 +114,9 @@ test_that("multiple() validates column existence and types", {
   expect_error(
     multiple(
       data = sarscov2,
-      case_timeseries = 'cases',
-      time = 'date',
-      component_pathogen_timeseries = c('alpha', 'nonexistent')
+      case_timeseries = "cases",
+      time = "date",
+      component_pathogen_timeseries = c("alpha", "nonexistent")
     ),
     "Column 'nonexistent' not found in data"
   )
@@ -127,9 +127,9 @@ test_that("multiple() validates column existence and types", {
   expect_error(
     multiple(
       data = test_data,
-      case_timeseries = 'cases',
-      time = 'date',
-      component_pathogen_timeseries = c('text_col')
+      case_timeseries = "cases",
+      time = "date",
+      component_pathogen_timeseries = c("text_col")
     ),
     "numeric"
   )
@@ -141,17 +141,17 @@ test_that("subtyped() creates correct structure", {
 
   result <- subtyped(
     data = influenza,
-    case_timeseries = 'ili',
-    time = 'week',
-    influenzaA_unsubtyped_timeseries = 'inf_A',
-    influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
-    other_pathogen_timeseries = c('inf_B', 'other')
+    case_timeseries = "ili",
+    time = "week",
+    influenzaA_unsubtyped_timeseries = "inf_A",
+    influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+    other_pathogen_timeseries = c("inf_B", "other")
   )
 
   # Test basic structure
   expect_s3_class(result, "EpiStrainDynamics.pathogen_structure")
   expect_equal(result$pathogen_structure, "subtyped")
-  expect_equal(result$pathogen_names, c('inf_H3N2', 'inf_H1N1', 'inf_B', 'other'))
+  expect_equal(result$pathogen_names, c("inf_H3N2", "inf_H1N1", "inf_B", "other"))
 
   # Test data structure
   expect_equal(length(result$data$case_timeseries), nrow(influenza))
@@ -166,15 +166,15 @@ test_that("subtyped() correctly orders and transposes pathogen data", {
 
   result <- subtyped(
     data = influenza,
-    case_timeseries = 'ili',
-    time = 'week',
-    influenzaA_unsubtyped_timeseries = 'inf_A',
-    influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
-    other_pathogen_timeseries = c('inf_B', 'other')
+    case_timeseries = "ili",
+    time = "week",
+    influenzaA_unsubtyped_timeseries = "inf_A",
+    influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+    other_pathogen_timeseries = c("inf_B", "other")
   )
 
   # Test pathogen name ordering
-  expect_equal(result$pathogen_names, c('inf_H3N2', 'inf_H1N1', 'inf_B', 'other'))
+  expect_equal(result$pathogen_names, c("inf_H3N2", "inf_H1N1", "inf_B", "other"))
 
   # Test matrix transposition for component_pathogens
   expect_equal(result$data$component_pathogens[1, ], influenza$inf_A)
@@ -192,11 +192,11 @@ test_that("subtyped() validates column existence and types", {
   expect_error(
     subtyped(
       data = influenza,
-      case_timeseries = 'ili',
-      time = 'nonexistent',
-      influenzaA_unsubtyped_timeseries = 'inf_A',
-      influenzaA_subtyped_timeseries = c('inf_H3N2'),
-      other_pathogen_timeseries = c('inf_B')
+      case_timeseries = "ili",
+      time = "nonexistent",
+      influenzaA_unsubtyped_timeseries = "inf_A",
+      influenzaA_subtyped_timeseries = c("inf_H3N2"),
+      other_pathogen_timeseries = c("inf_B")
     ),
     "Column 'nonexistent' not found in data"
   )
@@ -205,11 +205,11 @@ test_that("subtyped() validates column existence and types", {
   expect_error(
     subtyped(
       data = influenza,
-      case_timeseries = 'nonexistent',
-      time = 'week',
-      influenzaA_unsubtyped_timeseries = 'inf_A',
-      influenzaA_subtyped_timeseries = c('inf_H3N2'),
-      other_pathogen_timeseries = c('inf_B')
+      case_timeseries = "nonexistent",
+      time = "week",
+      influenzaA_unsubtyped_timeseries = "inf_A",
+      influenzaA_subtyped_timeseries = c("inf_H3N2"),
+      other_pathogen_timeseries = c("inf_B")
     ),
     "Column 'nonexistent' not found in data"
   )
@@ -218,11 +218,11 @@ test_that("subtyped() validates column existence and types", {
   expect_error(
     subtyped(
       data = influenza,
-      case_timeseries = 'ili',
-      time = 'week',
-      influenzaA_unsubtyped_timeseries = 'nonexistent',
-      influenzaA_subtyped_timeseries = c('inf_H3N2'),
-      other_pathogen_timeseries = c('inf_B')
+      case_timeseries = "ili",
+      time = "week",
+      influenzaA_unsubtyped_timeseries = "nonexistent",
+      influenzaA_subtyped_timeseries = c("inf_H3N2"),
+      other_pathogen_timeseries = c("inf_B")
     ),
     "Column 'nonexistent' not found in data"
   )
@@ -231,11 +231,11 @@ test_that("subtyped() validates column existence and types", {
   expect_error(
     subtyped(
       data = influenza,
-      case_timeseries = 'ili',
-      time = 'week',
-      influenzaA_unsubtyped_timeseries = 'inf_A',
-      influenzaA_subtyped_timeseries = c('nonexistent'),
-      other_pathogen_timeseries = c('inf_B')
+      case_timeseries = "ili",
+      time = "week",
+      influenzaA_unsubtyped_timeseries = "inf_A",
+      influenzaA_subtyped_timeseries = c("nonexistent"),
+      other_pathogen_timeseries = c("inf_B")
     ),
     "Column 'nonexistent' not found in data"
   )
@@ -244,11 +244,11 @@ test_that("subtyped() validates column existence and types", {
   expect_error(
     subtyped(
       data = influenza,
-      case_timeseries = 'ili',
-      time = 'week',
-      influenzaA_unsubtyped_timeseries = 'inf_A',
-      influenzaA_subtyped_timeseries = c('inf_H3N2'),
-      other_pathogen_timeseries = c('nonexistent')
+      case_timeseries = "ili",
+      time = "week",
+      influenzaA_unsubtyped_timeseries = "inf_A",
+      influenzaA_subtyped_timeseries = c("inf_H3N2"),
+      other_pathogen_timeseries = c("nonexistent")
     ),
     "Column 'nonexistent' not found in data"
   )
@@ -260,11 +260,11 @@ test_that("subtyped() validates column existence and types", {
   expect_error(
     subtyped(
       data = test_data,
-      case_timeseries = 'text_col',
-      time = 'week',
-      influenzaA_unsubtyped_timeseries = 'inf_A',
-      influenzaA_subtyped_timeseries = c('inf_H3N2'),
-      other_pathogen_timeseries = c('inf_B')
+      case_timeseries = "text_col",
+      time = "week",
+      influenzaA_unsubtyped_timeseries = "inf_A",
+      influenzaA_subtyped_timeseries = c("inf_H3N2"),
+      other_pathogen_timeseries = c("inf_B")
     ),
     "numeric"
   )
@@ -272,11 +272,11 @@ test_that("subtyped() validates column existence and types", {
   expect_error(
     subtyped(
       data = test_data,
-      case_timeseries = 'ili',
-      time = 'week',
-      influenzaA_unsubtyped_timeseries = 'text_col',
-      influenzaA_subtyped_timeseries = c('inf_H3N2'),
-      other_pathogen_timeseries = c('inf_B')
+      case_timeseries = "ili",
+      time = "week",
+      influenzaA_unsubtyped_timeseries = "text_col",
+      influenzaA_subtyped_timeseries = c("inf_H3N2"),
+      other_pathogen_timeseries = c("inf_B")
     ),
     "numeric"
   )
@@ -295,7 +295,7 @@ test_that("all pathogen structure functions handle missing data", {
 
   # Test single() with missing data
   expect_error(
-    single(data = test_sarscov2, case_timeseries = 'cases', time = 'date'),
+    single(data = test_sarscov2, case_timeseries = "cases", time = "date"),
     "missing|NA"
   )
 
@@ -303,9 +303,9 @@ test_that("all pathogen structure functions handle missing data", {
   expect_error(
     multiple(
       data = test_sarscov2,
-      case_timeseries = 'cases',
-      time = 'date',
-      component_pathogen_timeseries = c('alpha')
+      case_timeseries = "cases",
+      time = "date",
+      component_pathogen_timeseries = c("alpha")
     ),
     "missing|NA"
   )
@@ -316,9 +316,9 @@ test_that("all pathogen structure functions handle missing data", {
   expect_error(
     multiple(
       data = test_sarscov2_2,
-      case_timeseries = 'cases',
-      time = 'date',
-      component_pathogen_timeseries = c('alpha')
+      case_timeseries = "cases",
+      time = "date",
+      component_pathogen_timeseries = c("alpha")
     ),
     "missing|NA"
   )
@@ -327,11 +327,11 @@ test_that("all pathogen structure functions handle missing data", {
   expect_error(
     subtyped(
       data = test_influenza,
-      case_timeseries = 'ili',
-      time = 'week',
-      influenzaA_unsubtyped_timeseries = 'inf_A',
-      influenzaA_subtyped_timeseries = c('inf_H3N2'),
-      other_pathogen_timeseries = c('inf_B')
+      case_timeseries = "ili",
+      time = "week",
+      influenzaA_unsubtyped_timeseries = "inf_A",
+      influenzaA_subtyped_timeseries = c("inf_H3N2"),
+      other_pathogen_timeseries = c("inf_B")
     ),
     "missing|NA"
   )
@@ -344,8 +344,8 @@ test_that("all pathogen structure functions return required components", {
   # Test single() components
   single_result <- single(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date'
+    case_timeseries = "cases",
+    time = "date"
   )
 
   expect_true(all(c("pathogen_structure", "pathogen_names", "validated_tsbl",
@@ -356,9 +356,9 @@ test_that("all pathogen structure functions return required components", {
   # Test multiple() components
   multiple_result <- multiple(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('alpha', 'delta')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("alpha", "delta")
   )
 
   expect_true(all(c("pathogen_structure", "pathogen_names", "validated_tsbl",
@@ -370,11 +370,11 @@ test_that("all pathogen structure functions return required components", {
   # Test subtyped() components
   subtyped_result <- subtyped(
     data = influenza,
-    case_timeseries = 'ili',
-    time = 'week',
-    influenzaA_unsubtyped_timeseries = 'inf_A',
-    influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
-    other_pathogen_timeseries = c('inf_B')
+    case_timeseries = "ili",
+    time = "week",
+    influenzaA_unsubtyped_timeseries = "inf_A",
+    influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+    other_pathogen_timeseries = c("inf_B")
   )
 
   expect_true(all(c("pathogen_structure", "pathogen_names", "validated_tsbl",
@@ -390,7 +390,7 @@ test_that("pathogen structure functions handle edge cases correctly", {
 
   # Test with minimal valid data (small dataset)
   small_data <- data.frame(
-    date = as.Date('2020-01-01') + 0:4,
+    date = as.Date("2020-01-01") + 0:4,
     cases = c(10, 15, 20, 25, 30),
     variant_a = c(5, 8, 10, 12, 15),
     variant_b = c(5, 7, 10, 13, 15)
@@ -398,16 +398,16 @@ test_that("pathogen structure functions handle edge cases correctly", {
 
   result_single <- single(
     data = small_data,
-    case_timeseries = 'cases',
-    time = 'date'
+    case_timeseries = "cases",
+    time = "date"
   )
   expect_equal(length(result_single$data$case_timeseries), 5)
 
   result_multiple <- multiple(
     data = small_data,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('variant_a', 'variant_b')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("variant_a", "variant_b")
   )
   expect_equal(ncol(result_multiple$data$component_pathogens), 5)
   expect_equal(nrow(result_multiple$data$component_pathogens), 2)

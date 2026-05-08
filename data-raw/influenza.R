@@ -1,6 +1,6 @@
 
 ## Loading the influenza data
-df <- read.csv('data-raw/aus_influenza_data.csv')
+df <- read.csv("data-raw/aus_influenza_data.csv")
 
 ## Selecting subset of data (2012-2023)
 # Set limits on dates to consider
@@ -12,8 +12,8 @@ df$week <- lubridate::dmy(df$week)
 df <- df[df$week < max_date & df$week >= min_date, ]
 df$other <- df$num_spec - df$inf_all
 
-cols <- c('ili', 'week', 'inf_A', 'inf_B',
-          'inf_H3N2', 'inf_H1N1', 'other')
+cols <- c("ili", "week", "inf_A", "inf_B",
+          "inf_H3N2", "inf_H1N1", "other")
 
 influenza <- df[order(df$week), cols]
 

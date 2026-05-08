@@ -75,8 +75,8 @@ test_that("construct_model() handles day-of-week effects correctly", {
   method <- random_walk()
   pathogen <- single(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date'
+    case_timeseries = "cases",
+    time = "date"
   )
 
   expected_length <- get_expected_data_lengths()$sarscov2_length
@@ -100,8 +100,8 @@ test_that("construct_model() validates inputs appropriately", {
   method <- random_walk()
   pathogen <- single(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date'
+    case_timeseries = "cases",
+    time = "date"
   )
 
   # Test invalid method class
@@ -129,9 +129,9 @@ test_that("smoothing parameters are correctly incorporated into standata", {
   method <- random_walk()
   pathogen <- multiple(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
   )
 
   # Test shared smoothing (default)
@@ -168,8 +168,8 @@ test_that("dispersion parameters are correctly incorporated into standata", {
   method <- random_walk()
   pathogen <- single(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date'
+    case_timeseries = "cases",
+    time = "date"
   )
 
   # Test default dispersion (no priors)
@@ -195,9 +195,9 @@ test_that("pathogen_noise parameter is correctly incorporated into standata", {
   method <- random_walk()
   pathogen <- multiple(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('alpha', 'delta')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("alpha", "delta")
   )
 
   # Test pathogen_noise = FALSE (default)
@@ -428,9 +428,9 @@ test_that("Custom model construction with specific parameters", {
   method <- p_spline(spline_degree = 4, days_per_knot = 2)
   pathogen <- multiple(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('alpha', 'delta', 'omicron')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("alpha", "delta", "omicron")
   )
 
   result <- construct_model(
@@ -446,6 +446,6 @@ test_that("Custom model construction with specific parameters", {
   expect_equal(result$standata$week_effect, 7L)
   expect_equal(result$standata$cov_structure, 2)  # correlated
   expect_equal(result$standata$noise_structure, 1)  # pathogen noise = TRUE
-  expect_equal(result$pathogen_names, c('alpha', 'delta', 'omicron'))
+  expect_equal(result$pathogen_names, c("alpha", "delta", "omicron"))
   expect_true(result$dow_effect)
 })

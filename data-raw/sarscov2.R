@@ -3,9 +3,9 @@ min_date <- as.Date("2020-06-01")
 max_date <- as.Date("2022-12-31")
 
 # Load the UK COVID data from dashboard
-df1a <- read.csv('data-raw/newCasesBySpecimenDate_nation_2020.csv')
-df1b <- read.csv('data-raw/newCasesBySpecimenDate_nation_2021.csv')
-df1c <- read.csv('data-raw/newCasesBySpecimenDate_nation_2022.csv')
+df1a <- read.csv("data-raw/newCasesBySpecimenDate_nation_2020.csv")
+df1b <- read.csv("data-raw/newCasesBySpecimenDate_nation_2021.csv")
+df1c <- read.csv("data-raw/newCasesBySpecimenDate_nation_2022.csv")
 df1 <- rbind(df1a, df1b, df1c)
 df1 <- df1[df1$date >= min_date & df1$date <= max_date, ]
 
@@ -20,7 +20,7 @@ for (i in seq_along(unique(df1$date))) {
 }
 
 # Load the variant data available from Lythgoe et al and format
-df1S <- read.csv('data-raw/SampleInfo.csv')
+df1S <- read.csv("data-raw/SampleInfo.csv")
 df1S <- df1S[df1S$major_lineage != "Unassingned", ]
 
 lineages_considered <- c(
@@ -73,7 +73,7 @@ df <- df |>
     other = B.1.177 + XBB + Other
   )
 
-cols <- c('date', 'cases', 'alpha', 'delta', 'omicron', 'other')
+cols <- c("date", "cases", "alpha", "delta", "omicron", "other")
 
 # Include data after threshold for number of variants determined per day is
 # reached

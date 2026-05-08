@@ -48,43 +48,43 @@
 #'   fit <- fit_model(mod)
 #'   gr <- growth_rate(fit)
 growth_rate <- function(fitted_model, ...) {
-  validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')
+  validate_class_inherits(fitted_model, "EpiStrainDynamics.fit")
   UseMethod("growth_rate")
 }
 
 #' @rdname growth_rate
 #' @export
 growth_rate.ps <- function(fitted_model, ...) {
-  out <- compute_multi_pathogen(fitted_model, 2, 'growth_rate',
+  out <- compute_multi_pathogen(fitted_model, 2, "growth_rate",
                                 threshold = 0, use_splines = TRUE)
-  class(out) <- c('growth_rate', 'EpiStrainDynamics.metric', class(out))
+  class(out) <- c("growth_rate", "EpiStrainDynamics.metric", class(out))
   out
 }
 
 #' @rdname growth_rate
 #' @export
 growth_rate.rw <- function(fitted_model, ...) {
-  out <- compute_multi_pathogen(fitted_model, 2, 'growth_rate',
+  out <- compute_multi_pathogen(fitted_model, 2, "growth_rate",
                                 threshold = 0, use_splines = FALSE)
-  class(out) <- c('growth_rate', 'EpiStrainDynamics.metric', class(out))
+  class(out) <- c("growth_rate", "EpiStrainDynamics.metric", class(out))
   out
 }
 
 #' @rdname growth_rate
 #' @export
 growth_rate.ps_single <- function(fitted_model, ...) {
-  out <- compute_single_pathogen(fitted_model, 2, 'growth_rate',
+  out <- compute_single_pathogen(fitted_model, 2, "growth_rate",
                                  threshold = 0, use_splines = TRUE)
-  class(out) <- c('growth_rate', 'EpiStrainDynamics.metric', class(out))
+  class(out) <- c("growth_rate", "EpiStrainDynamics.metric", class(out))
   out
 }
 
 #' @rdname growth_rate
 #' @export
 growth_rate.rw_single <- function(fitted_model, ...) {
-  out <- compute_single_pathogen(fitted_model, 2, 'growth_rate',
+  out <- compute_single_pathogen(fitted_model, 2, "growth_rate",
                                  threshold = 0, use_splines = FALSE)
-  class(out) <- c('growth_rate', 'EpiStrainDynamics.metric', class(out))
+  class(out) <- c("growth_rate", "EpiStrainDynamics.metric", class(out))
   out
 }
 
@@ -118,11 +118,14 @@ calc_growth_single <- function(a, time_idx, pathogen_idx, post, components) {
 #'
 #' Computes log-difference in incidence for a specific pathogen
 #'
-#' @param a Array of log-incidence posterior samples \code{[samples, pathogens, time]}
+#' @param a Array of log-incidence posterior samples \code{[samples, pathogens,
+#'  time]}
 #' @param time_idx Integer time index
 #' @param pathogen_idx Integer pathogen index
-#' @param post Posterior samples object (unused but required for interface consistency)
-#' @param components Model components (unused but required for interface consistency)
+#' @param post Posterior samples object (unused but required for interface
+#'  consistency)
+#' @param components Model components (unused but required for interface
+#' consistency)
 #'
 #' @return Vector of growth rate posterior samples
 #' @noRd
@@ -138,7 +141,8 @@ calc_growth_individual <- function(a, time_idx, pathogen_idx, post, components) 
 #'
 #' Computes log-difference in total incidence across all pathogens
 #'
-#' @param a Array of log-incidence posterior samples \code{[samples, pathogens, time]}
+#' @param a Array of log-incidence posterior samples \code{[samples, pathogens,
+#'  time]}
 #' @param time_idx Integer time index
 #' @param pathogen_idx NULL (unused but required for interface consistency)
 #' @param post Posterior samples object (unused but required for interface consistency)

@@ -106,7 +106,7 @@ fit_model <- function (constructed_model,
                        seed = NULL, ...) {
 
   # validate inputs
-  validate_class_inherits(constructed_model, 'EpiStrainDynamics.model')
+  validate_class_inherits(constructed_model, "EpiStrainDynamics.model")
   validate_n_chain(n_chain)
   validate_n_iter(n_iter)
   validate_n_warmup(n_warmup)
@@ -210,7 +210,7 @@ fit_model.rw_subtyped <- function (constructed_model,
                 thin = thin
               ))
 
-  class(out) <- c('rw', 'EpiStrainDynamics.fit', class(out))
+  class(out) <- c("rw", "EpiStrainDynamics.fit", class(out))
   return(out)
 }
 
@@ -286,7 +286,7 @@ fit_model.ps_subtyped <- function (constructed_model,
                 thin = thin
               ))
 
-  class(out) <- c('ps', 'EpiStrainDynamics.fit', class(out))
+  class(out) <- c("ps", "EpiStrainDynamics.fit", class(out))
 
   return(out)
 }
@@ -363,7 +363,7 @@ fit_model.rw_multiple <- function (constructed_model,
                 thin = thin
               ))
 
-  class(out) <- c('rw', 'EpiStrainDynamics.fit', class(out))
+  class(out) <- c("rw", "EpiStrainDynamics.fit", class(out))
   return(out)
 }
 
@@ -439,7 +439,7 @@ fit_model.ps_multiple <- function (constructed_model,
                 thin = thin
               ))
 
-  class(out) <- c('ps', 'EpiStrainDynamics.fit', class(out))
+  class(out) <- c("ps", "EpiStrainDynamics.fit", class(out))
   return(out)
 }
 
@@ -515,7 +515,7 @@ fit_model.rw_single <- function (constructed_model,
                 thin = thin
               ))
 
-  class(out) <- c('rw_single', 'EpiStrainDynamics.fit', class(out))
+  class(out) <- c("rw_single", "EpiStrainDynamics.fit", class(out))
   return(out)
 }
 
@@ -591,6 +591,6 @@ fit_model.ps_single <- function (constructed_model,
                 thin = thin
               ))
 
-  class(out) <- c('ps_single', 'EpiStrainDynamics.fit', class(out))
+  class(out) <- c("ps_single", "EpiStrainDynamics.fit", class(out))
   return(out)
 }

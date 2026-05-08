@@ -32,14 +32,14 @@
 #'   fit <- fit_model(mod)
 #'   gr <- growth_rate(mod)
 #'   plot(gr)
-plot <- function(df, xlab = 'Time', ...) {
-  validate_class_inherits(df, 'EpiStrainDynamics.metric')
+plot <- function(df, xlab = "Time", ...) {
+  validate_class_inherits(df, "EpiStrainDynamics.metric")
   UseMethod("plot")
 }
 
 #' @rdname plot
 #' @export
-plot.incidence <- function(df, xlab = 'Time', ...) {
+plot.incidence <- function(df, xlab = "Time", ...) {
 
   measure_df <- df$measure
 
@@ -54,7 +54,7 @@ plot.incidence <- function(df, xlab = 'Time', ...) {
 
   tsbl <- df$constructed_model$validated_tsbl
   time_col <- tsibble::index_var(tsbl)
-  input_data <- tsbl[, c(time_col, 'case_timeseries')]
+  input_data <- tsbl[, c(time_col, "case_timeseries")]
 
   ggplot2::ggplot(measure_df) +
     ggplot2::geom_line(ggplot2::aes(x = .data$time,
@@ -93,7 +93,7 @@ plot.incidence <- function(df, xlab = 'Time', ...) {
 
 #' @rdname plot
 #' @export
-plot.growth_rate <- function(df, xlab = 'Time', ...) {
+plot.growth_rate <- function(df, xlab = "Time", ...) {
 
   measure_df <- df$measure
 
@@ -156,7 +156,7 @@ plot.growth_rate <- function(df, xlab = 'Time', ...) {
 
 #' @rdname plot
 #' @export
-plot.Rt <- function(df, xlab = 'Time', ...) {
+plot.Rt <- function(df, xlab = "Time", ...) {
 
   measure_df <- df$measure
 
@@ -198,7 +198,7 @@ plot.Rt <- function(df, xlab = 'Time', ...) {
 
 #' @rdname plot
 #' @export
-plot.proportion <- function(df, xlab = 'Time', ...) {
+plot.proportion <- function(df, xlab = "Time", ...) {
 
   measure_df <- df$measure
 

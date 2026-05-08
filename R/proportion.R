@@ -71,20 +71,20 @@
 #'
 #'   # or a unique combination, compared to all pathogens
 #'   prop2 <- proportion(fit,
-#'     numerator_combination = c('alpha', 'delta', 'omicron')
+#'     numerator_combination = c("alpha", "delta", "omicron")
 #'   )
 #'
 #'   # or a user-specified combination in both numerator and denominator
 #'   prop3 <- proportion(fit,
-#'     numerator_combination = 'alpha',
-#'     denominator_combination = c('alpha', 'delta', 'omicron')
+#'     numerator_combination = "alpha",
+#'     denominator_combination = c("alpha", "delta", "omicron")
 #'   )
 proportion <- function(fitted_model,
                        numerator_combination = NULL,
                        denominator_combination = NULL, ...) {
 
-  validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')
-  validate_class_inherits(fitted_model, c('ps', 'rw'), require_all = FALSE)
+  validate_class_inherits(fitted_model, "EpiStrainDynamics.fit")
+  validate_class_inherits(fitted_model, c("ps", "rw"), require_all = FALSE)
 
   # Validate combination arguments
   pathogen_names <- unique(fitted_model$constructed_model$pathogen_names)
@@ -93,7 +93,7 @@ proportion <- function(fitted_model,
   denom_idx <- validate_pathogen_combination(
     denominator_combination, pathogen_names, "denominator_combination")
 
-  use_splines <- ifelse(inherits(fitted_model, 'ps'), TRUE, FALSE)
+  use_splines <- ifelse(inherits(fitted_model, "ps"), TRUE, FALSE)
   path_names <- fitted_model$constructed_model$pathogen_names
 
   if (is.null(numerator_combination)) {
@@ -119,7 +119,7 @@ proportion <- function(fitted_model,
               fit = fitted_model$fit,
               constructed_model = fitted_model$constructed_model
   )
-  class(out) <- c('proportion', 'EpiStrainDynamics.metric', class(out))
+  class(out) <- c("proportion", "EpiStrainDynamics.metric", class(out))
   out
 }
 
@@ -177,7 +177,7 @@ compute_proportion <- function(fitted_model,
   pathogen_names_vec <- components$pathogen_names
   measure$pathogen <- apply(measure$pathogen, 1,
                             function(x) paste(pathogen_names_vec[x],
-                                              collapse = ', ')
+                                              collapse = ", ")
   )
 
   return(measure)

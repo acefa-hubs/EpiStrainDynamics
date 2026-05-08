@@ -20,10 +20,10 @@
 #' @examples random_walk()
 random_walk <- function () {
   model_inputs <- list(
-    method = 'random-walk'
+    method = "random-walk"
   )
 
-  class(model_inputs) <- 'EpiStrainDynamics.method'
+  class(model_inputs) <- "EpiStrainDynamics.method"
   return(model_inputs)
 }
 
@@ -76,12 +76,12 @@ p_spline <- function (spline_degree = 3,
 
   #' @srrstats {G2.4a} explicit conversion to `integer` via `as.integer()`
   model_inputs <- list(
-    method = 'p-spline',
+    method = "p-spline",
     model_params = list(
       spline_degree = as.integer(spline_degree),
       days_per_knot = as.integer(days_per_knot)
     )
   )
-  class(model_inputs) <- 'EpiStrainDynamics.method'
+  class(model_inputs) <- "EpiStrainDynamics.method"
   return(model_inputs)
 }

@@ -426,7 +426,7 @@ test_that("intake functions work with construct_model()", {
                                             "omicron", "other")
         ),
         smoothing_params = smoothing_structure(
-          'independent',
+          "independent",
           tau_mean = rep(0, 4),
           tau_sd = rep(1, 4)
         ),
@@ -451,7 +451,7 @@ test_that("intake functions work with construct_model()", {
                                             "omicron", "other")
         ),
         smoothing_params = smoothing_structure(
-          'independent',
+          "independent",
           tau_mean = rep(0, 4),
           tau_sd = rep(1, 4)
         ),

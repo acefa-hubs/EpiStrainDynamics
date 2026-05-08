@@ -40,24 +40,24 @@ create_test_models <- function() {
   # Base pathogen structures (reused across models)
   single_struct <- single(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date'
+    case_timeseries = "cases",
+    time = "date"
   )
 
   multiple_struct <- multiple(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
   )
 
   subtyped_struct <- subtyped(
     data = influenza,
-    case_timeseries = 'ili',
-    time = 'week',
-    influenzaA_unsubtyped_timeseries = 'inf_A',
-    influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
-    other_pathogen_timeseries = c('inf_B', 'other')
+    case_timeseries = "ili",
+    time = "week",
+    influenzaA_unsubtyped_timeseries = "inf_A",
+    influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+    other_pathogen_timeseries = c("inf_B", "other")
   )
 
   list(

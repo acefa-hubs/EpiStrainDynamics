@@ -86,13 +86,13 @@ This metric function can be run directly on the fitted model output.
 
   # or a unique combination, compared to all pathogens
   prop2 <- proportion(fit,
-    numerator_combination = c('alpha', 'delta', 'omicron')
+    numerator_combination = c("alpha", "delta", "omicron")
   )
 
   # or a user-specified combination in both numerator and denominator
   prop3 <- proportion(fit,
-    numerator_combination = 'alpha',
-    denominator_combination = c('alpha', 'delta', 'omicron')
+    numerator_combination = "alpha",
+    denominator_combination = c("alpha", "delta", "omicron")
   )
 \dontshow{\}) # examplesIf}
 }

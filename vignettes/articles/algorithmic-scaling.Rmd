@@ -152,16 +152,16 @@ for (n in data_sizes) {
   # Single pathogen structure
   single_struct <- single(
     data = test_data,
-    case_timeseries = 'cases',
-    time = 'date'
+    case_timeseries = "cases",
+    time = "date"
   )
   
   # Multiple pathogen structure
   multi_struct <- multiple(
     data = test_data,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('pathogen1', 'pathogen2', 'pathogen3', 'pathogen4')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("pathogen1", "pathogen2", "pathogen3", "pathogen4")
   )
   
   # Time single pathogen 
@@ -216,15 +216,15 @@ for (n in data_sizes) {
   
   single_struct <- single(
     data = test_data,
-    case_timeseries = 'cases',
-    time = 'date'
+    case_timeseries = "cases",
+    time = "date"
   )
   
   multi_struct <- multiple(
     data = test_data,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('pathogen1', 'pathogen2', 'pathogen3', 'pathogen4')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("pathogen1", "pathogen2", "pathogen3", "pathogen4")
   )
   
   # Time single pathogen
@@ -322,9 +322,9 @@ model <- construct_model(
   method = random_walk(),
   pathogen_structure = multiple(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
   )
 )
 
@@ -332,7 +332,7 @@ fit <- fit_model(model, n_chain = 2, n_iter = 1000, verbose = FALSE)
 
 # Extract incidence (predicted values)
 inc <- incidence(fit, dow = FALSE)
-inc_total <- inc$measure[inc$measure$pathogen == 'Total', ]
+inc_total <- inc$measure[inc$measure$pathogen == "Total", ]
 
 # Compare scales
 input_summary <- data.frame(
@@ -416,8 +416,8 @@ for (scale in test_scales) {
     method = random_walk(),
     pathogen_structure = single(
       data = test_data,
-      case_timeseries = 'cases',
-      time = 'date'
+      case_timeseries = "cases",
+      time = "date"
     )
   )
   
@@ -469,16 +469,16 @@ model_original <- construct_model(
   method = random_walk(),
   pathogen_structure = multiple(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
   )
 )
 
 fit_original <- fit_model(model_original, n_chain = 2, n_iter = 1000, 
                           seed = 54321, verbose = FALSE)
 inc_original <- incidence(fit_original, dow = FALSE)
-inc_original_total <- inc_original$measure[inc_original$measure$pathogen == 'Total', ]
+inc_original_total <- inc_original$measure[inc_original$measure$pathogen == "Total", ]
 
 # Test with different noise levels 
 noise_levels <- c(0.05, 0.1)  # 5%, 10% noise relative to mean
@@ -495,7 +495,7 @@ for (noise_level in noise_levels) {
   sarscov2_noisy <- sarscov2
   sarscov2_noisy$cases <- noisy_cases
   
-  for (pathogen in c('alpha', 'delta', 'omicron', 'other')) {
+  for (pathogen in c("alpha", "delta", "omicron", "other")) {
     sarscov2_noisy[[pathogen]] <- pmax(0, round(
       sarscov2[[pathogen]] + rnorm(length(sarscov2[[pathogen]]), 
                                    mean = 0, 
@@ -508,9 +508,9 @@ for (noise_level in noise_levels) {
     method = random_walk(),
     pathogen_structure = multiple(
       data = sarscov2_noisy,
-      case_timeseries = 'cases',
-      time = 'date',
-      component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+      case_timeseries = "cases",
+      time = "date",
+      component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
     )
   )
   
@@ -519,7 +519,7 @@ for (noise_level in noise_levels) {
   inc_noisy <- incidence(fit_noisy, dow = FALSE)
   
   noise_results[[as.character(noise_level)]] <- 
-    inc_noisy$measure[inc_noisy$measure$pathogen == 'Total', ]
+    inc_noisy$measure[inc_noisy$measure$pathogen == "Total", ]
 }
 ```
 
@@ -624,15 +624,15 @@ fit_with_seed <- function(seed) {
     method = random_walk(),
     pathogen_structure = multiple(
       data = sarscov2,
-      case_timeseries = 'cases',
-      time = 'date',
-      component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+      case_timeseries = "cases",
+      time = "date",
+      component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
     )
   )
   
   fit <- fit_model(model, n_chain = 2, n_iter = 1000, verbose = FALSE)
   inc <- incidence(fit, dow = FALSE)
-  inc$measure[inc$measure$pathogen == 'Total', ]
+  inc$measure[inc$measure$pathogen == "Total", ]
 }
 
 # Fit with different seeds

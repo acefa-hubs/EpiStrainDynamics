@@ -64,7 +64,7 @@
 #'   # Explicitly include dow effects (if model has them)
 #'   inc_with_dow <- incidence(fit, dow = TRUE)
 incidence <- function(fitted_model, dow = NULL, ...) {
-  validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')
+  validate_class_inherits(fitted_model, "EpiStrainDynamics.fit")
   UseMethod("incidence")
 }
 
@@ -74,9 +74,9 @@ incidence.ps <- function(fitted_model, dow = NULL, ...) {
   # Resolve and validate dow
   dow <- resolve_dow(fitted_model, dow)
 
-  out <- compute_multi_pathogen(fitted_model, 1, 'incidence',
+  out <- compute_multi_pathogen(fitted_model, 1, "incidence",
                                 threshold = 0, use_splines = TRUE, dow)
-  class(out) <- c('incidence', 'EpiStrainDynamics.metric', class(out))
+  class(out) <- c("incidence", "EpiStrainDynamics.metric", class(out))
   out
 }
 
@@ -86,9 +86,9 @@ incidence.rw <- function(fitted_model, dow = NULL, ...) {
   # Resolve and validate dow
   dow <- resolve_dow(fitted_model, dow)
 
-  out <- compute_multi_pathogen(fitted_model, 1, 'incidence',
+  out <- compute_multi_pathogen(fitted_model, 1, "incidence",
                                 threshold = 0, use_splines = FALSE, dow)
-  class(out) <- c('incidence', 'EpiStrainDynamics.metric', class(out))
+  class(out) <- c("incidence", "EpiStrainDynamics.metric", class(out))
   out
 }
 
@@ -98,9 +98,9 @@ incidence.ps_single <- function(fitted_model, dow = NULL, ...) {
   # Resolve and validate dow
   dow <- resolve_dow(fitted_model, dow)
 
-  out <- compute_single_pathogen(fitted_model, 1, 'incidence',
+  out <- compute_single_pathogen(fitted_model, 1, "incidence",
                                  threshold = 0, use_splines = TRUE, dow)
-  class(out) <- c('incidence', 'EpiStrainDynamics.metric', class(out))
+  class(out) <- c("incidence", "EpiStrainDynamics.metric", class(out))
   out
 }
 
@@ -110,9 +110,9 @@ incidence.rw_single <- function(fitted_model, dow = NULL, ...) {
   # Resolve and validate dow
   dow <- resolve_dow(fitted_model, dow)
 
-  out <- compute_single_pathogen(fitted_model, 1, 'incidence',
+  out <- compute_single_pathogen(fitted_model, 1, "incidence",
                                  threshold = 0, use_splines = FALSE, dow)
-  class(out) <- c('incidence', 'EpiStrainDynamics.metric', class(out))
+  class(out) <- c("incidence", "EpiStrainDynamics.metric", class(out))
   out
 }
 

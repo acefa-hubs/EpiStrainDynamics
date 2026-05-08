@@ -47,7 +47,7 @@
 #'                                     tau_sd = c(1, 1, 1))
 #'
 #' @export
-smoothing_structure <- function(smoothing_type = 'shared',
+smoothing_structure <- function(smoothing_type = "shared",
                                 tau_mean = NULL,
                                 tau_sd = NULL) {
 
@@ -88,7 +88,7 @@ smoothing_structure <- function(smoothing_type = 'shared',
     priors_provided = priors_provided
   )
 
-  class(smooth_obj) <- c('EpiStrainDynamics.smoothing', class(smooth_obj))
+  class(smooth_obj) <- c("EpiStrainDynamics.smoothing", class(smooth_obj))
   return(smooth_obj)
 }
 
@@ -134,7 +134,8 @@ dispersion_structure <- function(phi_mean = NULL, phi_sd = NULL) {
 
     # Check scalar
     if (length(disp_priors$mean) > 1 || length(disp_priors$sd) > 1) {
-      cli::cli_abort("Only one value for {.var phi_mean} and {.var phi_sd} expected.")
+      cli::cli_abort("Only one value for {.var phi_mean} and {.var phi_sd}
+                     expected.")
     }
   }
 
@@ -145,7 +146,7 @@ dispersion_structure <- function(phi_mean = NULL, phi_sd = NULL) {
     priors_provided = priors_provided
   )
 
-  class(disp_obj) <- c('EpiStrainDynamics.dispersion', class(disp_obj))
+  class(disp_obj) <- c("EpiStrainDynamics.dispersion", class(disp_obj))
   return(disp_obj)
 }
 

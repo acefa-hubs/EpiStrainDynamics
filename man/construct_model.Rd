@@ -20,7 +20,7 @@ construct_model(
 
 \item{smoothing_params}{argument is optional and defines the structure of the
 smoothing terms including optionally setting the smoothing prior tau.
-Created with \code{smoothing_structure()}. NULL option defaults to 'shared'
+Created with \code{smoothing_structure()}. NULL option defaults to "shared"
 smoothing structure and default priors.}
 
 \item{dispersion_params}{argument is optional and defines priors for the
@@ -49,13 +49,13 @@ mod <- construct_model(
 
   pathogen_structure = multiple(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
     ),
 
    smoothing_params = smoothing_structure(
-      'independent', tau_mean = c(0, 0.1, 0.3, 0), tau_sd = rep(1, times = 4)),
+      "independent", tau_mean = c(0, 0.1, 0.3, 0), tau_sd = rep(1, times = 4)),
    dispersion_params = dispersion_structure(phi_mean = 0, phi_sd = 1),
    pathogen_noise = FALSE,
    dow_effect = TRUE

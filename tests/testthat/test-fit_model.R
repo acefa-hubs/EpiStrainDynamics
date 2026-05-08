@@ -66,8 +66,8 @@ test_that("fit_model() validates MCMC parameters", {
     method = random_walk(),
     pathogen_structure = single(
       data = test_data,
-      case_timeseries = 'cases',
-      time = 'dates'
+      case_timeseries = "cases",
+      time = "dates"
     )
   )
 
@@ -95,8 +95,8 @@ test_that("fit_model() returns correct structure for single pathogen RW", {
     method = random_walk(),
     pathogen_structure = single(
       data = test_data,
-      case_timeseries = 'cases',
-      time = 'dates'
+      case_timeseries = "cases",
+      time = "dates"
     )
   )
 
@@ -123,8 +123,8 @@ test_that("fit_model() returns correct structure for single pathogen PS", {
     method = p_spline(),
     pathogen_structure = single(
       data = test_data,
-      case_timeseries = 'cases',
-      time = 'dates'
+      case_timeseries = "cases",
+      time = "dates"
     )
   )
 
@@ -144,9 +144,9 @@ test_that("fit_model() returns correct structure for multiple pathogen RW", {
     method = random_walk(),
     pathogen_structure = multiple(
       data = test_data,
-      case_timeseries = 'total',
-      time = 'dates',
-      component_pathogen_timeseries = c('var1', 'var2', 'var3', 'var4')
+      case_timeseries = "total",
+      time = "dates",
+      component_pathogen_timeseries = c("var1", "var2", "var3", "var4")
     )
   )
 
@@ -166,9 +166,9 @@ test_that("fit_model() returns correct structure for multiple pathogen PS", {
     method = p_spline(),
     pathogen_structure = multiple(
       data = test_data,
-      case_timeseries = 'total',
-      time = 'dates',
-      component_pathogen_timeseries = c('var1', 'var2', 'var3', 'var4')
+      case_timeseries = "total",
+      time = "dates",
+      component_pathogen_timeseries = c("var1", "var2", "var3", "var4")
     )
   )
 
@@ -192,8 +192,8 @@ test_that("fit_model() respects n_chain parameter", {
     method = random_walk(),
     pathogen_structure = single(
       data = test_data,
-      case_timeseries = 'cases',
-      time = 'dates'
+      case_timeseries = "cases",
+      time = "dates"
     )
   )
 
@@ -212,8 +212,8 @@ test_that("fit_model() respects n_iter parameter", {
     method = random_walk(),
     pathogen_structure = single(
       data = test_data,
-      case_timeseries = 'cases',
-      time = 'dates'
+      case_timeseries = "cases",
+      time = "dates"
     )
   )
 
@@ -237,8 +237,8 @@ test_that("fitted model works with metric functions", {
     method = random_walk(),
     pathogen_structure = single(
       data = test_data,
-      case_timeseries = 'cases',
-      time = 'dates'
+      case_timeseries = "cases",
+      time = "dates"
     )
   )
 
@@ -257,7 +257,7 @@ test_that("fitted model works with metric functions", {
 
   # Should work with Rt
   gi_simple <- function(x) ifelse(x == 0, 0, 4 * x * exp(-2 * x))
-  expect_no_error(rt <- Rt(fit, tau_max = 7, gi_dist = gi_simple))
+  expect_no_error(rt <- Rt(fit, gi_dist = gi_simple, tau_max = 7))
   expect_s3_class(rt, "Rt")
 })
 
@@ -271,8 +271,8 @@ test_that("posterior samples have correct dimensions for single pathogen", {
     method = random_walk(),
     pathogen_structure = single(
       data = test_data,
-      case_timeseries = 'cases',
-      time = 'dates'
+      case_timeseries = "cases",
+      time = "dates"
     )
   )
 
@@ -283,7 +283,7 @@ test_that("posterior samples have correct dimensions for single pathogen", {
 
   post <- rstan::extract(fit$fit)
 
-  # Check 'a' dimension: [samples, time]
+  # Check "a" dimension: [samples, time]
   expect_equal(length(dim(post$a)), 2)
   expect_equal(ncol(post$a), 30)  # n_days
 
@@ -298,9 +298,9 @@ test_that("posterior samples have correct dimensions for multiple pathogens", {
     method = random_walk(),
     pathogen_structure = multiple(
       data = test_data,
-      case_timeseries = 'total',
-      time = 'dates',
-      component_pathogen_timeseries = c('var1', 'var2', 'var3', 'var4')
+      case_timeseries = "total",
+      time = "dates",
+      component_pathogen_timeseries = c("var1", "var2", "var3", "var4")
     )
   )
 
@@ -311,7 +311,7 @@ test_that("posterior samples have correct dimensions for multiple pathogens", {
 
   post <- rstan::extract(fit$fit)
 
-  # Check 'a' dimension: [samples, pathogens, time]
+  # Check "a" dimension: [samples, pathogens, time]
   expect_equal(length(dim(post$a)), 3)
   expect_equal(dim(post$a)[2], 4)   # n_pathogens
   expect_equal(dim(post$a)[3], 30)  # n_days
@@ -328,8 +328,8 @@ test_that("verbose = FALSE suppresses Stan output", {
     method = random_walk(),
     pathogen_structure = single(
       data = test_data,
-      case_timeseries = 'cases',
-      time = 'dates'
+      case_timeseries = "cases",
+      time = "dates"
     )
   )
 

@@ -4,7 +4,7 @@
 #' @param pathogen_structure either `single()`, `multiple()`, or `subtyped()`
 #' @param smoothing_params argument is optional and defines the structure of the
 #'   smoothing terms including optionally setting the smoothing prior tau.
-#'   Created with `smoothing_structure()`. NULL option defaults to 'shared'
+#'   Created with `smoothing_structure()`. NULL option defaults to "shared"
 #'   smoothing structure and default priors.
 #' @param dispersion_params argument is optional and defines priors for the
 #'   overdispersion parameter of the negative binomial likelihood for
@@ -36,13 +36,13 @@
 #'
 #'   pathogen_structure = multiple(
 #'     data = sarscov2,
-#'     case_timeseries = 'cases',
-#'     time = 'date',
-#'     component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+#'     case_timeseries = "cases",
+#'     time = "date",
+#'     component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
 #'     ),
 #'
 #'    smoothing_params = smoothing_structure(
-#'       'independent', tau_mean = c(0, 0.1, 0.3, 0), tau_sd = rep(1, times = 4)),
+#'       "independent", tau_mean = c(0, 0.1, 0.3, 0), tau_sd = rep(1, times = 4)),
 #'    dispersion_params = dispersion_structure(phi_mean = 0, phi_sd = 1),
 #'    pathogen_noise = FALSE,
 #'    dow_effect = TRUE
@@ -58,10 +58,10 @@ construct_model <- function(method,
 
   #' @srrstats {G2.1, G2.2, G5.8, G5.8b} assertions on types of inputs
   validate_class_inherits(
-    method, 'EpiStrainDynamics.method'
+    method, "EpiStrainDynamics.method"
   )
   validate_class_inherits(
-    pathogen_structure, 'EpiStrainDynamics.pathogen_structure'
+    pathogen_structure, "EpiStrainDynamics.pathogen_structure"
   )
   smoothing_params <- validate_smoothing_structure(
     smoothing_params, pathogen_structure$pathogen_names,
@@ -112,7 +112,7 @@ construct_model <- function(method,
                    phi_sd = dispersion_params$sd
   )
 
-  if (pathogen_structure$pathogen_structure == 'subtyped') {
+  if (pathogen_structure$pathogen_structure == "subtyped") {
     standata <- c(standata,
                   list(num_path = length(pathogen_names),
                        cov_structure = cov_structure,
@@ -122,7 +122,7 @@ construct_model <- function(method,
     )
   }
 
-  if (pathogen_structure$pathogen_structure == 'multiple') {
+  if (pathogen_structure$pathogen_structure == "multiple") {
     standata <- c(standata,
                   list(num_path = length(pathogen_names),
                        cov_structure = cov_structure,
@@ -131,7 +131,7 @@ construct_model <- function(method,
     )
   }
 
-  if (method$method == 'p-spline') {
+  if (method$method == "p-spline") {
     knots <- get_knots(
       time_seq,
       days_per_knot = method$model_params$days_per_knot,
@@ -161,7 +161,7 @@ construct_model <- function(method,
 
 #' Extract model type from method and pathogen structure
 #'
-#' @param method_name Character string: method name ('random-walk' or 'p-spline')
+#' @param method_name Character string: method name ("random-walk" or "p-spline")
 #' @param pathogen_type Character string: pathogen structure type
 #'
 #' @noRd
@@ -173,8 +173,8 @@ construct_model <- function(method,
 get_model_type <- function(method_name, pathogen_type) {
 
   # Input validation
-  valid_methods <- c('random-walk', 'p-spline')
-  valid_pathogens <- c('single', 'multiple', 'subtyped')
+  valid_methods <- c("random-walk", "p-spline")
+  valid_pathogens <- c("single", "multiple", "subtyped")
 
   if (!method_name %in% valid_methods) {
     valid_methods_pasted <- paste(valid_methods, collapse = ", ")
@@ -194,10 +194,10 @@ get_model_type <- function(method_name, pathogen_type) {
 
   # Lookup model type
   method_abbrev <- switch(method_name,
-                          'p-spline' = 'ps',
-                          'random-walk' = 'rw')
+                          "p-spline" = "ps",
+                          "random-walk" = "rw")
 
-  model_type <- paste(method_abbrev, pathogen_type, sep = '_')
+  model_type <- paste(method_abbrev, pathogen_type, sep = "_")
 
   return(model_type)
 }
@@ -260,16 +260,16 @@ get_knots <- function(X, days_per_knot = 3, spline_degree = 3) {
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #' @srrstats {G1.4a} internal function specified with `@noRd`
 #'
-get_cov_structure <- function(smoothing_structure = c('shared',
-                                                      'independent',
-                                                      'correlated')) {
+get_cov_structure <- function(smoothing_structure = c("shared",
+                                                      "independent",
+                                                      "correlated")) {
 
   # Convert to numeric codes
   cov_structure <- switch(
     smoothing_structure,
-    'shared' = 0,
-    'independent' = 1,
-    'correlated' = 2,
+    "shared" = 0,
+    "independent" = 1,
+    "correlated" = 2,
     {
       cli::cli_abort("Invalid option provided: '{smoothing_structure}'.
                       Please choose 'shared', 'independent', or 'correlated'.")

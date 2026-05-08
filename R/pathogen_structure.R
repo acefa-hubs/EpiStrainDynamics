@@ -66,7 +66,7 @@ single <- function(data,
   #' @srrstats {G2.10} extraction of single columns happens after conversion
   #'   to consistent tabular form
   model_inputs <- list(
-    pathogen_structure = 'single',
+    pathogen_structure = "single",
     pathogen_names = case_timeseries,
     validated_tsbl = validated_tsbl,
     data = list(
@@ -74,7 +74,7 @@ single <- function(data,
     )
   )
 
-  class(model_inputs) <- c('EpiStrainDynamics.pathogen_structure',
+  class(model_inputs) <- c("EpiStrainDynamics.pathogen_structure",
                            class(model_inputs))
   model_inputs
 }
@@ -159,7 +159,7 @@ multiple <- function(data,
   #' @srrstats {G2.10} extraction of single columns happens after conversion
   #'   to consistent tabular form
   model_inputs <- list(
-    pathogen_structure = 'multiple',
+    pathogen_structure = "multiple",
     pathogen_names = component_pathogen_timeseries,
     validated_tsbl = validated_tsbl,
     data = list(
@@ -167,7 +167,7 @@ multiple <- function(data,
       component_pathogens = component_pathogens
     )
   )
-  class(model_inputs) <- c('EpiStrainDynamics.pathogen_structure',
+  class(model_inputs) <- c("EpiStrainDynamics.pathogen_structure",
                            class(model_inputs))
   model_inputs
 }
@@ -273,7 +273,7 @@ subtyped <- function(data,
   #' @srrstats {G2.10} extraction of single columns happens after conversion
   #'   to consistent tabular form
   model_inputs <- list(
-    pathogen_structure = 'subtyped',
+    pathogen_structure = "subtyped",
     pathogen_names = pathogen_names,
     validated_tsbl = validated_tsbl,
     data = list(
@@ -283,7 +283,7 @@ subtyped <- function(data,
     )
   )
 
-  class(model_inputs) <- c('EpiStrainDynamics.pathogen_structure',
+  class(model_inputs) <- c("EpiStrainDynamics.pathogen_structure",
                            class(model_inputs))
   model_inputs
 }

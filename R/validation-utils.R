@@ -144,8 +144,8 @@ validate_priors <- function(mean, sd) {
   }
 
   # Always create priors list structure (even if both are NULL)
-  priors <- list('mean' = mean, 'sd' = sd)
-  class(priors) <- c('EpiStrainDynamics.prior', class(priors))
+  priors <- list("mean" = mean, "sd" = sd)
+  class(priors) <- c("EpiStrainDynamics.prior", class(priors))
   return(priors)
 }
 
