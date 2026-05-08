@@ -66,6 +66,7 @@ class `EpiStrainDynamics.model`
 ## Examples
 
 ``` r
+
 mod <- construct_model(
 
   method = p_spline(),

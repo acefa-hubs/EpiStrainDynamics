@@ -172,6 +172,7 @@ selectively removed.
 A full worked example using a subtyped structure:
 
 ``` r
+
 mod <- construct_model(
 
   method = p_spline(),
@@ -216,6 +217,7 @@ be applied at this stage by simply calling
 onto the constructed model object.
 
 ``` r
+
 fit <- fit_model(
   mod,
   n_iter = 2000,
@@ -233,6 +235,7 @@ previous step, accessed with `$constructed_model`.
 A summary of model convergence diagnostics can be viewed using:
 
 ``` r
+
 diagnose_model(fit)
 #> Model Convergence Diagnostics
 #> =============================
@@ -246,6 +249,7 @@ package that works with stan outputs. For example, one could visualise
 posteriors with the package `bayesplot`:
 
 ``` r
+
 bayesplot::mcmc_areas(as.matrix(fit$fit), pars = 'tau[1]', prob = 0.8)
 ```
 
@@ -257,6 +261,7 @@ plot of chunk unnamed-chunk-5
 The `bayesplot` package can also be used to evaluate convergence:
 
 ``` r
+
 bayesplot::mcmc_trace(rstan::extract(fit$fit, permuted = FALSE), pars = c('a[1,1]'))
 ```
 
@@ -298,6 +303,7 @@ Calculate epidemic growth rate with
 [`growth_rate()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/growth_rate.md):
 
 ``` r
+
 gr <- growth_rate(fit)
 head(gr$measure)
 #> # A tsibble: 6 x 9 [7D]
@@ -323,6 +329,7 @@ Calculate effective reproduction number over time with
 (requiring specification of a generation interval distribution):
 
 ``` r
+
 rt <- Rt(fit, gi_dist = function(x) 4*x*exp(-2*x))
 plot(rt)
 ```
@@ -335,6 +342,7 @@ Calculate incidence with or without a day of week effect with
 [`incidence()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/incidence.md):
 
 ``` r
+
 inc_dow <- incidence(fit, dow = TRUE)
 plot(inc_dow)
 #> Error in plot.incidence(inc_dow): object 'inc' not found
@@ -356,6 +364,7 @@ named lists provided to
     )
 
 ``` r
+
 prop <- proportion(fit)
 #> Error in splineDesign(Aknots, x, ord): length of 'derivs' is larger than length of 'x'
 plot(prop)

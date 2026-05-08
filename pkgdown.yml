@@ -1,11 +1,11 @@
-pandoc: 3.1.11
+pandoc: 3.8.3
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   articles/algorithmic-scaling: algorithmic-scaling.html
   articles/parameter-recovery: parameter-recovery.html
   Using-EpiStrainDynamics: Using-EpiStrainDynamics.html
-last_built: 2026-03-27T08:44Z
+last_built: 2026-05-08T08:32Z
 urls:
   reference: https://acefa-hubs.github.io/EpiStrainDynamics/reference
   article: https://acefa-hubs.github.io/EpiStrainDynamics/articles

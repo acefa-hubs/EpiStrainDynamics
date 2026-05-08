@@ -34,6 +34,7 @@ dynamics.
 ### 1.1 Generate Data with Known SIR Dynamics
 
 ``` r
+
 set.seed(42)
 
 # SIR model simulation
@@ -92,6 +93,7 @@ true_values_single <- data.frame(
 ### 1.2 Fit Model with Multiple Seeds
 
 ``` r
+
 seeds <- c(111, 222)
 single_fits <- list()
 
@@ -129,6 +131,7 @@ for (i in seq_along(seeds)) {
 ### 1.3 Evaluate Recovery
 
 ``` r
+
 # Calculate metrics for each seed
 recovery_metrics_single <- data.frame(
   seed = seeds,
@@ -155,9 +158,10 @@ knitr::kable(
 |  111 |      0.9918 | 5.5725 |        0.1120 |           1 |      0.3444 |
 |  222 |      0.9918 | 5.5910 |        0.1124 |           1 |      0.3556 |
 
-Single pathogen parameter recovery metrics across seeds
+Single pathogen parameter recovery metrics across seeds {.table}
 
 ``` r
+
 
 cat("\nSummary across seeds:\n")
 #> 
@@ -173,6 +177,7 @@ cat("Mean 50% CI coverage:", round(mean(recovery_metrics_single$coverage_50), 4)
 ```
 
 ``` r
+
 # Plot first seed results
 plot_data <- data.frame(
   date = dates,
@@ -217,6 +222,7 @@ succession dynamics.
 ### 2.1 Generate Data with Known Pathogen Succession
 
 ``` r
+
 set.seed(123)
 
 n_timepoints <- 120
@@ -265,6 +271,7 @@ multiple_data <- data.frame(
 ### 2.2 Fit Model with Multiple Seeds
 
 ``` r
+
 seeds <- c(555, 666)
 multiple_fits <- list()
 
@@ -298,6 +305,7 @@ for (i in seq_along(seeds)) {
 ### 2.3 Evaluate Proportion Recovery
 
 ``` r
+
 # Calculate recovery metrics for each pathogen and seed
 recovery_metrics_multiple <- data.frame()
 
@@ -340,11 +348,12 @@ knitr::kable(summary_by_pathogen, digits = 4,
 | pathogen3 |           0.9980 |    0.0256 |   0.0132 |         0.0009 |
 
 Multiple pathogen proportion recovery summary across seeds (G5.6a,
-G5.6b)
+G5.6b) {.table}
 
 ### 2.4 Visualize True vs Estimated Proportions
 
 ``` r
+
 # Plot recovery for first seed with true proportions
 props_first <- multiple_fits[[1]]$proportions
 prop1 <- props_first$measure$y[props_first$measure$pathogen == 'pathogen1']
@@ -380,6 +389,7 @@ ggplot(plot_data, aes(x = date)) +
 ![](parameter-recovery_files/figure-html/plot-multiple-recovery-1.png)
 
 ``` r
+
 # Create comparison plots showing both true and estimated side by side
 comparison_data <- data.frame(
   date = rep(dates, 6),
@@ -412,6 +422,7 @@ ggplot(comparison_data, aes(x = date, y = proportion, color = type, linetype = t
 ### 2.5 Consistency Across Seeds (G5.6b)
 
 ``` r
+
 # Compare estimates across seeds at specific time points
 check_times <- c(30, 60, 90)
 
@@ -449,7 +460,7 @@ knitr::kable(consistency_results, digits = 4,
 | pathogen31 | pathogen3 |        60 |     0.0000 |        0.0157 |      0.0003 | 0.0167 |
 | pathogen32 | pathogen3 |        90 |     0.8209 |        0.8418 |      0.0581 | 0.0690 |
 
-Consistency of estimates across random seeds at key timepoints
+Consistency of estimates across random seeds at key timepoints {.table}
 
 **Interpretation**: Low coefficient of variation (\<0.05) across seeds
 indicates robust parameter recovery regardless of random seed choice.
@@ -463,6 +474,7 @@ Test whether the p-spline method also successfully recovers parameters
 from SIR-generated data.
 
 ``` r
+
 set.seed(999)
 
 # Use the same multiple pathogen data
@@ -509,9 +521,10 @@ knitr::kable(ps_recovery, digits = 4,
 | pathogen2 |      0.9980 | 0.0196 |
 | pathogen3 |      0.9995 | 0.0135 |
 
-P-spline method parameter recovery
+P-spline method parameter recovery {.table}
 
 ``` r
+
 # Compare random walk vs p-spline for pathogen 1
 rw_props1 <- multiple_fits[[1]]$proportions$measure$y[
   multiple_fits[[1]]$proportions$measure$pathogen == 'pathogen1']
@@ -548,6 +561,7 @@ Test recovery with the more complex subtyped structure using realistic
 influenza-like dynamics.
 
 ``` r
+
 set.seed(2024)
 
 n_timepoints <- 100
@@ -613,6 +627,7 @@ subtyped_data <- data.frame(
 ```
 
 ``` r
+
 model_subtyped <- construct_model(
   method = random_walk(),
   pathogen_structure = subtyped(
@@ -662,9 +677,10 @@ knitr::kable(subtyped_recovery, digits = 4,
 | inf_B    |      0.9941 | 0.0295 |
 | other    |      0.9528 | 0.0390 |
 
-Subtyped pathogen structure parameter recovery
+Subtyped pathogen structure parameter recovery {.table}
 
 ``` r
+
 # Create comparison plot
 plot_data_subtyped <- data.frame(
   date = rep(dates, 4),
@@ -728,8 +744,9 @@ correctly specified and the inference algorithms work as intended.
 ## Session Information
 
 ``` r
+
 sessionInfo()
-#> R version 4.5.3 (2026-03-11)
+#> R version 4.6.0 (2026-04-24)
 #> Platform: x86_64-pc-linux-gnu
 #> Running under: Ubuntu 24.04.4 LTS
 #> 
@@ -750,39 +767,39 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] dplyr_1.2.0                  ggplot2_4.0.2               
+#> [1] dplyr_1.2.1                  ggplot2_4.0.3               
 #> [3] EpiStrainDynamics_0.0.1.0000
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] tidyselect_1.2.1      viridisLite_0.4.3     timeDate_4052.112    
 #>  [4] farver_2.1.2          viridis_0.6.5         loo_2.9.0            
-#>  [7] S7_0.2.1              fastmap_1.2.0         digest_0.6.39        
-#> [10] rpart_4.1.24          timechange_0.4.0      lifecycle_1.0.5      
-#> [13] StanHeaders_2.32.10   survival_3.8-6        magrittr_2.0.4       
-#> [16] compiler_4.5.3        rlang_1.1.7           sass_0.4.10          
-#> [19] tools_4.5.3           yaml_2.3.12           data.table_1.18.2.1  
+#>  [7] S7_0.2.2              fastmap_1.2.0         digest_0.6.39        
+#> [10] rpart_4.1.27          timechange_0.4.0      lifecycle_1.0.5      
+#> [13] StanHeaders_2.32.10   survival_3.8-6        magrittr_2.0.5       
+#> [16] compiler_4.6.0        rlang_1.2.0           sass_0.4.10          
+#> [19] tools_4.6.0           yaml_2.3.12           data.table_1.18.4    
 #> [22] knitr_1.51            labeling_0.4.3        htmlwidgets_1.6.4    
 #> [25] pkgbuild_1.4.8        RColorBrewer_1.1-3    withr_3.0.2          
-#> [28] purrr_1.2.1           desc_1.4.3            nnet_7.3-20          
-#> [31] grid_4.5.3            stats4_4.5.3          timetk_2.9.1         
+#> [28] purrr_1.2.2           desc_1.4.3            nnet_7.3-20          
+#> [31] grid_4.6.0            stats4_4.6.0          timetk_2.9.1         
 #> [34] xts_0.14.2            future_1.70.0         inline_0.3.21        
 #> [37] globals_0.19.1        scales_1.4.0          MASS_7.3-65          
-#> [40] anytime_0.3.12        cli_3.6.5             rmarkdown_2.30       
+#> [40] anytime_0.3.13        cli_3.6.6             rmarkdown_2.31       
 #> [43] ragg_1.5.2            generics_0.1.4        otel_0.2.0           
 #> [46] RcppParallel_5.1.11-2 future.apply_1.20.2   cachem_1.1.0         
-#> [49] rstan_2.32.7          splines_4.5.3         bayesplot_1.15.0     
-#> [52] parallel_4.5.3        matrixStats_1.5.0     vctrs_0.7.2          
-#> [55] hardhat_1.4.2         Matrix_1.7-4          jsonlite_2.0.0       
+#> [49] rstan_2.32.7          splines_4.6.0         bayesplot_1.15.0     
+#> [52] parallel_4.6.0        matrixStats_1.5.0     vctrs_0.7.3          
+#> [55] hardhat_1.4.3         Matrix_1.7-5          jsonlite_2.0.0       
 #> [58] listenv_0.10.1        systemfonts_1.3.2     gower_1.0.2          
-#> [61] jquerylib_0.1.4       tidyr_1.3.2           recipes_1.3.1        
-#> [64] glue_1.8.0            parallelly_1.46.1     pkgdown_2.2.0        
+#> [61] jquerylib_0.1.4       tidyr_1.3.2           recipes_1.3.2        
+#> [64] glue_1.8.1            parallelly_1.47.0     pkgdown_2.2.0        
 #> [67] codetools_0.2-20      rsample_1.3.2         lubridate_1.9.5      
-#> [70] gtable_0.3.6          QuickJSR_1.9.0        tibble_3.3.1         
-#> [73] pillar_1.11.1         furrr_0.3.1           htmltools_0.5.9      
-#> [76] ipred_0.9-15          lava_1.8.2            R6_2.6.1             
+#> [70] gtable_0.3.6          QuickJSR_1.9.2        tibble_3.3.1         
+#> [73] pillar_1.11.1         furrr_0.4.0           htmltools_0.5.9      
+#> [76] ipred_0.9-15          lava_1.9.0            R6_2.6.1             
 #> [79] textshaping_1.0.5     evaluate_1.0.5        lattice_0.22-9       
 #> [82] tsibble_1.2.0         bslib_0.10.0          rstantools_2.6.0     
-#> [85] class_7.3-23          Rcpp_1.1.1            gridExtra_2.3        
-#> [88] prodlim_2026.03.11    xfun_0.57             fs_2.0.1             
+#> [85] class_7.3-23          Rcpp_1.1.1-1.1        gridExtra_2.3        
+#> [88] prodlim_2026.03.11    xfun_0.57             fs_2.1.0             
 #> [91] zoo_1.8-15            pkgconfig_2.0.3
 ```
