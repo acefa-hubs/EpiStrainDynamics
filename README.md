@@ -1,6 +1,7 @@
 
 # EpiStrainDynamics
 
+[![Status at rOpenSci Software Peer Review](https://badges.ropensci.org/763_status.svg)](https://github.com/ropensci/software-review/issues/763)
 [![codecov](https://codecov.io/gh/acefa-hubs/EpiStrainDynamics/graph/badge.svg)](https://app.codecov.io/gh/acefa-hubs/EpiStrainDynamics)
 [![](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Project Status: Active - The project has reached a stable, usable
