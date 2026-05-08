@@ -8,7 +8,9 @@
 #' @param ... Additional arguments passed to plot
 #' @importFrom viridis viridis
 #' @importFrom stats setNames
-#' @import ggplot2
+#' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point geom_hline
+#'  theme_bw theme scale_colour_manual scale_y_continuous sec_axis xlab ylab
+#'  ggplot_build element_blank
 #' @importFrom rlang .data
 #'
 #' @return ggplot2 plot output
@@ -56,30 +58,38 @@ plot.incidence <- function(df, xlab = 'Time', ...) {
   time_col <- tsibble::index_var(tsbl)
   input_data <- tsbl[, c(time_col, 'case_timeseries')]
 
-  ggplot(measure_df) +
-    geom_line(aes(x = .data$time, y = .data$y, color = .data$pathogen)) +
-    geom_ribbon(aes(x = .data$time, y = .data$y,
-                    ymin = .data$lb_50, ymax = .data$ub_50,
-                    fill = .data$pathogen),
-                alpha = 0.2) +
-    geom_ribbon(aes(x = .data$time, y = .data$y,
-                    ymin = .data$lb_95, ymax = .data$ub_95,
-                    fill = .data$pathogen),
-                alpha = 0.2) +
-    theme_bw(base_size = 14) +
-    geom_point(data = input_data,
-               aes(x = .data[[time_col]], y = .data$case_timeseries),
-               size = 0.8) +
-    geom_line(data = input_data,
-              aes(x = .data[[time_col]], y = .data$case_timeseries),
-              linewidth = 0.2) +
-    scale_colour_manual(
+  ggplot2::ggplot(measure_df) +
+    ggplot2::geom_line(ggplot2::aes(x = .data$time,
+                                    y = .data$y,
+                                    color = .data$pathogen)) +
+    ggplot2::geom_ribbon(ggplot2::aes(x = .data$time,
+                                      y = .data$y,
+                                      ymin = .data$lb_50,
+                                      ymax = .data$ub_50,
+                                      fill = .data$pathogen),
+                         alpha = 0.2) +
+    ggplot2::geom_ribbon(ggplot2::aes(x = .data$time,
+                                      y = .data$y,
+                                      ymin = .data$lb_95,
+                                      ymax = .data$ub_95,
+                                      fill = .data$pathogen),
+                         alpha = 0.2) +
+    ggplot2::theme_bw(base_size = 14) +
+    ggplot2::geom_point(data = input_data,
+                        ggplot2::aes(x = .data[[time_col]],
+                                     y = .data$case_timeseries),
+                        size = 0.8) +
+    ggplot2::geom_line(data = input_data,
+                       ggplot2::aes(x = .data[[time_col]],
+                                    y = .data$case_timeseries),
+                       linewidth = 0.2) +
+    ggplot2::scale_colour_manual(
       values = colors,
       aesthetics = c("colour", "fill")
     ) +
-    ylab("Modelled influenza cases") +
-    theme(legend.title = element_blank()) +
-    xlab(xlab)
+    ggplot2::ylab("Modelled influenza cases") +
+    ggplot2::theme(legend.title = ggplot2::element_blank()) +
+    ggplot2::xlab(xlab)
 
 }
 
@@ -98,27 +108,33 @@ plot.growth_rate <- function(df, xlab = 'Time', ...) {
     setNames(viridis::viridis(length(other_levels)), other_levels)
   )
 
-  p <- ggplot(measure_df) +
-    geom_line(aes(x = .data$time, y = .data$y, color = .data$pathogen)) +
-    geom_ribbon(aes(x = .data$time, y = .data$y,
-                    ymin = .data$lb_50, ymax = .data$ub_50,
-                    fill = .data$pathogen),
-                alpha = 0.2) +
-    geom_ribbon(aes(x = .data$time, y = .data$y,
-                    ymin = .data$lb_95, ymax = .data$ub_95,
-                    fill = .data$pathogen),
-                alpha = 0.2) +
-    theme_bw(base_size = 14) +
-    scale_colour_manual(
+  p <- ggplot2::ggplot(measure_df) +
+    ggplot2::geom_line(ggplot2::aes(x = .data$time,
+                                    y = .data$y,
+                                    color = .data$pathogen)) +
+    ggplot2::geom_ribbon(ggplot2::aes(x = .data$time,
+                                      y = .data$y,
+                                      ymin = .data$lb_50,
+                                      ymax = .data$ub_50,
+                                      fill = .data$pathogen),
+                         alpha = 0.2) +
+    ggplot2::geom_ribbon(ggplot2::aes(x = .data$time,
+                                      y = .data$y,
+                                      ymin = .data$lb_95,
+                                      ymax = .data$ub_95,
+                                      fill = .data$pathogen),
+                         alpha = 0.2) +
+    ggplot2::theme_bw(base_size = 14) +
+    ggplot2::scale_colour_manual(
       values = colors,
       aesthetics = c("colour", "fill")) +
-    geom_hline(yintercept = 0, linetype = "dashed") +
-    ylab("Growth rate") +
-    theme(legend.title = element_blank()) +
-    xlab(xlab)
+    ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
+    ggplot2::ylab("Growth rate") +
+    ggplot2::theme(legend.title = ggplot2::element_blank()) +
+    ggplot2::xlab(xlab)
 
   # Get the y-axis range from the built plot
-  y_range <- ggplot_build(p)$layout$panel_params[[1]]$y.range
+  y_range <- ggplot2::ggplot_build(p)$layout$panel_params[[1]]$y.range
 
   # Calculate appropriate breaks
   n_breaks <- 5
@@ -131,11 +147,11 @@ plot.growth_rate <- function(df, xlab = 'Time', ...) {
                    paste0(signs, round(times, 1)))
 
   # Add secondary axis with calculated breaks and labels
-  p + scale_y_continuous(
-    sec.axis = sec_axis(~ .,
-                        breaks = breaks,
-                        labels = labels,
-                        name = "Doubling(+) / Halving(-) time")
+  p + ggplot2::scale_y_continuous(
+    sec.axis = ggplot2::sec_axis(~ .,
+                                 breaks = breaks,
+                                 labels = labels,
+                                 name = "Doubling(+) / Halving(-) time")
   )
 
 }
@@ -155,24 +171,30 @@ plot.Rt <- function(df, xlab = 'Time', ...) {
     setNames(viridis::viridis(length(other_levels)), other_levels)
   )
 
-  ggplot(measure_df) +
-    geom_line(aes(x = .data$time, y = .data$y, color = .data$pathogen)) +
-    geom_ribbon(aes(x = .data$time, y = .data$y,
-                    ymin = .data$lb_50, ymax = .data$ub_50,
-                    fill = .data$pathogen),
-                alpha = 0.2) +
-    geom_ribbon(aes(x = .data$time, y = .data$y,
-                    ymin = .data$lb_95, ymax = .data$ub_95,
-                    fill = .data$pathogen),
-                alpha = 0.2) +
-    theme_bw(base_size = 14) +
-    scale_colour_manual(
+  ggplot2::ggplot(measure_df) +
+    ggplot2::geom_line(ggplot2::aes(x = .data$time,
+                                    y = .data$y,
+                                    color = .data$pathogen)) +
+    ggplot2::geom_ribbon(ggplot2::aes(x = .data$time,
+                                      y = .data$y,
+                                      ymin = .data$lb_50,
+                                      ymax = .data$ub_50,
+                                      fill = .data$pathogen),
+                         alpha = 0.2) +
+    ggplot2::geom_ribbon(ggplot2::aes(x = .data$time,
+                                      y = .data$y,
+                                      ymin = .data$lb_95,
+                                      ymax = .data$ub_95,
+                                      fill = .data$pathogen),
+                         alpha = 0.2) +
+    ggplot2::theme_bw(base_size = 14) +
+    ggplot2::scale_colour_manual(
       values = colors,
       aesthetics = c("colour", "fill")) +
-    geom_hline(yintercept = 1, linetype = "dashed") +
-    ylab("Effective reproduction number") +
-    theme(legend.title = element_blank()) +
-    xlab(xlab)
+    ggplot2::geom_hline(yintercept = 1, linetype = "dashed") +
+    ggplot2::ylab("Effective reproduction number") +
+    ggplot2::theme(legend.title = ggplot2::element_blank()) +
+    ggplot2::xlab(xlab)
 
 }
 
@@ -185,23 +207,29 @@ plot.proportion <- function(df, xlab = 'Time', ...) {
   combos <- unique(measure_df$pathogen)
   colors <- setNames(viridis::viridis(length(combos)), combos)
 
-  ggplot(measure_df) +
-    geom_line(aes(x = .data$time, y = .data$y, color = .data$pathogen)) +
-    geom_ribbon(aes(x = .data$time, y = .data$y,
-                    ymin = .data$lb_50, ymax = .data$ub_50,
-                    fill = .data$pathogen),
-                alpha = 0.2) +
-    geom_ribbon(aes(x = .data$time, y = .data$y,
-                    ymin = .data$lb_95, ymax = .data$ub_95,
-                    fill = .data$pathogen),
-                alpha = 0.2) +
-    theme_bw(base_size = 14) +
-    scale_colour_manual(
+  ggplot2::ggplot(measure_df) +
+    ggplot2::geom_line(ggplot2::aes(x = .data$time,
+                                    y = .data$y,
+                                    color = .data$pathogen)) +
+    ggplot2::geom_ribbon(ggplot2::aes(x = .data$time,
+                                      y = .data$y,
+                                      ymin = .data$lb_50,
+                                      ymax = .data$ub_50,
+                                      fill = .data$pathogen),
+                         alpha = 0.2) +
+    ggplot2::geom_ribbon(ggplot2::aes(x = .data$time,
+                                      y = .data$y,
+                                      ymin = .data$lb_95,
+                                      ymax = .data$ub_95,
+                                      fill = .data$pathogen),
+                         alpha = 0.2) +
+    ggplot2::theme_bw(base_size = 14) +
+    ggplot2::scale_colour_manual(
       values = colors,
       aesthetics = c("colour", "fill")) +
-    geom_hline(yintercept = 1, linetype = "dashed") +
-    ylab("Modelled proportion of cases") +
-    theme(legend.title = element_blank()) +
-    xlab(xlab)
+    ggplot2::geom_hline(yintercept = 1, linetype = "dashed") +
+    ggplot2::ylab("Modelled proportion of cases") +
+    ggplot2::theme(legend.title = ggplot2::element_blank()) +
+    ggplot2::xlab(xlab)
 
 }
