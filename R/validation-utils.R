@@ -151,16 +151,15 @@ validate_priors <- function(mean, sd) {
 
 #' Validate Smoothing Structure Object
 #'
-#' @param smoothing_obj An object created by \code{smoothing_structure()}
-#' @param pathogen_names Character vector of pathogen names (required for "independent" structure)
-#'
 #' @noRd
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #' @srrstats {G1.4a} internal function specified with `@noRd`
 #' @srrstats {G5.2a} every error statement is unique
 #' @srrstats {G5.8, G5.8a} checks for zero length
-validate_smoothing_structure <- function(smoothing_obj, pathogen_names = NULL,
-                                         pathogen_str) {
+validate_smoothing_structure <- function(smoothing_obj,
+                                         pathogen_str,
+                                         pathogen_names = NULL) {
+
   if (!inherits(smoothing_obj, "EpiStrainDynamics.smoothing")) {
     stop("smoothing_params must be created using the smoothing_structure() function")
   }

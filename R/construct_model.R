@@ -64,8 +64,8 @@ construct_model <- function(method,
     pathogen_structure, "EpiStrainDynamics.pathogen_structure"
   )
   smoothing_params <- validate_smoothing_structure(
-    smoothing_params, pathogen_structure$pathogen_names,
-    pathogen_structure$pathogen_structure)
+    smoothing_params, pathogen_structure$pathogen_structure,
+    pathogen_structure$pathogen_names)
   validate_class_inherits(dispersion_params, "EpiStrainDynamics.dispersion")
 
   if (!is.logical(pathogen_noise) || length(pathogen_noise) != 1) {

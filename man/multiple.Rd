@@ -4,7 +4,7 @@
 \alias{multiple}
 \title{Multiple pathogen structure}
 \usage{
-multiple(data, case_timeseries, time = NULL, component_pathogen_timeseries)
+multiple(data, case_timeseries, component_pathogen_timeseries, time = NULL)
 }
 \arguments{
 \item{data}{dataframe containing columns with all relevant data, or a time
@@ -13,15 +13,15 @@ series object (ts, xts, zoo, tsibble, etc.)}
 \item{case_timeseries}{Column name containing case counts. Must be numeric
 or a \code{units} object from the \pkg{units} package.}
 
-\item{time}{name of column with time data. Required for non-time-series
+\item{component_pathogen_timeseries}{vector of column names with additional
+pathogen case count timeseries to model. Must be numeric or a \code{units}
+object from the \pkg{units} package.}
+
+\item{time}{Column name with time data. Required for non-time-series
 input data. Flexible format - can be date, index, or others, accepted
 as \code{index} identifiers in the \code{tsibble} time format. Optional when
 \code{data} is a time series class object (ts, mts, xts, zoo, zooreg, tsibble)
 as the time index will be automatically detected.}
-
-\item{component_pathogen_timeseries}{vector of column names with additional
-pathogen case count timeseries to model. Must be numeric or a \code{units}
-object from the \pkg{units} package.}
 }
 \value{
 named list including pathogen_structure, pathogen_names, and data
@@ -35,8 +35,8 @@ Multiple pathogen structure
 multiple(
   data = sarscov2,
   case_timeseries = 'cases',
-  time = 'date',
-  component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+  component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other'),
+  time = 'date'
 )
 
 \dontshow{if (rlang::is_installed("xts")) withAutoprint(\{ # examplesIf}

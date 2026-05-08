@@ -138,8 +138,8 @@ saveRDS(incidence(fit_rw_single, dow = FALSE), "inst/testfixtures/inc_single.rds
 saveRDS(incidence(fit_rw_multi,  dow = FALSE), "inst/testfixtures/inc_multi.rds")
 saveRDS(growth_rate(fit_rw_single),            "inst/testfixtures/gr_single.rds")
 saveRDS(growth_rate(fit_rw_multi),             "inst/testfixtures/gr_multi.rds")
-saveRDS(Rt(fit_rw_single, tau_max = 7, gi_dist = gi_simple), "inst/testfixtures/rt_single.rds")
-saveRDS(Rt(fit_rw_multi,  tau_max = 7, gi_dist = gi_simple), "inst/testfixtures/rt_multi.rds")
+saveRDS(Rt(fit_rw_single, gi_dist = gi_simple, tau_max = 7), "inst/testfixtures/rt_single.rds")
+saveRDS(Rt(fit_rw_multi, gi_dist = gi_simple, tau_max = 7), "inst/testfixtures/rt_multi.rds")
 saveRDS(proportion(fit_rw_multi),              "inst/testfixtures/prop.rds")
 
 message("=== Regular fixtures done ===")

@@ -85,14 +85,14 @@ single <- function(data,
 #'   series object (ts, xts, zoo, tsibble, etc.)
 #' @param case_timeseries Column name containing case counts. Must be numeric
 #'   or a \code{units} object from the \pkg{units} package.
-#' @param time name of column with time data. Required for non-time-series
+#' @param component_pathogen_timeseries vector of column names with additional
+#'   pathogen case count timeseries to model. Must be numeric or a \code{units}
+#'   object from the \pkg{units} package.
+#' @param time Column name with time data. Required for non-time-series
 #'   input data. Flexible format - can be date, index, or others, accepted
 #'   as `index` identifiers in the `tsibble` time format. Optional when
 #'   `data` is a time series class object (ts, mts, xts, zoo, zooreg, tsibble)
 #'   as the time index will be automatically detected.
-#' @param component_pathogen_timeseries vector of column names with additional
-#'   pathogen case count timeseries to model. Must be numeric or a \code{units}
-#'   object from the \pkg{units} package.
 #'
 #' @returns named list including pathogen_structure, pathogen_names, and data
 #'   of class `EpiStrainDynamics.pathogen_structure`
@@ -112,8 +112,8 @@ single <- function(data,
 #' multiple(
 #'   data = sarscov2,
 #'   case_timeseries = 'cases',
-#'   time = 'date',
-#'   component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+#'   component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other'),
+#'   time = 'date'
 #' )
 #'
 #' @examplesIf rlang::is_installed("xts")
@@ -129,8 +129,8 @@ single <- function(data,
 #' )
 multiple <- function(data,
                      case_timeseries,
-                     time = NULL,
-                     component_pathogen_timeseries) {
+                     component_pathogen_timeseries,
+                     time = NULL) {
 
   #' @srrstats {G5.8c, G5.8d} edge cases produce errors
   #' @srrstats {G2.1, G5.8, G5.8b} assertions on types of inputs
@@ -178,11 +178,6 @@ multiple <- function(data,
 #'   series object (ts, xts, zoo, tsibble, etc.)
 #' @param case_timeseries Column name containing case counts. Must be numeric
 #'   or a \code{units} object from the \pkg{units} package.
-#' @param time name of column with time data. Required for non-time-series
-#'   input data. Flexible format - can be date, index, or others, accepted
-#'   as `index` identifiers in the `tsibble` time format. Optional when
-#'   `data` is a time series class object (ts, mts, xts, zoo, zooreg, tsibble)
-#'   as the time index will be automatically detected.
 #' @param influenzaA_unsubtyped_timeseries vector of column names with additional
 #'   unsubtyped influenzaA case count timeseries. Must be numeric or a
 #'   \code{units} object from the \pkg{units} package.
@@ -192,6 +187,11 @@ multiple <- function(data,
 #' @param other_pathogen_timeseries vector of column names with additional
 #'   pathogen case count timeseries to model. Must be numeric or a \code{units}
 #'   object from the \pkg{units} package.
+#' @param time name of column with time data. Required for non-time-series
+#'   input data. Flexible format - can be date, index, or others, accepted
+#'   as `index` identifiers in the `tsibble` time format. Optional when
+#'   `data` is a time series class object (ts, mts, xts, zoo, zooreg, tsibble)
+#'   as the time index will be automatically detected.
 #'
 #' @returns named list including pathogen_structure, pathogen_names, and data
 #'   of class `EpiStrainDynamics.pathogen_structure`
@@ -211,10 +211,10 @@ multiple <- function(data,
 #' subtyped(
 #'   data = influenza,
 #'   case_timeseries = 'ili',
-#'   time = 'week',
 #'   influenzaA_unsubtyped_timeseries = 'inf_A',
 #'   influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
-#'   other_pathogen_timeseries = c('inf_B', 'other')
+#'   other_pathogen_timeseries = c('inf_B', 'other'),
+#'   time = 'week'
 #' )
 #'
 #' @examplesIf rlang::is_installed("xts")
@@ -233,10 +233,10 @@ multiple <- function(data,
 #'
 subtyped <- function(data,
                      case_timeseries,
-                     time = NULL,
                      influenzaA_unsubtyped_timeseries,
                      influenzaA_subtyped_timeseries,
-                     other_pathogen_timeseries) {
+                     other_pathogen_timeseries,
+                     time = NULL) {
 
   #' @srrstats {G5.8c, G5.8d} edge cases produce errors
   #' @srrstats {G2.1, G5.8, G5.8b} assertions on types of inputs

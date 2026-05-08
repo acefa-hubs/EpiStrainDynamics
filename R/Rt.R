@@ -37,8 +37,8 @@
 #' This metric function can be run directly on the fitted model output.
 #'
 #' @param fitted_model Fitted model object with class `EpiStrainDynamics.fit`
-#' @param tau_max Integer maximum generation interval in days (default: 7)
 #' @param gi_dist Function that returns generation interval probability for given day
+#' @param tau_max Integer maximum generation interval in days (default: 7)
 #' @param ... Additional arguments passed to metrics calculation
 #' @return named list of class `EpiStrainDynamics.metric` containing a dataframe
 #'  of the calculated metric outcome (`$measure`), the fit object (`$fit`), and the
@@ -62,58 +62,58 @@
 #'
 #'   fit <- fit_model(mod)
 #'
-#'   rt <- Rt(fit, tau_max = 7, gi_dist = function(x) 4*x*exp(-2*x))
+#'   rt <- Rt(fit, gi_dist = function(x) 4*x*exp(-2*x), tau_max = 7)
 #'
-Rt <- function(fitted_model, tau_max = 7, gi_dist, ...) {
+Rt <- function(fitted_model, gi_dist, tau_max = 7, ...) {
   #' @srrstats {G2.1, G2.2, G5.8, G5.8a, G5.8b, G5.8c, G5.8d} assertions on
   #' types of inputs
-  validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')
-  validate_positive_whole_number(tau_max, 'tau_max')
+  validate_class_inherits(fitted_model, "EpiStrainDynamics.fit")
   validate_gi_dist(gi_dist)
+  validate_positive_whole_number(tau_max, "tau_max")
   UseMethod("Rt")
 }
 
 #' @rdname Rt
 #' @export
-Rt.ps <- function(fitted_model, tau_max = 7, gi_dist, ...) {
+Rt.ps <- function(fitted_model, gi_dist, tau_max = 7, ...) {
   g_a <- sum(gi_dist(seq(0, tau_max - 1, 1)))
-  out <- compute_multi_pathogen(fitted_model, tau_max, 'Rt',
+  out <- compute_multi_pathogen(fitted_model, tau_max, "Rt",
                                 threshold = 1, use_splines = TRUE,
                                 tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
-  class(out) <- c('Rt', 'EpiStrainDynamics.metric', class(out))
+  class(out) <- c("Rt", "EpiStrainDynamics.metric", class(out))
   out
 }
 
 #' @rdname Rt
 #' @export
-Rt.rw <- function(fitted_model, tau_max = 7, gi_dist, ...) {
+Rt.rw <- function(fitted_model, gi_dist, tau_max = 7, ...) {
   g_a <- sum(gi_dist(seq(0, tau_max - 1, 1)))
-  out <- compute_multi_pathogen(fitted_model, tau_max, 'Rt',
+  out <- compute_multi_pathogen(fitted_model, tau_max, "Rt",
                                 threshold = 1, use_splines = FALSE,
                                 tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
-  class(out) <- c('Rt', 'EpiStrainDynamics.metric', class(out))
+  class(out) <- c("Rt", "EpiStrainDynamics.metric", class(out))
   out
 }
 
 #' @rdname Rt
 #' @export
-Rt.ps_single <- function(fitted_model, tau_max = 7, gi_dist, ...) {
+Rt.ps_single <- function(fitted_model, gi_dist, tau_max = 7, ...) {
   g_a <- sum(gi_dist(seq(0, tau_max - 1, 1)))
-  out <- compute_single_pathogen(fitted_model, tau_max, 'Rt',
+  out <- compute_single_pathogen(fitted_model, tau_max, "Rt",
                                  threshold = 1, use_splines = TRUE,
                                  tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
-  class(out) <- c('Rt', 'EpiStrainDynamics.metric', class(out))
+  class(out) <- c("Rt", "EpiStrainDynamics.metric", class(out))
   out
 }
 
 #' @rdname Rt
 #' @export
-Rt.rw_single <- function(fitted_model, tau_max = 7, gi_dist, ...) {
+Rt.rw_single <- function(fitted_model, gi_dist, tau_max = 7, ...) {
   g_a <- sum(gi_dist(seq(0, tau_max - 1, 1)))
-  out <- compute_single_pathogen(fitted_model, tau_max, 'Rt',
+  out <- compute_single_pathogen(fitted_model, tau_max, "Rt",
                                  threshold = 1, use_splines = FALSE,
                                  tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
-  class(out) <- c('Rt', 'EpiStrainDynamics.metric', class(out))
+  class(out) <- c("Rt", "EpiStrainDynamics.metric", class(out))
   out
 }
 
@@ -128,8 +128,10 @@ Rt.rw_single <- function(fitted_model, tau_max = 7, gi_dist, ...) {
 #' @param a Array of log-incidence posterior samples \code{[samples, time]}
 #' @param time_idx Integer time index
 #' @param pathogen_idx NULL (unused but required for interface consistency)
-#' @param post Posterior samples object (unused but required for interface consistency)
-#' @param components Model components (unused but required for interface consistency)
+#' @param post Posterior samples object (unused but required for interface
+#'  consistency)
+#' @param components Model components (unused but required for interface
+#' c onsistency)
 #' @param tau_max Integer maximum generation interval (days)
 #' @param gi_dist Function returning generation interval probability for given day
 #' @param g_a Numeric normalization constant (sum of generation interval)

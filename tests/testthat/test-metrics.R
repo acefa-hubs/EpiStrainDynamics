@@ -10,18 +10,18 @@ test_that("Rt() validates inputs correctly", {
 
   # Wrong class
   expect_error(
-    Rt(list(fit = "not a fit"), tau_max = 7, gi_dist = gi_simple),
+    Rt(list(fit = "not a fit"), gi_dist = gi_simple, tau_max = 7),
     "Input must be of class"
   )
 
   # Invalid tau_max
   expect_error(
-    Rt(fit_rw_single, tau_max = -1, gi_dist = gi_simple),
+    Rt(fit_rw_single, gi_dist = gi_simple, tau_max = -1),
     "must be a positive number"
   )
 
   expect_error(
-    Rt(fit_rw_single, tau_max = 1.5, gi_dist = gi_simple),
+    Rt(fit_rw_single, gi_dist = gi_simple, tau_max = 1.5),
     "must be a whole number"
   )
 
@@ -33,7 +33,7 @@ test_that("Rt() validates inputs correctly", {
 
   # Invalid gi_dist
   expect_error(
-    Rt(fit_rw_single, tau_max = 7, gi_dist = "not a function"),
+    Rt(fit_rw_single, gi_dist = "not a function", tau_max = 7),
     "must be a function"
   )
 })
@@ -41,7 +41,7 @@ test_that("Rt() validates inputs correctly", {
 test_that("Rt() works for single pathogen random walk model", {
   skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
 
-  result <- Rt(fit_rw_single, tau_max = 7, gi_dist = gi_simple)
+  result <- Rt(fit_rw_single, gi_dist = gi_simple, tau_max = 7)
 
   # Check structure
   expect_s3_class(result, "Rt")
@@ -75,7 +75,7 @@ test_that("Rt() works for single pathogen random walk model", {
 test_that("Rt() works for single pathogen p-spline model", {
   skip_if_not(exists("fit_ps_single"), "Cached fitted models not available")
 
-  result <- Rt(fit_ps_single, tau_max = 7, gi_dist = gi_simple)
+  result <- Rt(fit_ps_single, gi_dist = gi_simple, tau_max = 7)
 
   expect_s3_class(result, "Rt")
   expect_s3_class(result$measure, "data.frame")
@@ -90,7 +90,7 @@ test_that("Rt() works for single pathogen p-spline model", {
 test_that("Rt() works for multiple pathogen models", {
   skip_if_not(exists("fit_rw_multi"), "Cached fitted models not available")
 
-  result <- Rt(fit_rw_multi, tau_max = 7, gi_dist = gi_simple)
+  result <- Rt(fit_rw_multi, gi_dist = gi_simple, tau_max = 7)
 
   expect_s3_class(result, "Rt")
 
@@ -109,8 +109,8 @@ test_that("Rt() works for multiple pathogen models", {
 test_that("Rt() respects tau_max parameter", {
   skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
 
-  result_7 <- Rt(fit_rw_single, tau_max = 7, gi_dist = gi_simple)
-  result_14 <- Rt(fit_rw_single, tau_max = 14, gi_dist = gi_simple)
+  result_7 <- Rt(fit_rw_single, gi_dist = gi_simple, tau_max = 7)
+  result_14 <- Rt(fit_rw_single, gi_dist = gi_simple, tau_max = 14)
 
   # Different tau_max should give different number of rows
   expect_lt(nrow(result_14$measure), nrow(result_7$measure))

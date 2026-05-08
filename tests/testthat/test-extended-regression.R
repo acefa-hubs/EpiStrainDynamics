@@ -15,7 +15,9 @@ test_that("Rt returns expected structure from random walk single-pathogen model"
 
   gi_simple <- function(x) ifelse(x == 0, 0, 4 * x * exp(-2 * x))
 
-  result <- Rt(extended_fixtures$fit_rw_single, tau_max = 7, gi_dist = gi_simple)
+  result <- Rt(extended_fixtures$fit_rw_single,
+               gi_dist = gi_simple,
+               tau_max = 7)
 
   expect_true(!is.null(result$measure))
   expect_true(nrow(result$measure) > 0)
@@ -26,7 +28,9 @@ test_that("Rt point estimates are finite and non-negative", {
 
   gi_simple <- function(x) ifelse(x == 0, 0, 4 * x * exp(-2 * x))
 
-  result <- Rt(extended_fixtures$fit_rw_single, tau_max = 7, gi_dist = gi_simple)
+  result <- Rt(extended_fixtures$fit_rw_single,
+               gi_dist = gi_simple,
+               tau_max = 7)
 
   expect_true(all(is.finite(result$measure$y)))
   expect_true(all(result$measure$y >= 0))
@@ -37,7 +41,9 @@ test_that("Rt credible intervals are ordered correctly", {
 
   gi_simple <- function(x) ifelse(x == 0, 0, 4 * x * exp(-2 * x))
 
-  result <- Rt(extended_fixtures$fit_rw_single, tau_max = 7, gi_dist = gi_simple)
+  result <- Rt(extended_fixtures$fit_rw_single,
+               gi_dist = gi_simple,
+               tau_max = 7)
 
   expect_true(all(result$measure$lb_95 <= result$measure$lb_50))
   expect_true(all(result$measure$lb_50 <= result$measure$y))
@@ -154,7 +160,9 @@ test_that("P-spline single-pathogen model produces valid Rt estimates", {
 
   gi_simple <- function(x) ifelse(x == 0, 0, 4 * x * exp(-2 * x))
 
-  result <- Rt(extended_fixtures$fit_ps_single, tau_max = 7, gi_dist = gi_simple)
+  result <- Rt(extended_fixtures$fit_ps_single,
+               gi_dist = gi_simple,
+               tau_max = 7)
 
   expect_true(!is.null(result$measure))
   expect_true(all(is.finite(result$measure$y)))

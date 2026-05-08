@@ -8,22 +8,22 @@
 \alias{Rt.rw_single}
 \title{Generic Method for Rt Analysis}
 \usage{
-Rt(fitted_model, tau_max = 7, gi_dist, ...)
+Rt(fitted_model, gi_dist, tau_max = 7, ...)
 
-\method{Rt}{ps}(fitted_model, tau_max = 7, gi_dist, ...)
+\method{Rt}{ps}(fitted_model, gi_dist, tau_max = 7, ...)
 
-\method{Rt}{rw}(fitted_model, tau_max = 7, gi_dist, ...)
+\method{Rt}{rw}(fitted_model, gi_dist, tau_max = 7, ...)
 
-\method{Rt}{ps_single}(fitted_model, tau_max = 7, gi_dist, ...)
+\method{Rt}{ps_single}(fitted_model, gi_dist, tau_max = 7, ...)
 
-\method{Rt}{rw_single}(fitted_model, tau_max = 7, gi_dist, ...)
+\method{Rt}{rw_single}(fitted_model, gi_dist, tau_max = 7, ...)
 }
 \arguments{
 \item{fitted_model}{Fitted model object with class \code{EpiStrainDynamics.fit}}
 
-\item{tau_max}{Integer maximum generation interval in days (default: 7)}
-
 \item{gi_dist}{Function that returns generation interval probability for given day}
+
+\item{tau_max}{Integer maximum generation interval in days (default: 7)}
 
 \item{...}{Additional arguments passed to metrics calculation}
 }
@@ -84,7 +84,7 @@ This metric function can be run directly on the fitted model output.
 
   fit <- fit_model(mod)
 
-  rt <- Rt(fit, tau_max = 7, gi_dist = function(x) 4*x*exp(-2*x))
+  rt <- Rt(fit, gi_dist = function(x) 4*x*exp(-2*x), tau_max = 7)
 \dontshow{\}) # examplesIf}
 }
 \seealso{
