@@ -108,9 +108,9 @@ test_that("plot.incidence() maps aesthetics correctly", {
   line_layer <- p$layers[[1]]
   line_mapping <- line_layer$mapping
 
-  expect_equal(as_label(line_mapping$x), "time")
-  expect_equal(as_label(line_mapping$y), "y")
-  expect_equal(as_label(line_mapping$colour), "pathogen")
+  expect_equal(rlang::as_label(line_mapping$x), "time")
+  expect_equal(rlang::as_label(line_mapping$y), "y")
+  expect_equal(rlang::as_label(line_mapping$colour), "pathogen")
 })
 
 test_that("plot.growth_rate() maps aesthetics correctly", {
@@ -119,9 +119,9 @@ test_that("plot.growth_rate() maps aesthetics correctly", {
   line_layer <- p$layers[[1]]
   line_mapping <- line_layer$mapping
 
-  expect_equal(as_label(line_mapping$x), "time")
-  expect_equal(as_label(line_mapping$y), "y")
-  expect_equal(as_label(line_mapping$colour), "pathogen")
+  expect_equal(rlang::as_label(line_mapping$x), "time")
+  expect_equal(rlang::as_label(line_mapping$y), "y")
+  expect_equal(rlang::as_label(line_mapping$colour), "pathogen")
 })
 
 test_that("plot.Rt() maps aesthetics correctly", {
@@ -130,9 +130,9 @@ test_that("plot.Rt() maps aesthetics correctly", {
   line_layer <- p$layers[[1]]
   line_mapping <- line_layer$mapping
 
-  expect_equal(as_label(line_mapping$x), "time")
-  expect_equal(as_label(line_mapping$y), "y")
-  expect_equal(as_label(line_mapping$colour), "pathogen")
+  expect_equal(rlang::as_label(line_mapping$x), "time")
+  expect_equal(rlang::as_label(line_mapping$y), "y")
+  expect_equal(rlang::as_label(line_mapping$colour), "pathogen")
 })
 
 test_that("plot.proportion() maps aesthetics correctly", {
@@ -141,9 +141,9 @@ test_that("plot.proportion() maps aesthetics correctly", {
   line_layer <- p$layers[[1]]
   line_mapping <- line_layer$mapping
 
-  expect_equal(as_label(line_mapping$x), "time")
-  expect_equal(as_label(line_mapping$y), "y")
-  expect_equal(as_label(line_mapping$colour), "pathogen")
+  expect_equal(rlang::as_label(line_mapping$x), "time")
+  expect_equal(rlang::as_label(line_mapping$y), "y")
+  expect_equal(rlang::as_label(line_mapping$colour), "pathogen")
 })
 
 # ==============================================================================
