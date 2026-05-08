@@ -75,7 +75,7 @@ secondary case)
 This metric function can be run directly on the fitted model output.
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
   mod <- construct_model(
     method = random_walk(),
     pathogen_structure = single(
@@ -85,8 +85,7 @@ This metric function can be run directly on the fitted model output.
   fit <- fit_model(mod)
 
   rt <- Rt(fit, tau_max = 7, gi_dist = function(x) 4*x*exp(-2*x))
-}
-
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other metrics: 

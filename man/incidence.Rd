@@ -65,7 +65,7 @@ higher weekday transmission).
 This metric function can be run directly on the fitted model output.
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
   mod <- construct_model(
     method = random_walk(),
     pathogen_structure = single(
@@ -82,7 +82,7 @@ This metric function can be run directly on the fitted model output.
 
   # Explicitly include dow effects (if model has them)
   inc_with_dow <- incidence(fit, dow = TRUE)
-}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other metrics: 

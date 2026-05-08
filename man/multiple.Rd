@@ -39,8 +39,8 @@ multiple(
   component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
 )
 
+\dontshow{if (rlang::is_installed("xts")) withAutoprint(\{ # examplesIf}
 # Using a time series object (time argument is optional)
-\dontrun{
 sarscov2_xts <- xts::xts(
   sarscov2[, c("cases", "alpha", "delta", "omicron", "other")],
   order.by = sarscov2$date
@@ -50,8 +50,7 @@ multiple(
   case_timeseries = 'cases',
   component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
 )
-}
-
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other pathogen_structure: 

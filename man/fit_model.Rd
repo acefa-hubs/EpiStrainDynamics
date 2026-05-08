@@ -152,7 +152,7 @@ an error is raised that can be caught and inspected.
 S3 generic for fitted models from constructed model object
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
   mod <- construct_model(
     method = random_walk(),
     pathogen_structure = single(
@@ -176,6 +176,5 @@ S3 generic for fitted models from constructed model object
     cat("Fitting failed:", result$message, "\n")
     # Can still access the model: result$constructed_model
   }
-}
-
+\dontshow{\}) # examplesIf}
 }

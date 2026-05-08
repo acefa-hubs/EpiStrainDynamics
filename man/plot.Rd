@@ -33,7 +33,7 @@ ggplot2 plot output
 S3 generic for plotting
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
   mod <- construct_model(
     method = random_walk(),
     pathogen_structure = single(
@@ -43,5 +43,5 @@ S3 generic for plotting
   fit <- fit_model(mod)
   gr <- growth_rate(mod)
   plot(gr)
-}
+\dontshow{\}) # examplesIf}
 }

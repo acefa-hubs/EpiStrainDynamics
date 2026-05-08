@@ -68,7 +68,7 @@ Delta + Omicron)
 This metric function can be run directly on the fitted model output.
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
   mod <- construct_model(
     method = p_spline(),
     pathogen_structure = multiple(
@@ -94,7 +94,7 @@ This metric function can be run directly on the fitted model output.
     numerator_combination = 'alpha',
     denominator_combination = c('alpha', 'delta', 'omicron')
   )
-}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other metrics: 

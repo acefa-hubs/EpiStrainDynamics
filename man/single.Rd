@@ -34,15 +34,14 @@ single(
   time = 'date'
 )
 
+\dontshow{if (rlang::is_installed("xts")) withAutoprint(\{ # examplesIf}
 # Using a time series object (time argument is optional)
-\dontrun{
 sarscov2_xts <- xts::xts(sarscov2[, c("cases", "alpha")], order.by = sarscov2$date)
 single(
   data = sarscov2_xts,
   case_timeseries = 'cases'
 )
-}
-
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other pathogen_structure: 

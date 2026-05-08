@@ -70,8 +70,7 @@
 #'   console. A user can further interrogate the fit itself, or calculate
 #'   epidemiological metrics using the `metrics` family of functions.
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #'   mod <- construct_model(
 #'     method = random_walk(),
 #'     pathogen_structure = single(
@@ -95,8 +94,6 @@
 #'     cat("Fitting failed:", result$message, "\n")
 #'     # Can still access the model: result$constructed_model
 #'   }
-#' }
-#'
 fit_model <- function (constructed_model,
                        n_chain = 4,
                        n_iter = 2000,

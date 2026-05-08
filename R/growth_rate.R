@@ -38,8 +38,7 @@
 #' @srrstats {G1.3} metric defined clearly
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #'   mod <- construct_model(
 #'     method = random_walk(),
 #'     pathogen_structure = single(
@@ -48,7 +47,6 @@
 #'
 #'   fit <- fit_model(mod)
 #'   gr <- growth_rate(fit)
-#' }
 growth_rate <- function(fitted_model, ...) {
   validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')
   UseMethod("growth_rate")

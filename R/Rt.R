@@ -53,8 +53,7 @@
 #' @srrstats {G1.3} metric defined clearly
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #'   mod <- construct_model(
 #'     method = random_walk(),
 #'     pathogen_structure = single(
@@ -64,10 +63,10 @@
 #'   fit <- fit_model(mod)
 #'
 #'   rt <- Rt(fit, tau_max = 7, gi_dist = function(x) 4*x*exp(-2*x))
-#' }
 #'
 Rt <- function(fitted_model, tau_max = 7, gi_dist, ...) {
-  #' @srrstats {G2.1, G2.2, G5.8, G5.8a, G5.8b, G5.8c, G5.8d} assertions on types of inputs
+  #' @srrstats {G2.1, G2.2, G5.8, G5.8a, G5.8b, G5.8c, G5.8d} assertions on
+  #' types of inputs
   validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')
   validate_positive_whole_number(tau_max, 'tau_max')
   validate_gi_dist(gi_dist)

@@ -178,10 +178,6 @@ transform_posterior_multi <- function(post, B_true, num_path, num_days) {
 #' @importFrom rstan extract
 #' @importFrom dplyr bind_rows arrange
 #'
-#' @examples
-#' \dontrun{
-#' results <- compute_multi_pathogen(fitted_model, 1, "incidence")
-#' }
 compute_multi_pathogen <- function(fitted_model, start_idx, measure,
                                    threshold = 0, use_splines = FALSE,
                                    ...) {
@@ -270,10 +266,7 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
 #'
 #' @return Data frame with analysis results
 #' @importFrom rstan extract
-#' @examples
-#' \dontrun{
-#' results <- compute_single_pathogen(fitted_model, 1, "growth_rate")
-#' }
+#'
 compute_single_pathogen <- function(fitted_model, start_idx, measure,
                                     threshold = 0, use_splines = FALSE, ...) {
 

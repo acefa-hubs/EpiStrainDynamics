@@ -20,7 +20,7 @@ list of diagnostic information
 Diagnose model convergence and fit
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
   mod <- construct_model(
     method = random_walk(),
     pathogen_structure = single(
@@ -28,6 +28,5 @@ Diagnose model convergence and fit
       time = sarscov2$date))
   fit <- fit_model(mod)
   diagnose(fit)
-}
-
+\dontshow{\}) # examplesIf}
 }

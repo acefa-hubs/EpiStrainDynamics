@@ -58,7 +58,7 @@ For example:
 This metric function can be run directly on the fitted model output.
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
   mod <- construct_model(
     method = random_walk(),
     pathogen_structure = single(
@@ -67,7 +67,7 @@ This metric function can be run directly on the fitted model output.
 
   fit <- fit_model(mod)
   gr <- growth_rate(fit)
-}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other metrics: 

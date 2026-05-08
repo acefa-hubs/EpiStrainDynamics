@@ -36,14 +36,13 @@
 #'   time = 'date'
 #' )
 #'
+#' @examplesIf rlang::is_installed("xts")
 #' # Using a time series object (time argument is optional)
-#' \dontrun{
 #' sarscov2_xts <- xts::xts(sarscov2[, c("cases", "alpha")], order.by = sarscov2$date)
 #' single(
 #'   data = sarscov2_xts,
 #'   case_timeseries = 'cases'
 #' )
-#' }
 #'
 single <- function(data,
                    case_timeseries,
@@ -117,8 +116,8 @@ single <- function(data,
 #'   component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
 #' )
 #'
+#' @examplesIf rlang::is_installed("xts")
 #' # Using a time series object (time argument is optional)
-#' \dontrun{
 #' sarscov2_xts <- xts::xts(
 #'   sarscov2[, c("cases", "alpha", "delta", "omicron", "other")],
 #'   order.by = sarscov2$date
@@ -128,8 +127,6 @@ single <- function(data,
 #'   case_timeseries = 'cases',
 #'   component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
 #' )
-#' }
-#'
 multiple <- function(data,
                      case_timeseries,
                      time = NULL,
@@ -220,8 +217,8 @@ multiple <- function(data,
 #'   other_pathogen_timeseries = c('inf_B', 'other')
 #' )
 #'
+#' @examplesIf rlang::is_installed("xts")
 #' # Using a time series object (time argument is optional)
-#' \dontrun{
 #' influenza_xts <- xts::xts(
 #'   influenza[, c("ili", "inf_A", "inf_H3N2", "inf_H1N1", "inf_B", "other")],
 #'   order.by = influenza$week
@@ -233,7 +230,6 @@ multiple <- function(data,
 #'   influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
 #'   other_pathogen_timeseries = c('inf_B', 'other')
 #' )
-#' }
 #'
 subtyped <- function(data,
                      case_timeseries,
@@ -247,7 +243,7 @@ subtyped <- function(data,
   #' @srrstats {G2.1a} validation for vector inputs
   if(!is.null(time)) check_column_exists(data, time)
   ts_cols <- c(case_timeseries, influenzaA_unsubtyped_timeseries,
-                influenzaA_subtyped_timeseries, other_pathogen_timeseries)
+               influenzaA_subtyped_timeseries, other_pathogen_timeseries)
   for (col in ts_cols) {
     check_column_exists(data, col)
   }

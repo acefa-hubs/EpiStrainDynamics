@@ -53,8 +53,7 @@
 #' @srrstats {G1.3} metric defined clearly
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #'   mod <- construct_model(
 #'     method = p_spline(),
 #'     pathogen_structure = multiple(
@@ -80,7 +79,6 @@
 #'     numerator_combination = 'alpha',
 #'     denominator_combination = c('alpha', 'delta', 'omicron')
 #'   )
-#' }
 proportion <- function(fitted_model,
                        numerator_combination = NULL,
                        denominator_combination = NULL, ...) {
@@ -139,10 +137,7 @@ proportion <- function(fitted_model,
 #'
 #' @return Data frame with analysis results
 #' @importFrom rstan extract
-#' @examples
-#' \dontrun{
-#' results <- compute_proportion(fitted_model, 1, "growth_rate")
-#' }
+#'
 compute_proportion <- function(fitted_model,
                                use_splines, ...) {
 

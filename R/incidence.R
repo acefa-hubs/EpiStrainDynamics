@@ -46,8 +46,7 @@
 #' @srrstats {G1.3} metric defined clearly
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #'   mod <- construct_model(
 #'     method = random_walk(),
 #'     pathogen_structure = single(
@@ -64,7 +63,6 @@
 #'
 #'   # Explicitly include dow effects (if model has them)
 #'   inc_with_dow <- incidence(fit, dow = TRUE)
-#' }
 incidence <- function(fitted_model, dow = NULL, ...) {
   validate_class_inherits(fitted_model, 'EpiStrainDynamics.fit')
   UseMethod("incidence")

@@ -10,8 +10,7 @@
 #'
 #' @return list of diagnostic information
 #' @export
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #'   mod <- construct_model(
 #'     method = random_walk(),
 #'     pathogen_structure = single(
@@ -19,8 +18,6 @@
 #'       time = sarscov2$date))
 #'   fit <- fit_model(mod)
 #'   diagnose(fit)
-#' }
-#'
 diagnose_model <- function(fitted_model,
                            rhat_threshold = 1.1,
                            eff_sample_threshold = 100) {

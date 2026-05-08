@@ -22,8 +22,7 @@
 #' @srrstats {TS5.0} default plot methods implemented
 #' @srrstats {TS5.1, TS5.2, TS5.3} Time on x axis with units printed
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #'   mod <- construct_model(
 #'     method = random_walk(),
 #'     pathogen_structure = single(
@@ -33,7 +32,6 @@
 #'   fit <- fit_model(mod)
 #'   gr <- growth_rate(mod)
 #'   plot(gr)
-#' }
 plot <- function(df, xlab = 'Time', ...) {
   validate_class_inherits(df, 'EpiStrainDynamics.metric')
   UseMethod("plot")

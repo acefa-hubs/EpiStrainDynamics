@@ -56,8 +56,8 @@ subtyped(
   other_pathogen_timeseries = c('inf_B', 'other')
 )
 
+\dontshow{if (rlang::is_installed("xts")) withAutoprint(\{ # examplesIf}
 # Using a time series object (time argument is optional)
-\dontrun{
 influenza_xts <- xts::xts(
   influenza[, c("ili", "inf_A", "inf_H3N2", "inf_H1N1", "inf_B", "other")],
   order.by = influenza$week
@@ -69,8 +69,7 @@ subtyped(
   influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
   other_pathogen_timeseries = c('inf_B', 'other')
 )
-}
-
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other pathogen_structure: 
