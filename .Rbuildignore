@@ -16,3 +16,5 @@ paper.md
 ^src/.*\.o$
 ^doc$
 ^Meta$
+^\.positai$
+^\.claude$
