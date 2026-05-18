@@ -2,14 +2,16 @@
 #'   including conditions that trigger these messages and comparing with
 #'   expected results
 #' @srrstats {G3.0} comparisons made between appropriate values
-#'
-# Tests for validate_positive_whole_number()
+
+# ==============================================================================
+# TESTS: validate_positive_whole_number()
+# ==============================================================================
+
 test_that("validate_positive_whole_number() passes valid inputs", {
-  # Should not throw errors for valid positive whole numbers
   expect_silent(EpiStrainDynamics:::validate_positive_whole_number(1, "test_param"))
   expect_silent(EpiStrainDynamics:::validate_positive_whole_number(5L, "test_param"))
   expect_silent(EpiStrainDynamics:::validate_positive_whole_number(100, "test_param"))
-  expect_silent(EpiStrainDynamics:::validate_positive_whole_number(3.0, "test_param"))  # Whole number as double
+  expect_silent(EpiStrainDynamics:::validate_positive_whole_number(3.0, "test_param"))
 })
 
 test_that("validate_positive_whole_number() returns invisible NULL", {
@@ -72,7 +74,10 @@ test_that("validate_positive_whole_number() uses correct argument name in errors
                "Argument days_per_knot must be numeric")
 })
 
-# Tests for validate_class_inherits()
+# ==============================================================================
+# TESTS: validate_class_inherits()
+# ==============================================================================
+
 test_that("validate_class_inherits() passes valid class", {
   df <- data.frame(x = 1:3, y = letters[1:3])
   mat <- matrix(1:6, nrow = 2)
@@ -83,64 +88,11 @@ test_that("validate_class_inherits() passes valid class", {
 })
 
 test_that("validate_class_inherits() handles inheritance", {
-  # Create object with multiple classes
   obj <- structure(list(a = 1), class = c("child_class", "parent_class"))
-
   expect_silent(EpiStrainDynamics:::validate_class_inherits(obj, "parent_class"))
   expect_silent(EpiStrainDynamics:::validate_class_inherits(obj, "child_class"))
 })
 
-# Tests for validate_gi_dist()
-test_that("validate_gi_dist accepts valid functions", {
-  # Standard valid function
-  gi_dist <- function(x) 4 * x * exp(-2 * x)
-  expect_silent(validate_gi_dist(gi_dist))
-
-  # Exponential-like
-  gi_dist1 <- function(x) exp(-x)
-  expect_silent(validate_gi_dist(gi_dist1))
-
-  # Gamma-like
-  gi_dist2 <- function(x) x^2 * exp(-x)
-  expect_silent(validate_gi_dist(gi_dist2))
-
-  # Constant
-  gi_dist3 <- function(x) rep(0.1, length(x))
-  expect_silent(validate_gi_dist(gi_dist3))
-})
-
-test_that("validate_gi_dist rejects invalid input types", {
-  # Non-function inputs
-  expect_error(validate_gi_dist(5), class = "rlang_error")
-  expect_error(validate_gi_dist("not a function"), class = "rlang_error")
-
-  # Function with no arguments
-  gi_dist <- function() 1
-  expect_error(validate_gi_dist(gi_dist), class = "rlang_error")
-})
-
-test_that("validate_gi_dist rejects functions with invalid outputs", {
-  # Function that errors
-  gi_dist1 <- function(x) stop("intentional error")
-  expect_error(validate_gi_dist(gi_dist1), class = "rlang_error")
-
-  # Non-numeric output
-  gi_dist2 <- function(x) as.character(x)
-  expect_error(validate_gi_dist(gi_dist2), class = "rlang_error")
-
-  # Non-vectorized function
-  gi_dist3 <- function(x) sum(x)
-  expect_error(validate_gi_dist(gi_dist3), class = "rlang_error")
-
-  # Negative values
-  gi_dist4 <- function(x) -x
-  expect_error(validate_gi_dist(gi_dist4), class = "rlang_error")
-})
-
-test_that("validate_gi_dist warns about non-finite values", {
-  gi_dist <- function(x) ifelse(x == 0, Inf, x)
-  expect_warning(validate_gi_dist(gi_dist), class = "rlang_warning")
-})
 test_that("validate_class_inherits() rejects wrong class", {
   expect_error(EpiStrainDynamics:::validate_class_inherits("string", "data.frame"),
                "Input must be of class data.frame but got class: character")
@@ -150,121 +102,244 @@ test_that("validate_class_inherits() rejects wrong class", {
                "Input must be of class data.frame but got class: list")
 })
 
+test_that("validate_class_inherits() handles require_all = FALSE", {
+  obj <- structure(list(a = 1), class = c("classA", "classB"))
+  expect_silent(EpiStrainDynamics:::validate_class_inherits(obj,
+                                                            c("classA", "classC"),
+                                                            require_all = FALSE))
+  expect_error(EpiStrainDynamics:::validate_class_inherits(obj,
+                                                           c("classX", "classY"),
+                                                           require_all = FALSE),
+               "Input must inherit from at least one of")
+})
+
+test_that("validate_class_inherits() handles multiple required classes", {
+  obj <- structure(list(a = 1), class = c("classA", "classB"))
+  expect_silent(EpiStrainDynamics:::validate_class_inherits(obj, c("classA", "classB")))
+  expect_error(EpiStrainDynamics:::validate_class_inherits(obj, c("classA", "classC")),
+               "Input must inherit from all classes")
+})
+
+test_that("validate_class_inherits() errors on empty class_names", {
+  expect_error(EpiStrainDynamics:::validate_class_inherits(1:5, character(0)),
+               "must be a non-empty character vector")
+})
+
+# ==============================================================================
+# TESTS: validate_priors()
+# ==============================================================================
+
+test_that("validate_priors() accepts valid priors", {
+  result <- EpiStrainDynamics:::validate_priors(mean = 0.5, sd = 1.0)
+  expect_s3_class(result, "EpiStrainDynamics.prior")
+  expect_equal(result$mean, 0.5)
+  expect_equal(result$sd, 1.0)
+})
+
+test_that("validate_priors() accepts vector priors", {
+  result <- EpiStrainDynamics:::validate_priors(mean = c(0.1, 0.2), sd = c(1.0, 1.0))
+  expect_s3_class(result, "EpiStrainDynamics.prior")
+  expect_length(result$mean, 2)
+})
+
+test_that("validate_priors() accepts NULL priors", {
+  result <- EpiStrainDynamics:::validate_priors(mean = NULL, sd = NULL)
+  expect_s3_class(result, "EpiStrainDynamics.prior")
+  expect_null(result$mean)
+  expect_null(result$sd)
+})
+
+test_that("validate_priors() errors when only one of mean/sd provided", {
+  expect_error(EpiStrainDynamics:::validate_priors(mean = 0.5, sd = NULL),
+               "both mean and sd must be provided")
+  expect_error(EpiStrainDynamics:::validate_priors(mean = NULL, sd = 1.0),
+               "both mean and sd must be provided")
+})
+
+test_that("validate_priors() errors on non-numeric priors", {
+  expect_error(EpiStrainDynamics:::validate_priors(mean = "a", sd = 1.0),
+               "must be numeric")
+  expect_error(EpiStrainDynamics:::validate_priors(mean = 0.5, sd = "b"),
+               "must be numeric")
+})
+
+test_that("validate_priors() errors on NA values", {
+  expect_error(EpiStrainDynamics:::validate_priors(mean = NA_real_, sd = 1.0),
+               "cannot contain NA values")
+  expect_error(EpiStrainDynamics:::validate_priors(mean = 0.5, sd = NA_real_),
+               "cannot contain NA values")
+})
+
+test_that("validate_priors() errors when mean and sd have different lengths", {
+  expect_error(EpiStrainDynamics:::validate_priors(mean = c(0.1, 0.2), sd = 1.0),
+               "must have the same length")
+})
+
+test_that("validate_priors() errors on negative values", {
+  expect_error(EpiStrainDynamics:::validate_priors(mean = -0.5, sd = 1.0),
+               "must be positive")
+  expect_error(EpiStrainDynamics:::validate_priors(mean = 0.5, sd = -1.0),
+               "must be positive")
+  expect_error(EpiStrainDynamics:::validate_priors(mean = 0.5, sd = 0),
+               "must be positive")
+})
+
+# ==============================================================================
+# TESTS: validate_gi_dist()
+# ==============================================================================
+
+test_that("validate_gi_dist accepts valid functions", {
+  gi_dist <- function(x) 4 * x * exp(-2 * x)
+  expect_silent(EpiStrainDynamics:::validate_gi_dist(gi_dist))
+
+  gi_dist1 <- function(x) exp(-x)
+  expect_silent(EpiStrainDynamics:::validate_gi_dist(gi_dist1))
+
+  gi_dist2 <- function(x) x^2 * exp(-x)
+  expect_silent(EpiStrainDynamics:::validate_gi_dist(gi_dist2))
+
+  gi_dist3 <- function(x) rep(0.1, length(x))
+  expect_silent(EpiStrainDynamics:::validate_gi_dist(gi_dist3))
+})
+
+test_that("validate_gi_dist rejects invalid input types", {
+  expect_error(EpiStrainDynamics:::validate_gi_dist(5), class = "rlang_error")
+  expect_error(EpiStrainDynamics:::validate_gi_dist("not a function"), class = "rlang_error")
+
+  gi_dist <- function() 1
+  expect_error(EpiStrainDynamics:::validate_gi_dist(gi_dist), class = "rlang_error")
+})
+
+test_that("validate_gi_dist rejects functions with invalid outputs", {
+  gi_dist1 <- function(x) stop("intentional error")
+  expect_error(EpiStrainDynamics:::validate_gi_dist(gi_dist1), class = "rlang_error")
+
+  gi_dist2 <- function(x) as.character(x)
+  expect_error(EpiStrainDynamics:::validate_gi_dist(gi_dist2), class = "rlang_error")
+
+  gi_dist3 <- function(x) sum(x)
+  expect_error(EpiStrainDynamics:::validate_gi_dist(gi_dist3), class = "rlang_error")
+
+  gi_dist4 <- function(x) -x
+  expect_error(EpiStrainDynamics:::validate_gi_dist(gi_dist4), class = "rlang_error")
+})
+
+test_that("validate_gi_dist warns about non-finite values", {
+  gi_dist <- function(x) ifelse(x == 0, Inf, x)
+  expect_warning(EpiStrainDynamics:::validate_gi_dist(gi_dist), class = "rlang_warning")
+})
+
+# ==============================================================================
+# TESTS: validate_pathogen_combination()
+# ==============================================================================
+
 test_that("validate_pathogen_combination accepts valid inputs", {
   pathogen_names <- c("alpha", "delta", "omicron", "other")
 
-  # NULL is valid for both
-  expect_silent(validate_pathogen_combination(NULL, pathogen_names, "numerator_combination"))
-  expect_silent(validate_pathogen_combination(NULL, pathogen_names, "denominator_combination"))
-
-  # Single and multiple pathogens valid for both
-  expect_silent(validate_pathogen_combination("alpha", pathogen_names, "numerator_combination"))
-  expect_silent(validate_pathogen_combination(c("alpha", "delta"), pathogen_names, "denominator_combination"))
-
+  expect_silent(EpiStrainDynamics:::validate_pathogen_combination(
+    NULL, pathogen_names, "numerator_combination"))
+  expect_silent(EpiStrainDynamics:::validate_pathogen_combination(
+    NULL, pathogen_names, "denominator_combination"))
+  expect_silent(EpiStrainDynamics:::validate_pathogen_combination(
+    "alpha", pathogen_names, "numerator_combination"))
+  expect_silent(EpiStrainDynamics:::validate_pathogen_combination(
+    c("alpha", "delta"), pathogen_names, "denominator_combination"))
 })
 
-test_that("validate_pathogen_combination rejects invalid inputs", {
+test_that("validate_pathogen_combination returns correct indices", {
   pathogen_names <- c("alpha", "delta", "omicron", "other")
 
-  # Non-character input
+  result <- EpiStrainDynamics:::validate_pathogen_combination(
+    NULL, pathogen_names, "numerator_combination")
+  expect_equal(result, 1:4)
+
+  result <- EpiStrainDynamics:::validate_pathogen_combination(
+    "delta", pathogen_names, "numerator_combination")
+  expect_equal(result, 2L)
+
+  result <- EpiStrainDynamics:::validate_pathogen_combination(
+    c("omicron", "alpha"), pathogen_names, "numerator_combination")
+  expect_equal(result, c(3L, 1L))
+})
+
+test_that("validate_pathogen_combination rejects invalid pathogen names", {
+  pathogen_names <- c("alpha", "delta", "omicron", "other")
+
   expect_error(
-    validate_pathogen_combination(123, pathogen_names, "numerator_combination"),
+    EpiStrainDynamics:::validate_pathogen_combination(
+      "beta", pathogen_names, "denominator_combination"),
     class = "rlang_error"
   )
-
-  # Invalid pathogen names
   expect_error(
-    validate_pathogen_combination("beta", pathogen_names, "denominator_combination"),
+    EpiStrainDynamics:::validate_pathogen_combination(
+      c("alpha", "beta"), pathogen_names, "numerator_combination"),
     class = "rlang_error"
   )
-
 })
 
-# Tests for collective MCMC parameter validation
+# ==============================================================================
+# TESTS: check_missing_data()
+# ==============================================================================
 
-test_that("validate_mcmc_params_collective checks n_warmup < n_iter ", {
+test_that("check_missing_data() passes when no NAs present", {
+  df <- data.frame(cases = c(10, 20, 30), dates = as.Date("2024-01-01") + 0:2)
+  expect_silent(EpiStrainDynamics:::check_missing_data(df, "cases", "case_timeseries"))
+})
+
+test_that("check_missing_data() errors when NAs present", {
+  df <- data.frame(cases = c(10, NA, 30))
   expect_error(
-    validate_mcmc_params_collective(n_iter = 100, n_warmup = 100, n_chain = 1),
-    "n_warmup.*must be less than.*n_iter"
+    EpiStrainDynamics:::check_missing_data(df, "cases", "case_timeseries"),
+    "Missing values"
   )
+})
 
+test_that("check_missing_data() shows correct row indices in error", {
+  df <- data.frame(cases = c(10, NA, 30, NA, 50))
   expect_error(
-    validate_mcmc_params_collective(n_iter = 100, n_warmup = 150, n_chain = 1),
-    "n_warmup.*must be less than.*n_iter"
+    EpiStrainDynamics:::check_missing_data(df, "cases", "case_timeseries"),
+    "row\\(s\\) 2, 4"
   )
 })
 
-test_that("validate_mcmc_params_collective warns about large n_iter", {
-  expect_warning(
-    validate_mcmc_params_collective(n_iter = 25000, n_warmup = 1000, n_chain = 1),
-    "Large.*n_iter.*long computation"
-  )
-
-  # Should not warn for reasonable values
-  expect_silent(
-    validate_mcmc_params_collective(n_iter = 2000, n_warmup = 1000, n_chain = 1)
-  )
-})
-
-test_that("validate_mcmc_params_collective warns when n_chain exceeds cores", {
-  n_cores <- parallel::detectCores(logical = FALSE)
-
-  if (!is.na(n_cores)) {
-    expect_warning(
-      validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = n_cores + 2),
-      "exceeds available CPU cores"
-    )
-  }
-})
-
-test_that("validate_mcmc_params_collective warns about excessive thinning", {
-  # This will result in only 10 samples: (100 - 50) / 5 * 1 = 10
-  expect_warning(
-    validate_mcmc_params_collective(n_iter = 100, n_warmup = 50, n_chain = 1, thin = 5),
-    "Very few effective samples.*thinning"
-  )
-
-})
-
-test_that("validate_mcmc_params_collective validates seed parameter", {
-  # NULL seed should pass
-  expect_silent(
-    validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = 1, seed = NULL)
-  )
-
-  # Single numeric should pass
-  expect_silent(
-    validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = 1, seed = 123)
-  )
-
-  # Non-numeric should error
+test_that("check_missing_data() summarises many NAs", {
+  df <- data.frame(cases = c(NA, NA, NA, NA, NA, NA, 10))
   expect_error(
-    validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = 1, seed = "abc"),
-    "seed.*must be a single numeric value"
-  )
-
-  # Multiple values should error
-  expect_error(
-    validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = 1, seed = c(1, 2)),
-    "seed.*must be a single numeric value"
-  )
-
-  # Non-integer should warn
-  expect_warning(
-    validate_mcmc_params_collective(n_iter = 1000, n_warmup = 500, n_chain = 1, seed = 123.5),
-    "seed.*not an integer"
+    EpiStrainDynamics:::check_missing_data(df, "cases", "case_timeseries"),
+    "6 total"
   )
 })
 
-test_that("fit_model uses collective validation", {
-  skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
-  check_package_data()
+# ==============================================================================
+# TESTS: check_list_columns()
+# ==============================================================================
 
-  models <- create_test_models()
+test_that("check_list_columns() passes for normal data frames", {
+  df <- data.frame(cases = 1:5, dates = as.Date("2024-01-01") + 0:4)
+  expect_silent(EpiStrainDynamics:::check_list_columns(df, "cases"))
+})
 
-  # Should error when n_warmup >= n_iter
+test_that("check_list_columns() errors when list columns present", {
+  df <- data.frame(x = 1:3)
+  df$list_col <- list(1, 2, 3)
   expect_error(
-    fit_model(models$rw_single, n_iter = 100, n_warmup = 100, n_chain = 1, verbose = FALSE),
-    "n_warmup.*must be less than.*n_iter"
+    EpiStrainDynamics:::check_list_columns(df, "list_col"),
+    "List columns detected"
   )
+})
+
+test_that("check_list_columns() passes when relevant cols don't exist", {
+  df <- data.frame(x = 1:3)
+  expect_silent(EpiStrainDynamics:::check_list_columns(df, "nonexistent_col"))
+})
+
+# ==============================================================================
+# TESTS: is_timeseries_class()
+# ==============================================================================
+
+test_that("is_timeseries_class() correctly identifies time series objects", {
+  expect_true(EpiStrainDynamics:::is_timeseries_class(ts(1:10)))
+  expect_false(EpiStrainDynamics:::is_timeseries_class(data.frame(x = 1:5)))
+  expect_false(EpiStrainDynamics:::is_timeseries_class(1:10))
+  expect_false(EpiStrainDynamics:::is_timeseries_class(list(x = 1:5)))
 })
