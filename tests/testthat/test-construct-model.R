@@ -160,6 +160,14 @@ test_that("smoothing parameters are correctly incorporated into standata", {
     smoothing_params = smoothing_structure("correlated")
   )
   expect_equal(result_corr$standata$cov_structure, 2)
+
+})
+
+test_that("smoothing_structure() alerts when tau priors provided for correlated type", {
+  expect_message(
+    smoothing_structure("correlated", tau_mean = 0.5, tau_sd = 1.0),
+    "ignored for"
+  )
 })
 
 test_that("dispersion parameters are correctly incorporated into standata", {
@@ -352,6 +360,10 @@ test_that("get_knots() validates inputs properly", {
                "must be a positive")
   expect_error(EpiStrainDynamics:::get_knots(X, spline_degree = 3.7),
                "must be a whole number")
+  expect_error(
+    EpiStrainDynamics:::get_knots(c(NA_real_, NA_real_, NA_real_)),
+    "'from' must be a finite number"
+  )
 })
 
 test_that("get_cov_structure() returns correct numeric codes", {
