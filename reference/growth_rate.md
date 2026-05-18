@@ -79,7 +79,7 @@ Other metrics:
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
   mod <- construct_model(
     method = random_walk(),
     pathogen_structure = single(
@@ -88,5 +88,5 @@ if (FALSE) { # \dontrun{
 
   fit <- fit_model(mod)
   gr <- growth_rate(fit)
-} # }
+}
 ```

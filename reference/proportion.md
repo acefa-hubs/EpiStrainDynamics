@@ -95,7 +95,7 @@ Other metrics:
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
   mod <- construct_model(
     method = p_spline(),
     pathogen_structure = multiple(
@@ -113,13 +113,13 @@ if (FALSE) { # \dontrun{
 
   # or a unique combination, compared to all pathogens
   prop2 <- proportion(fit,
-    numerator_combination = c('alpha', 'delta', 'omicron')
+    numerator_combination = c("alpha", "delta", "omicron")
   )
 
   # or a user-specified combination in both numerator and denominator
   prop3 <- proportion(fit,
-    numerator_combination = 'alpha',
-    denominator_combination = c('alpha', 'delta', 'omicron')
+    numerator_combination = "alpha",
+    denominator_combination = c("alpha", "delta", "omicron")
   )
-} # }
+}
 ```

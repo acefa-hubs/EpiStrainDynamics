@@ -85,7 +85,7 @@ Other metrics:
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
   mod <- construct_model(
     method = random_walk(),
     pathogen_structure = single(
@@ -102,5 +102,5 @@ if (FALSE) { # \dontrun{
 
   # Explicitly include dow effects (if model has them)
   inc_with_dow <- incidence(fit, dow = TRUE)
-} # }
+}
 ```

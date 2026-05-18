@@ -9,19 +9,19 @@ distribution: \$\$R_t = \frac{I_t}{\sum\_{k=0}^{\tau\_{\max}-1} I\_{t-k}
 ## Usage
 
 ``` r
-Rt(fitted_model, tau_max = 7, gi_dist, ...)
+Rt(fitted_model, gi_dist, tau_max = 7, ...)
 
 # S3 method for class 'ps'
-Rt(fitted_model, tau_max = 7, gi_dist, ...)
+Rt(fitted_model, gi_dist, tau_max = 7, ...)
 
 # S3 method for class 'rw'
-Rt(fitted_model, tau_max = 7, gi_dist, ...)
+Rt(fitted_model, gi_dist, tau_max = 7, ...)
 
 # S3 method for class 'ps_single'
-Rt(fitted_model, tau_max = 7, gi_dist, ...)
+Rt(fitted_model, gi_dist, tau_max = 7, ...)
 
 # S3 method for class 'rw_single'
-Rt(fitted_model, tau_max = 7, gi_dist, ...)
+Rt(fitted_model, gi_dist, tau_max = 7, ...)
 ```
 
 ## Arguments
@@ -30,13 +30,13 @@ Rt(fitted_model, tau_max = 7, gi_dist, ...)
 
   Fitted model object with class `EpiStrainDynamics.fit`
 
-- tau_max:
-
-  Integer maximum generation interval in days (default: 7)
-
 - gi_dist:
 
   Function that returns generation interval probability for given day
+
+- tau_max:
+
+  Integer maximum generation interval in days (default: 7)
 
 - ...:
 
@@ -101,7 +101,7 @@ Other metrics:
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
   mod <- construct_model(
     method = random_walk(),
     pathogen_structure = single(
@@ -110,6 +110,6 @@ if (FALSE) { # \dontrun{
 
   fit <- fit_model(mod)
 
-  rt <- Rt(fit, tau_max = 7, gi_dist = function(x) 4*x*exp(-2*x))
-} # }
+  rt <- Rt(fit, gi_dist = function(x) 4*x*exp(-2*x), tau_max = 7)
+}
 ```

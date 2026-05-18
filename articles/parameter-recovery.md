@@ -104,8 +104,8 @@ for (i in seq_along(seeds)) {
     method = random_walk(),
     pathogen_structure = single(
       data = single_data,
-      case_timeseries = 'cases',
-      time = 'date'
+      case_timeseries = "cases",
+      time = "date"
     )
   )
   
@@ -282,9 +282,9 @@ for (i in seq_along(seeds)) {
     method = random_walk(),
     pathogen_structure = multiple(
       data = multiple_data,
-      case_timeseries = 'cases',
-      time = 'date',
-      component_pathogen_timeseries = c('pathogen1', 'pathogen2', 'pathogen3')
+      case_timeseries = "cases",
+      time = "date",
+      component_pathogen_timeseries = c("pathogen1", "pathogen2", "pathogen3")
     )
   )
   
@@ -356,9 +356,9 @@ G5.6b) {.table}
 
 # Plot recovery for first seed with true proportions
 props_first <- multiple_fits[[1]]$proportions
-prop1 <- props_first$measure$y[props_first$measure$pathogen == 'pathogen1']
-prop2 <- props_first$measure$y[props_first$measure$pathogen == 'pathogen2']
-prop3 <- props_first$measure$y[props_first$measure$pathogen == 'pathogen3']
+prop1 <- props_first$measure$y[props_first$measure$pathogen == "pathogen1"]
+prop2 <- props_first$measure$y[props_first$measure$pathogen == "pathogen2"]
+prop3 <- props_first$measure$y[props_first$measure$pathogen == "pathogen3"]
 
 plot_data <- data.frame(
   date = rep(dates, 3),
@@ -482,9 +482,9 @@ model_ps <- construct_model(
   method = p_spline(spline_degree = 3, days_per_knot = 7),
   pathogen_structure = multiple(
     data = multiple_data,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('pathogen1', 'pathogen2', 'pathogen3')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("pathogen1", "pathogen2", "pathogen3")
   )
 )
 
@@ -492,9 +492,9 @@ fit_ps <- fit_model(model_ps, n_chain = 2, n_iter = 2000,
                     seed = 999, verbose = FALSE)
 
 props_ps <- proportion(fit_ps)$measure
-props1 <- props_ps$y[props_ps$pathogen == 'pathogen1']
-props2 <- props_ps$y[props_ps$pathogen == 'pathogen2']
-props3 <- props_ps$y[props_ps$pathogen == 'pathogen3']
+props1 <- props_ps$y[props_ps$pathogen == "pathogen1"]
+props2 <- props_ps$y[props_ps$pathogen == "pathogen2"]
+props3 <- props_ps$y[props_ps$pathogen == "pathogen3"]
 
 # Calculate recovery metrics
 ps_recovery <- data.frame(
@@ -527,7 +527,7 @@ P-spline method parameter recovery {.table}
 
 # Compare random walk vs p-spline for pathogen 1
 rw_props1 <- multiple_fits[[1]]$proportions$measure$y[
-  multiple_fits[[1]]$proportions$measure$pathogen == 'pathogen1']
+  multiple_fits[[1]]$proportions$measure$pathogen == "pathogen1"]
 
 comparison_data <- data.frame(
   date = rep(dates, 3),
@@ -632,11 +632,11 @@ model_subtyped <- construct_model(
   method = random_walk(),
   pathogen_structure = subtyped(
     data = subtyped_data,
-    case_timeseries = 'ili',
-    time = 'week',
-    influenzaA_unsubtyped_timeseries = 'inf_A',
-    influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
-    other_pathogen_timeseries = c('inf_B', 'other')
+    case_timeseries = "ili",
+    time = "week",
+    influenzaA_unsubtyped_timeseries = "inf_A",
+    influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+    other_pathogen_timeseries = c("inf_B", "other")
   )
 )
 
@@ -644,10 +644,10 @@ fit_subtyped <- fit_model(model_subtyped, n_chain = 2, n_iter = 2000,
                           seed = 12345, verbose = FALSE)
 
 props_subtyped <- proportion(fit_subtyped)
-h3n2 <- props_subtyped$measure$y[props_subtyped$measure$pathogen == 'inf_H3N2']
-h1n1 <- props_subtyped$measure$y[props_subtyped$measure$pathogen == 'inf_H1N1']
-b <- props_subtyped$measure$y[props_subtyped$measure$pathogen == 'inf_B']
-other <- props_subtyped$measure$y[props_subtyped$measure$pathogen == 'other']
+h3n2 <- props_subtyped$measure$y[props_subtyped$measure$pathogen == "inf_H3N2"]
+h1n1 <- props_subtyped$measure$y[props_subtyped$measure$pathogen == "inf_H1N1"]
+b <- props_subtyped$measure$y[props_subtyped$measure$pathogen == "inf_B"]
+other <- props_subtyped$measure$y[props_subtyped$measure$pathogen == "other"]
 
 # Calculate recovery metrics
 subtyped_recovery <- data.frame(
@@ -767,8 +767,8 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] dplyr_1.2.1                  ggplot2_4.0.3               
-#> [3] EpiStrainDynamics_0.0.1.0000
+#> [1] dplyr_1.2.1               ggplot2_4.0.3            
+#> [3] EpiStrainDynamics_0.0.1.1
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] tidyselect_1.2.1      viridisLite_0.4.3     timeDate_4052.112    
@@ -796,9 +796,9 @@ sessionInfo()
 #> [67] codetools_0.2-20      rsample_1.3.2         lubridate_1.9.5      
 #> [70] gtable_0.3.6          QuickJSR_1.9.2        tibble_3.3.1         
 #> [73] pillar_1.11.1         furrr_0.4.0           htmltools_0.5.9      
-#> [76] ipred_0.9-15          lava_1.9.0            R6_2.6.1             
+#> [76] ipred_0.9-15          lava_1.9.1            R6_2.6.1             
 #> [79] textshaping_1.0.5     evaluate_1.0.5        lattice_0.22-9       
-#> [82] tsibble_1.2.0         bslib_0.10.0          rstantools_2.6.0     
+#> [82] tsibble_1.2.0         bslib_0.11.0          rstantools_2.6.0     
 #> [85] class_7.3-23          Rcpp_1.1.1-1.1        gridExtra_2.3        
 #> [88] prodlim_2026.03.11    xfun_0.57             fs_2.1.0             
 #> [91] zoo_1.8-15            pkgconfig_2.0.3

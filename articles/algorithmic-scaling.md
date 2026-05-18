@@ -125,16 +125,16 @@ for (n in data_sizes) {
   # Single pathogen structure
   single_struct <- single(
     data = test_data,
-    case_timeseries = 'cases',
-    time = 'date'
+    case_timeseries = "cases",
+    time = "date"
   )
   
   # Multiple pathogen structure
   multi_struct <- multiple(
     data = test_data,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('pathogen1', 'pathogen2', 'pathogen3', 'pathogen4')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("pathogen1", "pathogen2", "pathogen3", "pathogen4")
   )
   
   # Time single pathogen 
@@ -195,15 +195,15 @@ for (n in data_sizes) {
   
   single_struct <- single(
     data = test_data,
-    case_timeseries = 'cases',
-    time = 'date'
+    case_timeseries = "cases",
+    time = "date"
   )
   
   multi_struct <- multiple(
     data = test_data,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('pathogen1', 'pathogen2', 'pathogen3', 'pathogen4')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("pathogen1", "pathogen2", "pathogen3", "pathogen4")
   )
   
   # Time single pathogen
@@ -295,10 +295,10 @@ knitr::kable(scaling_results, digits = 3,
 
 | method      | pathogen_structure | scaling_exponent | r_squared |
 |:------------|:-------------------|-----------------:|----------:|
-| p_spline    | multiple           |            1.014 |     0.996 |
-| p_spline    | single             |            0.849 |     0.992 |
-| random_walk | multiple           |            0.957 |     0.999 |
-| random_walk | single             |            0.881 |     0.982 |
+| p_spline    | multiple           |            1.009 |     0.997 |
+| p_spline    | single             |            0.840 |     0.990 |
+| random_walk | multiple           |            0.958 |     0.999 |
+| random_walk | single             |            0.883 |     0.984 |
 
 Scaling exponents: time complexity approximately O(n^exponent) {.table}
 
@@ -324,9 +324,9 @@ model <- construct_model(
   method = random_walk(),
   pathogen_structure = multiple(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
   )
 )
 
@@ -334,7 +334,7 @@ fit <- fit_model(model, n_chain = 2, n_iter = 1000, verbose = FALSE)
 
 # Extract incidence (predicted values)
 inc <- incidence(fit, dow = FALSE)
-inc_total <- inc$measure[inc$measure$pathogen == 'Total', ]
+inc_total <- inc$measure[inc$measure$pathogen == "Total", ]
 
 # Compare scales
 input_summary <- data.frame(
@@ -435,8 +435,8 @@ for (scale in test_scales) {
     method = random_walk(),
     pathogen_structure = single(
       data = test_data,
-      case_timeseries = 'cases',
-      time = 'date'
+      case_timeseries = "cases",
+      time = "date"
     )
   )
   
@@ -502,16 +502,16 @@ model_original <- construct_model(
   method = random_walk(),
   pathogen_structure = multiple(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
   )
 )
 
 fit_original <- fit_model(model_original, n_chain = 2, n_iter = 1000, 
                           seed = 54321, verbose = FALSE)
 inc_original <- incidence(fit_original, dow = FALSE)
-inc_original_total <- inc_original$measure[inc_original$measure$pathogen == 'Total', ]
+inc_original_total <- inc_original$measure[inc_original$measure$pathogen == "Total", ]
 
 # Test with different noise levels 
 noise_levels <- c(0.05, 0.1)  # 5%, 10% noise relative to mean
@@ -528,7 +528,7 @@ for (noise_level in noise_levels) {
   sarscov2_noisy <- sarscov2
   sarscov2_noisy$cases <- noisy_cases
   
-  for (pathogen in c('alpha', 'delta', 'omicron', 'other')) {
+  for (pathogen in c("alpha", "delta", "omicron", "other")) {
     sarscov2_noisy[[pathogen]] <- pmax(0, round(
       sarscov2[[pathogen]] + rnorm(length(sarscov2[[pathogen]]), 
                                    mean = 0, 
@@ -541,9 +541,9 @@ for (noise_level in noise_levels) {
     method = random_walk(),
     pathogen_structure = multiple(
       data = sarscov2_noisy,
-      case_timeseries = 'cases',
-      time = 'date',
-      component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+      case_timeseries = "cases",
+      time = "date",
+      component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
     )
   )
   
@@ -552,7 +552,7 @@ for (noise_level in noise_levels) {
   inc_noisy <- incidence(fit_noisy, dow = FALSE)
   
   noise_results[[as.character(noise_level)]] <- 
-    inc_noisy$measure[inc_noisy$measure$pathogen == 'Total', ]
+    inc_noisy$measure[inc_noisy$measure$pathogen == "Total", ]
 }
 ```
 
@@ -684,15 +684,15 @@ fit_with_seed <- function(seed) {
     method = random_walk(),
     pathogen_structure = multiple(
       data = sarscov2,
-      case_timeseries = 'cases',
-      time = 'date',
-      component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+      case_timeseries = "cases",
+      time = "date",
+      component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
     )
   )
   
   fit <- fit_model(model, n_chain = 2, n_iter = 1000, verbose = FALSE)
   inc <- incidence(fit, dow = FALSE)
-  inc$measure[inc$measure$pathogen == 'Total', ]
+  inc$measure[inc$measure$pathogen == "Total", ]
 }
 
 # Fit with different seeds
@@ -824,8 +824,8 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] dplyr_1.2.1                  ggplot2_4.0.3               
-#> [3] EpiStrainDynamics_0.0.1.0000
+#> [1] dplyr_1.2.1               ggplot2_4.0.3            
+#> [3] EpiStrainDynamics_0.0.1.1
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] tidyselect_1.2.1      viridisLite_0.4.3     timeDate_4052.112    
@@ -853,9 +853,9 @@ sessionInfo()
 #> [67] codetools_0.2-20      rsample_1.3.2         lubridate_1.9.5      
 #> [70] gtable_0.3.6          QuickJSR_1.9.2        tibble_3.3.1         
 #> [73] pillar_1.11.1         furrr_0.4.0           htmltools_0.5.9      
-#> [76] ipred_0.9-15          lava_1.9.0            R6_2.6.1             
+#> [76] ipred_0.9-15          lava_1.9.1            R6_2.6.1             
 #> [79] textshaping_1.0.5     evaluate_1.0.5        lattice_0.22-9       
-#> [82] tsibble_1.2.0         bslib_0.10.0          rstantools_2.6.0     
+#> [82] tsibble_1.2.0         bslib_0.11.0          rstantools_2.6.0     
 #> [85] class_7.3-23          Rcpp_1.1.1-1.1        gridExtra_2.3        
 #> [88] prodlim_2026.03.11    xfun_0.57             fs_2.1.0             
 #> [91] zoo_1.8-15            pkgconfig_2.0.3

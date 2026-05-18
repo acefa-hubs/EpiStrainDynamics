@@ -180,7 +180,7 @@ error is raised that can be caught and inspected.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
   mod <- construct_model(
     method = random_walk(),
     pathogen_structure = single(
@@ -204,5 +204,5 @@ if (FALSE) { # \dontrun{
     cat("Fitting failed:", result$message, "\n")
     # Can still access the model: result$constructed_model
   }
-} # }
+}
 ```

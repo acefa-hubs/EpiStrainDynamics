@@ -29,7 +29,7 @@ list of diagnostic information
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
   mod <- construct_model(
     method = random_walk(),
     pathogen_structure = single(
@@ -37,5 +37,5 @@ if (FALSE) { # \dontrun{
       time = sarscov2$date))
   fit <- fit_model(mod)
   diagnose(fit)
-} # }
+}
 ```
