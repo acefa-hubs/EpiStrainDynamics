@@ -6,10 +6,8 @@
 \alias{plot.growth_rate}
 \alias{plot.Rt}
 \alias{plot.proportion}
-\title{Generic Method for plotting metrics calculation outputs}
+\title{Plot metrics calculation outputs}
 \usage{
-plot(df, xlab = "Time", ...)
-
 \method{plot}{incidence}(df, xlab = "Time", ...)
 
 \method{plot}{growth_rate}(df, xlab = "Time", ...)
@@ -19,8 +17,7 @@ plot(df, xlab = "Time", ...)
 \method{plot}{proportion}(df, xlab = "Time", ...)
 }
 \arguments{
-\item{df}{Metrics calculation output of class \code{EpiStrainDynamics.metric}
-from either \code{\link[=incidence]{incidence()}}, \code{\link[=growth_rate]{growth_rate()}}, \code{\link[=Rt]{Rt()}}, or \code{\link[=proportion]{proportion()}}.}
+\item{df}{Metrics calculation output of class \code{EpiStrainDynamics.metric}}
 
 \item{xlab}{Time label for x axis, defaults to "Time"}
 
@@ -30,7 +27,8 @@ from either \code{\link[=incidence]{incidence()}}, \code{\link[=growth_rate]{gro
 ggplot2 plot output
 }
 \description{
-S3 generic for plotting
+S3 methods for plotting metrics calculated from the output sof either
+\code{\link[=incidence]{incidence()}}, \code{\link[=growth_rate]{growth_rate()}}, \code{\link[=Rt]{Rt()}}, or \code{\link[=proportion]{proportion()}}.
 }
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}

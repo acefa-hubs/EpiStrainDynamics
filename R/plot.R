@@ -1,9 +1,9 @@
-#' Generic Method for plotting metrics calculation outputs
+#' Plot metrics calculation outputs
 #'
-#' S3 generic for plotting
+#' S3 methods for plotting metrics calculated from the output sof either
+#' [incidence()], [growth_rate()], [Rt()], or [proportion()].
 #'
 #' @param df Metrics calculation output of class `EpiStrainDynamics.metric`
-#'  from either [incidence()], [growth_rate()], [Rt()], or [proportion()].
 #' @param xlab Time label for x axis, defaults to "Time"
 #' @param ... Additional arguments passed to plot
 #' @importFrom viridis viridis
@@ -14,6 +14,7 @@
 #' @importFrom rlang .data
 #'
 #' @return ggplot2 plot output
+#' @name plot
 #' @export
 #'
 #' @srrstats {BS6.1} All calculated epidemiological metrics can be plotted with
@@ -32,14 +33,8 @@
 #'   fit <- fit_model(mod)
 #'   gr <- growth_rate(mod)
 #'   plot(gr)
-plot <- function(df, xlab = "Time", ...) {
-  validate_class_inherits(df, "EpiStrainDynamics.metric")
-  UseMethod("plot")
-}
-
-#' @rdname plot
-#' @export
 plot.incidence <- function(df, xlab = "Time", ...) {
+  validate_class_inherits(df, "EpiStrainDynamics.metric")
 
   measure_df <- df$measure
 
@@ -94,6 +89,7 @@ plot.incidence <- function(df, xlab = "Time", ...) {
 #' @rdname plot
 #' @export
 plot.growth_rate <- function(df, xlab = "Time", ...) {
+  validate_class_inherits(df, "EpiStrainDynamics.metric")
 
   measure_df <- df$measure
 
@@ -157,6 +153,7 @@ plot.growth_rate <- function(df, xlab = "Time", ...) {
 #' @rdname plot
 #' @export
 plot.Rt <- function(df, xlab = "Time", ...) {
+  validate_class_inherits(df, "EpiStrainDynamics.metric")
 
   measure_df <- df$measure
 
@@ -199,6 +196,7 @@ plot.Rt <- function(df, xlab = "Time", ...) {
 #' @rdname plot
 #' @export
 plot.proportion <- function(df, xlab = "Time", ...) {
+  validate_class_inherits(df, "EpiStrainDynamics.metric")
 
   measure_df <- df$measure
 
