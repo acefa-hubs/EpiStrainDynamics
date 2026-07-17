@@ -43,7 +43,7 @@ diagnose_model <- function(fitted_model,
                            eff_sample_threshold = 100) {
 
   if (!inherits(fitted_model, "EpiStrainDynamics.fit")) {
-    stop("fitted_model must be an EpiStrainDynamics.fit object")
+    cli::cli_abort("{.arg fitted_model} must be an {.cls EpiStrainDynamics.fit} object, got {.cls {class(fitted_model)}}")
   }
 
   validate_rhat_threshold(rhat_threshold)

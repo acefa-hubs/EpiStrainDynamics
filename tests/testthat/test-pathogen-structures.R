@@ -23,13 +23,13 @@ test_that("single() validates column existence and types", {
   # Test non-existent time column
   expect_error(
     single(data = sarscov2, case_timeseries = "cases", time = "nonexistent"),
-    "Column 'nonexistent' not found in data"
+    "Column .nonexistent. not found in data"
   )
 
   # Test non-existent case column
   expect_error(
     single(data = sarscov2, case_timeseries = "nonexistent", time = "date"),
-    "Column 'nonexistent' not found in data"
+    "Column .nonexistent. not found in data"
   )
 
   # Test non-numeric case column (if you have a non-numeric column)
@@ -96,7 +96,7 @@ test_that("multiple() validates column existence and types", {
       time = "nonexistent",
       component_pathogen_timeseries = c("alpha")
     ),
-    "Column 'nonexistent' not found in data"
+    "Column .nonexistent. not found in data"
   )
 
   # Test non-existent case column
@@ -107,7 +107,7 @@ test_that("multiple() validates column existence and types", {
       time = "date",
       component_pathogen_timeseries = c("alpha")
     ),
-    "Column 'nonexistent' not found in data"
+    "Column .nonexistent. not found in data"
   )
 
   # Test non-existent component pathogen column
@@ -118,7 +118,7 @@ test_that("multiple() validates column existence and types", {
       time = "date",
       component_pathogen_timeseries = c("alpha", "nonexistent")
     ),
-    "Column 'nonexistent' not found in data"
+    "Column .nonexistent. not found in data"
   )
 
   # Test non-numeric component pathogen column
@@ -198,7 +198,7 @@ test_that("subtyped() validates column existence and types", {
       influenzaA_subtyped_timeseries = c("inf_H3N2"),
       other_pathogen_timeseries = c("inf_B")
     ),
-    "Column 'nonexistent' not found in data"
+    "Column .nonexistent. not found in data"
   )
 
   # Test non-existent case column
@@ -211,7 +211,7 @@ test_that("subtyped() validates column existence and types", {
       influenzaA_subtyped_timeseries = c("inf_H3N2"),
       other_pathogen_timeseries = c("inf_B")
     ),
-    "Column 'nonexistent' not found in data"
+    "Column .nonexistent. not found in data"
   )
 
   # Test non-existent influenzaA_unsubtyped column
@@ -224,7 +224,7 @@ test_that("subtyped() validates column existence and types", {
       influenzaA_subtyped_timeseries = c("inf_H3N2"),
       other_pathogen_timeseries = c("inf_B")
     ),
-    "Column 'nonexistent' not found in data"
+    "Column .nonexistent. not found in data"
   )
 
   # Test non-existent influenzaA_subtyped column
@@ -237,7 +237,7 @@ test_that("subtyped() validates column existence and types", {
       influenzaA_subtyped_timeseries = c("nonexistent"),
       other_pathogen_timeseries = c("inf_B")
     ),
-    "Column 'nonexistent' not found in data"
+    "Column .nonexistent. not found in data"
   )
 
   # Test non-existent other_pathogen column
@@ -250,7 +250,7 @@ test_that("subtyped() validates column existence and types", {
       influenzaA_subtyped_timeseries = c("inf_H3N2"),
       other_pathogen_timeseries = c("nonexistent")
     ),
-    "Column 'nonexistent' not found in data"
+    "Column .nonexistent. not found in data"
   )
 
   # Test non-numeric columns

@@ -64,7 +64,7 @@ test_that("validate_smoothing_structure() errors on wrong class", {
   bad_obj <- list(smoothing_type = "shared", tau_priors = list(), priors_provided = 1)
   expect_error(
     EpiStrainDynamics:::validate_smoothing_structure(bad_obj, "single"),
-    "smoothing_params must be created using the smoothing_structure\\(\\) function"
+    "smoothing_params.*must be created using the.*smoothing_structure"
   )
 })
 
@@ -121,7 +121,7 @@ test_that("validate_smoothing_independent() errors when pathogen_names missing",
   obj <- smoothing_structure("independent")
   expect_error(
     EpiStrainDynamics:::validate_smoothing_independent(obj, NULL),
-    "pathogen_names is required"
+    "pathogen_names.*is required"
   )
 })
 
