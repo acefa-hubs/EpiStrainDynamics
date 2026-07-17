@@ -3,7 +3,7 @@
 #' S3 generic for plotting
 #'
 #' @param df Metrics calculation output of class `EpiStrainDynamics.metric`
-#'  from either `incidence()`, `growth_rate()`, `Rt()`, or `proportion()`.
+#'  from either [incidence()], [growth_rate()], [Rt()], or [proportion()].
 #' @param xlab Time label for x axis, defaults to "Time"
 #' @param ... Additional arguments passed to plot
 #' @importFrom viridis viridis
