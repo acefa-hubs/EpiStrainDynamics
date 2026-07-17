@@ -50,6 +50,20 @@ You can install the development version of EpiStrainDynamics from
 pak::pak("acefa-hubs/EpiStrainDynamics")
 ```
 
+As there is not yet a CRAN release, this always builds
+`EpiStrainDynamics` from source, so users will need to configure their
+C++ toolchain first. This is because `EpiStrainDynamics` implements the
+underlying models in Stan (a statistical modelling language built on
+C++).
+
+Each operating system has a different set up procedure. Windows users
+need to install an appropriate version of
+[RTools](https://github.com/stan-dev/rstan/wiki/Configuring-C---Toolchain-for-Windows).
+Mac users can [follow these
+steps](https://github.com/stan-dev/rstan/wiki/Configuring-C---Toolchain-for-Mac),
+and Linux users can use [this
+guide](https://github.com/stan-dev/rstan/wiki/Configuring-C-Toolchain-for-Linux).
+
 ## Using `EpiStrainDynamics`
 
 Detailed instructions can be found on the
