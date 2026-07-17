@@ -9,12 +9,19 @@
   defaults (#38).
 * Enabled parallel testing with `Config/testthat/parallel: true` (#39).
 * Added tests for MCMC validation.
+* Standardised error handling on `cli::cli_abort()` (#49).
 
 ## Documentation
 
 * Replaced `\dontrun{}` in examples with `@examplesIf interactive()` for slow
   examples and guards such as `@examplesIf rlang::is_installed("xts")` where a
   package is used only in an example (#36).
+* Corrected documentation of both `sarscov2` and `influenza` datasets (#56).
+* Clarify contribution and maintenance guidelines, installation from source
+  instructions, and add citations to readme (#51, #57, #58, #59, #60).
+* Expanded documentation for `smoothing_structure()` and `diagnose_model()`, 
+  add cross-linked references where applicable (#53, #54, #55).
+* Increased R version dependency in line with base pipe usage (#43).
 
 # EpiStrainDynamics 0.0.1 (2026-03-27)
 
