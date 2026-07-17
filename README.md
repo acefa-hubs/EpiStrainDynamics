@@ -1,7 +1,6 @@
 
 # EpiStrainDynamics
 
-[![Status at rOpenSci Software Peer Review](https://badges.ropensci.org/763_status.svg)](https://github.com/ropensci/software-review/issues/763)
 [![codecov](https://codecov.io/gh/acefa-hubs/EpiStrainDynamics/graph/badge.svg)](https://app.codecov.io/gh/acefa-hubs/EpiStrainDynamics)
 [![](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Project Status: Active - The project has reached a stable, usable
@@ -213,7 +212,7 @@ When using this package, please cite both the package and the research
 article underlying the statistical model developments:
 
 Windecker S, Eales O (2025). EpiStrainDynamics: Infer temporal trends of
-multiple pathogens. R package version 0.0.0.9000,
+multiple pathogens. R package version 0.0.1,
 <https://acefa-hubs.github.io/EpiStrainDynamics/>.
 
 Oliver Eales, Saras M Windecker, James M McCaw, Freya M Shearer,
@@ -226,9 +225,13 @@ For code corresponding to the AJE paper, see branch
 
 ## Contribution
 
-This is a work in progress. If you see any mistakes in the package
-(branch `main`) or in the code associated with the analyses for the
-paper (branch `paper_analysis`), let us know by logging a bug on the
+`EpiStrainDynamics` is in a stable state of development, with some
+degree of active subsequent development as envisioned by the primary
+authors. Authors are committed to maintaining the package. If you would
+like to contribute to the package, please review the [contributing
+guide](https://github.com/acefa-hubs/EpiStrainDynamics/blob/main/.github/CONTRIBUTING.md).
+Test cases and improvements are especially welcome. If you see any
+mistakes in the package you can also let us know by logging a bug on the
 [issues](https://github.com/acefa-hubs/EpiStrainDynamics/issues) page.
 
 ## Code of Conduct

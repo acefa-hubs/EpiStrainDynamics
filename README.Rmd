@@ -178,7 +178,7 @@ For a more detailed discussion, check out the [vignette](https://acefa-hubs.gith
 
 When using this package, please cite both the package and the research article underlying the statistical model developments: 
 
-Windecker S, Eales O (2025). EpiStrainDynamics: Infer temporal trends of multiple pathogens. R package version 0.0.0.9000, https://acefa-hubs.github.io/EpiStrainDynamics/.
+Windecker S, Eales O (2025). EpiStrainDynamics: Infer temporal trends of multiple pathogens. R package version 0.0.1, https://acefa-hubs.github.io/EpiStrainDynamics/.
 
 Oliver Eales, Saras M Windecker, James M McCaw, Freya M Shearer, Inferring temporal trends of multiple pathogens, variants, subtypes or serotypes from routine surveillance data, American Journal of Epidemiology, 2025;, kwaf119, https://doi.org/10.1093/aje/kwaf119
 
@@ -186,8 +186,11 @@ For code corresponding to the AJE paper, see branch [`paper_analysis`](https://g
 
 ## Contribution
 
-This is a work in progress. 
-If you see any mistakes in the package (branch `main`) or in the code associated with the analyses for the paper (branch `paper_analysis`), let us know by logging a bug on the [issues](https://github.com/acefa-hubs/EpiStrainDynamics/issues) page. 
+`EpiStrainDynamics` is in a stable state of development, with some degree of active subsequent development as envisioned by the primary authors. 
+Authors are committed to maintaining the package. 
+If you would like to contribute to the package, please review the [contributing guide](https://github.com/acefa-hubs/EpiStrainDynamics/blob/main/.github/CONTRIBUTING.md). 
+Test cases and improvements are especially welcome. 
+If you see any mistakes in the package you can also let us know by logging a bug on the [issues](https://github.com/acefa-hubs/EpiStrainDynamics/issues) page. 
 
 ## Code of Conduct
 
