@@ -7,17 +7,35 @@
 diagnose_model(fitted_model, rhat_threshold = 1.1, eff_sample_threshold = 100)
 }
 \arguments{
-\item{fitted_model}{fitted model object}
+\item{fitted_model}{A fitted model object of class \code{EpiStrainDynamics.fit},
+as returned by \code{\link[=fit_model]{fit_model()}}.}
 
-\item{rhat_threshold}{R-hat threshold for convergence (default 1.1)}
+\item{rhat_threshold}{R-hat threshold for convergence (default 1.1). Values
+above this threshold indicate chains have not mixed well.}
 
-\item{eff_sample_threshold}{effective sample size threshold}
+\item{eff_sample_threshold}{Effective sample size threshold (default 100).
+Values below this threshold indicate the posterior samples for a
+parameter are too autocorrelated to reliably estimate its distribution.}
 }
 \value{
-list of diagnostic information
+An object of class \code{list}, returned invisibly, containing:
+\item{convergence}{Logical; \code{TRUE} if no parameter fails either
+threshold}
+\item{rhat_issues}{Character vector of parameter names with R-hat above
+\code{rhat_threshold}}
+\item{eff_sample_issues}{Character vector of parameter names with
+effective sample size below \code{eff_sample_threshold}}
+\item{max_rhat}{The largest R-hat value across all parameters}
+\item{min_neff}{The smallest effective sample size across all
+parameters}
+\item{summary}{The full \code{rstan::summary()} table the above are derived
+from}
 }
 \description{
-Diagnose model convergence and fit
+Checks MCMC convergence diagnostics --- \href{https://mc-stan.org/docs/reference-manual/analysis.html}{R-hat}
+and \href{https://mc-stan.org/docs/reference-manual/analysis.html}{effective sample size} ---
+against user-specified thresholds, and reports any parameters that fail
+either check.
 }
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
@@ -27,6 +45,6 @@ Diagnose model convergence and fit
       case_timeseries = sarscov2$cases,
       time = sarscov2$date))
   fit <- fit_model(mod)
-  diagnose(fit)
+  diagnose_model(fit)
 \dontshow{\}) # examplesIf}
 }
