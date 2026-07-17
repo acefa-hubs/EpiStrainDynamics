@@ -16,13 +16,21 @@ dispersion parameter. Must be positive. Optional - if not provided, no
 priors will be set.}
 }
 \value{
-An object of class \code{EpiStrainDynamics.dispersion} containing prior
-specifications for phi parameter
+An object of class \code{EpiStrainDynamics.dispersion} containing:
+\item{mean}{The prior mean for phi}
+\item{sd}{The prior standard deviation for phi}
+\item{priors_provided}{Integer flag passed to the Stan model: \code{1} if no
+priors were supplied (Stan's built-in default prior is used), \code{2} if
+priors were supplied (the \code{phi_mean}/\code{phi_sd} values are used as the
+prior)}
 }
 \description{
 This function creates a dispersion structure object that specifies priors
 for the overdispersion parameter of the negative binomial likelihood for
-the case timeseries.
+the case timeseries. \code{phi} controls how much the observed counts vary
+around the expected trend beyond Poisson noise: smaller values allow more
+overdispersion (noisier counts relative to the mean), larger values
+approach Poisson-like variance.
 }
 \examples{
 # Create dispersion structure
