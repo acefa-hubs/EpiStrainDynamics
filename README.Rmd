@@ -39,7 +39,7 @@ For example, ‘influenza-like illness’ — routinely monitored as a proxy for
 Inferred trends from such composite time series may not reflect the trends of any one of the component pathogens, each of which can exhibit distinct dynamics. 
 Although many surveillance systems routinely test a subset of individuals contributing to a surveillance indicator — providing information on the relative contribution of the component pathogens — trends may be obscured by time-varying testing rates or substantial noise in the observation process. 
 
-`EpiStrainDynamics` builds on existing modelling frameworks built to handle two pathogens, and extends them be to able to:
+`EpiStrainDynamics` builds on existing modelling frameworks built to handle two pathogens ([Eales et al. 2022](https://doi.org/10.1038/s41467-022-32096-4); [Eales et al. 2022](https://doi.org/10.1016/j.epidem.2022.100604)), and extends them be to able to:
 
 - infer the trends of any number of pathogens
 - fit to time series data of counts (eg, daily number of cases)
@@ -65,7 +65,9 @@ Each operating system has a different set up procedure. Windows users need to in
 ## Using `EpiStrainDynamics`
 
 Detailed instructions can be found on the [vignette](https://acefa-hubs.github.io/EpiStrainDynamics/articles/Using-EpiStrainDyamics.html). 
-Here we provide a short overview. 
+Here we provide a short overview.
+
+To build a model, you specify the model and pathogen structure with `construct_model()`, then fit it to your data with `fit_model()`. The steps below walk through this using the `sarscov2` data bundled with the package.
 
 ### Step 1: Construct model
 
