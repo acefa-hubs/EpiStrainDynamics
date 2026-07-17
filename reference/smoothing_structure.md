@@ -2,7 +2,11 @@
 
 This function creates a standardized smoothing structure object that
 specifies both the smoothing structure and associated priors for
-EpiStrainDynamics models.
+EpiStrainDynamics models. `tau` (denoted \\\rho\\ in Eales et al. 2022,
+*Epidemics*) is the smoothing parameter that penalises how much the
+underlying trend's growth rate is allowed to change over time. Smaller
+values enforce a smoother trend; larger values allow it to bend more
+sharply.
 
 ## Usage
 
@@ -55,6 +59,12 @@ An object of class `EpiStrainDynamics.smoothing` containing:
 - tau_priors:
 
   Prior specifications for tau
+
+- priors_provided:
+
+  Integer flag passed to the Stan model: `1` if no priors were supplied
+  (Stan's built-in default prior is used), `2` if priors were supplied
+  (the `tau_mean`/`tau_sd` values are used as the prior)
 
 ## Examples
 

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EpiStrainDynamics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,18 +46,36 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="epistraindynamics-development-version">EpiStrainDynamics (development version)<a class="anchor" aria-label="anchor" href="#epistraindynamics-development-version"></a></h2>
-<ul><li>Modified the plot code to explicitly call all ggplot2 functions and not import the whole package.</li>
-<li>Removed uses of  in the examples. Slow examples use <a href="https://github.com/examplesIf" class="external-link">@examplesIf</a> interactive() and other cases use alternatives, eg. <a href="https://github.com/examplesIf" class="external-link">@examplesIf</a> rlang::is_installed(“xts”) where xts is used only in the example but not imported by the package.</li>
-<li>Standardised use of quotation marks style.</li>
-<li>Placed the arguments that do not have a default value before the ones that do.</li>
-<li>Added Config/testthat/parallel: true to DESCRIPTION file.</li>
-<li>Added additional tests for mcmc validations.</li>
+<div class="section level3">
+<h3 id="minor-improvements-development-version">Minor improvements<a class="anchor" aria-label="anchor" href="#minor-improvements-development-version"></a></h3>
+<ul><li>Plot functions now call <code>ggplot2</code> functions explicitly rather than importing the whole package (<a href="https://github.com/acefa-hubs/EpiStrainDynamics/issues/35" class="external-link">#35</a>).</li>
+<li>Standardised quotation-mark style (<a href="https://github.com/acefa-hubs/EpiStrainDynamics/issues/37" class="external-link">#37</a>).</li>
+<li>Reordered function arguments so those without defaults precede those with defaults (<a href="https://github.com/acefa-hubs/EpiStrainDynamics/issues/38" class="external-link">#38</a>).</li>
+<li>Enabled parallel testing with <code>Config/testthat/parallel: true</code> (<a href="https://github.com/acefa-hubs/EpiStrainDynamics/issues/39" class="external-link">#39</a>).</li>
+<li>Added tests for MCMC validation.</li>
+<li>Standardised error handling on <code><a href="https://cli.r-lib.org/reference/cli_abort.html" class="external-link">cli::cli_abort()</a></code> (<a href="https://github.com/acefa-hubs/EpiStrainDynamics/issues/49" class="external-link">#49</a>).</li>
 </ul></div>
+<div class="section level3">
+<h3 id="documentation-development-version">Documentation<a class="anchor" aria-label="anchor" href="#documentation-development-version"></a></h3>
+<ul><li>Replaced <code>\dontrun{}</code> in examples with <code>@examplesIf interactive()</code> for slow examples and guards such as <code>@examplesIf rlang::is_installed("xts")</code> where a package is used only in an example (<a href="https://github.com/acefa-hubs/EpiStrainDynamics/issues/36" class="external-link">#36</a>).</li>
+<li>Corrected documentation of both <code>sarscov2</code> and <code>influenza</code> datasets (<a href="https://github.com/acefa-hubs/EpiStrainDynamics/issues/56" class="external-link">#56</a>).</li>
+<li>Clarify contribution and maintenance guidelines, installation from source instructions, and add citations to readme (<a href="https://github.com/acefa-hubs/EpiStrainDynamics/issues/51" class="external-link">#51</a>, <a href="https://github.com/acefa-hubs/EpiStrainDynamics/issues/57" class="external-link">#57</a>, <a href="https://github.com/acefa-hubs/EpiStrainDynamics/issues/58" class="external-link">#58</a>, <a href="https://github.com/acefa-hubs/EpiStrainDynamics/issues/59" class="external-link">#59</a>, <a href="https://github.com/acefa-hubs/EpiStrainDynamics/issues/60" class="external-link">#60</a>).</li>
+<li>Expanded documentation for <code><a href="../reference/smoothing_structure.html">smoothing_structure()</a></code> and <code><a href="../reference/diagnose_model.html">diagnose_model()</a></code>, add cross-linked references where applicable (<a href="https://github.com/acefa-hubs/EpiStrainDynamics/issues/53" class="external-link">#53</a>, <a href="https://github.com/acefa-hubs/EpiStrainDynamics/issues/54" class="external-link">#54</a>, <a href="https://github.com/acefa-hubs/EpiStrainDynamics/issues/55" class="external-link">#55</a>).</li>
+<li>Increased R version dependency in line with base pipe usage (<a href="https://github.com/acefa-hubs/EpiStrainDynamics/issues/43" class="external-link">#43</a>).</li>
+</ul></div>
+</div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.0.1.0000" id="epistraindynamics-0010000-2026-03-27">EpiStrainDynamics 0.0.1.0000 (2026-03-27)<a class="anchor" aria-label="anchor" href="#epistraindynamics-0010000-2026-03-27"></a></h2>
-<div class="section level4">
-<h4 id="new-features-0-0-1-0000">New features<a class="anchor" aria-label="anchor" href="#new-features-0-0-1-0000"></a></h4>
-<ul><li>submitted to ROpenSci</li>
+<h2 class="pkg-version" data-toc-text="0.0.1" id="epistraindynamics-001-2026-03-27">EpiStrainDynamics 0.0.1 (2026-03-27)<a class="anchor" aria-label="anchor" href="#epistraindynamics-001-2026-03-27"></a></h2>
+<p>Initial version submitted to rOpenSci for peer review (ropensci/software-review#763).</p>
+<div class="section level3">
+<h3 id="new-features-0-0-1">New features<a class="anchor" aria-label="anchor" href="#new-features-0-0-1"></a></h3>
+<ul><li>Random-walk and p-spline models for inferring temporal trends of single and multiple (including subtyped) pathogens, fitted via Stan.</li>
+<li>Model construction and fitting via <code><a href="../reference/construct_model.html">construct_model()</a></code> and <code><a href="../reference/fit_model.html">fit_model()</a></code>, with <code><a href="../reference/smoothing_structure.html">smoothing_structure()</a></code> and <code><a href="../reference/dispersion_structure.html">dispersion_structure()</a></code> helpers.</li>
+<li>Post-processing generics <code><a href="../reference/incidence.html">incidence()</a></code>, <code><a href="../reference/growth_rate.html">growth_rate()</a></code>, <code><a href="../reference/Rt.html">Rt()</a></code>, and <code><a href="../reference/proportion.html">proportion()</a></code>, each with a <code><a href="../reference/plot.html">plot()</a></code> method.</li>
+<li>
+<code><a href="../reference/diagnose_model.html">diagnose_model()</a></code> for MCMC convergence diagnostics.</li>
+<li>Bundled <code>influenza</code> and <code>sarscov2</code> example datasets.</li>
+<li>“Using EpiStrainDynamics” and “Algorithmic Scaling” vignettes.</li>
 </ul></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -69,7 +87,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

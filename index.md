@@ -1,7 +1,5 @@
 # EpiStrainDynamics
 
-[![Status at rOpenSci Software Peer
-Review](https://badges.ropensci.org/763_status.svg)](https://github.com/ropensci/software-review/issues/763)
 [![codecov](https://codecov.io/gh/acefa-hubs/EpiStrainDynamics/graph/badge.svg)](https://app.codecov.io/gh/acefa-hubs/EpiStrainDynamics)
 [![](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Project Status: Active - The project has reached a stable, usable
@@ -27,7 +25,10 @@ time-varying testing rates or substantial noise in the observation
 process.
 
 `EpiStrainDynamics` builds on existing modelling frameworks built to
-handle two pathogens, and extends them be to able to:
+handle two pathogens ([Eales et
+al. 2022](https://doi.org/10.1038/s41467-022-32096-4); [Eales et
+al. 2022](https://doi.org/10.1016/j.epidem.2022.100604)), and extends
+them be to able to:
 
 - infer the trends of any number of pathogens
 - fit to time series data of counts (eg, daily number of cases)
@@ -52,11 +53,32 @@ You can install the development version of EpiStrainDynamics from
 pak::pak("acefa-hubs/EpiStrainDynamics")
 ```
 
+As there is not yet a CRAN release, this always builds
+`EpiStrainDynamics` from source, so users will need to configure their
+C++ toolchain first. This is because `EpiStrainDynamics` implements the
+underlying models in Stan (a statistical modelling language built on
+C++).
+
+Each operating system has a different set up procedure. Windows users
+need to install an appropriate version of
+[RTools](https://github.com/stan-dev/rstan/wiki/Configuring-C---Toolchain-for-Windows).
+Mac users can [follow these
+steps](https://github.com/stan-dev/rstan/wiki/Configuring-C---Toolchain-for-Mac),
+and Linux users can use [this
+guide](https://github.com/stan-dev/rstan/wiki/Configuring-C-Toolchain-for-Linux).
+
 ## Using `EpiStrainDynamics`
 
 Detailed instructions can be found on the
 [vignette](https://acefa-hubs.github.io/EpiStrainDynamics/articles/Using-EpiStrainDyamics.html).
 Here we provide a short overview.
+
+To build a model, you specify the model and pathogen structure with
+[`construct_model()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/construct_model.md),
+then fit it to your data with
+[`fit_model()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/fit_model.md).
+The steps below walk through this using the `sarscov2` data bundled with
+the package.
 
 ### Step 1: Construct model
 
@@ -245,7 +267,7 @@ When using this package, please cite both the package and the research
 article underlying the statistical model developments:
 
 Windecker S, Eales O (2025). EpiStrainDynamics: Infer temporal trends of
-multiple pathogens. R package version 0.0.0.9000,
+multiple pathogens. R package version 0.0.1,
 <https://acefa-hubs.github.io/EpiStrainDynamics/>.
 
 Oliver Eales, Saras M Windecker, James M McCaw, Freya M Shearer,
@@ -258,9 +280,13 @@ For code corresponding to the AJE paper, see branch
 
 ## Contribution
 
-This is a work in progress. If you see any mistakes in the package
-(branch `main`) or in the code associated with the analyses for the
-paper (branch `paper_analysis`), let us know by logging a bug on the
+`EpiStrainDynamics` is in a stable state of development, with some
+degree of active subsequent development as envisioned by the primary
+authors. Authors are committed to maintaining the package. If you would
+like to contribute to the package, please review the [contributing
+guide](https://github.com/acefa-hubs/EpiStrainDynamics/blob/main/.github/CONTRIBUTING.md).
+Test cases and improvements are especially welcome. If you see any
+mistakes in the package you can also let us know by logging a bug on the
 [issues](https://github.com/acefa-hubs/EpiStrainDynamics/issues) page.
 
 ## Code of Conduct

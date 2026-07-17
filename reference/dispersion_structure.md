@@ -2,7 +2,10 @@
 
 This function creates a dispersion structure object that specifies
 priors for the overdispersion parameter of the negative binomial
-likelihood for the case timeseries.
+likelihood for the case timeseries. `phi` controls how much the observed
+counts vary around the expected trend beyond Poisson noise: smaller
+values allow more overdispersion (noisier counts relative to the mean),
+larger values approach Poisson-like variance.
 
 ## Usage
 
@@ -26,8 +29,21 @@ dispersion_structure(phi_mean = NULL, phi_sd = NULL)
 
 ## Value
 
-An object of class `EpiStrainDynamics.dispersion` containing prior
-specifications for phi parameter
+An object of class `EpiStrainDynamics.dispersion` containing:
+
+- mean:
+
+  The prior mean for phi
+
+- sd:
+
+  The prior standard deviation for phi
+
+- priors_provided:
+
+  Integer flag passed to the Stan model: `1` if no priors were supplied
+  (Stan's built-in default prior is used), `2` if priors were supplied
+  (the `phi_mean`/`phi_sd` values are used as the prior)
 
 ## Examples
 

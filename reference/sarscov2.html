@@ -3,13 +3,13 @@
 2020 - 2022 retrieved from the UK Health Security Agency's data dashboard.
 downloaded data describing the daily number of variants detected by
 collection date. The data classified all sequences based on ‘major lineage
-calls’. We considered 11 groupings of the variants based on their major
+calls’. We considered groupings of the variants based on their major
 lineage calls or other, consisting of all lineages with a designation not
 consistent with any of the major lineage calls."><meta property="og:description" content="Daily SARS-CoV-2 case numbers by specimen date for the United Kingdom from
 2020 - 2022 retrieved from the UK Health Security Agency's data dashboard.
 downloaded data describing the daily number of variants detected by
 collection date. The data classified all sequences based on ‘major lineage
-calls’. We considered 11 groupings of the variants based on their major
+calls’. We considered groupings of the variants based on their major
 lineage calls or other, consisting of all lineages with a designation not
 consistent with any of the major lineage calls."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -19,7 +19,7 @@ consistent with any of the major lineage calls."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">EpiStrainDynamics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,7 +62,7 @@ consistent with any of the major lineage calls."></head><body>
 2020 - 2022 retrieved from the UK Health Security Agency's data dashboard.
 downloaded data describing the daily number of variants detected by
 collection date. The data classified all sequences based on ‘major lineage
-calls’. We considered 11 groupings of the variants based on their major
+calls’. We considered groupings of the variants based on their major
 lineage calls or other, consisting of all lineages with a designation not
 consistent with any of the major lineage calls.</p>
     </div>
@@ -79,52 +79,26 @@ consistent with any of the major lineage calls.</p>
 <h3 id="sarscov-"><code>sarscov2</code><a class="anchor" aria-label="anchor" href="#sarscov-"></a></h3>
 
 
-<p>A data frame with 830 rows and 15 columns:</p><dl><dt>date</dt>
+<p>A data frame with 830 rows and 6 columns:</p><dl><dt>date</dt>
 <dd><p>Date, between 23 September 2020 and 31 December 2022</p></dd>
 
 <dt>cases</dt>
 <dd><p>Numeric, daily number of cases</p></dd>
 
-<dt>B.1.177</dt>
-<dd><p>Integer, daily number of cases of B.1.177</p></dd>
-
-<dt>B.1.1.7</dt>
+<dt>alpha</dt>
 <dd><p>Integer, daily number of cases of B.1.1.7 (Alpha variant)</p></dd>
 
-<dt>B.1.617.2</dt>
+<dt>delta</dt>
 <dd><p>Integer, daily number of cases of B.1.617.2 (Delta variant)</p></dd>
 
-<dt>BA.1</dt>
-<dd><p>Integer, daily number of cases of BA.1 (Omicron BA.1 variant)</p></dd>
+<dt>omicron</dt>
+<dd><p>Integer, daily number of cases of BA.1, BA.2, BA.2.75,
+BA.4, BA.5, BQ.1 (Omicron variants)</p></dd>
 
-<dt>BA.2</dt>
-<dd><p>Integer, daily number of cases of BA.2 (Omicron BA.2 variant)</p></dd>
-
-<dt>BA.2.75</dt>
-<dd><p>Integer, daily number of cases of BA.4 (Omicron BA.4 variant)</p></dd>
-
-<dt>BA.4</dt>
-<dd><p>Integer, daily number of cases of BA.5 (Omicron BA.5 variant)</p></dd>
-
-<dt>BA.5</dt>
-<dd><p>Integer, daily number of cases of BA.2.75 (Omicron BA.2.75 variant)</p></dd>
-
-<dt>BQ.1</dt>
-<dd><p>Integer, daily number of cases of BQ.1 (Omicron BQ.1 variant)</p></dd>
-
-<dt>XBB</dt>
-<dd><p>Integer, daily number of cases of XBB (a recombinant of omicron
-sub-variants)</p></dd>
-
-<dt>Other</dt>
-<dd><p>Integer, daily number of cases of all lineages with a
-designation not consistent with any of the major lineage calls</p></dd>
-
-<dt>total</dt>
-<dd></dd>
-
-<dt>t</dt>
-<dd></dd>
+<dt>other</dt>
+<dd><p>Integer, daily number of cases of B.1.177, XBB (a recombinant
+of omicron sub-variants), and all other lineages with a designation
+not consistent with any of the major lineage calls</p></dd>
 
 
 </dl></div>
@@ -145,7 +119,7 @@ https://datadryad.org/dataset/doi:10.5061/dryad.hx3ffbgm2&gt;</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

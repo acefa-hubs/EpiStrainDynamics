@@ -22,7 +22,7 @@ influenza
 
 ### `influenza`
 
-A data frame with 830 rows and 15 columns:
+A data frame with 426 rows and 7 columns:
 
 - ili:
 
