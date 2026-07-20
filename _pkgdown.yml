@@ -3,6 +3,7 @@ template:
   bootstrap: 5
   light-switch: true
   bootswatch: flatly
+  math-rendering: mathjax
 articles:
   - title: Statistical Properties
     navbar: ~
@@ -27,6 +28,7 @@ reference:
       - smoothing_structure
       - dispersion_structure
       - construct_model
+      - print.EpiStrainDynamics.model
   - title: Fit stan model
     contents:
       - fit_model
