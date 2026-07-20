@@ -159,6 +159,49 @@ construct_model <- function(method,
   return(model_input)
 }
 
+#' Print method for constructed EpiStrainDynamics models
+#'
+#' Prints a concise summary instead of dumping the full data and standata
+#' list to the console.
+#'
+#' @param x an `EpiStrainDynamics.model` object, as returned by
+#'   [construct_model()]
+#' @param ... further arguments passed to or from other methods (unused)
+#'
+#' @return `x`, invisibly
+#' @export
+#'
+#' @examples
+#' mod <- construct_model(
+#'   method = random_walk(),
+#'   pathogen_structure = single(
+#'     data = sarscov2,
+#'     case_timeseries = "cases",
+#'     time = "date"
+#'   )
+#' )
+#' print(mod)
+print.EpiStrainDynamics.model <- function(x, ...) {
+  method <- if (startsWith(class(x)[1], "ps")) "Penalised spline" else "Random walk"
+  structure_type <- switch(
+    class(x)[1],
+    rw_single = , ps_single = "single",
+    rw_multiple = , ps_multiple = "multiple",
+    rw_subtyped = , ps_subtyped = "subtyped"
+  )
+
+  cat("<EpiStrainDynamics model>\n")
+  cat("Method:             ", method, "\n", sep = "")
+  cat("Pathogen structure: ", structure_type, "\n", sep = "")
+  cat("Pathogens:          ", paste(x$pathogen_names, collapse = ", "), "\n", sep = "")
+  cat("Observations:       ", x$standata$num_data, "\n", sep = "")
+  cat("Day-of-week effect: ", x$dow_effect, "\n", sep = "")
+  cat("\nData (head):\n")
+  print(utils::head(x$validated_tsbl))
+
+  invisible(x)
+}
+
 #' Extract model type from method and pathogen structure
 #'
 #' @param method_name Character string: method name ("random-walk" or "p-spline")
