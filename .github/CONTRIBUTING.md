@@ -18,6 +18,13 @@ If you’ve found a bug, please file an issue that illustrates the bug with a mi
 [reprex](https://www.tidyverse.org/help/#reprex) (this will also help you write a unit test, if needed).
 See the guide on [how to create a great issue](https://code-review.tidyverse.org/issues/) for more advice.
 
+### Revising the "Using EpiStrainDynamics" vignette
+
+The "Using EpiStrainDynamics" vignette includes slow-running code. 
+We make use of the suggestions as described in this [blog post](https://ropensci.org/blog/2019/12/08/precompute-vignettes/) to manage the slow-running vignette. 
+To edit the vignette, edit the `vignettes/Using-EpiStrainDynamics.Rmd.orig` file, and then compile it using the code in `vignettes/precompile.R`. 
+This will execute the rmarkdown code locally, and ship a vignette in the package which already contains the rendered R output.
+
 ### Pull request process
 
 *   Fork the package and clone onto your computer. If you haven't done this before, we recommend using `usethis::create_from_github("acefa-hubs/EpiStrainDynamics", fork = TRUE)`.
@@ -41,6 +48,8 @@ See the guide on [how to create a great issue](https://code-review.tidyverse.org
 
 *  We use [testthat](https://cran.r-project.org/package=testthat) for unit tests. 
    Contributions with test cases included are easier to accept.  
+
+### 
 
 ## Code of Conduct
 
