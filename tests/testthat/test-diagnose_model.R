@@ -8,17 +8,17 @@
 test_that("diagnose_model() validates input class", {
   expect_error(
     diagnose_model(list(fit = "not a fit")),
-    "must be an EpiStrainDynamics.fit object"
+    "must be an .*EpiStrainDynamics.fit.* object"
   )
 
   expect_error(
     diagnose_model("not a model"),
-    "must be an EpiStrainDynamics.fit object"
+    "must be an .*EpiStrainDynamics.fit.* object"
   )
 
   expect_error(
     diagnose_model(data.frame(x = 1, y = 2)),
-    "must be an EpiStrainDynamics.fit object"
+    "must be an .*EpiStrainDynamics.fit.* object"
   )
 })
 

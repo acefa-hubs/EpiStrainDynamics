@@ -20,7 +20,7 @@ plot(df, xlab = "Time", ...)
 }
 \arguments{
 \item{df}{Metrics calculation output of class \code{EpiStrainDynamics.metric}
-from either \code{incidence()}, \code{growth_rate()}, \code{Rt()}, or \code{proportion()}.}
+from either \code{\link[=incidence]{incidence()}}, \code{\link[=growth_rate]{growth_rate()}}, \code{\link[=Rt]{Rt()}}, or \code{\link[=proportion]{proportion()}}.}
 
 \item{xlab}{Time label for x axis, defaults to "Time"}
 

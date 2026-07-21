@@ -65,13 +65,10 @@ df$total <- rowSums(mat)
 df$t <- as.numeric(df$date)
 df$t <- df$t - min(df$t) + 1
 
-df <- df |>
-  dplyr::mutate(
-    alpha = B.1.1.7,
-    delta = B.1.617.2,
-    omicron = BA.1 + BA.2 + BA.2.75 + BA.4 + BA.5 + BQ.1,
-    other = B.1.177 + XBB + Other
-  )
+df$alpha <- df$B.1.1.7
+df$delta <- df$B.1.617.2
+df$omicron <- df$BA.1 + df$BA.2 + df$BA.2.75 + df$BA.4 + df$BA.5 + df$BQ.1
+df$other <- df$B.1.177 + df$XBB + df$Other
 
 cols <- c("date", "cases", "alpha", "delta", "omicron", "other")
 

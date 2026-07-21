@@ -1,14 +1,14 @@
 #' Construct model
 #'
-#' @param method either `random_walk()` or `p_spline()`
-#' @param pathogen_structure either `single()`, `multiple()`, or `subtyped()`
+#' @param method either [random_walk()] or [p_spline()]
+#' @param pathogen_structure either [single()], [multiple()], or [subtyped()]
 #' @param smoothing_params argument is optional and defines the structure of the
 #'   smoothing terms including optionally setting the smoothing prior tau.
-#'   Created with `smoothing_structure()`. NULL option defaults to "shared"
+#'   Created with [smoothing_structure()]. NULL option defaults to "shared"
 #'   smoothing structure and default priors.
 #' @param dispersion_params argument is optional and defines priors for the
 #'   overdispersion parameter of the negative binomial likelihood for
-#'   the case timeseries. Created using `dispersion_structure()`. NULL option
+#'   the case timeseries. Created using [dispersion_structure()]. NULL option
 #'   uses default priors for phi.
 #' @param pathogen_noise logical whether individual pathogen counts have
 #'   additional gamma-distributed noise. Default is FALSE. Models with `single`

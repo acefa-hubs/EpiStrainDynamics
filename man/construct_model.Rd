@@ -14,18 +14,18 @@ construct_model(
 )
 }
 \arguments{
-\item{method}{either \code{random_walk()} or \code{p_spline()}}
+\item{method}{either \code{\link[=random_walk]{random_walk()}} or \code{\link[=p_spline]{p_spline()}}}
 
-\item{pathogen_structure}{either \code{single()}, \code{multiple()}, or \code{subtyped()}}
+\item{pathogen_structure}{either \code{\link[=single]{single()}}, \code{\link[=multiple]{multiple()}}, or \code{\link[=subtyped]{subtyped()}}}
 
 \item{smoothing_params}{argument is optional and defines the structure of the
 smoothing terms including optionally setting the smoothing prior tau.
-Created with \code{smoothing_structure()}. NULL option defaults to "shared"
+Created with \code{\link[=smoothing_structure]{smoothing_structure()}}. NULL option defaults to "shared"
 smoothing structure and default priors.}
 
 \item{dispersion_params}{argument is optional and defines priors for the
 overdispersion parameter of the negative binomial likelihood for
-the case timeseries. Created using \code{dispersion_structure()}. NULL option
+the case timeseries. Created using \code{\link[=dispersion_structure]{dispersion_structure()}}. NULL option
 uses default priors for phi.}
 
 \item{pathogen_noise}{logical whether individual pathogen counts have

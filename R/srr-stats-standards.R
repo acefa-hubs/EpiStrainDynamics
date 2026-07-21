@@ -28,7 +28,7 @@ NULL
 
 #' NA_standards
 #'
-#' @srrstatsNA {G1.6} This software makes no performance claims.
+#' @srrstatsNA {G1.6} This software makes no comparison performance claims
 #' @srrstatsNA {G2.4c} no conversion to character object
 #' @srrstatsNA {G2.4d, G2.4e, G2.5} no use of factor type objects
 #' @srrstatsNA {G2.9} no information is lost from type conversion to tsibble

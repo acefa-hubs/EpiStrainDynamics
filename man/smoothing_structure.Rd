@@ -35,10 +35,18 @@ supported.}
 An object of class \code{EpiStrainDynamics.smoothing} containing:
 \item{smoothing_type}{The specified smoothing structure type}
 \item{tau_priors}{Prior specifications for tau}
+\item{priors_provided}{Integer flag passed to the Stan model: \code{1} if no
+priors were supplied (Stan's built-in default prior is used), \code{2} if
+priors were supplied (the \code{tau_mean}/\code{tau_sd} values are used as the
+prior)}
 }
 \description{
 This function creates a standardized smoothing structure object that specifies
 both the smoothing structure and associated priors for EpiStrainDynamics models.
+\code{tau} (denoted \eqn{\rho} in Eales et al. 2022, \emph{Epidemics}) is the
+smoothing parameter that penalises how much the underlying trend's growth
+rate is allowed to change over time. Smaller values enforce a smoother
+trend; larger values allow it to bend more sharply.
 }
 \examples{
 # Shared smoothing with scalar priors

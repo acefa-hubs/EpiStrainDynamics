@@ -7,7 +7,7 @@
 \format{
 \subsection{\code{influenza}}{
 
-A data frame with 830 rows and 15 columns:
+A data frame with 426 rows and 7 columns:
 \describe{
 \item{ili}{Integer, daily total number of cases of influenza-like illness}
 \item{week}{Date, between 1 January 2012 to week starting 1 March 2020}

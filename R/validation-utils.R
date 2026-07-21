@@ -266,7 +266,7 @@ validate_pathogen_combination <- function(combination, pathogen_names, arg_name)
 #' @noRd
 check_column_exists <- function(data, col_name) {
   if (!col_name %in% colnames(data)) {
-    stop(sprintf("Column '%s' not found in data", col_name))
+    cli::cli_abort("Column {.val {col_name}} not found in data")
   }
 }
 
@@ -289,9 +289,7 @@ is_timeseries_class <- function(data) {
 #' @noRd
 check_column_numeric <- function(data, col_name) {
   if (!is.numeric(data[[col_name]]) && !inherits(data[[col_name]], "units")) {
-    stop(sprintf("Column '%s' specified must be numeric or have units,
-                 but is %s",
-                 col_name, class(data[[col_name]])[1]))
+    cli::cli_abort("Column {.val {col_name}} must be numeric or have units, but is {.cls {class(data[[col_name]])[1]}}")
   }
 }
 

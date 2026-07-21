@@ -122,6 +122,22 @@ fit_model <- function (constructed_model,
   UseMethod("fit_model")
 }
 
+#' Raise a catchable fitting error
+#'
+#' Signals an `EpiStrainDynamics.fit.error` condition carrying the constructed
+#' model, so callers can catch a failed fit and inspect what was being fit.
+#'
+#' @noRd
+abort_fit_error <- function(message, call, constructed_model, error_type) {
+  cli::cli_abort(
+    message,
+    class = "EpiStrainDynamics.fit.error",
+    call = call,
+    constructed_model = constructed_model,
+    error_type = error_type
+  )
+}
+
 #' @rdname fit_model
 #' @export
 fit_model.rw_subtyped <- function (constructed_model,
@@ -169,31 +185,20 @@ fit_model.rw_subtyped <- function (constructed_model,
 
   }, error = function(e) {
     # Create error object that can be inspected
-    error_obj <- list(
-      message = conditionMessage(e),
-      call = conditionCall(e),
-      constructed_model = constructed_model,
-      error_type = class(e)
+    abort_fit_error(
+      conditionMessage(e),
+      conditionCall(e), constructed_model, class(e)
     )
-    class(error_obj) <- c("EpiStrainDynamics.fit.error", "error", "condition")
-
-    # Re-raise the error with additional context
-    stop(error_obj)
   })
 
   #' @srrstats {BS2.15} Check if Stan sampling actually succeeded
   #' Stan sometimes returns a failed stanfit object rather than throwing an error
   if (!inherits(fit_object, "stanfit") ||
       length(fit_object@sim$samples) == 0) {
-    error_obj <- list(
-      message = "Stan sampling failed to produce valid samples. Check for
-      initialization failures or data issues.",
-      call = sys.call(),
-      constructed_model = constructed_model,
-      error_type = "stan_failure"
+    abort_fit_error(
+      "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
+      sys.call(), constructed_model, "stan_failure"
     )
-    class(error_obj) <- c("EpiStrainDynamics.fit.error", "error", "condition")
-    stop(error_obj)
   }
 
   #' @srrstats {BS5.5} the `model` return object is of class `stanfit`, which
@@ -252,26 +257,18 @@ fit_model.ps_subtyped <- function (constructed_model,
       stan_call()
     }
   }, error = function(e) {
-    error_obj <- list(
-      message = conditionMessage(e),
-      call = conditionCall(e),
-      constructed_model = constructed_model,
-      error_type = class(e)
+    abort_fit_error(
+      conditionMessage(e),
+      conditionCall(e), constructed_model, class(e)
     )
-    class(error_obj) <- c("EpiStrainDynamics.fit.error", "error", "condition")
-    stop(error_obj)
   })
 
   if (!inherits(fit_object, "stanfit") ||
       length(fit_object@sim$samples) == 0) {
-    error_obj <- list(
-      message = "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
-      call = sys.call(),
-      constructed_model = constructed_model,
-      error_type = "stan_failure"
+    abort_fit_error(
+      "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
+      sys.call(), constructed_model, "stan_failure"
     )
-    class(error_obj) <- c("EpiStrainDynamics.fit.error", "error", "condition")
-    stop(error_obj)
   }
 
   out <- list(fit = fit_object,
@@ -329,26 +326,18 @@ fit_model.rw_multiple <- function (constructed_model,
       stan_call()
     }
   }, error = function(e) {
-    error_obj <- list(
-      message = conditionMessage(e),
-      call = conditionCall(e),
-      constructed_model = constructed_model,
-      error_type = class(e)
+    abort_fit_error(
+      conditionMessage(e),
+      conditionCall(e), constructed_model, class(e)
     )
-    class(error_obj) <- c("EpiStrainDynamics.fit.error", "error", "condition")
-    stop(error_obj)
   })
 
   if (!inherits(fit_object, "stanfit") ||
       length(fit_object@sim$samples) == 0) {
-    error_obj <- list(
-      message = "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
-      call = sys.call(),
-      constructed_model = constructed_model,
-      error_type = "stan_failure"
+    abort_fit_error(
+      "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
+      sys.call(), constructed_model, "stan_failure"
     )
-    class(error_obj) <- c("EpiStrainDynamics.fit.error", "error", "condition")
-    stop(error_obj)
   }
 
   out <- list(fit = fit_object,
@@ -405,26 +394,18 @@ fit_model.ps_multiple <- function (constructed_model,
       stan_call()
     }
   }, error = function(e) {
-    error_obj <- list(
-      message = conditionMessage(e),
-      call = conditionCall(e),
-      constructed_model = constructed_model,
-      error_type = class(e)
+    abort_fit_error(
+      conditionMessage(e),
+      conditionCall(e), constructed_model, class(e)
     )
-    class(error_obj) <- c("EpiStrainDynamics.fit.error", "error", "condition")
-    stop(error_obj)
   })
 
   if (!inherits(fit_object, "stanfit") ||
       length(fit_object@sim$samples) == 0) {
-    error_obj <- list(
-      message = "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
-      call = sys.call(),
-      constructed_model = constructed_model,
-      error_type = "stan_failure"
+    abort_fit_error(
+      "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
+      sys.call(), constructed_model, "stan_failure"
     )
-    class(error_obj) <- c("EpiStrainDynamics.fit.error", "error", "condition")
-    stop(error_obj)
   }
 
   out <- list(fit = fit_object,
@@ -481,26 +462,18 @@ fit_model.rw_single <- function (constructed_model,
       stan_call()
     }
   }, error = function(e) {
-    error_obj <- list(
-      message = conditionMessage(e),
-      call = conditionCall(e),
-      constructed_model = constructed_model,
-      error_type = class(e)
+    abort_fit_error(
+      conditionMessage(e),
+      conditionCall(e), constructed_model, class(e)
     )
-    class(error_obj) <- c("EpiStrainDynamics.fit.error", "error", "condition")
-    stop(error_obj)
   })
 
   if (!inherits(fit_object, "stanfit") ||
       length(fit_object@sim$samples) == 0) {
-    error_obj <- list(
-      message = "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
-      call = sys.call(),
-      constructed_model = constructed_model,
-      error_type = "stan_failure"
+    abort_fit_error(
+      "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
+      sys.call(), constructed_model, "stan_failure"
     )
-    class(error_obj) <- c("EpiStrainDynamics.fit.error", "error", "condition")
-    stop(error_obj)
   }
 
   out <- list(fit = fit_object,
@@ -557,26 +530,18 @@ fit_model.ps_single <- function (constructed_model,
       stan_call()
     }
   }, error = function(e) {
-    error_obj <- list(
-      message = conditionMessage(e),
-      call = conditionCall(e),
-      constructed_model = constructed_model,
-      error_type = class(e)
+    abort_fit_error(
+      conditionMessage(e),
+      conditionCall(e), constructed_model, class(e)
     )
-    class(error_obj) <- c("EpiStrainDynamics.fit.error", "error", "condition")
-    stop(error_obj)
   })
 
   if (!inherits(fit_object, "stanfit") ||
       length(fit_object@sim$samples) == 0) {
-    error_obj <- list(
-      message = "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
-      call = sys.call(),
-      constructed_model = constructed_model,
-      error_type = "stan_failure"
+    abort_fit_error(
+      "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
+      sys.call(), constructed_model, "stan_failure"
     )
-    class(error_obj) <- c("EpiStrainDynamics.fit.error", "error", "condition")
-    stop(error_obj)
   }
 
   out <- list(fit = fit_object,

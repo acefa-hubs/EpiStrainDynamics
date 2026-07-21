@@ -10,7 +10,7 @@ validate_smoothing_structure <- function(smoothing_obj,
                                          pathogen_names = NULL) {
 
   if (!inherits(smoothing_obj, "EpiStrainDynamics.smoothing")) {
-    stop("smoothing_params must be created using the smoothing_structure() function")
+    cli::cli_abort("{.arg smoothing_params} must be created using the {.fn smoothing_structure} function")
   }
 
   smoothing_obj <- validate_smoothing_for_single(smoothing_obj, pathogen_str)
@@ -41,7 +41,7 @@ validate_smoothing_independent <- function(smoothing_obj, pathogen_names) {
   if (smoothing_obj$smoothing_type != "independent") return(smoothing_obj)
 
   if (is.null(pathogen_names)) {
-    stop("pathogen_names is required for 'independent' smoothing structure")
+    cli::cli_abort("{.arg pathogen_names} is required for {.val independent} smoothing structure")
   }
   expected_dim <- length(pathogen_names)
 
@@ -66,10 +66,7 @@ validate_smoothing_dim <- function(values, expected_dim, name) {
     return(rep(values, expected_dim))
   }
   if (actual_dim != expected_dim && actual_dim > 1) {
-    stop(sprintf(
-      "Length of %s (%d) does not match number of pathogens (%d)",
-      name, actual_dim, expected_dim
-    ))
+    cli::cli_abort("Length of {.arg {name}} ({actual_dim}) does not match number of pathogens ({expected_dim})")
   }
   return(values)
 }

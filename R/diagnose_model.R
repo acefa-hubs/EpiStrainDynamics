@@ -1,14 +1,34 @@
 #' Diagnose model convergence and fit
 #'
-#' @param fitted_model fitted model object
-#' @param rhat_threshold R-hat threshold for convergence (default 1.1)
-#' @param eff_sample_threshold effective sample size threshold
+#' Checks MCMC convergence diagnostics --- [R-hat](https://mc-stan.org/docs/reference-manual/analysis.html)
+#' and [effective sample size](https://mc-stan.org/docs/reference-manual/analysis.html) ---
+#' against user-specified thresholds, and reports any parameters that fail
+#' either check.
+#'
+#' @param fitted_model A fitted model object of class `EpiStrainDynamics.fit`,
+#'   as returned by [fit_model()].
+#' @param rhat_threshold R-hat threshold for convergence (default 1.1). Values
+#'   above this threshold indicate chains have not mixed well.
+#' @param eff_sample_threshold Effective sample size threshold (default 100).
+#'   Values below this threshold indicate the posterior samples for a
+#'   parameter are too autocorrelated to reliably estimate its distribution.
 #'
 #' @importFrom rstan summary
 #'
 #' @srrstats {BS4.3, BS5.3, BS5.4} implements a convergence checker
 #'
-#' @return list of diagnostic information
+#' @return An object of class `list`, returned invisibly, containing:
+#'   \item{convergence}{Logical; `TRUE` if no parameter fails either
+#'     threshold}
+#'   \item{rhat_issues}{Character vector of parameter names with R-hat above
+#'     `rhat_threshold`}
+#'   \item{eff_sample_issues}{Character vector of parameter names with
+#'     effective sample size below `eff_sample_threshold`}
+#'   \item{max_rhat}{The largest R-hat value across all parameters}
+#'   \item{min_neff}{The smallest effective sample size across all
+#'     parameters}
+#'   \item{summary}{The full `rstan::summary()` table the above are derived
+#'     from}
 #' @export
 #' @examplesIf interactive()
 #'   mod <- construct_model(
@@ -17,13 +37,13 @@
 #'       case_timeseries = sarscov2$cases,
 #'       time = sarscov2$date))
 #'   fit <- fit_model(mod)
-#'   diagnose(fit)
+#'   diagnose_model(fit)
 diagnose_model <- function(fitted_model,
                            rhat_threshold = 1.1,
                            eff_sample_threshold = 100) {
 
   if (!inherits(fitted_model, "EpiStrainDynamics.fit")) {
-    stop("fitted_model must be an EpiStrainDynamics.fit object")
+    cli::cli_abort("{.arg fitted_model} must be an {.cls EpiStrainDynamics.fit} object, got {.cls {class(fitted_model)}}")
   }
 
   validate_rhat_threshold(rhat_threshold)

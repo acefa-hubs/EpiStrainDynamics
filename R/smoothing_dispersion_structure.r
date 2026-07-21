@@ -2,6 +2,10 @@
 #'
 #' This function creates a standardized smoothing structure object that specifies
 #' both the smoothing structure and associated priors for EpiStrainDynamics models.
+#' `tau` (denoted \eqn{\rho} in Eales et al. 2022, \emph{Epidemics}) is the
+#' smoothing parameter that penalises how much the underlying trend's growth
+#' rate is allowed to change over time. Smaller values enforce a smoother
+#' trend; larger values allow it to bend more sharply.
 #'
 #' @param smoothing_type Character string specifying the smoothing type:
 #'   \itemize{
@@ -28,6 +32,10 @@
 #' @return An object of class `EpiStrainDynamics.smoothing` containing:
 #'   \item{smoothing_type}{The specified smoothing structure type}
 #'   \item{tau_priors}{Prior specifications for tau}
+#'   \item{priors_provided}{Integer flag passed to the Stan model: `1` if no
+#'     priors were supplied (Stan's built-in default prior is used), `2` if
+#'     priors were supplied (the `tau_mean`/`tau_sd` values are used as the
+#'     prior)}
 #'
 #' @srrstats {G1.3} clear definitions of smoothing structure types and prior
 #' @srrstats {G1.4} uses `Roxygen2` documentation
@@ -96,7 +104,10 @@ smoothing_structure <- function(smoothing_type = "shared",
 #'
 #' This function creates a dispersion structure object that specifies priors
 #' for the overdispersion parameter of the negative binomial likelihood for
-#' the case timeseries.
+#' the case timeseries. `phi` controls how much the observed counts vary
+#' around the expected trend beyond Poisson noise: smaller values allow more
+#' overdispersion (noisier counts relative to the mean), larger values
+#' approach Poisson-like variance.
 #'
 #' @param phi_mean Numeric scalar specifying the prior mean for the negative
 #'   binomial dispersion parameter. Must be positive. Optional - if not
@@ -105,8 +116,13 @@ smoothing_structure <- function(smoothing_type = "shared",
 #'   dispersion parameter. Must be positive. Optional - if not provided, no
 #'   priors will be set.
 #'
-#' @return An object of class `EpiStrainDynamics.dispersion` containing prior
-#'   specifications for phi parameter
+#' @return An object of class `EpiStrainDynamics.dispersion` containing:
+#'   \item{mean}{The prior mean for phi}
+#'   \item{sd}{The prior standard deviation for phi}
+#'   \item{priors_provided}{Integer flag passed to the Stan model: `1` if no
+#'     priors were supplied (Stan's built-in default prior is used), `2` if
+#'     priors were supplied (the `phi_mean`/`phi_sd` values are used as the
+#'     prior)}
 #'
 #' @srrstats {G1.3} clear definitions of dispersion parameters
 #' @srrstats {G1.4} uses `Roxygen2` documentation
