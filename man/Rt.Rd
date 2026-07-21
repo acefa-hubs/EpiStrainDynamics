@@ -21,7 +21,10 @@ Rt(fitted_model, gi_dist, tau_max = 7, ...)
 \arguments{
 \item{fitted_model}{Fitted model object with class \code{EpiStrainDynamics.fit}}
 
-\item{gi_dist}{Function that returns generation interval probability for given day}
+\item{gi_dist}{Function returning the generation interval probability for
+a given day. Must accept a numeric vector and return a non-negative
+numeric vector of the same length; does not need to sum to 1 (see
+Description).}
 
 \item{tau_max}{Integer maximum generation interval in days (default: 7)}
 
@@ -69,7 +72,14 @@ secondary case)
 \item Accounts for transmission timing using probability distribution
 \eqn{g(k)}
 \item Recent cases contribute more to current transmission potential
-\item Accepts user-defined generation interval distributions
+\item Accepts user-defined generation interval distributions, validated
+for structural properties (vectorized, non-negative, finite)
+\item Does not need to sum to 1 -- normalized internally using
+\eqn{g_a = \sum_{k=0}^{\tau_{\max}-1} g(k)}
+\item Validation does not assess whether the shape is epidemiologically
+plausible (e.g. unimodal, decaying); as with other Rt estimation
+methods, supplying a distribution informed by published estimates for
+the pathogen(s) being modelled is the user's responsibility
 }
 
 This metric function can be run directly on the fitted model output.
