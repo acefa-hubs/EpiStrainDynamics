@@ -45,7 +45,7 @@ method = p_spline(spline_degree = 3,  # example value for spline degree
 ## Pathogen structure
 
 There are three main types of pathogen structure available to model: `single()`, `multiple()`, and `subtyped()`.
-These functions require the name of the dataset itself and the column names for different data elements. These can also ingest timeseries class objects, which would then make the `time` column specification optional. The models are not currently equipped to handle missing values or irregular date sequences. Timeseries checks are run internally on data frame or any time of timeseries class input that is handled by the [`tsbox` package](https://docs.ropensci.org/tsbox/reference/tsbox-package.html).
+These functions require the name of the dataset itself and the column names for different data elements. These can also ingest timeseries class objects, which would then make the `time` column specification optional. Any timeseries class input that is handled by the [`tsbox` package](https://docs.ropensci.org/tsbox/reference/tsbox-package.html) is acceptable. The models are not currently equipped to handle missing values or irregular date sequences.
 
 The `single()` pathogen structure is the simplest and models a single pathogen timeseries. The name of the dataframe is passed to argument `data`, the name of the column with total case data is passed to `case_timeseries`, and the name of the column of time data is passed to `time` (optional if input dataset is a timeseries class). It can be specified as follows, illustrated using data provided with the package `sarscov2`:
 
