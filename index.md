@@ -282,12 +282,15 @@ For code corresponding to the AJE paper, see branch
 
 `EpiStrainDynamics` is in a stable state of development, with some
 degree of active subsequent development as envisioned by the primary
-authors. Authors are committed to maintaining the package. If you would
-like to contribute to the package, please review the [contributing
-guide](https://github.com/acefa-hubs/EpiStrainDynamics/blob/main/.github/CONTRIBUTING.md).
-Test cases and improvements are especially welcome. If you see any
-mistakes in the package you can also let us know by logging a bug on the
-[issues](https://github.com/acefa-hubs/EpiStrainDynamics/issues) page.
+authors. Authors are committed to maintaining the package. If you spot a
+bug, have a feature request, or want to contribute an improvement to the
+package (branch `main`) or the code associated with the paper analyses
+(branch `paper_analysis`), please open an
+[issue](https://github.com/acefa-hubs/EpiStrainDynamics/issues) or pull
+request. The [contributing
+guide](https://github.com/acefa-hubs/EpiStrainDynamics/blob/main/.github/CONTRIBUTING.md)
+describes the recommended workflow and scope for contributions. Test
+cases and improvements are especially welcome.
 
 ## Code of Conduct
 
