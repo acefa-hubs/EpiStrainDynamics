@@ -241,3 +241,45 @@ prop <- proportion(
 prop <- proportion(fit)
 plot(prop)
 ```
+
+# Additional worked example: COVID-19
+
+The worked example above uses influenza data with a subtyped pathogen structure and penalised splines. To illustrate a different combination, the following constructs and fits a random walk model to the `sarscov2` dataset bundled with the package, using the `multiple` pathogen structure to model the different SARS-CoV-2 variants circulating over time.
+
+```{r}
+mod_covid <- construct_model(
+  method = random_walk(),
+
+  pathogen_structure = multiple(
+    data = sarscov2,
+    case_timeseries = 'cases',
+    time = 'date',
+    component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+  ),
+
+  smoothing_params = smoothing_structure(
+    'independent', tau_mean = c(0, 0.1, 0.3, 0), tau_sd = rep(1, times = 4)),
+  dispersion_params = dispersion_structure(phi_mean = 0, phi_sd = 1),
+  pathogen_noise = FALSE,
+  dow_effect = TRUE
+)
+
+fit_covid <- fit_model(
+  mod_covid,
+  n_iter = 2000,
+  n_warmup = 1000,
+  verbose = FALSE
+)
+```
+
+As before, growth rate and pathogen proportions can be calculated and plotted directly from the fit:
+
+```{r growth_rate_covid}
+gr_covid <- growth_rate(fit_covid)
+plot(gr_covid)
+```
+
+```{r proportion_covid}
+prop_covid <- proportion(fit_covid)                                   plot(prop_covid)
+```
+
