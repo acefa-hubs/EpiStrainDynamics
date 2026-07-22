@@ -29,37 +29,37 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 32> locations_array__ =
   {" (found before start of program)",
-  " (in 'rw_single', line 27, column 2 to column 25)",
-  " (in 'rw_single', line 29, column 2 to column 20)",
-  " (in 'rw_single', line 31, column 2 to column 20)",
-  " (in 'rw_single', line 33, column 2 to column 43)",
-  " (in 'rw_single', line 38, column 2 to column 71)",
-  " (in 'rw_single', line 41, column 4 to column 35)",
-  " (in 'rw_single', line 40, column 29 to line 42, column 3)",
-  " (in 'rw_single', line 40, column 2 to line 42, column 3)",
-  " (in 'rw_single', line 46, column 4 to column 35)",
-  " (in 'rw_single', line 45, column 29 to line 47, column 3)",
-  " (in 'rw_single', line 45, column 2 to line 47, column 3)",
-  " (in 'rw_single', line 55, column 6 to column 83)",
-  " (in 'rw_single', line 54, column 4 to line 55, column 83)",
-  " (in 'rw_single', line 53, column 6 to line 56, column 3)",
-  " (in 'rw_single', line 51, column 4 to column 38)",
-  " (in 'rw_single', line 50, column 20 to line 52, column 3)",
-  " (in 'rw_single', line 50, column 2 to line 56, column 3)",
+  " (in 'rw_single', line 25, column 2 to column 25)",
+  " (in 'rw_single', line 26, column 2 to column 20)",
+  " (in 'rw_single', line 27, column 2 to column 20)",
+  " (in 'rw_single', line 28, column 2 to column 43)",
+  " (in 'rw_single', line 33, column 2 to column 71)",
+  " (in 'rw_single', line 36, column 4 to column 35)",
+  " (in 'rw_single', line 35, column 29 to line 37, column 3)",
+  " (in 'rw_single', line 35, column 2 to line 37, column 3)",
+  " (in 'rw_single', line 40, column 4 to column 35)",
+  " (in 'rw_single', line 39, column 29 to line 41, column 3)",
+  " (in 'rw_single', line 39, column 2 to line 41, column 3)",
+  " (in 'rw_single', line 48, column 6 to column 86)",
+  " (in 'rw_single', line 47, column 4 to line 48, column 86)",
+  " (in 'rw_single', line 46, column 6 to line 49, column 3)",
+  " (in 'rw_single', line 44, column 4 to column 38)",
+  " (in 'rw_single', line 43, column 20 to line 45, column 3)",
+  " (in 'rw_single', line 43, column 2 to line 49, column 3)",
   " (in 'rw_single', line 13, column 2 to column 15)",
   " (in 'rw_single', line 14, column 8 to column 16)",
   " (in 'rw_single', line 14, column 2 to column 18)",
   " (in 'rw_single', line 15, column 2 to column 18)",
   " (in 'rw_single', line 16, column 10 to column 18)",
   " (in 'rw_single', line 16, column 2 to column 20)",
-  " (in 'rw_single', line 18, column 2 to column 26)",
-  " (in 'rw_single', line 19, column 2 to column 25)",
-  " (in 'rw_single', line 20, column 2 to column 23)",
-  " (in 'rw_single', line 22, column 2 to column 26)",
-  " (in 'rw_single', line 23, column 2 to column 25)",
-  " (in 'rw_single', line 24, column 2 to column 23)",
-  " (in 'rw_single', line 27, column 13 to column 21)",
-  " (in 'rw_single', line 33, column 10 to column 21)"};
+  " (in 'rw_single', line 17, column 2 to column 26)",
+  " (in 'rw_single', line 18, column 2 to column 25)",
+  " (in 'rw_single', line 19, column 2 to column 23)",
+  " (in 'rw_single', line 20, column 2 to column 26)",
+  " (in 'rw_single', line 21, column 2 to column 25)",
+  " (in 'rw_single', line 22, column 2 to column 23)",
+  " (in 'rw_single', line 25, column 13 to column 21)",
+  " (in 'rw_single', line 28, column 10 to column 21)"};
 #include <stan_meta_header.hpp>
 class model_rw_single final : public model_base_crtp<model_rw_single> {
 private:
@@ -258,15 +258,15 @@ public:
             lp_accum__.add(stan::math::neg_binomial_lpmf<propto__>(
                              stan::model::rvalue(Y, "Y",
                                stan::model::index_uni(i)),
-                             stan::math::multiply(
-                               stan::math::multiply(
-                                 stan::math::multiply(stan::math::exp(a), phi),
-                                 week_effect),
-                               stan::model::rvalue(day_of_week_simplex,
-                                 "day_of_week_simplex",
-                                 stan::model::index_uni(
-                                   stan::model::rvalue(DOW, "DOW",
-                                     stan::model::index_uni(i))))), phi));
+                             (((stan::math::exp(
+                                  stan::model::rvalue(a, "a",
+                                    stan::model::index_uni(i))) * phi) *
+                             week_effect) *
+                             stan::model::rvalue(day_of_week_simplex,
+                               "day_of_week_simplex",
+                               stan::model::index_uni(
+                                 stan::model::rvalue(DOW, "DOW",
+                                   stan::model::index_uni(i))))), phi));
           }
         }
       }

@@ -25,6 +25,16 @@ We make use of the suggestions as described in this [blog post](https://ropensci
 To edit the vignette, edit the `vignettes/Using-EpiStrainDynamics.Rmd.orig` file, and then compile it using the code in `vignettes/precompile.R`. 
 This will execute the rmarkdown code locally, and ship a vignette in the package which already contains the rendered R output.
 
+### Revising Stan models
+
+This package includes stan models precompiled with `rstantools`. If any revisions are made to the stan models in `inst/stan/`, the models themselves must be recompiled as well. 
+
+1. Synchronize your .stan models with the generated C++ code and Rcpp::loadModule() calls using
+`rstantools::rstan_config()`
+
+2. Actually recompile the package with the regenerated C++
+`pkgbuild::compile_dll()`
+
 ### Pull request process
 
 *   Fork the package and clone onto your computer. If you haven't done this before, we recommend using `usethis::create_from_github("acefa-hubs/EpiStrainDynamics", fork = TRUE)`.

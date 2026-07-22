@@ -16,11 +16,11 @@ data {
   int Y[num_data];           // daily number of 'cases'
   int week_effect;          // Number of days in day of week effect? 1=none, 2=weekends?, 7=all days
   int DOW[num_data];        // integer of day of the week
-  
+
   int phi_priors_provided;      // 1=priors not provided, 2=priors provided
   real<lower=0> phi_mean;
   real<lower=0> phi_sd;
-  
+
   int tau_priors_provided;      // 1=priors not provided, 2=priors provided
   real<lower=0> tau_mean;
   real<lower=0> tau_sd;
@@ -28,11 +28,11 @@ data {
 
 parameters {
   row_vector[num_data] a;
-  
+
   real<lower=0> phi;
-  
+
   real<lower=0> tau;
-  
+
   simplex[week_effect] day_of_week_simplex;
 }
 
@@ -46,19 +46,19 @@ model {
   if(phi_priors_provided ==2){
     phi ~ normal(phi_mean, phi_sd);
   }
-  
+
   // Prior on tau
   if(tau_priors_provided ==2){
     tau ~ normal(tau_mean, tau_sd);
   }
-  
+
   //// Likelihood
   if(week_effect==1){
     Y ~ neg_binomial(exp(a)*phi, phi);
-  } 
+  }
   else{
     for(i in 1:num_data)
-      Y[i] ~ neg_binomial(exp(a)*phi*week_effect*day_of_week_simplex[DOW[i]], phi);
+      Y[i] ~ neg_binomial(exp(a[i])*phi*week_effect*day_of_week_simplex[DOW[i]], phi);
   }
-  
+
 }
