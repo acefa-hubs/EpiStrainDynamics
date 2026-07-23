@@ -159,7 +159,7 @@ resolve_dow <- function(fitted_model, dow) {
     )
   }
 
-  return(dow)
+  dow
 }
 
 #' Calculate Incidence for Single Pathogen Model (with DOW adjustment)

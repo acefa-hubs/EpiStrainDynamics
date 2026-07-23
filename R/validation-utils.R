@@ -149,7 +149,7 @@ validate_priors <- function(mean, sd) {
   # Always create priors list structure (even if both are NULL)
   priors <- list("mean" = mean, "sd" = sd)
   class(priors) <- c("EpiStrainDynamics.prior", class(priors))
-  return(priors)
+  priors
 }
 
 #' Validate generation interval distribution function
@@ -426,7 +426,7 @@ convert_ts_to_tsibble <- function(ts_obj) {
     }
   )
 
-  return(temp_tsbl)
+  temp_tsbl
 }
 
 #' Check for list columns in data
@@ -453,7 +453,7 @@ check_list_columns <- function(data, relevant_cols) {
       error = function(e) {
         # If we can't convert to check, skip the check
         # (will be handled by other validation)
-        return(NULL)
+        NULL
       }
     )
     if (is.null(data)) {
@@ -605,5 +605,5 @@ create_validated_timeseries <- function(data, columns, time_col = NULL) {
     )
   }
 
-  return(temp_tsbl)
+  temp_tsbl
 }

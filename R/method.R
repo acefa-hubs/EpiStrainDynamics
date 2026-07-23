@@ -24,7 +24,7 @@ random_walk <- function() {
   )
 
   class(model_inputs) <- "EpiStrainDynamics.method"
-  return(model_inputs)
+  model_inputs
 }
 
 #' Specify p_spline method
@@ -82,5 +82,5 @@ p_spline <- function(spline_degree = 3,
     )
   )
   class(model_inputs) <- "EpiStrainDynamics.method"
-  return(model_inputs)
+  model_inputs
 }

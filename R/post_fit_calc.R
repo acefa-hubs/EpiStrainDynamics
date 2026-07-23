@@ -326,7 +326,7 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
     fit = fitted_model$fit,
     constructed_model = fitted_model$constructed_model
   )
-  return(out)
+  out
 }
 
 #' Unified Calculation Wrapper
@@ -377,5 +377,5 @@ calc_wrapper <- function(df, time_idx_col, pathogen_idx_col, calc_fn,
   # Combine with original data frame (excluding time_idx column)
   result_df <- cbind(df[, !names(df) %in% "time_idx", drop = FALSE], stats_df)
 
-  return(result_df)
+  result_df
 }

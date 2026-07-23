@@ -168,7 +168,7 @@ construct_model <- function(method,
     model_type, "EpiStrainDynamics.model",
     class(model_input)
   )
-  return(model_input)
+  model_input
 }
 
 #' Print method for constructed EpiStrainDynamics models
@@ -256,7 +256,7 @@ get_model_type <- function(method_name, pathogen_type) {
 
   model_type <- paste(method_abbrev, pathogen_type, sep = "_")
 
-  return(model_type)
+  model_type
 }
 
 #' Function for getting knot locations
@@ -299,7 +299,7 @@ get_knots <- function(X, days_per_knot = 3, spline_degree = 3) {
 
   knots <- seq(first_knot, final_knot, by = days_per_knot)
 
-  return(knots)
+  knots
 }
 
 #' Get covariance structure from assigned smoothing structure
@@ -332,5 +332,5 @@ get_cov_structure <- function(smoothing_structure = c(
     }
   )
 
-  return(cov_structure)
+  cov_structure
 }

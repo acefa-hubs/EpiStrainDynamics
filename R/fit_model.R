@@ -221,7 +221,7 @@ fit_model.rw_subtyped <- function(constructed_model,
   )
 
   class(out) <- c("rw", "EpiStrainDynamics.fit", class(out))
-  return(out)
+  out
 }
 
 #' @rdname fit_model
@@ -295,7 +295,7 @@ fit_model.ps_subtyped <- function(constructed_model,
 
   class(out) <- c("ps", "EpiStrainDynamics.fit", class(out))
 
-  return(out)
+  out
 }
 
 #' @rdname fit_model
@@ -368,7 +368,7 @@ fit_model.rw_multiple <- function(constructed_model,
   )
 
   class(out) <- c("rw", "EpiStrainDynamics.fit", class(out))
-  return(out)
+  out
 }
 
 #' @rdname fit_model
@@ -441,7 +441,7 @@ fit_model.ps_multiple <- function(constructed_model,
   )
 
   class(out) <- c("ps", "EpiStrainDynamics.fit", class(out))
-  return(out)
+  out
 }
 
 #' @rdname fit_model
@@ -514,7 +514,7 @@ fit_model.rw_single <- function(constructed_model,
   )
 
   class(out) <- c("rw_single", "EpiStrainDynamics.fit", class(out))
-  return(out)
+  out
 }
 
 #' @rdname fit_model
@@ -587,5 +587,5 @@ fit_model.ps_single <- function(constructed_model,
   )
 
   class(out) <- c("ps_single", "EpiStrainDynamics.fit", class(out))
-  return(out)
+  out
 }

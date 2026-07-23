@@ -17,7 +17,7 @@ validate_smoothing_structure <- function(smoothing_obj,
   smoothing_obj <- validate_smoothing_shared(smoothing_obj)
   smoothing_obj <- validate_smoothing_correlated(smoothing_obj)
 
-  return(smoothing_obj)
+  smoothing_obj
 }
 
 #' @noRd
@@ -34,7 +34,7 @@ validate_smoothing_for_single <- function(smoothing_obj, pathogen_str) {
     smoothing_obj$tau_priors$mean <- 0.0
     smoothing_obj$tau_priors$sd <- 1.0
   }
-  return(smoothing_obj)
+  smoothing_obj
 }
 
 #' @noRd
@@ -59,7 +59,7 @@ validate_smoothing_independent <- function(smoothing_obj, pathogen_names) {
       smoothing_obj$tau_priors$sd, expected_dim, "tau_sd"
     )
   }
-  return(smoothing_obj)
+  smoothing_obj
 }
 
 #' @noRd
@@ -71,7 +71,7 @@ validate_smoothing_dim <- function(values, expected_dim, name) {
   if (actual_dim != expected_dim && actual_dim > 1) {
     cli::cli_abort("Length of {.arg {name}} ({actual_dim}) does not match number of pathogens ({expected_dim})")
   }
-  return(values)
+  values
 }
 
 #' @noRd
@@ -88,7 +88,7 @@ validate_smoothing_shared <- function(smoothing_obj) {
     smoothing_obj$tau_priors$mean <- array(0.0, dim = 1)
     smoothing_obj$tau_priors$sd <- array(1.0, dim = 1)
   }
-  return(smoothing_obj)
+  smoothing_obj
 }
 
 #' @noRd
@@ -105,5 +105,5 @@ validate_smoothing_correlated <- function(smoothing_obj) {
     smoothing_obj$tau_priors$mean <- numeric(0)
     smoothing_obj$tau_priors$sd <- numeric(0)
   }
-  return(smoothing_obj)
+  smoothing_obj
 }

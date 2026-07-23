@@ -95,7 +95,7 @@ smoothing_structure <- function(smoothing_type = "shared",
   )
 
   class(smooth_obj) <- c("EpiStrainDynamics.smoothing", class(smooth_obj))
-  return(smooth_obj)
+  smooth_obj
 }
 
 #' Create Dispersion Structure Specification
@@ -160,5 +160,5 @@ dispersion_structure <- function(phi_mean = NULL, phi_sd = NULL) {
   )
 
   class(disp_obj) <- c("EpiStrainDynamics.dispersion", class(disp_obj))
-  return(disp_obj)
+  disp_obj
 }

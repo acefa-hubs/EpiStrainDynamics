@@ -84,5 +84,5 @@ diagnose_model <- function(fitted_model,
   cat("Maximum R-hat:", round(max_rhat, 3), "\n")
   cat("Minimum n_eff:", round(min_neff, 0), "\n")
 
-  return(invisible(diagnostics))
+  invisible(diagnostics)
 }

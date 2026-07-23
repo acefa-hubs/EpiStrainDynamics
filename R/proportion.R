@@ -196,7 +196,7 @@ compute_proportion <- function(fitted_model,
     }
   )
 
-  return(measure)
+  measure
 }
 
 #' Calculate proportion for Individual Pathogen
