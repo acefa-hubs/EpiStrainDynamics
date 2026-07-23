@@ -249,7 +249,7 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
     key = "pathogen"
   )
 
-  out <- list(
+  list(
     measure = tsbl_measure,
     fit = fitted_model$fit,
     constructed_model = fitted_model$constructed_model

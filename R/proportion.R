@@ -97,7 +97,6 @@ proportion <- function(fitted_model,
   )
 
   use_splines <- ifelse(inherits(fitted_model, "ps"), TRUE, FALSE)
-  path_names <- fitted_model$constructed_model$pathogen_names
 
   if (is.null(numerator_combination)) {
     measure <- do.call(
