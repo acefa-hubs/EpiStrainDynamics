@@ -817,35 +817,35 @@ sessionInfo()
 #> [3] EpiStrainDynamics_0.0.1.9000
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] tidyselect_1.2.1      viridisLite_0.4.3     timeDate_4052.112    
-#>  [4] farver_2.1.2          viridis_0.6.5         loo_2.10.0           
-#>  [7] S7_0.2.2              fastmap_1.2.0         digest_0.6.39        
-#> [10] rpart_4.1.27          timechange_0.4.0      lifecycle_1.0.5      
-#> [13] StanHeaders_2.32.10   survival_3.8-6        magrittr_2.0.5       
-#> [16] compiler_4.6.1        rlang_1.3.0           sass_0.4.10          
-#> [19] tools_4.6.1           yaml_2.3.12           data.table_1.18.4    
-#> [22] knitr_1.51            labeling_0.4.3        htmlwidgets_1.6.4    
-#> [25] pkgbuild_1.4.8        RColorBrewer_1.1-3    withr_3.0.3          
-#> [28] purrr_1.2.2           desc_1.4.3            nnet_7.3-20          
-#> [31] grid_4.6.1            stats4_4.6.1          timetk_2.9.1         
-#> [34] xts_0.14.2            future_1.75.0         inline_0.3.21        
-#> [37] globals_0.19.1        scales_1.4.0          MASS_7.3-65          
-#> [40] anytime_0.3.13        cli_3.6.6             rmarkdown_2.31       
-#> [43] ragg_1.5.2            generics_0.1.4        otel_0.2.0           
-#> [46] RcppParallel_5.1.11-2 future.apply_1.20.2   cachem_1.1.0         
-#> [49] rstan_2.32.7          splines_4.6.1         bayesplot_1.15.0     
-#> [52] parallel_4.6.1        matrixStats_1.5.0     vctrs_0.7.3          
-#> [55] hardhat_1.4.3         Matrix_1.7-5          jsonlite_2.0.0       
-#> [58] listenv_1.0.0         systemfonts_1.3.2     gower_1.0.2          
-#> [61] jquerylib_0.1.4       tidyr_1.3.2           recipes_1.3.3        
-#> [64] glue_1.8.1            parallelly_1.48.0     pkgdown_2.2.1        
-#> [67] codetools_0.2-20      rsample_1.3.2         lubridate_1.9.5      
-#> [70] gtable_0.3.6          QuickJSR_1.10.0       tibble_3.3.1         
-#> [73] pillar_1.11.1         furrr_0.4.0           htmltools_0.5.9      
-#> [76] ipred_0.9-15          lava_1.9.2            R6_2.6.1             
-#> [79] textshaping_1.0.5     evaluate_1.0.5        lattice_0.22-9       
-#> [82] tsibble_1.2.0         bslib_0.11.0          rstantools_2.6.0     
-#> [85] class_7.3-23          Rcpp_1.1.2            gridExtra_2.3.1      
-#> [88] prodlim_2026.03.11    xfun_0.60             fs_2.1.0             
-#> [91] zoo_1.8-15            pkgconfig_2.0.3
+#>  [1] tidyselect_1.2.1    viridisLite_0.4.3   timeDate_4052.112  
+#>  [4] farver_2.1.2        viridis_0.6.5       loo_2.10.0         
+#>  [7] S7_0.2.2            fastmap_1.2.0       digest_0.6.39      
+#> [10] rpart_4.1.27        timechange_0.4.0    lifecycle_1.0.5    
+#> [13] StanHeaders_2.32.10 survival_3.8-6      magrittr_2.0.5     
+#> [16] compiler_4.6.1      rlang_1.3.0         sass_0.4.10        
+#> [19] tools_4.6.1         yaml_2.3.12         data.table_1.18.4  
+#> [22] knitr_1.51          labeling_0.4.3      htmlwidgets_1.6.4  
+#> [25] pkgbuild_1.4.8      RColorBrewer_1.1-3  withr_3.0.3        
+#> [28] purrr_1.2.2         desc_1.4.3          nnet_7.3-20        
+#> [31] grid_4.6.1          stats4_4.6.1        timetk_2.9.1       
+#> [34] xts_0.14.2          future_1.75.0       inline_0.3.21      
+#> [37] globals_0.19.1      scales_1.4.0        MASS_7.3-65        
+#> [40] anytime_0.3.13      cli_3.6.6           rmarkdown_2.31     
+#> [43] ragg_1.5.2          generics_0.1.4      otel_0.2.0         
+#> [46] RcppParallel_6.0.0  future.apply_1.20.2 cachem_1.1.0       
+#> [49] rstan_2.32.7        splines_4.6.1       bayesplot_1.15.0   
+#> [52] parallel_4.6.1      matrixStats_1.5.0   vctrs_0.7.3        
+#> [55] hardhat_1.4.3       Matrix_1.7-5        jsonlite_2.0.0     
+#> [58] listenv_1.0.0       systemfonts_1.3.2   gower_1.0.2        
+#> [61] jquerylib_0.1.4     tidyr_1.3.2         recipes_1.3.3      
+#> [64] glue_1.8.1          parallelly_1.48.0   pkgdown_2.2.1      
+#> [67] codetools_0.2-20    rsample_1.3.2       lubridate_1.9.5    
+#> [70] gtable_0.3.6        QuickJSR_1.10.0     tibble_3.3.1       
+#> [73] pillar_1.11.1       furrr_0.4.0         htmltools_0.5.9    
+#> [76] ipred_0.9-15        lava_1.9.2          R6_2.6.1           
+#> [79] textshaping_1.0.5   evaluate_1.0.5      lattice_0.22-9     
+#> [82] tsibble_1.2.0       bslib_0.11.0        rstantools_2.6.0   
+#> [85] class_7.3-23        Rcpp_1.1.2          gridExtra_2.3.1    
+#> [88] prodlim_2026.03.11  xfun_0.60           fs_2.1.0           
+#> [91] zoo_1.8-15          pkgconfig_2.0.3
 ```
