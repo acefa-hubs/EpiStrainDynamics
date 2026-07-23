@@ -11,6 +11,7 @@
 #' @importFrom rstantools rstan_config
 #' @importFrom RcppParallel RcppParallelLibs
 #' @importFrom bayesplot mcmc_areas mcmc_trace
+#' @importFrom rlang %||%
 #'
 #' @noRd
 #' @srrstats {G1.4} uses `Roxygen2` documentation
