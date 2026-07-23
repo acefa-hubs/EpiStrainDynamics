@@ -6,7 +6,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Using EpiStrainDynamics • EpiStrainDynamics</title>
-<script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- mathjax math --><script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script><script>
+  window.MathJax = {
+    chtml: {
+      fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
+    }
+  };
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -127,11 +133,10 @@ method = p_spline(spline_degree = 3,  # example value for spline degree
 <code><a href="../reference/subtyped.html">subtyped()</a></code>. These functions require the name of the dataset
 itself and the column names for different data elements. These can also
 ingest timeseries class objects, which would then make the
-<code>time</code> column specification optional. The models are not
-currently equipped to handle missing values or irregular date sequences.
-Timeseries checks are run internally on data frame or any time of
-timeseries class input that is handled by the <a href="https://docs.ropensci.org/tsbox/reference/tsbox-package.html" class="external-link"><code>tsbox</code>
-package</a>.</p>
+<code>time</code> column specification optional. Any timeseries class
+input that is handled by the <a href="https://docs.ropensci.org/tsbox/reference/tsbox-package.html" class="external-link"><code>tsbox</code>
+package</a> is acceptable. The models are not currently equipped to
+handle missing values or irregular date sequences.</p>
 <p>The <code><a href="../reference/single.html">single()</a></code> pathogen structure is the simplest and
 models a single pathogen timeseries. The name of the dataframe is passed
 to argument <code>data</code>, the name of the column with total case
@@ -211,9 +216,21 @@ prior on tau can also be specified, as below:</p>
 <h3 id="dispersion-parameters">Dispersion parameters<a class="anchor" aria-label="anchor" href="#dispersion-parameters"></a>
 </h3>
 <p>The argument <code>dispersion_params</code> allows users to set a
-prior for the overdispersion parameter of the negative binomial
-likelihood for the case timeseries. It is specified using
-<code><a href="../reference/dispersion_structure.html">dispersion_structure()</a></code> as below:</p>
+prior for the overdispersion parameter, <code>phi</code>, of the
+negative binomial likelihood for the case timeseries. This parameter
+controls how much the reported case count can vary from day to day
+around the model’s expected value. Even if the model’s smooth trend
+exactly captured the true expected number of cases on a given day, the
+actual reported count would still vary, since it depends on which
+patients happened to seek care, get tested, or have their test processed
+and reported that day. A negative binomial (rather than Poisson)
+likelihood is used because real surveillance counts are almost always
+more variable than a simple random-sampling process would predict, a
+pattern known as overdispersion. Smaller <code>phi</code> allows more
+day-to-day variation in reported counts; larger <code>phi</code> keeps
+them closer to the trend.</p>
+<p>It is specified using <code><a href="../reference/dispersion_structure.html">dispersion_structure()</a></code> as
+below:</p>
 <pre><code><span><span class="va">dispersion_params</span> <span class="op">=</span> <span class="fu"><a href="../reference/dispersion_structure.html">dispersion_structure</a></span><span class="op">(</span></span>
 <span>  phi_mean <span class="op">=</span> <span class="fl">0</span>, phi_sd <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre>
@@ -221,16 +238,35 @@ likelihood for the case timeseries. It is specified using
 <div class="section level3">
 <h3 id="pathogen-noise">Pathogen noise<a class="anchor" aria-label="anchor" href="#pathogen-noise"></a>
 </h3>
-<p>Whether to include noise between individual pathogens as well as the
-observation noise is specified as a logical (<code>TRUE</code> or
-<code>FALSE</code>) to the argument <code>pathogen_noise</code>.</p>
+<p>By default, the model assumes that on any given day, the relative mix
+of pathogens follows exactly the smooth underlying trends, and that any
+noisiness in the observed composition (e.g. how many positive tests were
+pathogen A vs. B) comes only from the day-to-day reporting variation
+described with <code>phi</code>, above.</p>
+<p>It is possible to add an extra source of variability, allowing the
+<em>true</em> day-to-day mix of pathogens to jitter around the smooth
+trend, not just the observed counts. This matters because real pathogens
+don’t necessarily move in lockstep with a single shared epidemic curve;
+one pathogen can genuinely spike or dip relative to the others for
+reasons the smooth trend alone doesn’t capture.</p>
+<p>The argument <code>pathogen_noise</code> refers to whether to include
+this noise between individual pathogens and can be specified as a
+logical (<code>TRUE</code> or <code>FALSE</code>).</p>
 </div>
 <div class="section level3">
 <h3 id="day-of-week-effect">Day of week effect<a class="anchor" aria-label="anchor" href="#day-of-week-effect"></a>
 </h3>
+<p>Surveillance data reported by calendar day often show a weekly
+pattern that has nothing to do with disease transmission, for example,
+fewer specimens processed or reported over weekends due to lab and
+clinic schedules.</p>
 <p>Day of week effect is specified as a logical (<code>TRUE</code> or
-<code>FALSE</code>) to the <code>dow_effect</code> argument. In plotting
-the day of week effect can be selectively removed.</p>
+<code>FALSE</code>) to the <code>dow_effect</code> argument. Setting
+<code>dow_effect = TRUE</code> fits a separate multiplier for each day
+of the week, so these reporting-schedule artifacts are absorbed by the
+day-of-week terms rather than being mistaken for genuine changes in the
+epidemic trend. In plotting the day of week effect can be selectively
+removed.</p>
 </div>
 <div class="section level3">
 <h3 id="worked-example">Worked example<a class="anchor" aria-label="anchor" href="#worked-example"></a>
@@ -284,39 +320,57 @@ the constructed model object.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_model.html">fit_model</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod</span>,</span>
-<span>  n_iter <span class="op">=</span> <span class="fl">2000</span>,</span>
-<span>  n_warmup <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  n_iter <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  n_warmup <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Very few effective samples will be retained after thinning</span></span>
+<span><span class="co">#&gt; ℹ With `n_iter` = 20, `n_warmup` = 10, `thin` = 1, and `n_chain`</span></span>
+<span><span class="co">#&gt;   = 4</span></span>
+<span><span class="co">#&gt; ℹ Only 40 samples will be retained</span></span>
+<span><span class="co">#&gt; ℹ Consider reducing `thin` or increasing `n_iter`</span></span>
+<span><span class="co">#&gt; Warning: There were 4 chains where the estimated Bayesian Fraction of Missing Information was low. See</span></span>
+<span><span class="co">#&gt; https://mc-stan.org/misc/warnings.html#bfmi-low</span></span>
+<span><span class="co">#&gt; Warning: Examine the pairs() plot to diagnose sampling problems</span></span>
+<span><span class="co">#&gt; Warning: The largest R-hat is 2.76, indicating chains have not mixed.</span></span>
+<span><span class="co">#&gt; Running the chains for more iterations may help. See</span></span>
+<span><span class="co">#&gt; https://mc-stan.org/misc/warnings.html#r-hat</span></span>
+<span><span class="co">#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.</span></span>
+<span><span class="co">#&gt; Running the chains for more iterations may help. See</span></span>
+<span><span class="co">#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess</span></span>
+<span><span class="co">#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.</span></span>
+<span><span class="co">#&gt; Running the chains for more iterations may help. See</span></span>
+<span><span class="co">#&gt; https://mc-stan.org/misc/warnings.html#tail-ess</span></span></code></pre></div>
 <p>The output of this function is a list with the stan fit object,
 accessed with <code>$fit</code>, and the elements of the constructed
 model object from the previous step, accessed with
 <code>$constructed_model</code>.</p>
-<div class="section level3">
-<h3 id="step-3-check-fit">Step 3: Check fit<a class="anchor" aria-label="anchor" href="#step-3-check-fit"></a>
-</h3>
+</div>
+<div class="section level2">
+<h2 id="step-3-check-fit">Step 3: Check fit<a class="anchor" aria-label="anchor" href="#step-3-check-fit"></a>
+</h2>
 <p>A summary of model convergence diagnostics can be viewed using:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/diagnose_model.html">diagnose_model</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Model Convergence Diagnostics</span></span>
 <span><span class="co">#&gt; =============================</span></span>
-<span><span class="co">#&gt; Overall convergence: GOOD </span></span>
-<span><span class="co">#&gt; Maximum R-hat: 1.006 </span></span>
-<span><span class="co">#&gt; Minimum n_eff: 976</span></span></code></pre></div>
+<span><span class="co">#&gt; Overall convergence: ISSUES DETECTED </span></span>
+<span><span class="co">#&gt; Maximum R-hat: 3.03 </span></span>
+<span><span class="co">#&gt; Minimum n_eff: 3</span></span></code></pre></div>
 <p>Beyond this summary, the stan fit object can be interrogated with any
 package that works with stan outputs. For example, one could visualise
 posteriors with the package <code>bayesplot</code>:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">bayesplot</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-intervals.html" class="external-link">mcmc_areas</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">fit</span><span class="op">)</span>, pars <span class="op">=</span> <span class="st">'tau[1]'</span>, prob <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="articles/figures/Using-EpiStrainDynamics-unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5"><div class="figcaption">plot of chunk unnamed-chunk-5</div>
+<img src="figures/Using-EpiStrainDynamics-unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5"><div class="figcaption">plot of chunk unnamed-chunk-5</div>
 </div>
 <p>The <code>bayesplot</code> package can also be used to evaluate
 convergence:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">bayesplot</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_trace</a></span><span class="op">(</span><span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-extract.html" class="external-link">extract</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">fit</span>, permuted <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'a[1,1]'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="articles/figures/Using-EpiStrainDynamics-unnamed-chunk-6-1.png" alt="plot of chunk unnamed-chunk-6"><div class="figcaption">plot of chunk unnamed-chunk-6</div>
+<img src="figures/Using-EpiStrainDynamics-unnamed-chunk-6-1.png" alt="plot of chunk unnamed-chunk-6"><div class="figcaption">plot of chunk unnamed-chunk-6</div>
 </div>
 <p>Or else the application <code>shinystan</code> is a great tool to
 visualise the fit and diagnose issues:</p>
@@ -335,9 +389,8 @@ structure.</li>
 parameter.</li>
 </ul>
 </div>
-</div>
 <div class="section level2">
-<h2 id="step-3-calculate-and-explore-epidemiological-quantities">Step 3: Calculate and explore epidemiological quantities<a class="anchor" aria-label="anchor" href="#step-3-calculate-and-explore-epidemiological-quantities"></a>
+<h2 id="step-4-calculate-and-explore-epidemiological-quantities">Step 4: Calculate and explore epidemiological quantities<a class="anchor" aria-label="anchor" href="#step-4-calculate-and-explore-epidemiological-quantities"></a>
 </h2>
 <p>The package provides helper functions to calculate a number of useful
 epidemiological quantities. The output of these methods functions are a
@@ -357,17 +410,18 @@ the pathogen name (<code>pathogen</code>), and the time index
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">gr</span><span class="op">$</span><span class="va">measure</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tsibble: 6 x 9 [7D]</span></span>
 <span><span class="co">#&gt; # Key:       pathogen [1]</span></span>
-<span><span class="co">#&gt;   pathogen pathogen_idx      y    lb_50  ub_50   lb_95  ub_95  prop time      </span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;           &lt;int&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;date&gt;    </span></span>
-<span><span class="co">#&gt; 1 Total              NA 0.0422 -0.00574 0.0879 -0.0936 0.184  0.722 2012-01-09</span></span>
-<span><span class="co">#&gt; 2 Total              NA 0.0411  0.00408 0.0803 -0.0692 0.157  0.774 2012-01-16</span></span>
-<span><span class="co">#&gt; 3 Total              NA 0.0378  0.00858 0.0698 -0.0472 0.132  0.807 2012-01-23</span></span>
-<span><span class="co">#&gt; 4 Total              NA 0.0343  0.00676 0.0599 -0.0382 0.112  0.808 2012-01-30</span></span>
-<span><span class="co">#&gt; 5 Total              NA 0.0306  0.00430 0.0546 -0.0421 0.105  0.788 2012-02-06</span></span>
-<span><span class="co">#&gt; 6 Total              NA 0.0268  0.00451 0.0500 -0.0374 0.0941 0.788 2012-02-13</span></span>
+<span><span class="co">#&gt;   pathogen pathogen_idx        y    lb_50  ub_50  lb_95 ub_95</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;           &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 Total              NA 0.177     0.0783  0.244  -0.159 0.417</span></span>
+<span><span class="co">#&gt; 2 Total              NA 0.119    -0.00736 0.188  -0.146 0.350</span></span>
+<span><span class="co">#&gt; 3 Total              NA 0.0409   -0.0311  0.126  -0.115 0.331</span></span>
+<span><span class="co">#&gt; 4 Total              NA 0.0436   -0.0917  0.127  -0.409 0.298</span></span>
+<span><span class="co">#&gt; 5 Total              NA 0.0243   -0.0853  0.117  -0.528 0.406</span></span>
+<span><span class="co">#&gt; 6 Total              NA 0.000323 -0.111   0.0634 -0.391 0.407</span></span>
+<span><span class="co">#&gt; # ℹ 2 more variables: prop &lt;dbl&gt;, time &lt;date&gt;</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">gr</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="articles/figures/Using-EpiStrainDynamics-growth_rate-1.png" alt="plot of chunk growth_rate"><div class="figcaption">plot of chunk growth_rate</div>
+<img src="figures/Using-EpiStrainDynamics-growth_rate-1.png" alt="plot of chunk growth_rate"><div class="figcaption">plot of chunk growth_rate</div>
 </div>
 <p>Calculate effective reproduction number over time with
 <code><a href="../reference/Rt.html">Rt()</a></code> (requiring specification of a generation interval
@@ -376,14 +430,16 @@ distribution):</p>
 <code class="sourceCode R"><span><span class="va">rt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Rt.html">Rt</a></span><span class="op">(</span><span class="va">fit</span>, gi_dist <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">4</span><span class="op">*</span><span class="va">x</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span><span class="op">*</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">rt</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="articles/figures/Using-EpiStrainDynamics-Rt-1.png" alt="plot of chunk Rt"><div class="figcaption">plot of chunk Rt</div>
+<img src="figures/Using-EpiStrainDynamics-Rt-1.png" alt="plot of chunk Rt"><div class="figcaption">plot of chunk Rt</div>
 </div>
 <p>Calculate incidence with or without a day of week effect with
 <code><a href="../reference/incidence.html">incidence()</a></code>:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">inc_dow</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/incidence.html">incidence</a></span><span class="op">(</span><span class="va">fit</span>, dow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">inc_dow</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in plot.incidence(inc_dow): object 'inc' not found</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">inc_dow</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="figures/Using-EpiStrainDynamics-incidence-1.png" alt="plot of chunk incidence"><div class="figcaption">plot of chunk incidence</div>
+</div>
 <p>Calculate proportions of different combinations of cases attributable
 to different pathogens/subtypes using <code><a href="../reference/proportion.html">proportion()</a></code>. By
 default, the function will return a dataframe with proportions of each
@@ -397,9 +453,80 @@ named lists provided to <code><a href="../reference/construct_model.html">constr
 <span><span class="op">)</span></span></code></pre>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/proportion.html">proportion</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in splineDesign(Aknots, x, ord): length of 'derivs' is larger than length of 'x'</span></span>
-<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">prop</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error: object 'prop' not found</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">prop</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="figures/Using-EpiStrainDynamics-proportion-1.png" alt="plot of chunk proportion"><div class="figcaption">plot of chunk proportion</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="additional-worked-example-covid-19">Additional worked example: COVID-19<a class="anchor" aria-label="anchor" href="#additional-worked-example-covid-19"></a>
+</h2>
+<p>The worked example above uses influenza data with a subtyped pathogen
+structure and penalised splines. To illustrate a different combination,
+the following constructs and fits a random walk model to the
+<code>sarscov2</code> dataset bundled with the package, using the
+<code>multiple</code> pathogen structure to model the different
+SARS-CoV-2 variants circulating over time.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mod_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
+<span>  method <span class="op">=</span> <span class="fu"><a href="../reference/random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span></span>
+<span>  pathogen_structure <span class="op">=</span> <span class="fu"><a href="../reference/multiple.html">multiple</a></span><span class="op">(</span></span>
+<span>    data <span class="op">=</span> <span class="va">sarscov2</span>,</span>
+<span>    case_timeseries <span class="op">=</span> <span class="st">'cases'</span>,</span>
+<span>    time <span class="op">=</span> <span class="st">'date'</span>,</span>
+<span>    component_pathogen_timeseries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'alpha'</span>, <span class="st">'delta'</span>, <span class="st">'omicron'</span>, <span class="st">'other'</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span></span>
+<span>  smoothing_params <span class="op">=</span> <span class="fu"><a href="../reference/smoothing_structure.html">smoothing_structure</a></span><span class="op">(</span></span>
+<span>    <span class="st">'independent'</span>, tau_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0</span><span class="op">)</span>, tau_sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, times <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  dispersion_params <span class="op">=</span> <span class="fu"><a href="../reference/dispersion_structure.html">dispersion_structure</a></span><span class="op">(</span>phi_mean <span class="op">=</span> <span class="fl">0</span>, phi_sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  pathogen_noise <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  dow_effect <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fit_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_model.html">fit_model</a></span><span class="op">(</span></span>
+<span>  <span class="va">mod_covid</span>,</span>
+<span>  n_iter <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  n_warmup <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Very few effective samples will be retained after thinning</span></span>
+<span><span class="co">#&gt; ℹ With `n_iter` = 20, `n_warmup` = 10, `thin` = 1, and `n_chain`</span></span>
+<span><span class="co">#&gt;   = 4</span></span>
+<span><span class="co">#&gt; ℹ Only 40 samples will be retained</span></span>
+<span><span class="co">#&gt; ℹ Consider reducing `thin` or increasing `n_iter`</span></span>
+<span><span class="co">#&gt; Warning: There were 2 divergent transitions after warmup. See</span></span>
+<span><span class="co">#&gt; https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</span></span>
+<span><span class="co">#&gt; to find out why this is a problem and how to eliminate them.</span></span>
+<span><span class="co">#&gt; Warning: There were 3 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See</span></span>
+<span><span class="co">#&gt; https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded</span></span>
+<span><span class="co">#&gt; Warning: There were 4 chains where the estimated Bayesian Fraction of Missing Information was low. See</span></span>
+<span><span class="co">#&gt; https://mc-stan.org/misc/warnings.html#bfmi-low</span></span>
+<span><span class="co">#&gt; Warning: Examine the pairs() plot to diagnose sampling problems</span></span>
+<span><span class="co">#&gt; Warning: The largest R-hat is 4.6, indicating chains have not mixed.</span></span>
+<span><span class="co">#&gt; Running the chains for more iterations may help. See</span></span>
+<span><span class="co">#&gt; https://mc-stan.org/misc/warnings.html#r-hat</span></span>
+<span><span class="co">#&gt; Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.</span></span>
+<span><span class="co">#&gt; Running the chains for more iterations may help. See</span></span>
+<span><span class="co">#&gt; https://mc-stan.org/misc/warnings.html#bulk-ess</span></span>
+<span><span class="co">#&gt; Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.</span></span>
+<span><span class="co">#&gt; Running the chains for more iterations may help. See</span></span>
+<span><span class="co">#&gt; https://mc-stan.org/misc/warnings.html#tail-ess</span></span></code></pre></div>
+<p>As before, growth rate and pathogen proportions can be calculated and
+plotted directly from the fit:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">gr_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/growth_rate.html">growth_rate</a></span><span class="op">(</span><span class="va">fit_covid</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">gr_covid</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="figures/Using-EpiStrainDynamics-growth_rate_covid-1.png" alt="plot of chunk growth_rate_covid"><div class="figcaption">plot of chunk growth_rate_covid</div>
+</div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">prop_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/proportion.html">proportion</a></span><span class="op">(</span><span class="va">fit_covid</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">prop_covid</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="figures/Using-EpiStrainDynamics-proportion_covid-1.png" alt="plot of chunk proportion_covid"><div class="figcaption">plot of chunk proportion_covid</div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

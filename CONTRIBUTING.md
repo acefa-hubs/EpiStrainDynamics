@@ -28,6 +28,30 @@ help you write a unit test, if needed). See the guide on [how to create
 a great issue](https://code-review.tidyverse.org/issues/) for more
 advice.
 
+### Revising the “Using EpiStrainDynamics” vignette
+
+The “Using EpiStrainDynamics” vignette includes slow-running code. We
+make use of the suggestions as described in this [blog
+post](https://ropensci.org/blog/2019/12/08/precompute-vignettes/) to
+manage the slow-running vignette. To edit the vignette, edit the
+`vignettes/Using-EpiStrainDynamics.Rmd.orig` file, and then compile it
+using the code in `vignettes/precompile.R`. This will execute the
+rmarkdown code locally, and ship a vignette in the package which already
+contains the rendered R output.
+
+### Revising Stan models
+
+This package includes stan models precompiled with `rstantools`. If any
+revisions are made to the stan models in `inst/stan/`, the models
+themselves must be recompiled as well.
+
+1.  Synchronize your .stan models with the generated C++ code and
+    Rcpp::loadModule() calls using
+    [`rstantools::rstan_config()`](https://mc-stan.org/rstantools/reference/rstan_config.html)
+
+2.  Actually recompile the package with the regenerated C++
+    [`pkgbuild::compile_dll()`](https://pkgbuild.r-lib.org/reference/compile_dll.html)
+
 ### Pull request process
 
 - Fork the package and clone onto your computer. If you haven’t done
@@ -67,6 +91,8 @@ advice.
 - We use [testthat](https://cran.r-project.org/package=testthat) for
   unit tests. Contributions with test cases included are easier to
   accept.
+
+### 
 
 ## Code of Conduct
 

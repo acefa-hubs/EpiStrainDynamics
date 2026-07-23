@@ -32,7 +32,10 @@ Rt(fitted_model, gi_dist, tau_max = 7, ...)
 
 - gi_dist:
 
-  Function that returns generation interval probability for given day
+  Function returning the generation interval probability for a given
+  day. Must accept a numeric vector and return a non-negative numeric
+  vector of the same length; does not need to sum to 1 (see
+  Description).
 
 - tau_max:
 
@@ -87,7 +90,16 @@ generated it, where:
 
 - Recent cases contribute more to current transmission potential
 
-- Accepts user-defined generation interval distributions
+- Accepts user-defined generation interval distributions, validated for
+  structural properties (vectorized, non-negative, finite)
+
+- Does not need to sum to 1 – normalized internally using \\g_a =
+  \sum\_{k=0}^{\tau\_{\max}-1} g(k)\\
+
+- Validation does not assess whether the shape is epidemiologically
+  plausible (e.g. unimodal, decaying); as with other Rt estimation
+  methods, supplying a distribution informed by published estimates for
+  the pathogen(s) being modelled is the user's responsibility
 
 This metric function can be run directly on the fitted model output.
 

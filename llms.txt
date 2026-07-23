@@ -338,6 +338,8 @@ Functions for constructing model object.
   : Create Dispersion Structure Specification
 - [`construct_model()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/construct_model.md)
   : Construct model
+- [`print(`*`<EpiStrainDynamics.model>`*`)`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/print.EpiStrainDynamics.model.md)
+  : Print method for constructed EpiStrainDynamics models
 
 ## Fit stan model
 
@@ -358,8 +360,11 @@ Functions to calculate and plot metrics from fitted models.
   : Generic Method for Incidence Analysis
 - [`proportion()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/proportion.md)
   : Generic Method for proportion Analysis
-- [`plot()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/plot.md)
-  : Generic Method for plotting metrics calculation outputs
+- [`plot(`*`<incidence>`*`)`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/plot.md)
+  [`plot(`*`<growth_rate>`*`)`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/plot.md)
+  [`plot(`*`<Rt>`*`)`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/plot.md)
+  [`plot(`*`<proportion>`*`)`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/plot.md)
+  : Plot metrics calculation outputs
 
 # Articles
 

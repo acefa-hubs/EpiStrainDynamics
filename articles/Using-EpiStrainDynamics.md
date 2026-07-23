@@ -58,11 +58,10 @@ and
 These functions require the name of the dataset itself and the column
 names for different data elements. These can also ingest timeseries
 class objects, which would then make the `time` column specification
-optional. The models are not currently equipped to handle missing values
-or irregular date sequences. Timeseries checks are run internally on
-data frame or any time of timeseries class input that is handled by the
-[`tsbox`
-package](https://docs.ropensci.org/tsbox/reference/tsbox-package.html).
+optional. Any timeseries class input that is handled by the [`tsbox`
+package](https://docs.ropensci.org/tsbox/reference/tsbox-package.html)
+is acceptable. The models are not currently equipped to handle missing
+values or irregular date sequences.
 
 The
 [`single()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/single.md)
@@ -146,8 +145,20 @@ standard deviation of the prior on tau can also be specified, as below:
 ### Dispersion parameters
 
 The argument `dispersion_params` allows users to set a prior for the
-overdispersion parameter of the negative binomial likelihood for the
-case timeseries. It is specified using
+overdispersion parameter, `phi`, of the negative binomial likelihood for
+the case timeseries. This parameter controls how much the reported case
+count can vary from day to day around the model’s expected value. Even
+if the model’s smooth trend exactly captured the true expected number of
+cases on a given day, the actual reported count would still vary, since
+it depends on which patients happened to seek care, get tested, or have
+their test processed and reported that day. A negative binomial (rather
+than Poisson) likelihood is used because real surveillance counts are
+almost always more variable than a simple random-sampling process would
+predict, a pattern known as overdispersion. Smaller `phi` allows more
+day-to-day variation in reported counts; larger `phi` keeps them closer
+to the trend.
+
+It is specified using
 [`dispersion_structure()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/dispersion_structure.md)
 as below:
 
@@ -157,15 +168,36 @@ as below:
 
 ### Pathogen noise
 
-Whether to include noise between individual pathogens as well as the
-observation noise is specified as a logical (`TRUE` or `FALSE`) to the
-argument `pathogen_noise`.
+By default, the model assumes that on any given day, the relative mix of
+pathogens follows exactly the smooth underlying trends, and that any
+noisiness in the observed composition (e.g. how many positive tests were
+pathogen A vs. B) comes only from the day-to-day reporting variation
+described with `phi`, above.
+
+It is possible to add an extra source of variability, allowing the
+*true* day-to-day mix of pathogens to jitter around the smooth trend,
+not just the observed counts. This matters because real pathogens don’t
+necessarily move in lockstep with a single shared epidemic curve; one
+pathogen can genuinely spike or dip relative to the others for reasons
+the smooth trend alone doesn’t capture.
+
+The argument `pathogen_noise` refers to whether to include this noise
+between individual pathogens and can be specified as a logical (`TRUE`
+or `FALSE`).
 
 ### Day of week effect
 
+Surveillance data reported by calendar day often show a weekly pattern
+that has nothing to do with disease transmission, for example, fewer
+specimens processed or reported over weekends due to lab and clinic
+schedules.
+
 Day of week effect is specified as a logical (`TRUE` or `FALSE`) to the
-`dow_effect` argument. In plotting the day of week effect can be
-selectively removed.
+`dow_effect` argument. Setting `dow_effect = TRUE` fits a separate
+multiplier for each day of the week, so these reporting-schedule
+artifacts are absorbed by the day-of-week terms rather than being
+mistaken for genuine changes in the epidemic trend. In plotting the day
+of week effect can be selectively removed.
 
 ### Worked example
 
@@ -220,17 +252,34 @@ onto the constructed model object.
 
 fit <- fit_model(
   mod,
-  n_iter = 2000,
-  n_warmup = 1000,
+  n_iter = 20,
+  n_warmup = 10,
   verbose = FALSE
 )
+#> Warning: Very few effective samples will be retained after thinning
+#> ℹ With `n_iter` = 20, `n_warmup` = 10, `thin` = 1, and `n_chain`
+#>   = 4
+#> ℹ Only 40 samples will be retained
+#> ℹ Consider reducing `thin` or increasing `n_iter`
+#> Warning: There were 4 chains where the estimated Bayesian Fraction of Missing Information was low. See
+#> https://mc-stan.org/misc/warnings.html#bfmi-low
+#> Warning: Examine the pairs() plot to diagnose sampling problems
+#> Warning: The largest R-hat is 2.76, indicating chains have not mixed.
+#> Running the chains for more iterations may help. See
+#> https://mc-stan.org/misc/warnings.html#r-hat
+#> Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#> Running the chains for more iterations may help. See
+#> https://mc-stan.org/misc/warnings.html#bulk-ess
+#> Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#> Running the chains for more iterations may help. See
+#> https://mc-stan.org/misc/warnings.html#tail-ess
 ```
 
 The output of this function is a list with the stan fit object, accessed
 with `$fit`, and the elements of the constructed model object from the
 previous step, accessed with `$constructed_model`.
 
-### Step 3: Check fit
+## Step 3: Check fit
 
 A summary of model convergence diagnostics can be viewed using:
 
@@ -239,9 +288,9 @@ A summary of model convergence diagnostics can be viewed using:
 diagnose_model(fit)
 #> Model Convergence Diagnostics
 #> =============================
-#> Overall convergence: GOOD 
-#> Maximum R-hat: 1.006 
-#> Minimum n_eff: 976
+#> Overall convergence: ISSUES DETECTED 
+#> Maximum R-hat: 3.03 
+#> Minimum n_eff: 3
 ```
 
 Beyond this summary, the stan fit object can be interrogated with any
@@ -254,7 +303,7 @@ bayesplot::mcmc_areas(as.matrix(fit$fit), pars = 'tau[1]', prob = 0.8)
 ```
 
 ![plot of chunk
-unnamed-chunk-5](articles/figures/Using-EpiStrainDynamics-unnamed-chunk-5-1.png)
+unnamed-chunk-5](figures/Using-EpiStrainDynamics-unnamed-chunk-5-1.png)
 
 plot of chunk unnamed-chunk-5
 
@@ -266,7 +315,7 @@ bayesplot::mcmc_trace(rstan::extract(fit$fit, permuted = FALSE), pars = c('a[1,1
 ```
 
 ![plot of chunk
-unnamed-chunk-6](articles/figures/Using-EpiStrainDynamics-unnamed-chunk-6-1.png)
+unnamed-chunk-6](figures/Using-EpiStrainDynamics-unnamed-chunk-6-1.png)
 
 plot of chunk unnamed-chunk-6
 
@@ -287,7 +336,7 @@ Some quick tips:
   `pathogen_noise = FALSE` or a shared smoothing structure.
 - Increase the number of warmup samples with the n_warmup parameter.
 
-## Step 3: Calculate and explore epidemiological quantities
+## Step 4: Calculate and explore epidemiological quantities
 
 The package provides helper functions to calculate a number of useful
 epidemiological quantities. The output of these methods functions are a
@@ -308,19 +357,20 @@ gr <- growth_rate(fit)
 head(gr$measure)
 #> # A tsibble: 6 x 9 [7D]
 #> # Key:       pathogen [1]
-#>   pathogen pathogen_idx      y    lb_50  ub_50   lb_95  ub_95  prop time      
-#>   <chr>           <int>  <dbl>    <dbl>  <dbl>   <dbl>  <dbl> <dbl> <date>    
-#> 1 Total              NA 0.0422 -0.00574 0.0879 -0.0936 0.184  0.722 2012-01-09
-#> 2 Total              NA 0.0411  0.00408 0.0803 -0.0692 0.157  0.774 2012-01-16
-#> 3 Total              NA 0.0378  0.00858 0.0698 -0.0472 0.132  0.807 2012-01-23
-#> 4 Total              NA 0.0343  0.00676 0.0599 -0.0382 0.112  0.808 2012-01-30
-#> 5 Total              NA 0.0306  0.00430 0.0546 -0.0421 0.105  0.788 2012-02-06
-#> 6 Total              NA 0.0268  0.00451 0.0500 -0.0374 0.0941 0.788 2012-02-13
+#>   pathogen pathogen_idx        y    lb_50  ub_50  lb_95 ub_95
+#>   <chr>           <int>    <dbl>    <dbl>  <dbl>  <dbl> <dbl>
+#> 1 Total              NA 0.177     0.0783  0.244  -0.159 0.417
+#> 2 Total              NA 0.119    -0.00736 0.188  -0.146 0.350
+#> 3 Total              NA 0.0409   -0.0311  0.126  -0.115 0.331
+#> 4 Total              NA 0.0436   -0.0917  0.127  -0.409 0.298
+#> 5 Total              NA 0.0243   -0.0853  0.117  -0.528 0.406
+#> 6 Total              NA 0.000323 -0.111   0.0634 -0.391 0.407
+#> # ℹ 2 more variables: prop <dbl>, time <date>
 plot(gr)
 ```
 
 ![plot of chunk
-growth_rate](articles/figures/Using-EpiStrainDynamics-growth_rate-1.png)
+growth_rate](figures/Using-EpiStrainDynamics-growth_rate-1.png)
 
 plot of chunk growth_rate
 
@@ -334,7 +384,7 @@ rt <- Rt(fit, gi_dist = function(x) 4*x*exp(-2*x))
 plot(rt)
 ```
 
-![plot of chunk Rt](articles/figures/Using-EpiStrainDynamics-Rt-1.png)
+![plot of chunk Rt](figures/Using-EpiStrainDynamics-Rt-1.png)
 
 plot of chunk Rt
 
@@ -345,8 +395,12 @@ Calculate incidence with or without a day of week effect with
 
 inc_dow <- incidence(fit, dow = TRUE)
 plot(inc_dow)
-#> Error in plot.incidence(inc_dow): object 'inc' not found
 ```
+
+![plot of chunk
+incidence](figures/Using-EpiStrainDynamics-incidence-1.png)
+
+plot of chunk incidence
 
 Calculate proportions of different combinations of cases attributable to
 different pathogens/subtypes using
@@ -366,7 +420,93 @@ named lists provided to
 ``` r
 
 prop <- proportion(fit)
-#> Error in splineDesign(Aknots, x, ord): length of 'derivs' is larger than length of 'x'
 plot(prop)
-#> Error: object 'prop' not found
 ```
+
+![plot of chunk
+proportion](figures/Using-EpiStrainDynamics-proportion-1.png)
+
+plot of chunk proportion
+
+## Additional worked example: COVID-19
+
+The worked example above uses influenza data with a subtyped pathogen
+structure and penalised splines. To illustrate a different combination,
+the following constructs and fits a random walk model to the `sarscov2`
+dataset bundled with the package, using the `multiple` pathogen
+structure to model the different SARS-CoV-2 variants circulating over
+time.
+
+``` r
+
+mod_covid <- construct_model(
+  method = random_walk(),
+
+  pathogen_structure = multiple(
+    data = sarscov2,
+    case_timeseries = 'cases',
+    time = 'date',
+    component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+  ),
+
+  smoothing_params = smoothing_structure(
+    'independent', tau_mean = c(0, 0.1, 0.3, 0), tau_sd = rep(1, times = 4)),
+  dispersion_params = dispersion_structure(phi_mean = 0, phi_sd = 1),
+  pathogen_noise = FALSE,
+  dow_effect = TRUE
+)
+
+fit_covid <- fit_model(
+  mod_covid,
+  n_iter = 20,
+  n_warmup = 10,
+  verbose = FALSE
+)
+#> Warning: Very few effective samples will be retained after thinning
+#> ℹ With `n_iter` = 20, `n_warmup` = 10, `thin` = 1, and `n_chain`
+#>   = 4
+#> ℹ Only 40 samples will be retained
+#> ℹ Consider reducing `thin` or increasing `n_iter`
+#> Warning: There were 2 divergent transitions after warmup. See
+#> https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+#> to find out why this is a problem and how to eliminate them.
+#> Warning: There were 3 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#> https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
+#> Warning: There were 4 chains where the estimated Bayesian Fraction of Missing Information was low. See
+#> https://mc-stan.org/misc/warnings.html#bfmi-low
+#> Warning: Examine the pairs() plot to diagnose sampling problems
+#> Warning: The largest R-hat is 4.6, indicating chains have not mixed.
+#> Running the chains for more iterations may help. See
+#> https://mc-stan.org/misc/warnings.html#r-hat
+#> Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+#> Running the chains for more iterations may help. See
+#> https://mc-stan.org/misc/warnings.html#bulk-ess
+#> Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+#> Running the chains for more iterations may help. See
+#> https://mc-stan.org/misc/warnings.html#tail-ess
+```
+
+As before, growth rate and pathogen proportions can be calculated and
+plotted directly from the fit:
+
+``` r
+
+gr_covid <- growth_rate(fit_covid)
+plot(gr_covid)
+```
+
+![plot of chunk
+growth_rate_covid](figures/Using-EpiStrainDynamics-growth_rate_covid-1.png)
+
+plot of chunk growth_rate_covid
+
+``` r
+
+prop_covid <- proportion(fit_covid)
+plot(prop_covid)
+```
+
+![plot of chunk
+proportion_covid](figures/Using-EpiStrainDynamics-proportion_covid-1.png)
+
+plot of chunk proportion_covid

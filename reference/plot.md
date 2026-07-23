@@ -1,36 +1,33 @@
-# Generic Method for plotting metrics calculation outputs
+# Plot metrics calculation outputs
 
-S3 generic for plotting
+S3 methods for plotting metrics calculated from the output sof either
+[`incidence()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/incidence.md),
+[`growth_rate()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/growth_rate.md),
+[`Rt()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/Rt.md),
+or
+[`proportion()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/proportion.md).
 
 ## Usage
 
 ``` r
-plot(df, xlab = "Time", ...)
-
 # S3 method for class 'incidence'
-plot(df, xlab = "Time", ...)
+plot(x, xlab = "Time", ...)
 
 # S3 method for class 'growth_rate'
-plot(df, xlab = "Time", ...)
+plot(x, xlab = "Time", ...)
 
 # S3 method for class 'Rt'
-plot(df, xlab = "Time", ...)
+plot(x, xlab = "Time", ...)
 
 # S3 method for class 'proportion'
-plot(df, xlab = "Time", ...)
+plot(x, xlab = "Time", ...)
 ```
 
 ## Arguments
 
-- df:
+- x:
 
-  Metrics calculation output of class `EpiStrainDynamics.metric` from
-  either
-  [`incidence()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/incidence.md),
-  [`growth_rate()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/growth_rate.md),
-  [`Rt()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/Rt.md),
-  or
-  [`proportion()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/proportion.md).
+  Metrics calculation output of class `EpiStrainDynamics.metric`
 
 - xlab:
 
