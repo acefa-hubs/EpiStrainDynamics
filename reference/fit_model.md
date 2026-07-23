@@ -181,28 +181,30 @@ error is raised that can be caught and inspected.
 
 ``` r
 if (FALSE) { # interactive()
-  mod <- construct_model(
-    method = random_walk(),
-    pathogen_structure = single(
-      case_timeseries = sarscov2$cases,
-      time = sarscov2$date))
-
-  fit <- fit_model(mod)
-
-  # Suppress progress and messages but keep warnings/errors
-  fit <- fit_model(mod, verbose = FALSE)
-
-  # Suppress warnings too
-  fit <- fit_model(mod, verbose = FALSE, suppress_warnings = TRUE)
-
-  # Catch errors and inspect
-  result <- tryCatch(
-    fit_model(mod),
-    error = function(e) e
+mod <- construct_model(
+  method = random_walk(),
+  pathogen_structure = single(
+    case_timeseries = sarscov2$cases,
+    time = sarscov2$date
   )
-  if (inherits(result, "EpiStrainDynamics.fit.error")) {
-    cat("Fitting failed:", result$message, "\n")
-    # Can still access the model: result$constructed_model
-  }
+)
+
+fit <- fit_model(mod)
+
+# Suppress progress and messages but keep warnings/errors
+fit <- fit_model(mod, verbose = FALSE)
+
+# Suppress warnings too
+fit <- fit_model(mod, verbose = FALSE, suppress_warnings = TRUE)
+
+# Catch errors and inspect
+result <- tryCatch(
+  fit_model(mod),
+  error = function(e) e
+)
+if (inherits(result, "EpiStrainDynamics.fit.error")) {
+  cat("Fitting failed:", result$message, "\n")
+  # Can still access the model: result$constructed_model
+}
 }
 ```

@@ -28,71 +28,75 @@ simulate_sir <- function(n_days, R0, recovery_rate = 0.1, I0 = 0.01) {
   S <- numeric(n_days)
   I <- numeric(n_days)
   R <- numeric(n_days)
-  
+
   S[1] <- 1 - I0
   I[1] <- I0
   R[1] <- 0
-  
+
   beta <- R0 * recovery_rate
-  
+
   for (t in 2:n_days) {
-    dS <- -beta * S[t-1] * I[t-1]
-    dI <- beta * S[t-1] * I[t-1] - recovery_rate * I[t-1]
-    dR <- recovery_rate * I[t-1]
-    
-    S[t] <- max(0, S[t-1] + dS)
-    I[t] <- max(0, I[t-1] + dI)
-    R[t] <- min(1, R[t-1] + dR)
+    dS <- -beta * S[t - 1] * I[t - 1]
+    dI <- beta * S[t - 1] * I[t - 1] - recovery_rate * I[t - 1]
+    dR <- recovery_rate * I[t - 1]
+
+    S[t] <- max(0, S[t - 1] + dS)
+    I[t] <- max(0, I[t - 1] + dI)
+    R[t] <- min(1, R[t - 1] + dR)
   }
-  
+
   return(I)
 }
 
 # Function to generate epidemic-like data with pathogen succession
 generate_test_data <- function(n_timepoints, n_pathogens = 4, baseline_cases = 100) {
-  dates <- seq.Date(from = as.Date("2020-01-01"), 
-                    by = "day", 
-                    length.out = n_timepoints)
-  
+  dates <- seq.Date(
+    from = as.Date("2020-01-01"),
+    by = "day",
+    length.out = n_timepoints
+  )
+
   # Simulate pathogen dynamics with succession
   # Each pathogen has different R0 and timing
   pathogen_dynamics <- matrix(0, nrow = n_timepoints, ncol = n_pathogens)
-  
+
   # Pathogen 1: Early peak, moderate R0
   pathogen_dynamics[, 1] <- simulate_sir(n_timepoints, R0 = 2.5, I0 = 0.02)
-  
+
   # Pathogen 2: Mid-season peak, higher R0
   offset2 <- round(n_timepoints * 0.3)
   if (offset2 < n_timepoints) {
-    pathogen_dynamics[offset2:n_timepoints, 2] <- 
+    pathogen_dynamics[offset2:n_timepoints, 2] <-
       simulate_sir(n_timepoints - offset2 + 1, R0 = 3.0, I0 = 0.01)
   }
-  
+
   # Pathogen 3: Late peak, lower R0
   offset3 <- round(n_timepoints * 0.6)
   if (offset3 < n_timepoints) {
-    pathogen_dynamics[offset3:n_timepoints, 3] <- 
+    pathogen_dynamics[offset3:n_timepoints, 3] <-
       simulate_sir(n_timepoints - offset3 + 1, R0 = 2.0, I0 = 0.015)
   }
-  
+
   # Pathogen 4: Background/endemic, low level
-  pathogen_dynamics[, 4] <- 0.05 * sin(seq(0, 2*pi, length.out = n_timepoints)) + 0.1
-  
+  pathogen_dynamics[, 4] <- 0.05 * sin(seq(0, 2 * pi, length.out = n_timepoints)) + 0.1
+
   # Normalize to proportions
   row_sums <- rowSums(pathogen_dynamics)
   proportions <- pathogen_dynamics / row_sums
-  
+
   # Generate total cases with epidemic-like pattern
   epidemic_trend <- rowSums(pathogen_dynamics) * baseline_cases
   total_cases <- rpois(n_timepoints, lambda = epidemic_trend)
-  
+
   # Allocate to pathogens using multinomial sampling
   pathogen_counts <- matrix(0, nrow = n_timepoints, ncol = n_pathogens)
   for (t in 1:n_timepoints) {
-    pathogen_counts[t, ] <- as.vector(rmultinom(1, size = total_cases[t], 
-                                                 prob = proportions[t, ]))
+    pathogen_counts[t, ] <- as.vector(rmultinom(1,
+      size = total_cases[t],
+      prob = proportions[t, ]
+    ))
   }
-  
+
   data.frame(
     date = dates,
     cases = total_cases,
@@ -103,7 +107,7 @@ generate_test_data <- function(n_timepoints, n_pathogens = 4, baseline_cases = 1
   )
 }
 
-# Test across different data sizes 
+# Test across different data sizes
 data_sizes <- c(30, 60, 120, 240, 480)
 ```
 
@@ -121,14 +125,14 @@ rw_timings <- data.frame(
 for (n in data_sizes) {
   cat("Testing n =", n, "\n")
   test_data <- generate_test_data(n)
-  
+
   # Single pathogen structure
   single_struct <- single(
     data = test_data,
     case_timeseries = "cases",
     time = "date"
   )
-  
+
   # Multiple pathogen structure
   multi_struct <- multiple(
     data = test_data,
@@ -136,34 +140,34 @@ for (n in data_sizes) {
     time = "date",
     component_pathogen_timeseries = c("pathogen1", "pathogen2", "pathogen3", "pathogen4")
   )
-  
-  # Time single pathogen 
+
+  # Time single pathogen
   model_single <- construct_model(
     method = random_walk(),
     pathogen_structure = single_struct
   )
-  
+
   time_single <- system.time({
     fit_single <- fit_model(model_single, n_chain = 2, n_iter = 500, verbose = FALSE)
   })
-  
+
   rw_timings <- rbind(rw_timings, data.frame(
     n_timepoints = n,
     method = "random_walk",
     pathogen_structure = "single",
     time_seconds = time_single["elapsed"]
   ))
-  
-  # Time multiple pathogens 
+
+  # Time multiple pathogens
   model_multi <- construct_model(
     method = random_walk(),
     pathogen_structure = multi_struct
   )
-  
+
   time_multi <- system.time({
     fit_multi <- fit_model(model_multi, n_chain = 2, n_iter = 500, verbose = FALSE)
   })
-  
+
   rw_timings <- rbind(rw_timings, data.frame(
     n_timepoints = n,
     method = "random_walk",
@@ -192,47 +196,47 @@ ps_timings <- data.frame(
 for (n in data_sizes) {
   cat("Testing n =", n, "\n")
   test_data <- generate_test_data(n)
-  
+
   single_struct <- single(
     data = test_data,
     case_timeseries = "cases",
     time = "date"
   )
-  
+
   multi_struct <- multiple(
     data = test_data,
     case_timeseries = "cases",
     time = "date",
     component_pathogen_timeseries = c("pathogen1", "pathogen2", "pathogen3", "pathogen4")
   )
-  
+
   # Time single pathogen
   model_single <- construct_model(
     method = p_spline(),
     pathogen_structure = single_struct
   )
-  
+
   time_single <- system.time({
     fit_single <- fit_model(model_single, n_chain = 2, n_iter = 500, verbose = FALSE)
   })
-  
+
   ps_timings <- rbind(ps_timings, data.frame(
     n_timepoints = n,
     method = "p_spline",
     pathogen_structure = "single",
     time_seconds = time_single["elapsed"]
   ))
-  
-  # Time multiple pathogens 
+
+  # Time multiple pathogens
   model_multi <- construct_model(
     method = p_spline(),
     pathogen_structure = multi_struct
   )
-  
+
   time_multi <- system.time({
     fit_multi <- fit_model(model_multi, n_chain = 2, n_iter = 500, verbose = FALSE)
   })
-  
+
   ps_timings <- rbind(ps_timings, data.frame(
     n_timepoints = n,
     method = "p_spline",
@@ -255,8 +259,10 @@ for (n in data_sizes) {
 all_timings <- rbind(rw_timings, ps_timings)
 
 # Create log-log plot
-ggplot(all_timings, aes(x = n_timepoints, y = time_seconds, 
-                        color = method, linetype = pathogen_structure)) +
+ggplot(all_timings, aes(
+  x = n_timepoints, y = time_seconds,
+  color = method, linetype = pathogen_structure
+)) +
   geom_point(size = 3) +
   geom_line(linewidth = 1) +
   scale_x_log10(breaks = data_sizes) +
@@ -289,16 +295,18 @@ scaling_results <- all_timings %>%
     .groups = "drop"
   )
 
-knitr::kable(scaling_results, digits = 3,
-             caption = "Scaling exponents: time complexity approximately O(n^exponent)")
+knitr::kable(scaling_results,
+  digits = 3,
+  caption = "Scaling exponents: time complexity approximately O(n^exponent)"
+)
 ```
 
 | method      | pathogen_structure | scaling_exponent | r_squared |
 |:------------|:-------------------|-----------------:|----------:|
-| p_spline    | multiple           |            0.999 |     0.996 |
-| p_spline    | single             |            0.804 |     0.983 |
-| random_walk | multiple           |            0.932 |     0.998 |
-| random_walk | single             |            0.872 |     0.983 |
+| p_spline    | multiple           |            1.007 |     0.996 |
+| p_spline    | single             |            0.850 |     0.992 |
+| random_walk | multiple           |            0.955 |     0.999 |
+| random_walk | single             |            0.882 |     0.982 |
 
 Scaling exponents: time complexity approximately O(n^exponent) {.table}
 
@@ -319,7 +327,7 @@ input data.
 # Use package data
 data(sarscov2)
 
-# Fit model 
+# Fit model
 model <- construct_model(
   method = random_walk(),
   pathogen_structure = multiple(
@@ -357,8 +365,10 @@ input_summary <- data.frame(
 
 input_summary$ratio <- input_summary$predicted_cases / input_summary$input_cases
 
-knitr::kable(input_summary, digits = 2,
-             caption = "Comparison of input and predicted case scales")
+knitr::kable(input_summary,
+  digits = 2,
+  caption = "Comparison of input and predicted case scales"
+)
 ```
 
 | metric | input_cases | predicted_cases | ratio |
@@ -416,7 +426,7 @@ different properties (non-zero means, different magnitudes, etc.).
 
 ``` r
 
-# Test with data at different scales 
+# Test with data at different scales
 test_scales <- c(10, 100, 1000)
 recovery_results <- data.frame(
   input_scale = numeric(),
@@ -429,7 +439,7 @@ for (scale in test_scales) {
   # Generate data at this scale
   n <- 100
   test_data <- generate_test_data(n, baseline_cases = scale)
-  
+
   # Fit model
   model <- construct_model(
     method = random_walk(),
@@ -439,11 +449,11 @@ for (scale in test_scales) {
       time = "date"
     )
   )
-  
+
   fit <- fit_model(model, n_chain = 2, n_iter = 500, verbose = FALSE)
   inc <- incidence(fit, dow = FALSE)
   inc_values <- inc$measure$y
-  
+
   # Record results
   recovery_results <- rbind(recovery_results, data.frame(
     input_scale = scale,
@@ -453,8 +463,10 @@ for (scale in test_scales) {
   ))
 }
 
-knitr::kable(recovery_results, digits = 2,
-             caption = "Scale recovery across different input magnitudes")
+knitr::kable(recovery_results,
+  digits = 2,
+  caption = "Scale recovery across different input magnitudes"
+)
 ```
 
 | input_scale | input_mean | predicted_mean | relative_error |
@@ -497,7 +509,7 @@ meaningfully changes results.
 
 set.seed(999)
 
-# Fit model to original data 
+# Fit model to original data
 model_original <- construct_model(
   method = random_walk(),
   pathogen_structure = multiple(
@@ -508,35 +520,39 @@ model_original <- construct_model(
   )
 )
 
-fit_original <- fit_model(model_original, n_chain = 2, n_iter = 1000, 
-                          seed = 54321, verbose = FALSE)
+fit_original <- fit_model(model_original,
+  n_chain = 2, n_iter = 1000,
+  seed = 54321, verbose = FALSE
+)
 inc_original <- incidence(fit_original, dow = FALSE)
 inc_original_total <- inc_original$measure[inc_original$measure$pathogen == "Total", ]
 
-# Test with different noise levels 
-noise_levels <- c(0.05, 0.1)  # 5%, 10% noise relative to mean
+# Test with different noise levels
+noise_levels <- c(0.05, 0.1) # 5%, 10% noise relative to mean
 noise_results <- list()
 
 for (noise_level in noise_levels) {
   # Add noise to case counts
-  noisy_cases <- pmax(1, round(sarscov2$cases + 
-                                rnorm(length(sarscov2$cases), 
-                                      mean = 0, 
-                                      sd = noise_level * mean(sarscov2$cases))))
-  
+  noisy_cases <- pmax(1, round(sarscov2$cases +
+    rnorm(length(sarscov2$cases),
+      mean = 0,
+      sd = noise_level * mean(sarscov2$cases)
+    )))
+
   # Also add proportional noise to pathogen counts
   sarscov2_noisy <- sarscov2
   sarscov2_noisy$cases <- noisy_cases
-  
+
   for (pathogen in c("alpha", "delta", "omicron", "other")) {
     sarscov2_noisy[[pathogen]] <- pmax(0, round(
-      sarscov2[[pathogen]] + rnorm(length(sarscov2[[pathogen]]), 
-                                   mean = 0, 
-                                   sd = noise_level * mean(sarscov2[[pathogen]]))
+      sarscov2[[pathogen]] + rnorm(length(sarscov2[[pathogen]]),
+        mean = 0,
+        sd = noise_level * mean(sarscov2[[pathogen]])
+      )
     ))
   }
-  
-  # Fit model to noisy data 
+
+  # Fit model to noisy data
   model_noisy <- construct_model(
     method = random_walk(),
     pathogen_structure = multiple(
@@ -546,12 +562,14 @@ for (noise_level in noise_levels) {
       component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
     )
   )
-  
-  fit_noisy <- fit_model(model_noisy, n_chain = 2, n_iter = 1000,
-                        seed = 54321, verbose = FALSE)
+
+  fit_noisy <- fit_model(model_noisy,
+    n_chain = 2, n_iter = 1000,
+    seed = 54321, verbose = FALSE
+  )
   inc_noisy <- incidence(fit_noisy, dow = FALSE)
-  
-  noise_results[[as.character(noise_level)]] <- 
+
+  noise_results[[as.character(noise_level)]] <-
     inc_noisy$measure[inc_noisy$measure$pathogen == "Total", ]
 }
 ```
@@ -571,8 +589,10 @@ noise_comparison <- data.frame(
   mean_difference = sapply(noise_results, function(x) mean(abs(x$y - inc_original_total$y)))
 )
 
-knitr::kable(noise_comparison, digits = 4,
-             caption = "Impact of trivial noise on model results")
+knitr::kable(noise_comparison,
+  digits = 4,
+  caption = "Impact of trivial noise on model results"
+)
 ```
 
 |      | noise_level | correlation |     rmse | relative_rmse | mean_difference |
@@ -613,8 +633,9 @@ noise_plot_data <- do.call(rbind, lapply(names(noise_plot_list), function(cond) 
     y = data$y,
     lower_95 = data$lb_95,
     upper_95 = data$ub_95,
-    condition = ifelse(cond == "original", "Original", 
-                      paste0("Noise ", as.numeric(sub("noise_", "", cond)) * 100, "%"))
+    condition = ifelse(cond == "original", "Original",
+      paste0("Noise ", as.numeric(sub("noise_", "", cond)) * 100, "%")
+    )
   )
 }))
 
@@ -676,10 +697,10 @@ results.
 
 ``` r
 
-# Function to fit model with a given seed 
+# Function to fit model with a given seed
 fit_with_seed <- function(seed) {
   set.seed(seed)
-  
+
   model <- construct_model(
     method = random_walk(),
     pathogen_structure = multiple(
@@ -689,7 +710,7 @@ fit_with_seed <- function(seed) {
       component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
     )
   )
-  
+
   fit <- fit_model(model, n_chain = 2, n_iter = 1000, verbose = FALSE)
   inc <- incidence(fit, dow = FALSE)
   inc$measure[inc$measure$pathogen == "Total", ]
@@ -710,8 +731,10 @@ seed_summary <- data.frame(
   )
 )
 
-knitr::kable(seed_summary, digits = 4,
-             caption = "Coefficient of variation across different random seeds")
+knitr::kable(seed_summary,
+  digits = 4,
+  caption = "Coefficient of variation across different random seeds"
+)
 ```
 
 | metric             |  value |

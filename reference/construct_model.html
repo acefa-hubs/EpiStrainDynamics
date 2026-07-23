@@ -113,23 +113,21 @@ names of class <code>EpiStrainDynamics.model</code></p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">construct_model</span><span class="op">(</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  method <span class="op">=</span> <span class="fu"><a href="p_spline.html">p_spline</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  pathogen_structure <span class="op">=</span> <span class="fu"><a href="multiple.html">multiple</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    data <span class="op">=</span> <span class="va">sarscov2</span>,</span></span>
 <span class="r-in"><span>    case_timeseries <span class="op">=</span> <span class="st">"cases"</span>,</span></span>
 <span class="r-in"><span>    time <span class="op">=</span> <span class="st">"date"</span>,</span></span>
 <span class="r-in"><span>    component_pathogen_timeseries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha"</span>, <span class="st">"delta"</span>, <span class="st">"omicron"</span>, <span class="st">"other"</span><span class="op">)</span></span></span>
-<span class="r-in"><span>    <span class="op">)</span>,</span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span>   smoothing_params <span class="op">=</span> <span class="fu"><a href="smoothing_structure.html">smoothing_structure</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>      <span class="st">"independent"</span>, tau_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0</span><span class="op">)</span>, tau_sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, times <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>   dispersion_params <span class="op">=</span> <span class="fu"><a href="dispersion_structure.html">dispersion_structure</a></span><span class="op">(</span>phi_mean <span class="op">=</span> <span class="fl">0</span>, phi_sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>   pathogen_noise <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
-<span class="r-in"><span>   dow_effect <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span>,</span></span>
+<span class="r-in"><span>  smoothing_params <span class="op">=</span> <span class="fu"><a href="smoothing_structure.html">smoothing_structure</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="st">"independent"</span>,</span></span>
+<span class="r-in"><span>    tau_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0</span><span class="op">)</span>, tau_sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, times <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span>,</span></span>
+<span class="r-in"><span>  dispersion_params <span class="op">=</span> <span class="fu"><a href="dispersion_structure.html">dispersion_structure</a></span><span class="op">(</span>phi_mean <span class="op">=</span> <span class="fl">0</span>, phi_sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  pathogen_noise <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>  dow_effect <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

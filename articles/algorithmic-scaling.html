@@ -108,71 +108,75 @@ pathogen succession patterns.</p>
 <span>  <span class="va">S</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="va">n_days</span><span class="op">)</span></span>
 <span>  <span class="va">I</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="va">n_days</span><span class="op">)</span></span>
 <span>  <span class="va">R</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="va">n_days</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">S</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">I0</span></span>
 <span>  <span class="va">I</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">I0</span></span>
 <span>  <span class="va">R</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">beta</span> <span class="op">&lt;-</span> <span class="va">R0</span> <span class="op">*</span> <span class="va">recovery_rate</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="va">n_days</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">dS</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="va">beta</span> <span class="op">*</span> <span class="va">S</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="va">I</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span></span>
-<span>    <span class="va">dI</span> <span class="op">&lt;-</span> <span class="va">beta</span> <span class="op">*</span> <span class="va">S</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="va">I</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">recovery_rate</span> <span class="op">*</span> <span class="va">I</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span></span>
-<span>    <span class="va">dR</span> <span class="op">&lt;-</span> <span class="va">recovery_rate</span> <span class="op">*</span> <span class="va">I</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span></span>
-<span>    </span>
-<span>    <span class="va">S</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">S</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">dS</span><span class="op">)</span></span>
-<span>    <span class="va">I</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">I</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">dI</span><span class="op">)</span></span>
-<span>    <span class="va">R</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">R</span><span class="op">[</span><span class="va">t</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">dR</span><span class="op">)</span></span>
+<span>    <span class="va">dS</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="va">beta</span> <span class="op">*</span> <span class="va">S</span><span class="op">[</span><span class="va">t</span> <span class="op">-</span> <span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="va">I</span><span class="op">[</span><span class="va">t</span> <span class="op">-</span> <span class="fl">1</span><span class="op">]</span></span>
+<span>    <span class="va">dI</span> <span class="op">&lt;-</span> <span class="va">beta</span> <span class="op">*</span> <span class="va">S</span><span class="op">[</span><span class="va">t</span> <span class="op">-</span> <span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="va">I</span><span class="op">[</span><span class="va">t</span> <span class="op">-</span> <span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">recovery_rate</span> <span class="op">*</span> <span class="va">I</span><span class="op">[</span><span class="va">t</span> <span class="op">-</span> <span class="fl">1</span><span class="op">]</span></span>
+<span>    <span class="va">dR</span> <span class="op">&lt;-</span> <span class="va">recovery_rate</span> <span class="op">*</span> <span class="va">I</span><span class="op">[</span><span class="va">t</span> <span class="op">-</span> <span class="fl">1</span><span class="op">]</span></span>
+<span></span>
+<span>    <span class="va">S</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">S</span><span class="op">[</span><span class="va">t</span> <span class="op">-</span> <span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">dS</span><span class="op">)</span></span>
+<span>    <span class="va">I</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">I</span><span class="op">[</span><span class="va">t</span> <span class="op">-</span> <span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">dI</span><span class="op">)</span></span>
+<span>    <span class="va">R</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">R</span><span class="op">[</span><span class="va">t</span> <span class="op">-</span> <span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">dR</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">I</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Function to generate epidemic-like data with pathogen succession</span></span>
 <span><span class="va">generate_test_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">n_timepoints</span>, <span class="va">n_pathogens</span> <span class="op">=</span> <span class="fl">4</span>, <span class="va">baseline_cases</span> <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">dates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.Date.html" class="external-link">seq.Date</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2020-01-01"</span><span class="op">)</span>, </span>
-<span>                    by <span class="op">=</span> <span class="st">"day"</span>, </span>
-<span>                    length.out <span class="op">=</span> <span class="va">n_timepoints</span><span class="op">)</span></span>
-<span>  </span>
+<span>  <span class="va">dates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.Date.html" class="external-link">seq.Date</a></span><span class="op">(</span></span>
+<span>    from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2020-01-01"</span><span class="op">)</span>,</span>
+<span>    by <span class="op">=</span> <span class="st">"day"</span>,</span>
+<span>    length.out <span class="op">=</span> <span class="va">n_timepoints</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
 <span>  <span class="co"># Simulate pathogen dynamics with succession</span></span>
 <span>  <span class="co"># Each pathogen has different R0 and timing</span></span>
 <span>  <span class="va">pathogen_dynamics</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="va">n_timepoints</span>, ncol <span class="op">=</span> <span class="va">n_pathogens</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Pathogen 1: Early peak, moderate R0</span></span>
 <span>  <span class="va">pathogen_dynamics</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">simulate_sir</span><span class="op">(</span><span class="va">n_timepoints</span>, R0 <span class="op">=</span> <span class="fl">2.5</span>, I0 <span class="op">=</span> <span class="fl">0.02</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Pathogen 2: Mid-season peak, higher R0</span></span>
 <span>  <span class="va">offset2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">n_timepoints</span> <span class="op">*</span> <span class="fl">0.3</span><span class="op">)</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="va">offset2</span> <span class="op">&lt;</span> <span class="va">n_timepoints</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">pathogen_dynamics</span><span class="op">[</span><span class="va">offset2</span><span class="op">:</span><span class="va">n_timepoints</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> </span>
+<span>    <span class="va">pathogen_dynamics</span><span class="op">[</span><span class="va">offset2</span><span class="op">:</span><span class="va">n_timepoints</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span></span>
 <span>      <span class="fu">simulate_sir</span><span class="op">(</span><span class="va">n_timepoints</span> <span class="op">-</span> <span class="va">offset2</span> <span class="op">+</span> <span class="fl">1</span>, R0 <span class="op">=</span> <span class="fl">3.0</span>, I0 <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Pathogen 3: Late peak, lower R0</span></span>
 <span>  <span class="va">offset3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">n_timepoints</span> <span class="op">*</span> <span class="fl">0.6</span><span class="op">)</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="va">offset3</span> <span class="op">&lt;</span> <span class="va">n_timepoints</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">pathogen_dynamics</span><span class="op">[</span><span class="va">offset3</span><span class="op">:</span><span class="va">n_timepoints</span>, <span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span> </span>
+<span>    <span class="va">pathogen_dynamics</span><span class="op">[</span><span class="va">offset3</span><span class="op">:</span><span class="va">n_timepoints</span>, <span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span></span>
 <span>      <span class="fu">simulate_sir</span><span class="op">(</span><span class="va">n_timepoints</span> <span class="op">-</span> <span class="va">offset3</span> <span class="op">+</span> <span class="fl">1</span>, R0 <span class="op">=</span> <span class="fl">2.0</span>, I0 <span class="op">=</span> <span class="fl">0.015</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Pathogen 4: Background/endemic, low level</span></span>
-<span>  <span class="va">pathogen_dynamics</span><span class="op">[</span>, <span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0.05</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span><span class="op">*</span><span class="va">pi</span>, length.out <span class="op">=</span> <span class="va">n_timepoints</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.1</span></span>
-<span>  </span>
+<span>  <span class="va">pathogen_dynamics</span><span class="op">[</span>, <span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0.05</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span>, length.out <span class="op">=</span> <span class="va">n_timepoints</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.1</span></span>
+<span></span>
 <span>  <span class="co"># Normalize to proportions</span></span>
 <span>  <span class="va">row_sums</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">pathogen_dynamics</span><span class="op">)</span></span>
 <span>  <span class="va">proportions</span> <span class="op">&lt;-</span> <span class="va">pathogen_dynamics</span> <span class="op">/</span> <span class="va">row_sums</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Generate total cases with epidemic-like pattern</span></span>
 <span>  <span class="va">epidemic_trend</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">pathogen_dynamics</span><span class="op">)</span> <span class="op">*</span> <span class="va">baseline_cases</span></span>
 <span>  <span class="va">total_cases</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="va">n_timepoints</span>, lambda <span class="op">=</span> <span class="va">epidemic_trend</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Allocate to pathogens using multinomial sampling</span></span>
 <span>  <span class="va">pathogen_counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="va">n_timepoints</span>, ncol <span class="op">=</span> <span class="va">n_pathogens</span><span class="op">)</span></span>
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">n_timepoints</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">pathogen_counts</span><span class="op">[</span><span class="va">t</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Multinom.html" class="external-link">rmultinom</a></span><span class="op">(</span><span class="fl">1</span>, size <span class="op">=</span> <span class="va">total_cases</span><span class="op">[</span><span class="va">t</span><span class="op">]</span>, </span>
-<span>                                                 prob <span class="op">=</span> <span class="va">proportions</span><span class="op">[</span><span class="va">t</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">pathogen_counts</span><span class="op">[</span><span class="va">t</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Multinom.html" class="external-link">rmultinom</a></span><span class="op">(</span><span class="fl">1</span>,</span>
+<span>      size <span class="op">=</span> <span class="va">total_cases</span><span class="op">[</span><span class="va">t</span><span class="op">]</span>,</span>
+<span>      prob <span class="op">=</span> <span class="va">proportions</span><span class="op">[</span><span class="va">t</span>, <span class="op">]</span></span>
+<span>    <span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    date <span class="op">=</span> <span class="va">dates</span>,</span>
 <span>    cases <span class="op">=</span> <span class="va">total_cases</span>,</span>
@@ -183,7 +187,7 @@ pathogen succession patterns.</p>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="co"># Test across different data sizes </span></span>
+<span><span class="co"># Test across different data sizes</span></span>
 <span><span class="va">data_sizes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">60</span>, <span class="fl">120</span>, <span class="fl">240</span>, <span class="fl">480</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -200,14 +204,14 @@ pathogen succession patterns.</p>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">n</span> <span class="kw">in</span> <span class="va">data_sizes</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Testing n ="</span>, <span class="va">n</span>, <span class="st">"\n"</span><span class="op">)</span></span>
 <span>  <span class="va">test_data</span> <span class="op">&lt;-</span> <span class="fu">generate_test_data</span><span class="op">(</span><span class="va">n</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Single pathogen structure</span></span>
 <span>  <span class="va">single_struct</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/single.html">single</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">test_data</span>,</span>
 <span>    case_timeseries <span class="op">=</span> <span class="st">"cases"</span>,</span>
 <span>    time <span class="op">=</span> <span class="st">"date"</span></span>
 <span>  <span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Multiple pathogen structure</span></span>
 <span>  <span class="va">multi_struct</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/multiple.html">multiple</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">test_data</span>,</span>
@@ -215,34 +219,34 @@ pathogen succession patterns.</p>
 <span>    time <span class="op">=</span> <span class="st">"date"</span>,</span>
 <span>    component_pathogen_timeseries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pathogen1"</span>, <span class="st">"pathogen2"</span>, <span class="st">"pathogen3"</span>, <span class="st">"pathogen4"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
-<span>  </span>
-<span>  <span class="co"># Time single pathogen </span></span>
+<span></span>
+<span>  <span class="co"># Time single pathogen</span></span>
 <span>  <span class="va">model_single</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
 <span>    method <span class="op">=</span> <span class="fu"><a href="../reference/random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    pathogen_structure <span class="op">=</span> <span class="va">single_struct</span></span>
 <span>  <span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">time_single</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="va">fit_single</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">model_single</span>, n_chain <span class="op">=</span> <span class="fl">2</span>, n_iter <span class="op">=</span> <span class="fl">500</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">rw_timings</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">rw_timings</span>, <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    n_timepoints <span class="op">=</span> <span class="va">n</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"random_walk"</span>,</span>
 <span>    pathogen_structure <span class="op">=</span> <span class="st">"single"</span>,</span>
 <span>    time_seconds <span class="op">=</span> <span class="va">time_single</span><span class="op">[</span><span class="st">"elapsed"</span><span class="op">]</span></span>
 <span>  <span class="op">)</span><span class="op">)</span></span>
-<span>  </span>
-<span>  <span class="co"># Time multiple pathogens </span></span>
+<span></span>
+<span>  <span class="co"># Time multiple pathogens</span></span>
 <span>  <span class="va">model_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
 <span>    method <span class="op">=</span> <span class="fu"><a href="../reference/random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    pathogen_structure <span class="op">=</span> <span class="va">multi_struct</span></span>
 <span>  <span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">time_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="va">fit_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">model_multi</span>, n_chain <span class="op">=</span> <span class="fl">2</span>, n_iter <span class="op">=</span> <span class="fl">500</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">rw_timings</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">rw_timings</span>, <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    n_timepoints <span class="op">=</span> <span class="va">n</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"random_walk"</span>,</span>
@@ -270,47 +274,47 @@ pathogen succession patterns.</p>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">n</span> <span class="kw">in</span> <span class="va">data_sizes</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Testing n ="</span>, <span class="va">n</span>, <span class="st">"\n"</span><span class="op">)</span></span>
 <span>  <span class="va">test_data</span> <span class="op">&lt;-</span> <span class="fu">generate_test_data</span><span class="op">(</span><span class="va">n</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">single_struct</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/single.html">single</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">test_data</span>,</span>
 <span>    case_timeseries <span class="op">=</span> <span class="st">"cases"</span>,</span>
 <span>    time <span class="op">=</span> <span class="st">"date"</span></span>
 <span>  <span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">multi_struct</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/multiple.html">multiple</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">test_data</span>,</span>
 <span>    case_timeseries <span class="op">=</span> <span class="st">"cases"</span>,</span>
 <span>    time <span class="op">=</span> <span class="st">"date"</span>,</span>
 <span>    component_pathogen_timeseries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pathogen1"</span>, <span class="st">"pathogen2"</span>, <span class="st">"pathogen3"</span>, <span class="st">"pathogen4"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Time single pathogen</span></span>
 <span>  <span class="va">model_single</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
 <span>    method <span class="op">=</span> <span class="fu"><a href="../reference/p_spline.html">p_spline</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    pathogen_structure <span class="op">=</span> <span class="va">single_struct</span></span>
 <span>  <span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">time_single</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="va">fit_single</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">model_single</span>, n_chain <span class="op">=</span> <span class="fl">2</span>, n_iter <span class="op">=</span> <span class="fl">500</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">ps_timings</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">ps_timings</span>, <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    n_timepoints <span class="op">=</span> <span class="va">n</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"p_spline"</span>,</span>
 <span>    pathogen_structure <span class="op">=</span> <span class="st">"single"</span>,</span>
 <span>    time_seconds <span class="op">=</span> <span class="va">time_single</span><span class="op">[</span><span class="st">"elapsed"</span><span class="op">]</span></span>
 <span>  <span class="op">)</span><span class="op">)</span></span>
-<span>  </span>
-<span>  <span class="co"># Time multiple pathogens </span></span>
+<span></span>
+<span>  <span class="co"># Time multiple pathogens</span></span>
 <span>  <span class="va">model_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
 <span>    method <span class="op">=</span> <span class="fu"><a href="../reference/p_spline.html">p_spline</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    pathogen_structure <span class="op">=</span> <span class="va">multi_struct</span></span>
 <span>  <span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">time_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="va">fit_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">model_multi</span>, n_chain <span class="op">=</span> <span class="fl">2</span>, n_iter <span class="op">=</span> <span class="fl">500</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">ps_timings</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">ps_timings</span>, <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    n_timepoints <span class="op">=</span> <span class="va">n</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"p_spline"</span>,</span>
@@ -332,8 +336,10 @@ pathogen succession patterns.</p>
 <span><span class="va">all_timings</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">rw_timings</span>, <span class="va">ps_timings</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create log-log plot</span></span>
-<span><span class="fu">ggplot</span><span class="op">(</span><span class="va">all_timings</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">n_timepoints</span>, y <span class="op">=</span> <span class="va">time_seconds</span>, </span>
-<span>                        color <span class="op">=</span> <span class="va">method</span>, linetype <span class="op">=</span> <span class="va">pathogen_structure</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span><span class="va">all_timings</span>, <span class="fu">aes</span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="va">n_timepoints</span>, y <span class="op">=</span> <span class="va">time_seconds</span>,</span>
+<span>  color <span class="op">=</span> <span class="va">method</span>, linetype <span class="op">=</span> <span class="va">pathogen_structure</span></span>
+<span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_line</span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">scale_x_log10</span><span class="op">(</span>breaks <span class="op">=</span> <span class="va">data_sizes</span><span class="op">)</span> <span class="op">+</span></span>
@@ -364,8 +370,10 @@ pathogen succession patterns.</p>
 <span>    .groups <span class="op">=</span> <span class="st">"drop"</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">scaling_results</span>, digits <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>             caption <span class="op">=</span> <span class="st">"Scaling exponents: time complexity approximately O(n^exponent)"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">scaling_results</span>,</span>
+<span>  digits <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  caption <span class="op">=</span> <span class="st">"Scaling exponents: time complexity approximately O(n^exponent)"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <caption>Scaling exponents: time complexity approximately
 O(n^exponent)</caption>
@@ -379,26 +387,26 @@ O(n^exponent)</caption>
 <tr class="odd">
 <td align="left">p_spline</td>
 <td align="left">multiple</td>
-<td align="right">0.999</td>
+<td align="right">1.007</td>
 <td align="right">0.996</td>
 </tr>
 <tr class="even">
 <td align="left">p_spline</td>
 <td align="left">single</td>
-<td align="right">0.804</td>
-<td align="right">0.983</td>
+<td align="right">0.850</td>
+<td align="right">0.992</td>
 </tr>
 <tr class="odd">
 <td align="left">random_walk</td>
 <td align="left">multiple</td>
-<td align="right">0.932</td>
-<td align="right">0.998</td>
+<td align="right">0.955</td>
+<td align="right">0.999</td>
 </tr>
 <tr class="even">
 <td align="left">random_walk</td>
 <td align="left">single</td>
-<td align="right">0.872</td>
-<td align="right">0.983</td>
+<td align="right">0.882</td>
+<td align="right">0.982</td>
 </tr>
 </tbody>
 </table>
@@ -418,7 +426,7 @@ input data.</p>
 <code class="sourceCode R"><span><span class="co"># Use package data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">sarscov2</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Fit model </span></span>
+<span><span class="co"># Fit model</span></span>
 <span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
 <span>  method <span class="op">=</span> <span class="fu"><a href="../reference/random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  pathogen_structure <span class="op">=</span> <span class="fu"><a href="../reference/multiple.html">multiple</a></span><span class="op">(</span></span>
@@ -456,8 +464,10 @@ input data.</p>
 <span></span>
 <span><span class="va">input_summary</span><span class="op">$</span><span class="va">ratio</span> <span class="op">&lt;-</span> <span class="va">input_summary</span><span class="op">$</span><span class="va">predicted_cases</span> <span class="op">/</span> <span class="va">input_summary</span><span class="op">$</span><span class="va">input_cases</span></span>
 <span></span>
-<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">input_summary</span>, digits <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>             caption <span class="op">=</span> <span class="st">"Comparison of input and predicted case scales"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">input_summary</span>,</span>
+<span>  digits <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  caption <span class="op">=</span> <span class="st">"Comparison of input and predicted case scales"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <caption>Comparison of input and predicted case scales</caption>
 <thead><tr class="header">
@@ -538,7 +548,7 @@ appropriately capture the observed data.</p>
 <p>Test whether the model correctly recovers input scales when data have
 different properties (non-zero means, different magnitudes, etc.).</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Test with data at different scales </span></span>
+<code class="sourceCode R"><span><span class="co"># Test with data at different scales</span></span>
 <span><span class="va">test_scales</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">100</span>, <span class="fl">1000</span><span class="op">)</span></span>
 <span><span class="va">recovery_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  input_scale <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -551,7 +561,7 @@ different properties (non-zero means, different magnitudes, etc.).</p>
 <span>  <span class="co"># Generate data at this scale</span></span>
 <span>  <span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
 <span>  <span class="va">test_data</span> <span class="op">&lt;-</span> <span class="fu">generate_test_data</span><span class="op">(</span><span class="va">n</span>, baseline_cases <span class="op">=</span> <span class="va">scale</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Fit model</span></span>
 <span>  <span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
 <span>    method <span class="op">=</span> <span class="fu"><a href="../reference/random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -561,11 +571,11 @@ different properties (non-zero means, different magnitudes, etc.).</p>
 <span>      time <span class="op">=</span> <span class="st">"date"</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">model</span>, n_chain <span class="op">=</span> <span class="fl">2</span>, n_iter <span class="op">=</span> <span class="fl">500</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="va">inc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/incidence.html">incidence</a></span><span class="op">(</span><span class="va">fit</span>, dow <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="va">inc_values</span> <span class="op">&lt;-</span> <span class="va">inc</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">y</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Record results</span></span>
 <span>  <span class="va">recovery_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">recovery_results</span>, <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    input_scale <span class="op">=</span> <span class="va">scale</span>,</span>
@@ -575,8 +585,10 @@ different properties (non-zero means, different magnitudes, etc.).</p>
 <span>  <span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">recovery_results</span>, digits <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>             caption <span class="op">=</span> <span class="st">"Scale recovery across different input magnitudes"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">recovery_results</span>,</span>
+<span>  digits <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  caption <span class="op">=</span> <span class="st">"Scale recovery across different input magnitudes"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <caption>Scale recovery across different input magnitudes</caption>
 <thead><tr class="header">
@@ -632,7 +644,7 @@ meaningfully changes results.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">999</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Fit model to original data </span></span>
+<span><span class="co"># Fit model to original data</span></span>
 <span><span class="va">model_original</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
 <span>  method <span class="op">=</span> <span class="fu"><a href="../reference/random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  pathogen_structure <span class="op">=</span> <span class="fu"><a href="../reference/multiple.html">multiple</a></span><span class="op">(</span></span>
@@ -643,35 +655,39 @@ meaningfully changes results.</p>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">fit_original</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">model_original</span>, n_chain <span class="op">=</span> <span class="fl">2</span>, n_iter <span class="op">=</span> <span class="fl">1000</span>, </span>
-<span>                          seed <span class="op">=</span> <span class="fl">54321</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">fit_original</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">model_original</span>,</span>
+<span>  n_chain <span class="op">=</span> <span class="fl">2</span>, n_iter <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">54321</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">inc_original</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/incidence.html">incidence</a></span><span class="op">(</span><span class="va">fit_original</span>, dow <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">inc_original_total</span> <span class="op">&lt;-</span> <span class="va">inc_original</span><span class="op">$</span><span class="va">measure</span><span class="op">[</span><span class="va">inc_original</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">"Total"</span>, <span class="op">]</span></span>
 <span></span>
-<span><span class="co"># Test with different noise levels </span></span>
-<span><span class="va">noise_levels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.1</span><span class="op">)</span>  <span class="co"># 5%, 10% noise relative to mean</span></span>
+<span><span class="co"># Test with different noise levels</span></span>
+<span><span class="va">noise_levels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.1</span><span class="op">)</span> <span class="co"># 5%, 10% noise relative to mean</span></span>
 <span><span class="va">noise_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">noise_level</span> <span class="kw">in</span> <span class="va">noise_levels</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># Add noise to case counts</span></span>
-<span>  <span class="va">noisy_cases</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span> <span class="op">+</span> </span>
-<span>                                <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span><span class="op">)</span>, </span>
-<span>                                      mean <span class="op">=</span> <span class="fl">0</span>, </span>
-<span>                                      sd <span class="op">=</span> <span class="va">noise_level</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>  </span>
+<span>  <span class="va">noisy_cases</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span><span class="op">)</span>,</span>
+<span>      mean <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>      sd <span class="op">=</span> <span class="va">noise_level</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span><span class="op">)</span></span>
+<span>    <span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span>  <span class="co"># Also add proportional noise to pathogen counts</span></span>
 <span>  <span class="va">sarscov2_noisy</span> <span class="op">&lt;-</span> <span class="va">sarscov2</span></span>
 <span>  <span class="va">sarscov2_noisy</span><span class="op">$</span><span class="va">cases</span> <span class="op">&lt;-</span> <span class="va">noisy_cases</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">pathogen</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha"</span>, <span class="st">"delta"</span>, <span class="st">"omicron"</span>, <span class="st">"other"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">sarscov2_noisy</span><span class="op">[[</span><span class="va">pathogen</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span></span>
-<span>      <span class="va">sarscov2</span><span class="op">[[</span><span class="va">pathogen</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">sarscov2</span><span class="op">[[</span><span class="va">pathogen</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>, </span>
-<span>                                   mean <span class="op">=</span> <span class="fl">0</span>, </span>
-<span>                                   sd <span class="op">=</span> <span class="va">noise_level</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">sarscov2</span><span class="op">[[</span><span class="va">pathogen</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span>      <span class="va">sarscov2</span><span class="op">[[</span><span class="va">pathogen</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">sarscov2</span><span class="op">[[</span><span class="va">pathogen</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>        mean <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>        sd <span class="op">=</span> <span class="va">noise_level</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">sarscov2</span><span class="op">[[</span><span class="va">pathogen</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span>      <span class="op">)</span></span>
 <span>    <span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
-<span>  </span>
-<span>  <span class="co"># Fit model to noisy data </span></span>
+<span></span>
+<span>  <span class="co"># Fit model to noisy data</span></span>
 <span>  <span class="va">model_noisy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
 <span>    method <span class="op">=</span> <span class="fu"><a href="../reference/random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    pathogen_structure <span class="op">=</span> <span class="fu"><a href="../reference/multiple.html">multiple</a></span><span class="op">(</span></span>
@@ -681,12 +697,14 @@ meaningfully changes results.</p>
 <span>      component_pathogen_timeseries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha"</span>, <span class="st">"delta"</span>, <span class="st">"omicron"</span>, <span class="st">"other"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
-<span>  </span>
-<span>  <span class="va">fit_noisy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">model_noisy</span>, n_chain <span class="op">=</span> <span class="fl">2</span>, n_iter <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span>                        seed <span class="op">=</span> <span class="fl">54321</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">fit_noisy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">model_noisy</span>,</span>
+<span>    n_chain <span class="op">=</span> <span class="fl">2</span>, n_iter <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>    seed <span class="op">=</span> <span class="fl">54321</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span></span>
 <span>  <span class="va">inc_noisy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/incidence.html">incidence</a></span><span class="op">(</span><span class="va">fit_noisy</span>, dow <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span>  </span>
-<span>  <span class="va">noise_results</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">noise_level</span><span class="op">)</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> </span>
+<span></span>
+<span>  <span class="va">noise_results</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">noise_level</span><span class="op">)</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span></span>
 <span>    <span class="va">inc_noisy</span><span class="op">$</span><span class="va">measure</span><span class="op">[</span><span class="va">inc_noisy</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">"Total"</span>, <span class="op">]</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="section level3">
@@ -704,8 +722,10 @@ meaningfully changes results.</p>
 <span>  mean_difference <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">noise_results</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">y</span> <span class="op">-</span> <span class="va">inc_original_total</span><span class="op">$</span><span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">noise_comparison</span>, digits <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>             caption <span class="op">=</span> <span class="st">"Impact of trivial noise on model results"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">noise_comparison</span>,</span>
+<span>  digits <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  caption <span class="op">=</span> <span class="st">"Impact of trivial noise on model results"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <caption>Impact of trivial noise on model results</caption>
 <colgroup>
@@ -772,8 +792,9 @@ meaningfully changes results.</p>
 <span>    y <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">y</span>,</span>
 <span>    lower_95 <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">lb_95</span>,</span>
 <span>    upper_95 <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">ub_95</span>,</span>
-<span>    condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">cond</span> <span class="op">==</span> <span class="st">"original"</span>, <span class="st">"Original"</span>, </span>
-<span>                      <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Noise "</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">"noise_"</span>, <span class="st">""</span>, <span class="va">cond</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">cond</span> <span class="op">==</span> <span class="st">"original"</span>, <span class="st">"Original"</span>,</span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Noise "</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">"noise_"</span>, <span class="st">""</span>, <span class="va">cond</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>, <span class="st">"%"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -827,10 +848,10 @@ or data quality issues do not substantially affect results.</p>
 <p>Test whether different random seeds produce meaningfully similar
 results.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Function to fit model with a given seed </span></span>
+<code class="sourceCode R"><span><span class="co"># Function to fit model with a given seed</span></span>
 <span><span class="va">fit_with_seed</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">seed</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="va">seed</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_model.html">construct_model</a></span><span class="op">(</span></span>
 <span>    method <span class="op">=</span> <span class="fu"><a href="../reference/random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    pathogen_structure <span class="op">=</span> <span class="fu"><a href="../reference/multiple.html">multiple</a></span><span class="op">(</span></span>
@@ -840,7 +861,7 @@ results.</p>
 <span>      component_pathogen_timeseries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha"</span>, <span class="st">"delta"</span>, <span class="st">"omicron"</span>, <span class="st">"other"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">model</span>, n_chain <span class="op">=</span> <span class="fl">2</span>, n_iter <span class="op">=</span> <span class="fl">1000</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="va">inc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/incidence.html">incidence</a></span><span class="op">(</span><span class="va">fit</span>, dow <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="va">inc</span><span class="op">$</span><span class="va">measure</span><span class="op">[</span><span class="va">inc</span><span class="op">$</span><span class="va">measure</span><span class="op">$</span><span class="va">pathogen</span> <span class="op">==</span> <span class="st">"Total"</span>, <span class="op">]</span></span>
@@ -861,8 +882,10 @@ results.</p>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">seed_summary</span>, digits <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>             caption <span class="op">=</span> <span class="st">"Coefficient of variation across different random seeds"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">seed_summary</span>,</span>
+<span>  digits <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  caption <span class="op">=</span> <span class="st">"Coefficient of variation across different random seeds"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <caption>Coefficient of variation across different random
 seeds</caption>

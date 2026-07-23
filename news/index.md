@@ -11,8 +11,14 @@
   [`proportion()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/proportion.md)
   /
   [`plot()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/plot.md)
-  example in the vignette and assured figures aren’t missing
+  example in the vignette and fixed the underlying figure path so plots
+  render correctly
   ([\#45](https://github.com/acefa-hubs/EpiStrainDynamics/issues/45)).
+- Fixed the
+  [`Rt()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/Rt.md)
+  equation failing to render on the pkgdown site by setting MathJax as
+  the math renderer
+  ([\#44](https://github.com/acefa-hubs/EpiStrainDynamics/issues/44)).
 
 ### Minor improvements
 
@@ -36,6 +42,17 @@
 - [`plot()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/plot.md)
   is no longer redefined as a generic
   ([\#48](https://github.com/acefa-hubs/EpiStrainDynamics/issues/48)).
+- Increased the minimum R version to 4.1.0, matching actual base pipe
+  usage, and added it to the R-CMD-check.yaml test matrix
+  ([\#43](https://github.com/acefa-hubs/EpiStrainDynamics/issues/43)).
+- Fixed all lintr-identified issues
+  ([\#50](https://github.com/acefa-hubs/EpiStrainDynamics/issues/50)):
+  styling (line length, indentation, spacing) via `styler`, dropped
+  explicit [`return()`](https://rdrr.io/r/base/function.html) on final
+  statements, converted [`sapply()`](https://rdrr.io/r/base/lapply.html)
+  to [`vapply()`](https://rdrr.io/r/base/lapply.html) for type-safe
+  extraction, and removed genuine dead code flagged by unused-variable
+  checks.
 
 ### Documentation
 
@@ -44,23 +61,36 @@
   `@examplesIf rlang::is_installed("xts")` where a package is used only
   in an example
   ([\#36](https://github.com/acefa-hubs/EpiStrainDynamics/issues/36)).
-- Increased R version dependency in line with base pipe usage
-  ([\#43](https://github.com/acefa-hubs/EpiStrainDynamics/issues/43)).
 - Expanded documentation for
-  [`Rt()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/Rt.md)
-  ([\#44](https://github.com/acefa-hubs/EpiStrainDynamics/issues/44)),
-  and[`smoothing_structure()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/smoothing_structure.md)
+  [`Rt()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/Rt.md),
+  including its `gi_dist` argument
+  ([\#44](https://github.com/acefa-hubs/EpiStrainDynamics/issues/44)).
+- Expanded documentation for
+  [`smoothing_structure()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/smoothing_structure.md)
   and
-  [`diagnose_model()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/diagnose_model.md),
-  add cross-linked references where applicable
+  [`diagnose_model()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/diagnose_model.md)
   ([\#53](https://github.com/acefa-hubs/EpiStrainDynamics/issues/53),
-  [\#54](https://github.com/acefa-hubs/EpiStrainDynamics/issues/54),
-  [\#55](https://github.com/acefa-hubs/EpiStrainDynamics/issues/55)).
-- Committed `precompile.R` for vignette and included revision
-  instructions
+  [\#54](https://github.com/acefa-hubs/EpiStrainDynamics/issues/54)).
+- Expanded documentation for
+  [`growth_rate()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/growth_rate.md),
+  [`incidence()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/incidence.md),
+  and
+  [`proportion()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/proportion.md)
+  to match the level of detail in
+  [`Rt()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/Rt.md),
+  including symbol breakdowns for their adjustment formulas and, for
+  [`growth_rate()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/growth_rate.md),
+  its relationship to
+  [`Rt()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/Rt.md)
+  ([\#66](https://github.com/acefa-hubs/EpiStrainDynamics/issues/66)).
+- Added roxygen `[]` cross-links for referenced functions throughout the
+  documentation
+  ([\#55](https://github.com/acefa-hubs/EpiStrainDynamics/issues/55)).
+- Committed `precompile.R` for the vignette and included revision
+  instructions in CONTRIBUTING.md
   ([\#46](https://github.com/acefa-hubs/EpiStrainDynamics/issues/46)).
-- Clarified contribution and maintenance guidelines, installation from
-  source instructions, and add citations to readme
+- Clarified contribution and maintenance guidelines, added installation-
+  from-source instructions, and added citations to the README
   ([\#51](https://github.com/acefa-hubs/EpiStrainDynamics/issues/51),
   [\#57](https://github.com/acefa-hubs/EpiStrainDynamics/issues/57),
   [\#58](https://github.com/acefa-hubs/EpiStrainDynamics/issues/58),
@@ -69,10 +99,16 @@
 - Corrected documentation of both `sarscov2` and `influenza` datasets
   ([\#56](https://github.com/acefa-hubs/EpiStrainDynamics/issues/56)).
 - Added explanations of “pathogen noise” and the day-of-week effect
-  ([\#61](https://github.com/acefa-hubs/EpiStrainDynamics/issues/61)),
+  ([\#61](https://github.com/acefa-hubs/EpiStrainDynamics/issues/61)), a
+  link to the relevant timeseries class
+  ([\#62](https://github.com/acefa-hubs/EpiStrainDynamics/issues/62)),
   and a COVID-19 example
   ([\#63](https://github.com/acefa-hubs/EpiStrainDynamics/issues/63)),
   to the vignette.
+- Clarified the G1.6 srr standard statement to note that, although
+  performance/scaling is evaluated in the vignettes, this does not
+  constitute an explicit comparison against alternative implementations
+  ([\#52](https://github.com/acefa-hubs/EpiStrainDynamics/issues/52)).
 
 ## EpiStrainDynamics 0.0.1 (2026-03-27)
 

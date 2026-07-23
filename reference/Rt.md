@@ -114,14 +114,16 @@ Other metrics:
 
 ``` r
 if (FALSE) { # interactive()
-  mod <- construct_model(
-    method = random_walk(),
-    pathogen_structure = single(
-      case_timeseries = sarscov2$cases,
-      time = sarscov2$date))
+mod <- construct_model(
+  method = random_walk(),
+  pathogen_structure = single(
+    case_timeseries = sarscov2$cases,
+    time = sarscov2$date
+  )
+)
 
-  fit <- fit_model(mod)
+fit <- fit_model(mod)
 
-  rt <- Rt(fit, gi_dist = function(x) 4*x*exp(-2*x), tau_max = 7)
+rt <- Rt(fit, gi_dist = function(x) 4 * x * exp(-2 * x), tau_max = 7)
 }
 ```

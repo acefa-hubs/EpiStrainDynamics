@@ -121,9 +121,13 @@ point, where it is:</p><ul><li><p>Always positive (since it's an exponentiated v
 </ul><p><strong>Day-of-week adjustment</strong>: When day-of-week effects are included in the model,
 the incidence is further adjusted as:
 $$I_t^{adj} = I_t \times \text{week\_effect} \times \text{dow\_simplex}[\text{DOW}(t)]$$</p>
-<p>This accounts for systematic variations in case reporting or transmission
-patterns across different days of the week (e.g., lower weekend reporting,
-higher weekday transmission).</p>
+<p>Where:</p><ul><li><p>\(\text{week\_effect}\) is the number of distinct days modelled
+(7 for a full weekly cycle)</p></li>
+<li><p>\(\text{dow\_simplex}\) gives the relative reporting weight for
+each day of the week, estimated from the data</p></li>
+<li><p>\(\text{DOW}(t)\) maps time \(t\) to its day of the week</p></li>
+</ul><p>This accounts for systematic variations in case reporting (e.g. lower
+weekend reporting) that are not part of the underlying transmission trend.</p>
 <p>This metric function can be run directly on the fitted model output.</p>
     </div>
     <div class="section level2">
@@ -137,22 +141,24 @@ higher weekday transmission).</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># interactive()</span></span></span>
-<span class="r-in"><span>  <span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="construct_model.html">construct_model</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    method <span class="op">=</span> <span class="fu"><a href="random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    pathogen_structure <span class="op">=</span> <span class="fu"><a href="single.html">single</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>      case_timeseries <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span>,</span></span>
-<span class="r-in"><span>      time <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">date</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="construct_model.html">construct_model</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  method <span class="op">=</span> <span class="fu"><a href="random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  pathogen_structure <span class="op">=</span> <span class="fu"><a href="single.html">single</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    case_timeseries <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span>,</span></span>
+<span class="r-in"><span>    time <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">date</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="co"># Use model's dow setting (default)</span></span></span>
-<span class="r-in"><span>  <span class="va">inc</span> <span class="op">&lt;-</span> <span class="fu">incidence</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Use model's dow setting (default)</span></span></span>
+<span class="r-in"><span><span class="va">inc</span> <span class="op">&lt;-</span> <span class="fu">incidence</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="co"># Explicitly exclude dow effects</span></span></span>
-<span class="r-in"><span>  <span class="va">inc_no_dow</span> <span class="op">&lt;-</span> <span class="fu">incidence</span><span class="op">(</span><span class="va">fit</span>, dow <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Explicitly exclude dow effects</span></span></span>
+<span class="r-in"><span><span class="va">inc_no_dow</span> <span class="op">&lt;-</span> <span class="fu">incidence</span><span class="op">(</span><span class="va">fit</span>, dow <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="co"># Explicitly include dow effects (if model has them)</span></span></span>
-<span class="r-in"><span>  <span class="va">inc_with_dow</span> <span class="op">&lt;-</span> <span class="fu">incidence</span><span class="op">(</span><span class="va">fit</span>, dow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Explicitly include dow effects (if model has them)</span></span></span>
+<span class="r-in"><span><span class="va">inc_with_dow</span> <span class="op">&lt;-</span> <span class="fu">incidence</span><span class="op">(</span><span class="va">fit</span>, dow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>

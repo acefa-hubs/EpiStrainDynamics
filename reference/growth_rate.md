@@ -3,8 +3,10 @@
 Computes the epidemiological growth rate, defined as the instantaneous
 rate of change in log-incidence over time. Mathematically, it
 represents: \$\$r_t = \log(I_t) - \log(I\_{t-1}) =
-\log\left(\frac{I_t}{I\_{t-1}}\right)\$\$ where \\I_t\\ is incidence at
-time t.
+\log\left(\frac{I_t}{I\_{t-1}}\right)\$\$ where \\I_t\\ is incidence
+(see
+[`incidence()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/incidence.md))
+at time \\t\\.
 
 ## Usage
 
@@ -47,6 +49,15 @@ label (`time`).
 
 ## Details
 
+Growth rate and \\R_t\\ both describe transmission trends, but on
+different scales: growth rate is a direct log-scale rate of change,
+while
+[`Rt()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/Rt.md)
+additionally accounts for the generation interval to translate that rate
+into an average number of secondary infections per case. Growth rate is
+positive whenever \\R_t \> 1\\ and negative whenever \\R_t \< 1\\, since
+both describe the same underlying growth or decline.
+
 This metric quantifies the **proportional change** in disease incidence
 from one time period to the next on a logarithmic scale, where:
 
@@ -80,13 +91,15 @@ Other metrics:
 
 ``` r
 if (FALSE) { # interactive()
-  mod <- construct_model(
-    method = random_walk(),
-    pathogen_structure = single(
-      case_timeseries = sarscov2$cases,
-      time = sarscov2$date))
+mod <- construct_model(
+  method = random_walk(),
+  pathogen_structure = single(
+    case_timeseries = sarscov2$cases,
+    time = sarscov2$date
+  )
+)
 
-  fit <- fit_model(mod)
-  gr <- growth_rate(fit)
+fit <- fit_model(mod)
+gr <- growth_rate(fit)
 }
 ```

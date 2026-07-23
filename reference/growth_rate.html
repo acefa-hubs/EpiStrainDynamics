@@ -8,10 +8,10 @@
 </script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Generic Method for Growth Rate Analysis — growth_rate"><meta name="description" content="Computes the epidemiological growth rate, defined as the instantaneous
 rate of change in log-incidence over time. Mathematically, it represents:
 $$r_t = \log(I_t) - \log(I_{t-1}) = \log\left(\frac{I_t}{I_{t-1}}\right)$$
-where \(I_t\) is incidence at time t."><meta property="og:description" content="Computes the epidemiological growth rate, defined as the instantaneous
+where \(I_t\) is incidence (see incidence()) at time \(t\)."><meta property="og:description" content="Computes the epidemiological growth rate, defined as the instantaneous
 rate of change in log-incidence over time. Mathematically, it represents:
 $$r_t = \log(I_t) - \log(I_{t-1}) = \log\left(\frac{I_t}{I_{t-1}}\right)$$
-where \(I_t\) is incidence at time t."></head><body>
+where \(I_t\) is incidence (see incidence()) at time \(t\)."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -61,7 +61,7 @@ where \(I_t\) is incidence at time t."></head><body>
     <p>Computes the epidemiological growth rate, defined as the instantaneous
 rate of change in log-incidence over time. Mathematically, it represents:
 $$r_t = \log(I_t) - \log(I_{t-1}) = \log\left(\frac{I_t}{I_{t-1}}\right)$$
-where \(I_t\) is incidence at time t.</p>
+where \(I_t\) is incidence (see <code><a href="incidence.html">incidence()</a></code>) at time \(t\).</p>
     </div>
 
     <div class="section level2">
@@ -105,7 +105,13 @@ interval of the quantity (<code>lb_50</code> &amp; <code>ub_50</code>), the 95% 
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This metric quantifies the <strong>proportional change</strong> in disease incidence
+    <p>Growth rate and \(R_t\) both describe transmission trends, but on
+different scales: growth rate is a direct log-scale rate of change, while
+<code><a href="Rt.html">Rt()</a></code> additionally accounts for the generation interval to translate
+that rate into an average number of secondary infections per case.
+Growth rate is positive whenever \(R_t &gt; 1\) and negative whenever
+\(R_t &lt; 1\), since both describe the same underlying growth or decline.</p>
+<p>This metric quantifies the <strong>proportional change</strong> in disease incidence
 from one time period to the next on a logarithmic scale, where:</p><ul><li><p>Positive values (\(r_t &gt; 0\)) indicate exponential growth</p></li>
 <li><p>Negative values (\(r_t &lt; 0\)) indicate exponential decline</p></li>
 <li><p>Values near zero (\(r_t \approx 0\)) indicate stable incidence</p></li>
@@ -126,14 +132,16 @@ from one time period to the next on a logarithmic scale, where:</p><ul><li><p>Po
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># interactive()</span></span></span>
-<span class="r-in"><span>  <span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="construct_model.html">construct_model</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    method <span class="op">=</span> <span class="fu"><a href="random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    pathogen_structure <span class="op">=</span> <span class="fu"><a href="single.html">single</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>      case_timeseries <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span>,</span></span>
-<span class="r-in"><span>      time <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">date</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="construct_model.html">construct_model</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  method <span class="op">=</span> <span class="fu"><a href="random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  pathogen_structure <span class="op">=</span> <span class="fu"><a href="single.html">single</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    case_timeseries <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span>,</span></span>
+<span class="r-in"><span>    time <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">date</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu">growth_rate</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu">growth_rate</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>

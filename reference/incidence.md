@@ -69,9 +69,19 @@ point, where it is:
 model, the incidence is further adjusted as: \$\$I_t^{adj} = I_t \times
 \text{week\\effect} \times \text{dow\\simplex}\[\text{DOW}(t)\]\$\$
 
-This accounts for systematic variations in case reporting or
-transmission patterns across different days of the week (e.g., lower
-weekend reporting, higher weekday transmission).
+Where:
+
+- \\\text{week\\effect}\\ is the number of distinct days modelled (7 for
+  a full weekly cycle)
+
+- \\\text{dow\\simplex}\\ gives the relative reporting weight for each
+  day of the week, estimated from the data
+
+- \\\text{DOW}(t)\\ maps time \\t\\ to its day of the week
+
+This accounts for systematic variations in case reporting (e.g. lower
+weekend reporting) that are not part of the underlying transmission
+trend.
 
 This metric function can be run directly on the fitted model output.
 
@@ -86,21 +96,23 @@ Other metrics:
 
 ``` r
 if (FALSE) { # interactive()
-  mod <- construct_model(
-    method = random_walk(),
-    pathogen_structure = single(
-      case_timeseries = sarscov2$cases,
-      time = sarscov2$date))
+mod <- construct_model(
+  method = random_walk(),
+  pathogen_structure = single(
+    case_timeseries = sarscov2$cases,
+    time = sarscov2$date
+  )
+)
 
-  fit <- fit_model(mod)
+fit <- fit_model(mod)
 
-  # Use model's dow setting (default)
-  inc <- incidence(fit)
+# Use model's dow setting (default)
+inc <- incidence(fit)
 
-  # Explicitly exclude dow effects
-  inc_no_dow <- incidence(fit, dow = FALSE)
+# Explicitly exclude dow effects
+inc_no_dow <- incidence(fit, dow = FALSE)
 
-  # Explicitly include dow effects (if model has them)
-  inc_with_dow <- incidence(fit, dow = TRUE)
+# Explicitly include dow effects (if model has them)
+inc_with_dow <- incidence(fit, dow = TRUE)
 }
 ```

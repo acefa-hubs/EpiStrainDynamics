@@ -120,13 +120,15 @@ from</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># interactive()</span></span></span>
-<span class="r-in"><span>  <span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="construct_model.html">construct_model</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    method <span class="op">=</span> <span class="fu"><a href="random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    pathogen_structure <span class="op">=</span> <span class="fu"><a href="single.html">single</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>      case_timeseries <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span>,</span></span>
-<span class="r-in"><span>      time <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">date</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu">diagnose_model</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="construct_model.html">construct_model</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  method <span class="op">=</span> <span class="fu"><a href="random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  pathogen_structure <span class="op">=</span> <span class="fu"><a href="single.html">single</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    case_timeseries <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span>,</span></span>
+<span class="r-in"><span>    time <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">date</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_model.html">fit_model</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">diagnose_model</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>

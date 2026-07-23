@@ -64,12 +64,14 @@ An object of class `list`, returned invisibly, containing:
 
 ``` r
 if (FALSE) { # interactive()
-  mod <- construct_model(
-    method = random_walk(),
-    pathogen_structure = single(
-      case_timeseries = sarscov2$cases,
-      time = sarscov2$date))
-  fit <- fit_model(mod)
-  diagnose_model(fit)
+mod <- construct_model(
+  method = random_walk(),
+  pathogen_structure = single(
+    case_timeseries = sarscov2$cases,
+    time = sarscov2$date
+  )
+)
+fit <- fit_model(mod)
+diagnose_model(fit)
 }
 ```

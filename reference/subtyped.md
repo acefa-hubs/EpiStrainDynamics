@@ -69,11 +69,11 @@ Other pathogen_structure:
 # Using a data frame
 subtyped(
   data = influenza,
-  case_timeseries = 'ili',
-  influenzaA_unsubtyped_timeseries = 'inf_A',
-  influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
-  other_pathogen_timeseries = c('inf_B', 'other'),
-  time = 'week'
+  case_timeseries = "ili",
+  influenzaA_unsubtyped_timeseries = "inf_A",
+  influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+  other_pathogen_timeseries = c("inf_B", "other"),
+  time = "week"
 )
 #> $pathogen_structure
 #> [1] "subtyped"
@@ -430,10 +430,10 @@ influenza_xts <- xts::xts(
 )
 subtyped(
   data = influenza_xts,
-  case_timeseries = 'ili',
-  influenzaA_unsubtyped_timeseries = 'inf_A',
-  influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
-  other_pathogen_timeseries = c('inf_B', 'other')
+  case_timeseries = "ili",
+  influenzaA_unsubtyped_timeseries = "inf_A",
+  influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+  other_pathogen_timeseries = c("inf_B", "other")
 )
 #> $pathogen_structure
 #> [1] "subtyped"

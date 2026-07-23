@@ -232,29 +232,31 @@ an error is raised that can be caught and inspected.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># interactive()</span></span></span>
-<span class="r-in"><span>  <span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="construct_model.html">construct_model</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    method <span class="op">=</span> <span class="fu"><a href="random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    pathogen_structure <span class="op">=</span> <span class="fu"><a href="single.html">single</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>      case_timeseries <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span>,</span></span>
-<span class="r-in"><span>      time <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">date</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">fit_model</span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="co"># Suppress progress and messages but keep warnings/errors</span></span></span>
-<span class="r-in"><span>  <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">fit_model</span><span class="op">(</span><span class="va">mod</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="co"># Suppress warnings too</span></span></span>
-<span class="r-in"><span>  <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">fit_model</span><span class="op">(</span><span class="va">mod</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, suppress_warnings <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="co"># Catch errors and inspect</span></span></span>
-<span class="r-in"><span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="fu">fit_model</span><span class="op">(</span><span class="va">mod</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="va">e</span></span></span>
+<span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="construct_model.html">construct_model</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  method <span class="op">=</span> <span class="fu"><a href="random_walk.html">random_walk</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  pathogen_structure <span class="op">=</span> <span class="fu"><a href="single.html">single</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    case_timeseries <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">cases</span>,</span></span>
+<span class="r-in"><span>    time <span class="op">=</span> <span class="va">sarscov2</span><span class="op">$</span><span class="va">date</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">inherits</a></span><span class="op">(</span><span class="va">result</span>, <span class="st">"EpiStrainDynamics.fit.error"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Fitting failed:"</span>, <span class="va">result</span><span class="op">$</span><span class="va">message</span>, <span class="st">"\n"</span><span class="op">)</span></span></span>
-<span class="r-in"><span>    <span class="co"># Can still access the model: result$constructed_model</span></span></span>
-<span class="r-in"><span>  <span class="op">}</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">fit_model</span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Suppress progress and messages but keep warnings/errors</span></span></span>
+<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">fit_model</span><span class="op">(</span><span class="va">mod</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Suppress warnings too</span></span></span>
+<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">fit_model</span><span class="op">(</span><span class="va">mod</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, suppress_warnings <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Catch errors and inspect</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu">fit_model</span><span class="op">(</span><span class="va">mod</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="va">e</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">inherits</a></span><span class="op">(</span><span class="va">result</span>, <span class="st">"EpiStrainDynamics.fit.error"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Fitting failed:"</span>, <span class="va">result</span><span class="op">$</span><span class="va">message</span>, <span class="st">"\n"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="co"># Can still access the model: result$constructed_model</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>

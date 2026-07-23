@@ -50,9 +50,9 @@ Other pathogen_structure:
 # Using a data frame
 multiple(
   data = sarscov2,
-  case_timeseries = 'cases',
-  component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other'),
-  time = 'date'
+  case_timeseries = "cases",
+  component_pathogen_timeseries = c("alpha", "delta", "omicron", "other"),
+  time = "date"
 )
 #> $pathogen_structure
 #> [1] "multiple"
@@ -586,8 +586,8 @@ sarscov2_xts <- xts::xts(
 )
 multiple(
   data = sarscov2_xts,
-  case_timeseries = 'cases',
-  component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+  case_timeseries = "cases",
+  component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
 )
 #> $pathogen_structure
 #> [1] "multiple"

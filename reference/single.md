@@ -45,8 +45,8 @@ Other pathogen_structure:
 # Using a data frame
 single(
   data = sarscov2,
-  case_timeseries = 'cases',
-  time = 'date'
+  case_timeseries = "cases",
+  time = "date"
 )
 #> $pathogen_structure
 #> [1] "single"
@@ -165,7 +165,7 @@ single(
 sarscov2_xts <- xts::xts(sarscov2[, c("cases", "alpha")], order.by = sarscov2$date)
 single(
   data = sarscov2_xts,
-  case_timeseries = 'cases'
+  case_timeseries = "cases"
 )
 #> $pathogen_structure
 #> [1] "single"

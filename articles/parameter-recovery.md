@@ -42,23 +42,23 @@ simulate_sir <- function(n_days, R0, recovery_rate = 0.1, I0 = 0.01) {
   S <- numeric(n_days)
   I <- numeric(n_days)
   R <- numeric(n_days)
-  
+
   S[1] <- 1 - I0
   I[1] <- I0
   R[1] <- 0
-  
+
   beta <- R0 * recovery_rate
-  
+
   for (t in 2:n_days) {
-    dS <- -beta * S[t-1] * I[t-1]
-    dI <- beta * S[t-1] * I[t-1] - recovery_rate * I[t-1]
-    dR <- recovery_rate * I[t-1]
-    
-    S[t] <- max(0, S[t-1] + dS)
-    I[t] <- max(0, I[t-1] + dI)
-    R[t] <- min(1, R[t-1] + dR)
+    dS <- -beta * S[t - 1] * I[t - 1]
+    dI <- beta * S[t - 1] * I[t - 1] - recovery_rate * I[t - 1]
+    dR <- recovery_rate * I[t - 1]
+
+    S[t] <- max(0, S[t - 1] + dS)
+    I[t] <- max(0, I[t - 1] + dI)
+    R[t] <- min(1, R[t - 1] + dR)
   }
-  
+
   return(I)
 }
 
@@ -70,8 +70,10 @@ true_R0 <- 2.5
 true_recovery_rate <- 0.1
 baseline_cases <- 500
 
-true_I <- simulate_sir(n_timepoints, R0 = true_R0, 
-                       recovery_rate = true_recovery_rate, I0 = 0.02)
+true_I <- simulate_sir(n_timepoints,
+  R0 = true_R0,
+  recovery_rate = true_recovery_rate, I0 = 0.02
+)
 true_lambda <- true_I * baseline_cases
 
 # Generate observed counts with overdispersion
@@ -99,7 +101,7 @@ single_fits <- list()
 
 for (i in seq_along(seeds)) {
   cat("Fitting with seed", seeds[i], "\n")
-  
+
   model <- construct_model(
     method = random_walk(),
     pathogen_structure = single(
@@ -108,13 +110,15 @@ for (i in seq_along(seeds)) {
       time = "date"
     )
   )
-  
-  fit <- fit_model(model, n_chain = 2, n_iter = 2000, 
-                   seed = seeds[i], verbose = FALSE)
-  
+
+  fit <- fit_model(model,
+    n_chain = 2, n_iter = 2000,
+    seed = seeds[i], verbose = FALSE
+  )
+
   inc <- incidence(fit, dow = FALSE)
   inc_values <- inc$measure
-  
+
   single_fits[[i]] <- list(
     seed = seeds[i],
     median = inc_values$y,
@@ -149,8 +153,10 @@ recovery_metrics_single <- data.frame(
 )
 
 knitr::kable(
-  recovery_metrics_single, digits = 4,
-  caption = "Single pathogen parameter recovery metrics across seeds")
+  recovery_metrics_single,
+  digits = 4,
+  caption = "Single pathogen parameter recovery metrics across seeds"
+)
 ```
 
 | seed | correlation |   rmse | relative_rmse | coverage_95 | coverage_50 |
@@ -234,18 +240,22 @@ pathogen1 <- simulate_sir(n_timepoints, R0 = 2.5, recovery_rate = 0.1, I0 = 0.03
 
 # Pathogen 2: Mid-season, emerges later, R0 = 3.0
 offset2 <- 30
-pathogen2 <- c(rep(0, offset2), 
-                 simulate_sir(n_timepoints - offset2, R0 = 3.0, recovery_rate = 0.1, I0 = 0.02))
+pathogen2 <- c(
+  rep(0, offset2),
+  simulate_sir(n_timepoints - offset2, R0 = 3.0, recovery_rate = 0.1, I0 = 0.02)
+)
 
 # Pathogen 3: Late season, R0 = 2.0
 offset3 <- 60
-pathogen3 <- c(rep(0, offset3), 
-                 simulate_sir(n_timepoints - offset3, R0 = 2.0, recovery_rate = 0.1, I0 = 0.025))
+pathogen3 <- c(
+  rep(0, offset3),
+  simulate_sir(n_timepoints - offset3, R0 = 2.0, recovery_rate = 0.1, I0 = 0.025)
+)
 
 # Combine into proportions matrix
 I_matrix <- cbind(pathogen1, pathogen2, pathogen3)
 true_proportions <- I_matrix / rowSums(I_matrix)
-true_proportions[is.nan(true_proportions)] <- 1/3  # Handle division by zero
+true_proportions[is.nan(true_proportions)] <- 1 / 3 # Handle division by zero
 
 # Generate total cases from combined epidemic
 total_I <- rowSums(I_matrix)
@@ -255,8 +265,10 @@ total_cases <- rpois(n_timepoints, lambda = total_I * baseline)
 # Allocate to pathogens using multinomial
 pathogen_counts <- matrix(0, nrow = n_timepoints, ncol = 3)
 for (t in 1:n_timepoints) {
-  pathogen_counts[t, ] <- as.vector(rmultinom(1, size = total_cases[t], 
-                                               prob = true_proportions[t, ]))
+  pathogen_counts[t, ] <- as.vector(rmultinom(1,
+    size = total_cases[t],
+    prob = true_proportions[t, ]
+  ))
 }
 
 multiple_data <- data.frame(
@@ -277,7 +289,7 @@ multiple_fits <- list()
 
 for (i in seq_along(seeds)) {
   cat("Fitting with seed", seeds[i], "\n")
-  
+
   model <- construct_model(
     method = random_walk(),
     pathogen_structure = multiple(
@@ -287,12 +299,14 @@ for (i in seq_along(seeds)) {
       component_pathogen_timeseries = c("pathogen1", "pathogen2", "pathogen3")
     )
   )
-  
-  fit <- fit_model(model, n_chain = 2, n_iter = 2000,
-                   seed = seeds[i], verbose = FALSE)
-  
+
+  fit <- fit_model(model,
+    n_chain = 2, n_iter = 2000,
+    seed = seeds[i], verbose = FALSE
+  )
+
   props <- proportion(fit)
-  
+
   multiple_fits[[i]] <- list(
     seed = seeds[i],
     proportions = props
@@ -311,11 +325,11 @@ recovery_metrics_multiple <- data.frame()
 
 for (i in seq_along(seeds)) {
   props_est <- multiple_fits[[i]]$proportions
-  
+
   for (pathogen in c("pathogen1", "pathogen2", "pathogen3")) {
     true_prop <- true_proportions[, pathogen]
     est_prop <- props_est$measure$y[props_est$measure$pathogen == pathogen]
-    
+
     recovery_metrics_multiple <- rbind(recovery_metrics_multiple, data.frame(
       seed = seeds[i],
       pathogen = pathogen,
@@ -337,8 +351,10 @@ summary_by_pathogen <- recovery_metrics_multiple %>%
     .groups = "drop"
   )
 
-knitr::kable(summary_by_pathogen, digits = 4,
-             caption = "Multiple pathogen proportion recovery summary across seeds (G5.6a, G5.6b)")
+knitr::kable(summary_by_pathogen,
+  digits = 4,
+  caption = "Multiple pathogen proportion recovery summary across seeds (G5.6a, G5.6b)"
+)
 ```
 
 | pathogen  | mean_correlation | mean_rmse | mean_mae | sd_correlation |
@@ -364,10 +380,14 @@ plot_data <- data.frame(
   date = rep(dates, 3),
   true = c(true_proportions[, 1], true_proportions[, 2], true_proportions[, 3]),
   estimated = c(prop1, prop2, prop3),
-  pathogen = rep(c("Pathogen 1 (Early, R0=2.5)", 
-                   "Pathogen 2 (Mid, R0=3.0)", 
-                   "Pathogen 3 (Late, R0=2.0)"), 
-                 each = n_timepoints)
+  pathogen = rep(
+    c(
+      "Pathogen 1 (Early, R0=2.5)",
+      "Pathogen 2 (Mid, R0=3.0)",
+      "Pathogen 3 (Late, R0=2.0)"
+    ),
+    each = n_timepoints
+  )
 )
 
 ggplot(plot_data, aes(x = date)) +
@@ -393,9 +413,11 @@ ggplot(plot_data, aes(x = date)) +
 # Create comparison plots showing both true and estimated side by side
 comparison_data <- data.frame(
   date = rep(dates, 6),
-  proportion = c(true_proportions[, 1], prop1,
-                 true_proportions[, 2], prop2,
-                 true_proportions[, 3], prop3),
+  proportion = c(
+    true_proportions[, 1], prop1,
+    true_proportions[, 2], prop2,
+    true_proportions[, 3], prop3
+  ),
   type = rep(rep(c("True", "Estimated"), each = n_timepoints), 3),
   pathogen = rep(c("Pathogen 1", "Pathogen 2", "Pathogen 3"), each = n_timepoints * 2)
 )
@@ -430,9 +452,12 @@ consistency_results <- data.frame()
 
 for (pathogen in c("pathogen1", "pathogen2", "pathogen3")) {
   for (t in check_times) {
-    estimates <- sapply(multiple_fits, function(x) x$proportions$measure$y[
-      x$proportions$measure$pathogen == pathogen][t])
-    
+    estimates <- sapply(multiple_fits, function(x) {
+      x$proportions$measure$y[
+        x$proportions$measure$pathogen == pathogen
+      ][t]
+    })
+
     consistency_results <- rbind(consistency_results, data.frame(
       pathogen = pathogen,
       timepoint = t,
@@ -444,8 +469,10 @@ for (pathogen in c("pathogen1", "pathogen2", "pathogen3")) {
   }
 }
 
-knitr::kable(consistency_results, digits = 4,
-             caption = "Consistency of estimates across random seeds at key timepoints")
+knitr::kable(consistency_results,
+  digits = 4,
+  caption = "Consistency of estimates across random seeds at key timepoints"
+)
 ```
 
 |            | pathogen  | timepoint | true_value | mean_estimate | sd_estimate |     cv |
@@ -488,8 +515,10 @@ model_ps <- construct_model(
   )
 )
 
-fit_ps <- fit_model(model_ps, n_chain = 2, n_iter = 2000,
-                    seed = 999, verbose = FALSE)
+fit_ps <- fit_model(model_ps,
+  n_chain = 2, n_iter = 2000,
+  seed = 999, verbose = FALSE
+)
 
 props_ps <- proportion(fit_ps)$measure
 props1 <- props_ps$y[props_ps$pathogen == "pathogen1"]
@@ -511,8 +540,10 @@ ps_recovery <- data.frame(
   )
 )
 
-knitr::kable(ps_recovery, digits = 4,
-             caption = "P-spline method parameter recovery")
+knitr::kable(ps_recovery,
+  digits = 4,
+  caption = "P-spline method parameter recovery"
+)
 ```
 
 | pathogen  | correlation |   rmse |
@@ -527,7 +558,8 @@ P-spline method parameter recovery {.table}
 
 # Compare random walk vs p-spline for pathogen 1
 rw_props1 <- multiple_fits[[1]]$proportions$measure$y[
-  multiple_fits[[1]]$proportions$measure$pathogen == "pathogen1"]
+  multiple_fits[[1]]$proportions$measure$pathogen == "pathogen1"
+]
 
 comparison_data <- data.frame(
   date = rep(dates, 3),
@@ -573,16 +605,20 @@ h3n2_I <- simulate_sir(n_timepoints, R0 = 2.8, recovery_rate = 0.12, I0 = 0.04)
 
 # H1N1: emerges mid-season, R0 = 2.5
 offset_h1n1 <- 35
-h1n1_I <- c(rep(0, offset_h1n1), 
-            simulate_sir(n_timepoints - offset_h1n1, R0 = 2.5, recovery_rate = 0.12, I0 = 0.03))
+h1n1_I <- c(
+  rep(0, offset_h1n1),
+  simulate_sir(n_timepoints - offset_h1n1, R0 = 2.5, recovery_rate = 0.12, I0 = 0.03)
+)
 
 # Influenza B: late season, R0 = 2.2
 offset_infB <- 60
-infB_I <- c(rep(0, offset_infB), 
-            simulate_sir(n_timepoints - offset_infB, R0 = 2.2, recovery_rate = 0.1, I0 = 0.025))
+infB_I <- c(
+  rep(0, offset_infB),
+  simulate_sir(n_timepoints - offset_infB, R0 = 2.2, recovery_rate = 0.1, I0 = 0.025)
+)
 
 # Other: background/endemic
-other_I <- 0.08 + 0.03 * sin(seq(0, 2*pi, length.out = n_timepoints))
+other_I <- 0.08 + 0.03 * sin(seq(0, 2 * pi, length.out = n_timepoints))
 
 # Combine and normalize
 I_matrix <- cbind(h3n2_I, h1n1_I, infB_I, other_I)
@@ -605,7 +641,7 @@ for (t in 1:n_timepoints) {
     subtyped_counts[t, 1] <- rbinom(1, size = inf_A_counts[t], prob = prop_h3n2_given_A)
     subtyped_counts[t, 2] <- inf_A_counts[t] - subtyped_counts[t, 1]
   }
-  
+
   # Remaining cases split between inf_B and other
   remaining <- total_ili[t] - inf_A_counts[t]
   if (remaining > 0) {
@@ -640,8 +676,10 @@ model_subtyped <- construct_model(
   )
 )
 
-fit_subtyped <- fit_model(model_subtyped, n_chain = 2, n_iter = 2000,
-                          seed = 12345, verbose = FALSE)
+fit_subtyped <- fit_model(model_subtyped,
+  n_chain = 2, n_iter = 2000,
+  seed = 12345, verbose = FALSE
+)
 
 props_subtyped <- proportion(fit_subtyped)
 h3n2 <- props_subtyped$measure$y[props_subtyped$measure$pathogen == "inf_H3N2"]
@@ -666,8 +704,10 @@ subtyped_recovery <- data.frame(
   )
 )
 
-knitr::kable(subtyped_recovery, digits = 4,
-             caption = "Subtyped pathogen structure parameter recovery")
+knitr::kable(subtyped_recovery,
+  digits = 4,
+  caption = "Subtyped pathogen structure parameter recovery"
+)
 ```
 
 | pathogen | correlation |   rmse |
@@ -684,14 +724,20 @@ Subtyped pathogen structure parameter recovery {.table}
 # Create comparison plot
 plot_data_subtyped <- data.frame(
   date = rep(dates, 4),
-  true = c(true_props_subtyped[, 1], true_props_subtyped[, 2],
-           true_props_subtyped[, 3], true_props_subtyped[, 4]),
+  true = c(
+    true_props_subtyped[, 1], true_props_subtyped[, 2],
+    true_props_subtyped[, 3], true_props_subtyped[, 4]
+  ),
   estimated = c(h3n2, h1n1, b, other),
-  pathogen = rep(c("H3N2 (Early, R0=2.8)", 
-                   "H1N1 (Mid, R0=2.5)", 
-                   "Influenza B (Late, R0=2.2)", 
-                   "Other (Endemic)"), 
-                 each = n_timepoints)
+  pathogen = rep(
+    c(
+      "H3N2 (Early, R0=2.8)",
+      "H1N1 (Mid, R0=2.5)",
+      "Influenza B (Late, R0=2.2)",
+      "Other (Endemic)"
+    ),
+    each = n_timepoints
+  )
 )
 
 ggplot(plot_data_subtyped, aes(x = date)) +

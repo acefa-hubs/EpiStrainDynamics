@@ -56,6 +56,11 @@ estimates: \$\$P_t = \frac{\sum\_{i \in \text{numerator}}
 \exp(\log\text{-incidence}\_{i,t})}{\sum\_{j \in \text{denominator}}
 \exp(\log\text{-incidence}\_{j,t})}\$\$
 
+Where the numerator and denominator are each a user-specified set of
+pathogens or subtypes (via
+`numerator_combination`/`denominator_combination`), and \\i\\, \\j\\
+index the pathogens included in each.
+
 This metric quantifies the **relative contribution** of specific
 pathogen(s) or strain(s) to the total disease burden. Key
 characteristics:
@@ -96,30 +101,32 @@ Other metrics:
 
 ``` r
 if (FALSE) { # interactive()
-  mod <- construct_model(
-    method = p_spline(),
-    pathogen_structure = multiple(
-      case_timeseries = sarscov2$cases,
-      time = sarscov2$date,
-      component_pathogen_timeseries = list(
-        alpha = sarscov2$alpha,
-        delta = sarscov2$delta,
-        omicron = sarscov2$omicron,
-        other = sarscov2$other))
+mod <- construct_model(
+  method = p_spline(),
+  pathogen_structure = multiple(
+    case_timeseries = sarscov2$cases,
+    time = sarscov2$date,
+    component_pathogen_timeseries = list(
+      alpha = sarscov2$alpha,
+      delta = sarscov2$delta,
+      omicron = sarscov2$omicron,
+      other = sarscov2$other
+    )
   )
+)
 
-  fit <- fit_model(mod)
-  prop <- proportion(fit)
+fit <- fit_model(mod)
+prop <- proportion(fit)
 
-  # or a unique combination, compared to all pathogens
-  prop2 <- proportion(fit,
-    numerator_combination = c("alpha", "delta", "omicron")
-  )
+# or a unique combination, compared to all pathogens
+prop2 <- proportion(fit,
+  numerator_combination = c("alpha", "delta", "omicron")
+)
 
-  # or a user-specified combination in both numerator and denominator
-  prop3 <- proportion(fit,
-    numerator_combination = "alpha",
-    denominator_combination = c("alpha", "delta", "omicron")
-  )
+# or a user-specified combination in both numerator and denominator
+prop3 <- proportion(fit,
+  numerator_combination = "alpha",
+  denominator_combination = c("alpha", "delta", "omicron")
+)
 }
 ```

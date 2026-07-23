@@ -45,14 +45,16 @@ ggplot2 plot output
 
 ``` r
 if (FALSE) { # interactive()
-  mod <- construct_model(
-    method = random_walk(),
-    pathogen_structure = single(
-      case_timeseries = sarscov2$cases,
-      time = sarscov2$date))
+mod <- construct_model(
+  method = random_walk(),
+  pathogen_structure = single(
+    case_timeseries = sarscov2$cases,
+    time = sarscov2$date
+  )
+)
 
-  fit <- fit_model(mod)
-  gr <- growth_rate(mod)
-  plot(gr)
+fit <- fit_model(mod)
+gr <- growth_rate(mod)
+plot(gr)
 }
 ```
