@@ -44,8 +44,9 @@ test_that("smoothing_structure() accepts priors for shared type", {
 
 test_that("smoothing_structure() accepts priors for independent type", {
   result <- smoothing_structure("independent",
-                                tau_mean = c(0.1, 0.2),
-                                tau_sd = c(1.0, 1.0))
+    tau_mean = c(0.1, 0.2),
+    tau_sd = c(1.0, 1.0)
+  )
   expect_s3_class(result, "EpiStrainDynamics.smoothing")
   expect_equal(result$smoothing_type, "independent")
   expect_equal(result$priors_provided, 2)
@@ -128,7 +129,8 @@ test_that("validate_smoothing_independent() errors when pathogen_names missing",
 test_that("validate_smoothing_independent() sets default priors when none provided", {
   obj <- smoothing_structure("independent")
   result <- EpiStrainDynamics:::validate_smoothing_independent(
-    obj, c("alpha", "delta", "omicron", "other"))
+    obj, c("alpha", "delta", "omicron", "other")
+  )
   expect_equal(result$tau_priors$mean, rep(0.0, 4))
   expect_equal(result$tau_priors$sd, rep(1.0, 4))
 })
@@ -136,18 +138,21 @@ test_that("validate_smoothing_independent() sets default priors when none provid
 test_that("validate_smoothing_independent() expands scalar priors to vector", {
   obj <- smoothing_structure("independent", tau_mean = 0.5, tau_sd = 1.0)
   result <- EpiStrainDynamics:::validate_smoothing_independent(
-    obj, c("alpha", "delta", "omicron", "other"))
+    obj, c("alpha", "delta", "omicron", "other")
+  )
   expect_length(result$tau_priors$mean, 4)
   expect_true(all(result$tau_priors$mean == 0.5))
 })
 
 test_that("validate_smoothing_independent() errors on dimension mismatch", {
   obj <- smoothing_structure("independent",
-                             tau_mean = c(0.1, 0.2),
-                             tau_sd = c(1.0, 1.0))
+    tau_mean = c(0.1, 0.2),
+    tau_sd = c(1.0, 1.0)
+  )
   expect_error(
     EpiStrainDynamics:::validate_smoothing_independent(
-      obj, c("alpha", "delta", "omicron", "other")),
+      obj, c("alpha", "delta", "omicron", "other")
+    ),
     "does not match number of pathogens"
   )
 })
@@ -222,4 +227,3 @@ test_that("validate_smoothing_correlated() preserves existing priors_provided = 
   result <- EpiStrainDynamics:::validate_smoothing_correlated(obj)
   expect_equal(result$tau_priors$mean, c(0.1, 0.2))
 })
-

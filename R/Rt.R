@@ -64,15 +64,17 @@
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #'
 #' @examplesIf interactive()
-#'   mod <- construct_model(
-#'     method = random_walk(),
-#'     pathogen_structure = single(
-#'       case_timeseries = sarscov2$cases,
-#'       time = sarscov2$date))
+#' mod <- construct_model(
+#'   method = random_walk(),
+#'   pathogen_structure = single(
+#'     case_timeseries = sarscov2$cases,
+#'     time = sarscov2$date
+#'   )
+#' )
 #'
-#'   fit <- fit_model(mod)
+#' fit <- fit_model(mod)
 #'
-#'   rt <- Rt(fit, gi_dist = function(x) 4*x*exp(-2*x), tau_max = 7)
+#' rt <- Rt(fit, gi_dist = function(x) 4 * x * exp(-2 * x), tau_max = 7)
 #'
 Rt <- function(fitted_model, gi_dist, tau_max = 7, ...) {
   #' @srrstats {G2.1, G2.2, G5.8, G5.8a, G5.8b, G5.8c, G5.8d} assertions on
@@ -88,8 +90,9 @@ Rt <- function(fitted_model, gi_dist, tau_max = 7, ...) {
 Rt.ps <- function(fitted_model, gi_dist, tau_max = 7, ...) {
   g_a <- sum(gi_dist(seq(0, tau_max - 1, 1)))
   out <- compute_multi_pathogen(fitted_model, tau_max, "Rt",
-                                threshold = 1, use_splines = TRUE,
-                                tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
+    threshold = 1, use_splines = TRUE,
+    tau_max = tau_max, gi_dist = gi_dist, g_a = g_a
+  )
   class(out) <- c("Rt", "EpiStrainDynamics.metric", class(out))
   out
 }
@@ -99,8 +102,9 @@ Rt.ps <- function(fitted_model, gi_dist, tau_max = 7, ...) {
 Rt.rw <- function(fitted_model, gi_dist, tau_max = 7, ...) {
   g_a <- sum(gi_dist(seq(0, tau_max - 1, 1)))
   out <- compute_multi_pathogen(fitted_model, tau_max, "Rt",
-                                threshold = 1, use_splines = FALSE,
-                                tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
+    threshold = 1, use_splines = FALSE,
+    tau_max = tau_max, gi_dist = gi_dist, g_a = g_a
+  )
   class(out) <- c("Rt", "EpiStrainDynamics.metric", class(out))
   out
 }
@@ -110,8 +114,9 @@ Rt.rw <- function(fitted_model, gi_dist, tau_max = 7, ...) {
 Rt.ps_single <- function(fitted_model, gi_dist, tau_max = 7, ...) {
   g_a <- sum(gi_dist(seq(0, tau_max - 1, 1)))
   out <- compute_single_pathogen(fitted_model, tau_max, "Rt",
-                                 threshold = 1, use_splines = TRUE,
-                                 tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
+    threshold = 1, use_splines = TRUE,
+    tau_max = tau_max, gi_dist = gi_dist, g_a = g_a
+  )
   class(out) <- c("Rt", "EpiStrainDynamics.metric", class(out))
   out
 }
@@ -121,8 +126,9 @@ Rt.ps_single <- function(fitted_model, gi_dist, tau_max = 7, ...) {
 Rt.rw_single <- function(fitted_model, gi_dist, tau_max = 7, ...) {
   g_a <- sum(gi_dist(seq(0, tau_max - 1, 1)))
   out <- compute_single_pathogen(fitted_model, tau_max, "Rt",
-                                 threshold = 1, use_splines = FALSE,
-                                 tau_max = tau_max, gi_dist = gi_dist, g_a = g_a)
+    threshold = 1, use_splines = FALSE,
+    tau_max = tau_max, gi_dist = gi_dist, g_a = g_a
+  )
   class(out) <- c("Rt", "EpiStrainDynamics.metric", class(out))
   out
 }
@@ -154,9 +160,8 @@ Rt.rw_single <- function(fitted_model, gi_dist, tau_max = 7, ...) {
 #'
 calc_rt_single <- function(a, time_idx, pathogen_idx, post, components,
                            tau_max, gi_dist, g_a) {
-
   R_denom <- matrix(0, nrow = length(a[, 1]), ncol = 1)
-  for(k in 0:(tau_max - 1)) {
+  for (k in 0:(tau_max - 1)) {
     R_denom <- R_denom + exp(a[, time_idx - k]) * gi_dist(k)
   }
 
@@ -184,9 +189,8 @@ calc_rt_single <- function(a, time_idx, pathogen_idx, post, components,
 #'
 calc_rt_individual <- function(a, time_idx, pathogen_idx, post, components,
                                tau_max, gi_dist, g_a) {
-
   R_denom <- matrix(0, nrow = dim(a)[1], ncol = 1)
-  for(k in 0:(tau_max - 1)) {
+  for (k in 0:(tau_max - 1)) {
     R_denom <- R_denom + exp(a[, pathogen_idx, time_idx - k]) * gi_dist(k)
   }
   exp(a[, pathogen_idx, time_idx]) / (R_denom / g_a)
@@ -213,9 +217,8 @@ calc_rt_individual <- function(a, time_idx, pathogen_idx, post, components,
 #'
 calc_rt_total <- function(a, time_idx, pathogen_idx, post, components,
                           tau_max, gi_dist, g_a) {
-
   R_denom <- matrix(0, nrow = dim(a)[1], ncol = 1)
-  for(k in 0:(tau_max - 1)) {
+  for (k in 0:(tau_max - 1)) {
     R_denom <- R_denom + rowSums(exp(a[, , time_idx - k])) * gi_dist(k)
   }
   rowSums(exp(a[, , time_idx])) / (R_denom / g_a)

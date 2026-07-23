@@ -1,4 +1,3 @@
-
 # Test helper function: check_list_columns
 test_that("check_list_columns detects list columns in data.frame", {
   # Create data with list column

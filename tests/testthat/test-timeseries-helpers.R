@@ -186,7 +186,6 @@ test_that("create_validated_timeseries() detects unordered time series", {
 
 test_that("create_validated_timeseries() warns when time arg provided for
           ts objects", {
-
   skip_if_not_installed("xts")
   skip_if_not_installed("timetk")
 
@@ -201,7 +200,7 @@ test_that("create_validated_timeseries() warns when time arg provided for
     create_validated_timeseries(
       data = xts_obj,
       columns = c("cases", "alpha"),
-      time_col = "date"  # This should trigger a warning
+      time_col = "date" # This should trigger a warning
     ),
     "time.*argument is ignored when data is a time series object"
   )
@@ -313,7 +312,7 @@ test_that("create_validated_timeseries() subsets to only required columns", {
   )
 
   expect_s3_class(result, "tbl_ts")
-  expect_equal(ncol(result), 3)  # date + cases + alpha
+  expect_equal(ncol(result), 3) # date + cases + alpha
   expect_true(all(c("date", "cases", "alpha") %in% names(result)))
   expect_false("extra1" %in% names(result))
   expect_false("extra2" %in% names(result))
@@ -345,7 +344,7 @@ test_that("create_validated_timeseries() validates numeric columns in dfs", {
   df <- data.frame(
     date = seq.Date(as.Date("2020-01-01"), by = "day", length.out = 10),
     cases = 1:10,
-    alpha = as.character(11:20)  # Non-numeric
+    alpha = as.character(11:20) # Non-numeric
   )
 
   expect_error(
@@ -366,7 +365,7 @@ test_that("create_validated_timeseries() validates num. columns for tsibbles", {
   tsbl_obj <- tsibble::tsibble(
     date = dates,
     cases = 1:10,
-    alpha = as.character(11:20),  # Non-numeric
+    alpha = as.character(11:20), # Non-numeric
     index = date
   )
 
@@ -386,7 +385,7 @@ test_that("intake functions fail with gaps in time series", {
   check_package_data()
 
   # Create data with gaps
-  test_data <- sarscov2[c(1:10, 12:20), ]  # Skip row 11
+  test_data <- sarscov2[c(1:10, 12:20), ] # Skip row 11
 
   expect_error(
     single(
@@ -402,7 +401,7 @@ test_that("intake functions fail with unordered time series", {
   check_package_data()
 
   # Create unordered data
-  test_data <- sarscov2[c(1:5, 10:6, 11:15), ]  # Swap order
+  test_data <- sarscov2[c(1:5, 10:6, 11:15), ] # Swap order
 
   expect_error(
     single(
@@ -418,7 +417,7 @@ test_that("multiple() fails with duplicate time indices", {
   check_package_data()
 
   # Create data with duplicate dates
-  test_data <- rbind(sarscov2[1:10, ], sarscov2[10, ])  # Duplicate last row
+  test_data <- rbind(sarscov2[1:10, ], sarscov2[10, ]) # Duplicate last row
 
   expect_error(
     multiple(

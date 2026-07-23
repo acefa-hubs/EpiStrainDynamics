@@ -82,7 +82,6 @@ test_that("fit_model() validates MCMC parameters", {
     fit_model(mod, n_iter = 0),
     "must be positive|invalid"
   )
-
 })
 
 # ==============================================================================
@@ -101,8 +100,10 @@ test_that("fit_model() returns correct structure for single pathogen RW", {
   )
 
   suppressWarnings(
-    fit <- fit_model(mod, n_iter = 500, n_chain = 1,
-                     verbose = FALSE, seed = 123)
+    fit <- fit_model(mod,
+      n_iter = 500, n_chain = 1,
+      verbose = FALSE, seed = 123
+    )
   )
 
   # Check output structure
@@ -129,8 +130,10 @@ test_that("fit_model() returns correct structure for single pathogen PS", {
   )
 
   suppressWarnings(
-    fit <- fit_model(mod, n_iter = 500, n_chain = 1,
-                     verbose = FALSE, seed = 123)
+    fit <- fit_model(mod,
+      n_iter = 500, n_chain = 1,
+      verbose = FALSE, seed = 123
+    )
   )
 
   expect_s3_class(fit, "EpiStrainDynamics.fit")
@@ -151,8 +154,10 @@ test_that("fit_model() returns correct structure for multiple pathogen RW", {
   )
 
   suppressWarnings(
-    fit <- fit_model(mod, n_iter = 500, n_chain = 1,
-                     verbose = FALSE, seed = 123)
+    fit <- fit_model(mod,
+      n_iter = 500, n_chain = 1,
+      verbose = FALSE, seed = 123
+    )
   )
 
   expect_s3_class(fit, "EpiStrainDynamics.fit")
@@ -173,8 +178,10 @@ test_that("fit_model() returns correct structure for multiple pathogen PS", {
   )
 
   suppressWarnings(
-    fit <- fit_model(mod, n_iter = 500, n_chain = 1,
-                     verbose = FALSE, seed = 123)
+    fit <- fit_model(mod,
+      n_iter = 500, n_chain = 1,
+      verbose = FALSE, seed = 123
+    )
   )
 
   expect_s3_class(fit, "EpiStrainDynamics.fit")
@@ -198,8 +205,10 @@ test_that("fit_model() respects n_chain parameter", {
   )
 
   suppressWarnings(
-    fit <- fit_model(mod, n_iter = 500, n_chain = 2,
-                     verbose = FALSE, seed = 123)
+    fit <- fit_model(mod,
+      n_iter = 500, n_chain = 2,
+      verbose = FALSE, seed = 123
+    )
   )
 
   # Check that fit has 2 chains
@@ -218,8 +227,10 @@ test_that("fit_model() respects n_iter parameter", {
   )
 
   suppressWarnings(
-    fit <- fit_model(mod, n_iter = 600, n_warmup = 200, n_chain = 1,
-                     verbose = FALSE, seed = 123)
+    fit <- fit_model(mod,
+      n_iter = 600, n_warmup = 200, n_chain = 1,
+      verbose = FALSE, seed = 123
+    )
   )
 
   # Check total iterations (warmup + sampling)
@@ -243,8 +254,10 @@ test_that("fitted model works with metric functions", {
   )
 
   suppressWarnings(
-    fit <- fit_model(mod, n_iter = 500, n_chain = 1,
-                     verbose = FALSE, seed = 123)
+    fit <- fit_model(mod,
+      n_iter = 500, n_chain = 1,
+      verbose = FALSE, seed = 123
+    )
   )
 
   # Should work with incidence
@@ -277,15 +290,17 @@ test_that("posterior samples have correct dimensions for single pathogen", {
   )
 
   suppressWarnings(
-    fit <- fit_model(mod, n_iter = 600, n_warmup = 200, n_chain = 2,
-                     verbose = FALSE, seed = 123)
+    fit <- fit_model(mod,
+      n_iter = 600, n_warmup = 200, n_chain = 2,
+      verbose = FALSE, seed = 123
+    )
   )
 
   post <- rstan::extract(fit$fit)
 
   # Check "a" dimension: [samples, time]
   expect_equal(length(dim(post$a)), 2)
-  expect_equal(ncol(post$a), 30)  # n_days
+  expect_equal(ncol(post$a), 30) # n_days
 
   # Check we have the right number of posterior samples
   # (n_iter - n_warmup) * n_chain = (600 - 200) * 2 = 800
@@ -305,16 +320,18 @@ test_that("posterior samples have correct dimensions for multiple pathogens", {
   )
 
   suppressWarnings(
-    fit <- fit_model(mod, n_iter = 600, n_warmup = 200, n_chain = 2,
-                     verbose = FALSE, seed = 123)
+    fit <- fit_model(mod,
+      n_iter = 600, n_warmup = 200, n_chain = 2,
+      verbose = FALSE, seed = 123
+    )
   )
 
   post <- rstan::extract(fit$fit)
 
   # Check "a" dimension: [samples, pathogens, time]
   expect_equal(length(dim(post$a)), 3)
-  expect_equal(dim(post$a)[2], 4)   # n_pathogens
-  expect_equal(dim(post$a)[3], 30)  # n_days
+  expect_equal(dim(post$a)[2], 4) # n_pathogens
+  expect_equal(dim(post$a)[3], 30) # n_days
   expect_equal(dim(post$a)[1], 800) # posterior samples
 })
 
@@ -335,8 +352,10 @@ test_that("verbose = FALSE suppresses Stan output", {
 
   # Capture output
   output <- capture.output(suppressWarnings(
-    fit <- fit_model(mod, n_iter = 500, n_chain = 1,
-                     verbose = FALSE, seed = 123)
+    fit <- fit_model(mod,
+      n_iter = 500, n_chain = 1,
+      verbose = FALSE, seed = 123
+    )
   ))
 
   # Should have minimal/no output

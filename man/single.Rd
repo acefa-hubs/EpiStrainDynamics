@@ -30,8 +30,8 @@ Single pathogen structure
 # Using a data frame
 single(
   data = sarscov2,
-  case_timeseries = 'cases',
-  time = 'date'
+  case_timeseries = "cases",
+  time = "date"
 )
 
 \dontshow{if (rlang::is_installed("xts")) withAutoprint(\{ # examplesIf}
@@ -39,7 +39,7 @@ single(
 sarscov2_xts <- xts::xts(sarscov2[, c("cases", "alpha")], order.by = sarscov2$date)
 single(
   data = sarscov2_xts,
-  case_timeseries = 'cases'
+  case_timeseries = "cases"
 )
 \dontshow{\}) # examplesIf}
 }

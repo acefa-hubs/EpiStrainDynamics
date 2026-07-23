@@ -54,70 +54,77 @@
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #'
 #' @examplesIf interactive()
-#'   mod <- construct_model(
-#'     method = p_spline(),
-#'     pathogen_structure = multiple(
-#'       case_timeseries = sarscov2$cases,
-#'       time = sarscov2$date,
-#'       component_pathogen_timeseries = list(
-#'         alpha = sarscov2$alpha,
-#'         delta = sarscov2$delta,
-#'         omicron = sarscov2$omicron,
-#'         other = sarscov2$other))
+#' mod <- construct_model(
+#'   method = p_spline(),
+#'   pathogen_structure = multiple(
+#'     case_timeseries = sarscov2$cases,
+#'     time = sarscov2$date,
+#'     component_pathogen_timeseries = list(
+#'       alpha = sarscov2$alpha,
+#'       delta = sarscov2$delta,
+#'       omicron = sarscov2$omicron,
+#'       other = sarscov2$other
+#'     )
 #'   )
+#' )
 #'
-#'   fit <- fit_model(mod)
-#'   prop <- proportion(fit)
+#' fit <- fit_model(mod)
+#' prop <- proportion(fit)
 #'
-#'   # or a unique combination, compared to all pathogens
-#'   prop2 <- proportion(fit,
-#'     numerator_combination = c("alpha", "delta", "omicron")
-#'   )
+#' # or a unique combination, compared to all pathogens
+#' prop2 <- proportion(fit,
+#'   numerator_combination = c("alpha", "delta", "omicron")
+#' )
 #'
-#'   # or a user-specified combination in both numerator and denominator
-#'   prop3 <- proportion(fit,
-#'     numerator_combination = "alpha",
-#'     denominator_combination = c("alpha", "delta", "omicron")
-#'   )
+#' # or a user-specified combination in both numerator and denominator
+#' prop3 <- proportion(fit,
+#'   numerator_combination = "alpha",
+#'   denominator_combination = c("alpha", "delta", "omicron")
+#' )
 proportion <- function(fitted_model,
                        numerator_combination = NULL,
                        denominator_combination = NULL, ...) {
-
   validate_class_inherits(fitted_model, "EpiStrainDynamics.fit")
   validate_class_inherits(fitted_model, c("ps", "rw"), require_all = FALSE)
 
   # Validate combination arguments
   pathogen_names <- unique(fitted_model$constructed_model$pathogen_names)
   num_idx <- validate_pathogen_combination(
-    numerator_combination, pathogen_names, "numerator_combination")
+    numerator_combination, pathogen_names, "numerator_combination"
+  )
   denom_idx <- validate_pathogen_combination(
-    denominator_combination, pathogen_names, "denominator_combination")
+    denominator_combination, pathogen_names, "denominator_combination"
+  )
 
   use_splines <- ifelse(inherits(fitted_model, "ps"), TRUE, FALSE)
   path_names <- fitted_model$constructed_model$pathogen_names
 
   if (is.null(numerator_combination)) {
     measure <- do.call(
-      rbind, lapply(num_idx,
-                    function(x) {
-                      compute_proportion(
-                        fitted_model,
-                        use_splines = use_splines,
-                        numerator_idx = x,
-                        denominator_idx = denom_idx
-                      )
-                    }
-      ))
+      rbind, lapply(
+        num_idx,
+        function(x) {
+          compute_proportion(
+            fitted_model,
+            use_splines = use_splines,
+            numerator_idx = x,
+            denominator_idx = denom_idx
+          )
+        }
+      )
+    )
   } else {
     measure <- compute_proportion(fitted_model,
-                                  use_splines = use_splines,
-                                  numerator_idx = num_idx,
-                                  denominator_idx = denom_idx)
+      use_splines = use_splines,
+      numerator_idx = num_idx,
+      denominator_idx = denom_idx
+    )
   }
 
-  out <- list(measure = measure,
-              fit = fitted_model$fit,
-              constructed_model = fitted_model$constructed_model
+  out <- list(
+    measure = measure,
+    fit = fitted_model$fit,
+    constructed_model = fitted_model$constructed_model
   )
   class(out) <- c("proportion", "EpiStrainDynamics.metric", class(out))
   out
@@ -140,17 +147,20 @@ proportion <- function(fitted_model,
 #'
 compute_proportion <- function(fitted_model,
                                use_splines, ...) {
-
   components <- get_model_components(fitted_model)
   post <- rstan::extract(components$fit)
 
   # Transform data if using splines
   if (use_splines) {
     time_seq <- seq_len(components$num_days)
-    B_true <- predict_B_true(time_seq, components$knots,
-                             components$spline_degree)
-    a <- transform_posterior_multi(post, B_true, components$num_path,
-                                   components$num_days)
+    B_true <- predict_B_true(
+      time_seq, components$knots,
+      components$spline_degree
+    )
+    a <- transform_posterior_multi(
+      post, B_true, components$num_path,
+      components$num_days
+    )
   } else {
     a <- post$a
   }
@@ -165,19 +175,25 @@ compute_proportion <- function(fitted_model,
   pathogen_idx_col <- rep(list(rep), nrow(time_grid))
 
   results <- calc_wrapper(time_grid, time_grid$time_idx,
-                          pathogen_idx_col = pathogen_idx_col,
-                          calc_proportion,
-                          a, post, components, extra_args, threshold = 0)
+    pathogen_idx_col = pathogen_idx_col,
+    calc_proportion,
+    a, post, components, extra_args, threshold = 0
+  )
 
   measure <- cbind(results,
-                   time = components$time[selection_index])
+    time = components$time[selection_index]
+  )
 
 
   measure$pathogen <- do.call(rbind, pathogen_idx_col)
   pathogen_names_vec <- components$pathogen_names
-  measure$pathogen <- apply(measure$pathogen, 1,
-                            function(x) paste(pathogen_names_vec[x],
-                                              collapse = ", ")
+  measure$pathogen <- apply(
+    measure$pathogen, 1,
+    function(x) {
+      paste(pathogen_names_vec[x],
+        collapse = ", "
+      )
+    }
   )
 
   return(measure)
@@ -203,7 +219,6 @@ compute_proportion <- function(fitted_model,
 #'
 calc_proportion <- function(a, time_idx, pathogen_idx, post, components,
                             numerator_idx, denominator_idx) {
-
   if (length(pathogen_idx) > 1) {
     num <- rowSums(exp(a[, pathogen_idx, time_idx]))
   } else {
@@ -212,5 +227,5 @@ calc_proportion <- function(a, time_idx, pathogen_idx, post, components,
 
   den <- rowSums(exp(a[, denominator_idx, time_idx]))
 
-  num/den
+  num / den
 }

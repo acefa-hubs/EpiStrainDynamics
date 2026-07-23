@@ -21,57 +21,93 @@ test_that("validate_positive_whole_number() returns invisible NULL", {
 })
 
 test_that("validate_positive_whole_number() rejects non-numeric inputs", {
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number("5", "test_param"),
-               "Argument test_param must be numeric")
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number(TRUE, "test_param"),
-               "Argument test_param must be numeric")
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number(list(5), "test_param"),
-               "Argument test_param must be numeric")
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number("5", "test_param"),
+    "Argument test_param must be numeric"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number(TRUE, "test_param"),
+    "Argument test_param must be numeric"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number(list(5), "test_param"),
+    "Argument test_param must be numeric"
+  )
 })
 
 test_that("validate_positive_whole_number() rejects multiple values", {
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number(c(1, 2, 3), "test_param"),
-               "Argument test_param must be a single value")
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number(c(5, 10), "test_param"),
-               "Argument test_param must be a single value")
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number(integer(0), "test_param"),
-               "Argument test_param must be a single value")
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number(c(1, 2, 3), "test_param"),
+    "Argument test_param must be a single value"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number(c(5, 10), "test_param"),
+    "Argument test_param must be a single value"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number(integer(0), "test_param"),
+    "Argument test_param must be a single value"
+  )
 })
 
 test_that("validate_positive_whole_number() rejects non-finite values", {
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number(NA, "test_param"),
-               "Argument test_param must be numeric")
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number(Inf, "test_param"),
-               "Argument test_param must be a finite number")
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number(-Inf, "test_param"),
-               "Argument test_param must be a finite number")
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number(NaN, "test_param"),
-               "Argument test_param must be a finite number")
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number(NA, "test_param"),
+    "Argument test_param must be numeric"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number(Inf, "test_param"),
+    "Argument test_param must be a finite number"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number(-Inf, "test_param"),
+    "Argument test_param must be a finite number"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number(NaN, "test_param"),
+    "Argument test_param must be a finite number"
+  )
 })
 
 test_that("validate_positive_whole_number() rejects non-whole numbers", {
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number(1.5, "test_param"),
-               "Argument test_param must be a whole number")
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number(3.14, "test_param"),
-               "Argument test_param must be a whole number")
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number(-2.7, "test_param"),
-               "Argument test_param must be a whole number")
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number(1.5, "test_param"),
+    "Argument test_param must be a whole number"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number(3.14, "test_param"),
+    "Argument test_param must be a whole number"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number(-2.7, "test_param"),
+    "Argument test_param must be a whole number"
+  )
 })
 
 test_that("validate_positive_whole_number() rejects non-positive numbers", {
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number(0, "test_param"),
-               "Argument test_param must be a positive number")
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number(-1, "test_param"),
-               "Argument test_param must be a positive number")
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number(-10, "test_param"),
-               "Argument test_param must be a positive number")
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number(0, "test_param"),
+    "Argument test_param must be a positive number"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number(-1, "test_param"),
+    "Argument test_param must be a positive number"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number(-10, "test_param"),
+    "Argument test_param must be a positive number"
+  )
 })
 
 test_that("validate_positive_whole_number() uses correct argument name in errors", {
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number(-1, "spline_degree"),
-               "Argument spline_degree must be a positive number")
-  expect_error(EpiStrainDynamics:::validate_positive_whole_number("abc", "days_per_knot"),
-               "Argument days_per_knot must be numeric")
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number(-1, "spline_degree"),
+    "Argument spline_degree must be a positive number"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_positive_whole_number("abc", "days_per_knot"),
+    "Argument days_per_knot must be numeric"
+  )
 })
 
 # ==============================================================================
@@ -94,35 +130,49 @@ test_that("validate_class_inherits() handles inheritance", {
 })
 
 test_that("validate_class_inherits() rejects wrong class", {
-  expect_error(EpiStrainDynamics:::validate_class_inherits("string", "data.frame"),
-               "Input must be of class data.frame but got class: character")
-  expect_error(EpiStrainDynamics:::validate_class_inherits(1:5, "matrix"),
-               "Input must be of class matrix but got class: integer")
-  expect_error(EpiStrainDynamics:::validate_class_inherits(list(a = 1), "data.frame"),
-               "Input must be of class data.frame but got class: list")
+  expect_error(
+    EpiStrainDynamics:::validate_class_inherits("string", "data.frame"),
+    "Input must be of class data.frame but got class: character"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_class_inherits(1:5, "matrix"),
+    "Input must be of class matrix but got class: integer"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_class_inherits(list(a = 1), "data.frame"),
+    "Input must be of class data.frame but got class: list"
+  )
 })
 
 test_that("validate_class_inherits() handles require_all = FALSE", {
   obj <- structure(list(a = 1), class = c("classA", "classB"))
   expect_silent(EpiStrainDynamics:::validate_class_inherits(obj,
-                                                            c("classA", "classC"),
-                                                            require_all = FALSE))
-  expect_error(EpiStrainDynamics:::validate_class_inherits(obj,
-                                                           c("classX", "classY"),
-                                                           require_all = FALSE),
-               "Input must inherit from at least one of")
+    c("classA", "classC"),
+    require_all = FALSE
+  ))
+  expect_error(
+    EpiStrainDynamics:::validate_class_inherits(obj,
+      c("classX", "classY"),
+      require_all = FALSE
+    ),
+    "Input must inherit from at least one of"
+  )
 })
 
 test_that("validate_class_inherits() handles multiple required classes", {
   obj <- structure(list(a = 1), class = c("classA", "classB"))
   expect_silent(EpiStrainDynamics:::validate_class_inherits(obj, c("classA", "classB")))
-  expect_error(EpiStrainDynamics:::validate_class_inherits(obj, c("classA", "classC")),
-               "Input must inherit from all classes")
+  expect_error(
+    EpiStrainDynamics:::validate_class_inherits(obj, c("classA", "classC")),
+    "Input must inherit from all classes"
+  )
 })
 
 test_that("validate_class_inherits() errors on empty class_names", {
-  expect_error(EpiStrainDynamics:::validate_class_inherits(1:5, character(0)),
-               "must be a non-empty character vector")
+  expect_error(
+    EpiStrainDynamics:::validate_class_inherits(1:5, character(0)),
+    "must be a non-empty character vector"
+  )
 })
 
 # ==============================================================================
@@ -150,38 +200,58 @@ test_that("validate_priors() accepts NULL priors", {
 })
 
 test_that("validate_priors() errors when only one of mean/sd provided", {
-  expect_error(EpiStrainDynamics:::validate_priors(mean = 0.5, sd = NULL),
-               "both mean and sd must be provided")
-  expect_error(EpiStrainDynamics:::validate_priors(mean = NULL, sd = 1.0),
-               "both mean and sd must be provided")
+  expect_error(
+    EpiStrainDynamics:::validate_priors(mean = 0.5, sd = NULL),
+    "both mean and sd must be provided"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_priors(mean = NULL, sd = 1.0),
+    "both mean and sd must be provided"
+  )
 })
 
 test_that("validate_priors() errors on non-numeric priors", {
-  expect_error(EpiStrainDynamics:::validate_priors(mean = "a", sd = 1.0),
-               "must be numeric")
-  expect_error(EpiStrainDynamics:::validate_priors(mean = 0.5, sd = "b"),
-               "must be numeric")
+  expect_error(
+    EpiStrainDynamics:::validate_priors(mean = "a", sd = 1.0),
+    "must be numeric"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_priors(mean = 0.5, sd = "b"),
+    "must be numeric"
+  )
 })
 
 test_that("validate_priors() errors on NA values", {
-  expect_error(EpiStrainDynamics:::validate_priors(mean = NA_real_, sd = 1.0),
-               "cannot contain NA values")
-  expect_error(EpiStrainDynamics:::validate_priors(mean = 0.5, sd = NA_real_),
-               "cannot contain NA values")
+  expect_error(
+    EpiStrainDynamics:::validate_priors(mean = NA_real_, sd = 1.0),
+    "cannot contain NA values"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_priors(mean = 0.5, sd = NA_real_),
+    "cannot contain NA values"
+  )
 })
 
 test_that("validate_priors() errors when mean and sd have different lengths", {
-  expect_error(EpiStrainDynamics:::validate_priors(mean = c(0.1, 0.2), sd = 1.0),
-               "must have the same length")
+  expect_error(
+    EpiStrainDynamics:::validate_priors(mean = c(0.1, 0.2), sd = 1.0),
+    "must have the same length"
+  )
 })
 
 test_that("validate_priors() errors on negative values", {
-  expect_error(EpiStrainDynamics:::validate_priors(mean = -0.5, sd = 1.0),
-               "must be positive")
-  expect_error(EpiStrainDynamics:::validate_priors(mean = 0.5, sd = -1.0),
-               "must be positive")
-  expect_error(EpiStrainDynamics:::validate_priors(mean = 0.5, sd = 0),
-               "must be positive")
+  expect_error(
+    EpiStrainDynamics:::validate_priors(mean = -0.5, sd = 1.0),
+    "must be positive"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_priors(mean = 0.5, sd = -1.0),
+    "must be positive"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_priors(mean = 0.5, sd = 0),
+    "must be positive"
+  )
 })
 
 # ==============================================================================
@@ -237,28 +307,35 @@ test_that("validate_pathogen_combination accepts valid inputs", {
   pathogen_names <- c("alpha", "delta", "omicron", "other")
 
   expect_silent(EpiStrainDynamics:::validate_pathogen_combination(
-    NULL, pathogen_names, "numerator_combination"))
+    NULL, pathogen_names, "numerator_combination"
+  ))
   expect_silent(EpiStrainDynamics:::validate_pathogen_combination(
-    NULL, pathogen_names, "denominator_combination"))
+    NULL, pathogen_names, "denominator_combination"
+  ))
   expect_silent(EpiStrainDynamics:::validate_pathogen_combination(
-    "alpha", pathogen_names, "numerator_combination"))
+    "alpha", pathogen_names, "numerator_combination"
+  ))
   expect_silent(EpiStrainDynamics:::validate_pathogen_combination(
-    c("alpha", "delta"), pathogen_names, "denominator_combination"))
+    c("alpha", "delta"), pathogen_names, "denominator_combination"
+  ))
 })
 
 test_that("validate_pathogen_combination returns correct indices", {
   pathogen_names <- c("alpha", "delta", "omicron", "other")
 
   result <- EpiStrainDynamics:::validate_pathogen_combination(
-    NULL, pathogen_names, "numerator_combination")
+    NULL, pathogen_names, "numerator_combination"
+  )
   expect_equal(result, 1:4)
 
   result <- EpiStrainDynamics:::validate_pathogen_combination(
-    "delta", pathogen_names, "numerator_combination")
+    "delta", pathogen_names, "numerator_combination"
+  )
   expect_equal(result, 2L)
 
   result <- EpiStrainDynamics:::validate_pathogen_combination(
-    c("omicron", "alpha"), pathogen_names, "numerator_combination")
+    c("omicron", "alpha"), pathogen_names, "numerator_combination"
+  )
   expect_equal(result, c(3L, 1L))
 })
 
@@ -267,12 +344,14 @@ test_that("validate_pathogen_combination rejects invalid pathogen names", {
 
   expect_error(
     EpiStrainDynamics:::validate_pathogen_combination(
-      "beta", pathogen_names, "denominator_combination"),
+      "beta", pathogen_names, "denominator_combination"
+    ),
     class = "rlang_error"
   )
   expect_error(
     EpiStrainDynamics:::validate_pathogen_combination(
-      c("alpha", "beta"), pathogen_names, "numerator_combination"),
+      c("alpha", "beta"), pathogen_names, "numerator_combination"
+    ),
     class = "rlang_error"
   )
 })

@@ -16,66 +16,66 @@ create_test_ts_data <- function(class_type = "data.frame") {
 
   # Convert to requested class type
   switch(class_type,
-         "data.frame" = df,
-         "data.table" = {
-           if (requireNamespace("data.table", quietly = TRUE)) {
-             data.table::as.data.table(df)
-           } else {
-             skip(paste(class_type, "package not available"))
-           }
-         },
-         "tibble" = {
-           if (requireNamespace("tibble", quietly = TRUE)) {
-             tibble::as_tibble(df)
-           } else {
-             skip(paste(class_type, "package not available"))
-           }
-         },
-         "ts" = {
-           # Convert to ts format (univariate time series)
-           # For ts, we can only have one series, so return just cases
-           ts(df$cases, start = 1, frequency = 1)
-         },
-         "mts" = {
-           # Multivariate time series
-           ts(df[, -1], start = 1, frequency = 1)
-         },
-         "xts" = {
-           if (requireNamespace("xts", quietly = TRUE)) {
-             xts::xts(df[, -1], order.by = df$date)
-           } else {
-             skip(paste(class_type, "package not available"))
-           }
-         },
-         "zoo" = {
-           if (requireNamespace("zoo", quietly = TRUE)) {
-             zoo::zoo(df[, -1], order.by = df$date)
-           } else {
-             skip(paste(class_type, "package not available"))
-           }
-         },
-         "zooreg" = {
-           if (requireNamespace("zoo", quietly = TRUE)) {
-             zoo::zooreg(df[, -1], start = as.Date("2020-01-01"), frequency = 1)
-           } else {
-             skip(paste(class_type, "package not available"))
-           }
-         },
-         "tsibble" = {
-           if (requireNamespace("tsibble", quietly = TRUE)) {
-             tsibble::as_tsibble(df, index = date)
-           } else {
-             skip(paste(class_type, "package not available"))
-           }
-         },
-         "tibbletime" = {
-           if (requireNamespace("tibbletime", quietly = TRUE)) {
-             tibbletime::as_tbl_time(df, index = date)
-           } else {
-             skip(paste(class_type, "package not available"))
-           }
-         },
-         stop("Unknown class type")
+    "data.frame" = df,
+    "data.table" = {
+      if (requireNamespace("data.table", quietly = TRUE)) {
+        data.table::as.data.table(df)
+      } else {
+        skip(paste(class_type, "package not available"))
+      }
+    },
+    "tibble" = {
+      if (requireNamespace("tibble", quietly = TRUE)) {
+        tibble::as_tibble(df)
+      } else {
+        skip(paste(class_type, "package not available"))
+      }
+    },
+    "ts" = {
+      # Convert to ts format (univariate time series)
+      # For ts, we can only have one series, so return just cases
+      ts(df$cases, start = 1, frequency = 1)
+    },
+    "mts" = {
+      # Multivariate time series
+      ts(df[, -1], start = 1, frequency = 1)
+    },
+    "xts" = {
+      if (requireNamespace("xts", quietly = TRUE)) {
+        xts::xts(df[, -1], order.by = df$date)
+      } else {
+        skip(paste(class_type, "package not available"))
+      }
+    },
+    "zoo" = {
+      if (requireNamespace("zoo", quietly = TRUE)) {
+        zoo::zoo(df[, -1], order.by = df$date)
+      } else {
+        skip(paste(class_type, "package not available"))
+      }
+    },
+    "zooreg" = {
+      if (requireNamespace("zoo", quietly = TRUE)) {
+        zoo::zooreg(df[, -1], start = as.Date("2020-01-01"), frequency = 1)
+      } else {
+        skip(paste(class_type, "package not available"))
+      }
+    },
+    "tsibble" = {
+      if (requireNamespace("tsibble", quietly = TRUE)) {
+        tsibble::as_tsibble(df, index = date)
+      } else {
+        skip(paste(class_type, "package not available"))
+      }
+    },
+    "tibbletime" = {
+      if (requireNamespace("tibbletime", quietly = TRUE)) {
+        tibbletime::as_tbl_time(df, index = date)
+      } else {
+        skip(paste(class_type, "package not available"))
+      }
+    },
+    stop("Unknown class type")
   )
 }
 
@@ -213,8 +213,10 @@ test_that("multiple() returns expected structure with all classes", {
 
   expect_s3_class(result_df, "EpiStrainDynamics.pathogen_structure")
   expect_equal(result_df$pathogen_structure, "multiple")
-  expect_equal(result_df$pathogen_names,
-               c("alpha", "delta", "omicron", "other"))
+  expect_equal(
+    result_df$pathogen_names,
+    c("alpha", "delta", "omicron", "other")
+  )
   expect_type(result_df$data, "list")
   expect_named(result_df$data, c("case_timeseries", "component_pathogens"))
   expect_length(result_df$data$case_timeseries, 100)
@@ -231,8 +233,10 @@ test_that("multiple() returns expected structure with all classes", {
 
     expect_s3_class(result_xts, "EpiStrainDynamics.pathogen_structure")
     expect_equal(result_xts$pathogen_structure, "multiple")
-    expect_equal(result_xts$pathogen_names,
-                 c("alpha", "delta", "omicron", "other"))
+    expect_equal(
+      result_xts$pathogen_names,
+      c("alpha", "delta", "omicron", "other")
+    )
     expect_equal(dim(result_xts$data$component_pathogens), c(4, 100))
   }
 })
@@ -251,58 +255,58 @@ create_subtyped_test_data <- function(class_type = "data.frame") {
 
   # Convert to requested class type
   switch(class_type,
-         "data.frame" = df,
-         "data.table" = {
-           if (requireNamespace("data.table", quietly = TRUE)) {
-             data.table::as.data.table(df)
-           } else {
-             skip(paste(class_type, "package not available"))
-           }
-         },
-         "tibble" = {
-           if (requireNamespace("tibble", quietly = TRUE)) {
-             tibble::as_tibble(df)
-           } else {
-             skip(paste(class_type, "package not available"))
-           }
-         },
-         "mts" = ts(df[, -1], start = 1, frequency = 1),
-         "xts" = {
-           if (requireNamespace("xts", quietly = TRUE)) {
-             xts::xts(df[, -1], order.by = df$date)
-           } else {
-             skip(paste(class_type, "package not available"))
-           }
-         },
-         "zoo" = {
-           if (requireNamespace("zoo", quietly = TRUE)) {
-             zoo::zoo(df[, -1], order.by = df$date)
-           } else {
-             skip(paste(class_type, "package not available"))
-           }
-         },
-         "zooreg" = {
-           if (requireNamespace("zoo", quietly = TRUE)) {
-             zoo::zooreg(df[, -1], start = as.Date("2020-01-01"), frequency = 1)
-           } else {
-             skip(paste(class_type, "package not available"))
-           }
-         },
-         "tsibble" = {
-           if (requireNamespace("tsibble", quietly = TRUE)) {
-             tsibble::as_tsibble(df, index = date)
-           } else {
-             skip(paste(class_type, "package not available"))
-           }
-         },
-         "tibbletime" = {
-           if (requireNamespace("tibbletime", quietly = TRUE)) {
-             tibbletime::as_tbl_time(df, index = date)
-           } else {
-             skip(paste(class_type, "package not available"))
-           }
-         },
-         stop("Unknown class type")
+    "data.frame" = df,
+    "data.table" = {
+      if (requireNamespace("data.table", quietly = TRUE)) {
+        data.table::as.data.table(df)
+      } else {
+        skip(paste(class_type, "package not available"))
+      }
+    },
+    "tibble" = {
+      if (requireNamespace("tibble", quietly = TRUE)) {
+        tibble::as_tibble(df)
+      } else {
+        skip(paste(class_type, "package not available"))
+      }
+    },
+    "mts" = ts(df[, -1], start = 1, frequency = 1),
+    "xts" = {
+      if (requireNamespace("xts", quietly = TRUE)) {
+        xts::xts(df[, -1], order.by = df$date)
+      } else {
+        skip(paste(class_type, "package not available"))
+      }
+    },
+    "zoo" = {
+      if (requireNamespace("zoo", quietly = TRUE)) {
+        zoo::zoo(df[, -1], order.by = df$date)
+      } else {
+        skip(paste(class_type, "package not available"))
+      }
+    },
+    "zooreg" = {
+      if (requireNamespace("zoo", quietly = TRUE)) {
+        zoo::zooreg(df[, -1], start = as.Date("2020-01-01"), frequency = 1)
+      } else {
+        skip(paste(class_type, "package not available"))
+      }
+    },
+    "tsibble" = {
+      if (requireNamespace("tsibble", quietly = TRUE)) {
+        tsibble::as_tsibble(df, index = date)
+      } else {
+        skip(paste(class_type, "package not available"))
+      }
+    },
+    "tibbletime" = {
+      if (requireNamespace("tibbletime", quietly = TRUE)) {
+        tibbletime::as_tbl_time(df, index = date)
+      } else {
+        skip(paste(class_type, "package not available"))
+      }
+    },
+    stop("Unknown class type")
   )
 }
 
@@ -373,8 +377,10 @@ test_that("subtyped() returns expected structure with all classes", {
 
   expect_s3_class(result_df, "EpiStrainDynamics.pathogen_structure")
   expect_equal(result_df$pathogen_structure, "subtyped")
-  expect_equal(result_df$pathogen_names,
-               c("inf_H1N1", "inf_H3N2", "inf_B", "other"))
+  expect_equal(
+    result_df$pathogen_names,
+    c("inf_H1N1", "inf_H3N2", "inf_B", "other")
+  )
   expect_type(result_df$data, "list")
   expect_named(result_df$data, c("case_timeseries", "component_pathogens", "influenzaA_subtyped"))
   expect_length(result_df$data$case_timeseries, 100)
@@ -394,8 +400,10 @@ test_that("subtyped() returns expected structure with all classes", {
 
     expect_s3_class(result_xts, "EpiStrainDynamics.pathogen_structure")
     expect_equal(result_xts$pathogen_structure, "subtyped")
-    expect_equal(result_xts$pathogen_names,
-                 c("inf_H1N1", "inf_H3N2", "inf_B", "other"))
+    expect_equal(
+      result_xts$pathogen_names,
+      c("inf_H1N1", "inf_H3N2", "inf_B", "other")
+    )
     expect_equal(dim(result_xts$data$component_pathogens), c(3, 100))
     expect_equal(dim(result_xts$data$influenzaA_subtyped), c(2, 100))
   }
@@ -422,8 +430,10 @@ test_that("intake functions work with construct_model()", {
           data = test_data,
           case_timeseries = "cases",
           time = "date",
-          component_pathogen_timeseries = c("alpha", "delta",
-                                            "omicron", "other")
+          component_pathogen_timeseries = c(
+            "alpha", "delta",
+            "omicron", "other"
+          )
         ),
         smoothing_params = smoothing_structure(
           "independent",
@@ -447,8 +457,10 @@ test_that("intake functions work with construct_model()", {
         pathogen_structure = multiple(
           data = test_xts,
           case_timeseries = "cases",
-          component_pathogen_timeseries = c("alpha", "delta",
-                                            "omicron", "other")
+          component_pathogen_timeseries = c(
+            "alpha", "delta",
+            "omicron", "other"
+          )
         ),
         smoothing_params = smoothing_structure(
           "independent",
@@ -504,13 +516,13 @@ test_that("intake functions preserve data integrity across conversions", {
       original_df$cases,
       info = paste("Values should be preserved for", class_type)
     )
-
   }
 
   # Test with time series object
   if (requireNamespace("xts", quietly = TRUE)) {
     test_xts <- xts::xts(original_df[, c("cases", "alpha")],
-                         order.by = original_df$date)
+      order.by = original_df$date
+    )
 
     result_xts <- single(
       data = test_xts,

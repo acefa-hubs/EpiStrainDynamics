@@ -47,22 +47,24 @@
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #'
 #' @examplesIf interactive()
-#'   mod <- construct_model(
-#'     method = random_walk(),
-#'     pathogen_structure = single(
-#'       case_timeseries = sarscov2$cases,
-#'       time = sarscov2$date))
+#' mod <- construct_model(
+#'   method = random_walk(),
+#'   pathogen_structure = single(
+#'     case_timeseries = sarscov2$cases,
+#'     time = sarscov2$date
+#'   )
+#' )
 #'
-#'   fit <- fit_model(mod)
+#' fit <- fit_model(mod)
 #'
-#'   # Use model's dow setting (default)
-#'   inc <- incidence(fit)
+#' # Use model's dow setting (default)
+#' inc <- incidence(fit)
 #'
-#'   # Explicitly exclude dow effects
-#'   inc_no_dow <- incidence(fit, dow = FALSE)
+#' # Explicitly exclude dow effects
+#' inc_no_dow <- incidence(fit, dow = FALSE)
 #'
-#'   # Explicitly include dow effects (if model has them)
-#'   inc_with_dow <- incidence(fit, dow = TRUE)
+#' # Explicitly include dow effects (if model has them)
+#' inc_with_dow <- incidence(fit, dow = TRUE)
 incidence <- function(fitted_model, dow = NULL, ...) {
   validate_class_inherits(fitted_model, "EpiStrainDynamics.fit")
   UseMethod("incidence")
@@ -75,7 +77,8 @@ incidence.ps <- function(fitted_model, dow = NULL, ...) {
   dow <- resolve_dow(fitted_model, dow)
 
   out <- compute_multi_pathogen(fitted_model, 1, "incidence",
-                                threshold = 0, use_splines = TRUE, dow)
+    threshold = 0, use_splines = TRUE, dow
+  )
   class(out) <- c("incidence", "EpiStrainDynamics.metric", class(out))
   out
 }
@@ -87,7 +90,8 @@ incidence.rw <- function(fitted_model, dow = NULL, ...) {
   dow <- resolve_dow(fitted_model, dow)
 
   out <- compute_multi_pathogen(fitted_model, 1, "incidence",
-                                threshold = 0, use_splines = FALSE, dow)
+    threshold = 0, use_splines = FALSE, dow
+  )
   class(out) <- c("incidence", "EpiStrainDynamics.metric", class(out))
   out
 }
@@ -99,7 +103,8 @@ incidence.ps_single <- function(fitted_model, dow = NULL, ...) {
   dow <- resolve_dow(fitted_model, dow)
 
   out <- compute_single_pathogen(fitted_model, 1, "incidence",
-                                 threshold = 0, use_splines = TRUE, dow)
+    threshold = 0, use_splines = TRUE, dow
+  )
   class(out) <- c("incidence", "EpiStrainDynamics.metric", class(out))
   out
 }
@@ -111,7 +116,8 @@ incidence.rw_single <- function(fitted_model, dow = NULL, ...) {
   dow <- resolve_dow(fitted_model, dow)
 
   out <- compute_single_pathogen(fitted_model, 1, "incidence",
-                                 threshold = 0, use_splines = FALSE, dow)
+    threshold = 0, use_splines = FALSE, dow
+  )
   class(out) <- c("incidence", "EpiStrainDynamics.metric", class(out))
   out
 }

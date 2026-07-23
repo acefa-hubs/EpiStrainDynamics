@@ -108,8 +108,10 @@ test_that("diagnose_model() returns correct structure", {
   expect_type(diag, "list")
 
   # Should have expected components
-  expect_named(diag, c("convergence", "rhat_issues", "eff_sample_issues",
-                       "max_rhat", "min_neff", "summary"))
+  expect_named(diag, c(
+    "convergence", "rhat_issues", "eff_sample_issues",
+    "max_rhat", "min_neff", "summary"
+  ))
 })
 
 test_that("diagnose_model() convergence is logical", {
@@ -158,8 +160,10 @@ test_that("diagnose_model() summary is a matrix", {
   expect_true(is.matrix(diag$summary))
 
   # Should have standard Stan summary columns
-  expected_cols <- c("mean", "se_mean", "sd", "2.5%", "25%", "50%",
-                     "75%", "97.5%", "n_eff", "Rhat")
+  expected_cols <- c(
+    "mean", "se_mean", "sd", "2.5%", "25%", "50%",
+    "75%", "97.5%", "n_eff", "Rhat"
+  )
   expect_true(all(expected_cols %in% colnames(diag$summary)))
 })
 
@@ -170,8 +174,10 @@ test_that("diagnose_model() summary is a matrix", {
 test_that("diagnose_model() convergence logic is correct", {
   skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
 
-  diag <- diagnose_model(fit_rw_single, rhat_threshold = 1.1,
-                         eff_sample_threshold = 100)
+  diag <- diagnose_model(fit_rw_single,
+    rhat_threshold = 1.1,
+    eff_sample_threshold = 100
+  )
 
   # If convergence is TRUE, there should be no issues
   if (diag$convergence) {
@@ -247,8 +253,10 @@ test_that("diagnose_model() min_neff is positive", {
 test_that("diagnose_model() identifies parameter names in issues", {
   skip_if_not(exists("fit_rw_single"), "Cached fitted models not available")
 
-  diag <- diagnose_model(fit_rw_single, rhat_threshold = 1.01,
-                         eff_sample_threshold = 500)
+  diag <- diagnose_model(fit_rw_single,
+    rhat_threshold = 1.01,
+    eff_sample_threshold = 500
+  )
 
   # If there are issues, they should be named parameters
   if (length(diag$rhat_issues) > 0) {
@@ -337,8 +345,10 @@ test_that("diagnose_model() produces consistent output across model types", {
   diag_ps_multi <- diagnose_model(fit_ps_multi)
 
   # All should have the same structure
-  expected_names <- c("convergence", "rhat_issues", "eff_sample_issues",
-                      "max_rhat", "min_neff", "summary")
+  expected_names <- c(
+    "convergence", "rhat_issues", "eff_sample_issues",
+    "max_rhat", "min_neff", "summary"
+  )
 
   expect_named(diag_rw_single, expected_names)
   expect_named(diag_ps_single, expected_names)

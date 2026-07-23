@@ -105,9 +105,10 @@ expand_pathogen_grid <- function(time_grid, pathogen_names) {
 predict_B_true <- function(time_seq, knots, spline_degree) {
   X <- as.numeric(time_seq)
   B_true <- splines::bs(seq(knots[1], knots[length(knots)], 1),
-                        knots = knots[2:(length(knots)-1)],
-                        degree = spline_degree,
-                        intercept = TRUE)
+    knots = knots[2:(length(knots) - 1)],
+    degree = spline_degree,
+    intercept = TRUE
+  )
   t(stats::predict(B_true, X))
 }
 
@@ -127,8 +128,8 @@ predict_B_true <- function(time_seq, knots, spline_degree) {
 #'
 transform_posterior_single <- function(post, B_true, num_days) {
   a <- array(data = NA, dim = c(nrow(post$a), num_days))
-  for(k in seq_len(nrow(post$a))) {
-    a[k,] <- as.array(post$a[k,]) %*% B_true
+  for (k in seq_len(nrow(post$a))) {
+    a[k, ] <- as.array(post$a[k, ]) %*% B_true
   }
   a
 }
@@ -150,9 +151,9 @@ transform_posterior_single <- function(post, B_true, num_days) {
 #'
 transform_posterior_multi <- function(post, B_true, num_path, num_days) {
   a <- array(data = NA, dim = c(nrow(post$a), num_path, num_days))
-  for(j in 1:num_path) {
-    for(k in seq_len(nrow(post$a))) {
-      a[k,j,] <- as.array(post$a[k,j,]) %*% B_true
+  for (j in 1:num_path) {
+    for (k in seq_len(nrow(post$a))) {
+      a[k, j, ] <- as.array(post$a[k, j, ]) %*% B_true
     }
   }
   a
@@ -181,17 +182,20 @@ transform_posterior_multi <- function(post, B_true, num_path, num_days) {
 compute_multi_pathogen <- function(fitted_model, start_idx, measure,
                                    threshold = 0, use_splines = FALSE,
                                    ...) {
-
   components <- get_model_components(fitted_model)
   post <- rstan::extract(components$fit)
 
   # Transform data if using splines
   if (use_splines) {
     time_seq <- seq_len(components$num_days)
-    B_true <- predict_B_true(time_seq, components$knots,
-                             components$spline_degree)
-    a <- transform_posterior_multi(post, B_true, components$num_path,
-                                   components$num_days)
+    B_true <- predict_B_true(
+      time_seq, components$knots,
+      components$spline_degree
+    )
+    a <- transform_posterior_multi(
+      post, B_true, components$num_path,
+      components$num_days
+    )
   } else {
     a <- post$a
   }
@@ -203,8 +207,7 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
   # Individual pathogen results
   pathogen_grid <- expand_pathogen_grid(time_grid, components$pathogen_names)
 
-  calc_individual_pathogen_fn <- switch(
-    measure,
+  calc_individual_pathogen_fn <- switch(measure,
     "incidence" = calc_incidence_individual,
     "growth_rate" = calc_growth_individual,
     "Rt" = calc_rt_individual,
@@ -212,13 +215,14 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
       cli::cli_abort("Invalid option provided: '{measure}'.")
     }
   )
-  pathogen_results <- calc_wrapper(pathogen_grid, pathogen_grid$time_idx,
-                                   pathogen_grid$pathogen_idx,
-                                   calc_individual_pathogen_fn,
-                                   a, post, components, extra_args, threshold)
+  pathogen_results <- calc_wrapper(
+    pathogen_grid, pathogen_grid$time_idx,
+    pathogen_grid$pathogen_idx,
+    calc_individual_pathogen_fn,
+    a, post, components, extra_args, threshold
+  )
 
-  calc_total_pathogens_fn <- switch(
-    measure,
+  calc_total_pathogens_fn <- switch(measure,
     "incidence" = calc_incidence_total,
     "growth_rate" = calc_growth_total,
     "Rt" = calc_rt_total,
@@ -227,9 +231,10 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
     }
   )
   total_results <- calc_wrapper(time_grid, time_grid$time_idx,
-                                pathogen_idx_col = rep(list(NULL), nrow(time_grid)),
-                                calc_total_pathogens_fn,
-                                a, post, components, extra_args, threshold)
+    pathogen_idx_col = rep(list(NULL), nrow(time_grid)),
+    calc_total_pathogens_fn,
+    a, post, components, extra_args, threshold
+  )
   total_results$pathogen <- "Total"
 
   measure_out <- dplyr::bind_rows(pathogen_results, total_results) |>
@@ -244,9 +249,11 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
     key = "pathogen"
   )
 
-  out <- list(measure = tsbl_measure,
-              fit = fitted_model$fit,
-              constructed_model = fitted_model$constructed_model)
+  out <- list(
+    measure = tsbl_measure,
+    fit = fitted_model$fit,
+    constructed_model = fitted_model$constructed_model
+  )
 }
 
 #' Generic Computation Engine for Single Pathogen Analysis
@@ -269,7 +276,6 @@ compute_multi_pathogen <- function(fitted_model, start_idx, measure,
 #'
 compute_single_pathogen <- function(fitted_model, start_idx, measure,
                                     threshold = 0, use_splines = FALSE, ...) {
-
   components <- get_model_components(fitted_model)
   post <- rstan::extract(components$fit)
 
@@ -288,8 +294,7 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
   selection_index <- start_idx:components$num_days
   time_grid <- data.frame(time_idx = selection_index)
 
-  calc_single_pathogen_fn <- switch(
-    measure,
+  calc_single_pathogen_fn <- switch(measure,
     "incidence" = calc_incidence_single,
     "growth_rate" = calc_growth_single,
     "Rt" = calc_rt_single,
@@ -301,9 +306,10 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
   pathogen_idx_col <- rep(list(NULL), nrow(time_grid))
 
   results <- calc_wrapper(time_grid, time_grid$time_idx,
-                          pathogen_idx_col = pathogen_idx_col,
-                          calc_single_pathogen_fn,
-                          a, post, components, extra_args, threshold)
+    pathogen_idx_col = pathogen_idx_col,
+    calc_single_pathogen_fn,
+    a, post, components, extra_args, threshold
+  )
 
   results$pathogen <- components$pathogen_names
 
@@ -315,9 +321,11 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
     index = "time"
   )
 
-  out <- list(measure = tsbl_measure,
-              fit = fitted_model$fit,
-              constructed_model = fitted_model$constructed_model)
+  out <- list(
+    measure = tsbl_measure,
+    fit = fitted_model$fit,
+    constructed_model = fitted_model$constructed_model
+  )
   return(out)
 }
 
@@ -341,21 +349,27 @@ compute_single_pathogen <- function(fitted_model, start_idx, measure,
 #'
 #' @return Data frame with expanded summary statistics
 #' @importFrom purrr map2
-calc_wrapper <- function (df, time_idx_col, pathogen_idx_col, calc_fn,
-                          a, post, components, extra_args, threshold) {
-
+calc_wrapper <- function(df, time_idx_col, pathogen_idx_col, calc_fn,
+                         a, post, components, extra_args, threshold) {
   # Calculate statistics for each time/pathogen combination
-  stats_list <- purrr::map2(time_idx_col, pathogen_idx_col,
-                            function(t_idx, p_idx) {
-                              values <- do.call(
-                                calc_fn, c(list(a = a,
-                                                time_idx = t_idx,
-                                                pathogen_idx = p_idx,
-                                                post = post,
-                                                components = components),
-                                           extra_args))
-                              calc_stats(values, threshold = threshold)
-                            })
+  stats_list <- purrr::map2(
+    time_idx_col, pathogen_idx_col,
+    function(t_idx, p_idx) {
+      values <- do.call(
+        calc_fn, c(
+          list(
+            a = a,
+            time_idx = t_idx,
+            pathogen_idx = p_idx,
+            post = post,
+            components = components
+          ),
+          extra_args
+        )
+      )
+      calc_stats(values, threshold = threshold)
+    }
+  )
 
   # Convert list of dataframes to single data frame
   stats_df <- do.call(rbind, stats_list)

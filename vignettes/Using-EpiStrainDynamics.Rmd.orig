@@ -136,20 +136,19 @@ A full worked example using a subtyped structure:
 
 ```{r}
 mod <- construct_model(
-
   method = p_spline(),
-
   pathogen_structure = subtyped(
     data = influenza,
-    case_timeseries = 'ili',
-    time = 'week',
-    influenzaA_unsubtyped_timeseries = 'inf_A',
-    influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
-    other_pathogen_timeseries = c('inf_B', 'other')
+    case_timeseries = "ili",
+    time = "week",
+    influenzaA_unsubtyped_timeseries = "inf_A",
+    influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+    other_pathogen_timeseries = c("inf_B", "other")
   ),
-
   smoothing_params = smoothing_structure(
-    'independent', tau_mean = c(0, 0.1, 0.3, 0), tau_sd = rep(1, times = 4)),
+    "independent",
+    tau_mean = c(0, 0.1, 0.3, 0), tau_sd = rep(1, times = 4)
+  ),
   dispersion_params = dispersion_structure(phi_mean = 0, phi_sd = 1),
   pathogen_noise = FALSE,
   dow_effect = TRUE
@@ -186,13 +185,13 @@ diagnose_model(fit)
 Beyond this summary, the stan fit object can be interrogated with any package that works with stan outputs. For example, one could visualise posteriors with the package `bayesplot`:
 
 ```{r}
-bayesplot::mcmc_areas(as.matrix(fit$fit), pars = 'tau[1]', prob = 0.8)
+bayesplot::mcmc_areas(as.matrix(fit$fit), pars = "tau[1]", prob = 0.8)
 ```
 
 The `bayesplot` package can also be used to evaluate convergence:
 
 ```{r}
-bayesplot::mcmc_trace(rstan::extract(fit$fit, permuted = FALSE), pars = c('a[1,1]'))
+bayesplot::mcmc_trace(rstan::extract(fit$fit, permuted = FALSE), pars = c("a[1,1]"))
 ```
 
 Or else the application `shinystan` is a great tool to visualise the fit and diagnose issues:
@@ -221,7 +220,7 @@ plot(gr)
 
 Calculate effective reproduction number over time with `Rt()` (requiring specification of a generation interval distribution):
 ```{r Rt}
-rt <- Rt(fit, gi_dist = function(x) 4*x*exp(-2*x))
+rt <- Rt(fit, gi_dist = function(x) 4 * x * exp(-2 * x))
 plot(rt)
 ```
 
@@ -252,16 +251,16 @@ The worked example above uses influenza data with a subtyped pathogen structure 
 ```{r}
 mod_covid <- construct_model(
   method = random_walk(),
-
   pathogen_structure = multiple(
     data = sarscov2,
-    case_timeseries = 'cases',
-    time = 'date',
-    component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+    case_timeseries = "cases",
+    time = "date",
+    component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
   ),
-
   smoothing_params = smoothing_structure(
-    'independent', tau_mean = c(0, 0.1, 0.3, 0), tau_sd = rep(1, times = 4)),
+    "independent",
+    tau_mean = c(0, 0.1, 0.3, 0), tau_sd = rep(1, times = 4)
+  ),
   dispersion_params = dispersion_structure(phi_mean = 0, phi_sd = 1),
   pathogen_noise = FALSE,
   dow_effect = TRUE

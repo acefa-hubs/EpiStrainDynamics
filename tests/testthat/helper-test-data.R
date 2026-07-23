@@ -66,27 +66,22 @@ create_test_models <- function() {
       method = random_walk(),
       pathogen_structure = single_struct
     ),
-
     ps_single = construct_model(
       method = p_spline(),
       pathogen_structure = single_struct
     ),
-
     rw_multiple = construct_model(
       method = random_walk(),
       pathogen_structure = multiple_struct
     ),
-
     ps_multiple = construct_model(
       method = p_spline(),
       pathogen_structure = multiple_struct
     ),
-
     rw_subtyped = construct_model(
       method = random_walk(),
       pathogen_structure = subtyped_struct
     ),
-
     ps_subtyped = construct_model(
       method = p_spline(),
       pathogen_structure = subtyped_struct
@@ -98,7 +93,6 @@ create_test_models <- function() {
       pathogen_structure = multiple_struct,
       smoothing_params = smoothing_structure("shared", tau_mean = 0, tau_sd = 1)
     ),
-
     ps_multiple_shared_smooth = construct_model(
       method = p_spline(),
       pathogen_structure = multiple_struct,
@@ -110,16 +104,17 @@ create_test_models <- function() {
       method = random_walk(),
       pathogen_structure = multiple_struct,
       smoothing_params = smoothing_structure("independent",
-                                             tau_mean = c(0, 0.1, 0.3, 0),
-                                             tau_sd = rep(1, 4))
+        tau_mean = c(0, 0.1, 0.3, 0),
+        tau_sd = rep(1, 4)
+      )
     ),
-
     ps_subtyped_indep_smooth = construct_model(
       method = p_spline(),
       pathogen_structure = subtyped_struct,
       smoothing_params = smoothing_structure("independent",
-                                             tau_mean = c(0, 0, 0.2, 0.1),
-                                             tau_sd = rep(0.5, 4))
+        tau_mean = c(0, 0, 0.2, 0.1),
+        tau_sd = rep(0.5, 4)
+      )
     ),
 
     # Models with correlated smoothing
@@ -128,7 +123,6 @@ create_test_models <- function() {
       pathogen_structure = multiple_struct,
       smoothing_params = smoothing_structure("correlated")
     ),
-
     ps_subtyped_corr_smooth = construct_model(
       method = p_spline(),
       pathogen_structure = subtyped_struct,
@@ -141,7 +135,6 @@ create_test_models <- function() {
       pathogen_structure = multiple_struct,
       dispersion_params = dispersion_structure(phi_mean = 2.0, phi_sd = 0.5)
     ),
-
     ps_subtyped_custom_disp = construct_model(
       method = p_spline(),
       pathogen_structure = subtyped_struct,
@@ -154,7 +147,6 @@ create_test_models <- function() {
       pathogen_structure = multiple_struct,
       pathogen_noise = TRUE
     ),
-
     ps_subtyped_noise = construct_model(
       method = p_spline(),
       pathogen_structure = subtyped_struct,
@@ -167,7 +159,6 @@ create_test_models <- function() {
       pathogen_structure = single_struct,
       dow_effect = TRUE
     ),
-
     ps_multiple_dow = construct_model(
       method = p_spline(),
       pathogen_structure = multiple_struct,
@@ -179,13 +170,13 @@ create_test_models <- function() {
       method = random_walk(),
       pathogen_structure = multiple_struct,
       smoothing_params = smoothing_structure("independent",
-                                             tau_mean = rep(0, 4),
-                                             tau_sd = rep(1, 4)),
+        tau_mean = rep(0, 4),
+        tau_sd = rep(1, 4)
+      ),
       dispersion_params = dispersion_structure(phi_mean = 2.0, phi_sd = 0.5),
       pathogen_noise = TRUE,
       dow_effect = TRUE
     ),
-
     ps_subtyped_full = construct_model(
       method = p_spline(),
       pathogen_structure = subtyped_struct,
@@ -204,9 +195,9 @@ get_expected_data_lengths <- function() {
   list(
     sarscov2_length = length(sarscov2$cases),
     influenza_length = length(influenza$ili),
-    sarscov2_pathogen_count = 4,  # alpha, delta, omicron, other
+    sarscov2_pathogen_count = 4, # alpha, delta, omicron, other
     influenza_subtyped_count = 2, # H3N2, H1N1
-    influenza_other_count = 2     # influenzaB, other
+    influenza_other_count = 2 # influenzaB, other
   )
 }
 

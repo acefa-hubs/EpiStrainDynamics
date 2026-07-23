@@ -11,7 +11,6 @@
 #' @return NULL (invisibly) if validation passes, otherwise stops with error
 #'
 validate_positive_whole_number <- function(value, arg_name) {
-
   # Check that value is numeric
   if (!is.numeric(value)) {
     cli::cli_abort("Argument {arg_name} must be numeric")
@@ -58,7 +57,6 @@ validate_positive_whole_number <- function(value, arg_name) {
 #'
 #' @return Invisible NULL if validation passes, otherwise throws an error
 validate_class_inherits <- function(obj, class_names, require_all = TRUE) {
-
   # Ensure class_names is a character vector
   if (length(class_names) == 0) {
     cli::cli_abort("{class_names} must be a non-empty character vector")
@@ -66,7 +64,8 @@ validate_class_inherits <- function(obj, class_names, require_all = TRUE) {
 
   # Check inheritance for each class
   inheritance_results <- vapply(class_names, function(cls) inherits(obj, cls),
-                                FUN.VALUE = logical(1))
+    FUN.VALUE = logical(1)
+  )
 
   obj_class <- class(obj)
 
@@ -77,16 +76,20 @@ validate_class_inherits <- function(obj, class_names, require_all = TRUE) {
       if (length(class_names) == 1) {
         cli::cli_abort("Input must be of class {class_names} but got class: {obj_class}")
       } else {
-        cli::cli_abort(c("Input must inherit from all classes: {class_names}",
-                         "Missing classes: {missing_classes}",
-                         "Actual classes: {obj_class}"))
+        cli::cli_abort(c(
+          "Input must inherit from all classes: {class_names}",
+          "Missing classes: {missing_classes}",
+          "Actual classes: {obj_class}"
+        ))
       }
     }
   } else {
     # Must inherit from at least ONE class
     if (!any(inheritance_results)) {
-      cli::cli_abort(c("Input must inherit from at least one of: {class_names}",
-                       "Actual classes: {obj_class}"))
+      cli::cli_abort(c(
+        "Input must inherit from at least one of: {class_names}",
+        "Actual classes: {obj_class}"
+      ))
     }
   }
 
@@ -231,7 +234,6 @@ validate_gi_dist <- function(gi_dist) {
 #'   Must be either "numerator_combination" or "denominator_combination"
 #' @noRd
 validate_pathogen_combination <- function(combination, pathogen_names, arg_name) {
-
   if (is.null(combination)) {
     idx <- seq_along(pathogen_names)
     return(idx)
@@ -279,8 +281,10 @@ check_column_exists <- function(data, col_name) {
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #' @srrstats {G1.4a} internal function specified with `@noRd`
 is_timeseries_class <- function(data) {
-  ts_classes <- c("ts", "mts", "xts", "zoo", "zooreg", "tsibble", "tbl_ts",
-                  "tibbletime", "tbl_time", "timeSeries", "irts", "tis")
+  ts_classes <- c(
+    "ts", "mts", "xts", "zoo", "zooreg", "tsibble", "tbl_ts",
+    "tibbletime", "tbl_time", "timeSeries", "irts", "tis"
+  )
   any(class(data) %in% ts_classes)
 }
 
@@ -347,10 +351,8 @@ check_missing_data <- function(data, columns, context) {
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #' @srrstats {G1.4a} internal function specified with `@noRd`
 convert_ts_to_tsibble <- function(ts_obj) {
-
   # Handle xts and zoo objects using timetk (best practice for these classes)
   if (inherits(ts_obj, c("xts", "zoo", "zooreg"))) {
-
     # Check if timetk is available
     if (!requireNamespace("timetk", quietly = TRUE)) {
       cli::cli_abort(
@@ -366,32 +368,38 @@ convert_ts_to_tsibble <- function(ts_obj) {
     temp_tbl <- timetk::tk_tbl(ts_obj, preserve_index = TRUE, rename_index = "index")
 
     # Convert to tsibble
-    temp_tsbl <- tryCatch({
-      tsibble::as_tsibble(temp_tbl, index = .data$index)
-    }, error = function(e) {
-      cli::cli_abort(
-        "Error converting {.cls {class(ts_obj)[1]}} to tsibble: {e$message}"
-      )
-    })
+    temp_tsbl <- tryCatch(
+      {
+        tsibble::as_tsibble(temp_tbl, index = .data$index)
+      },
+      error = function(e) {
+        cli::cli_abort(
+          "Error converting {.cls {class(ts_obj)[1]}} to tsibble: {e$message}"
+        )
+      }
+    )
 
     return(temp_tsbl)
   }
 
   # Handle ts and mts objects using tsibble's built-in conversion
   if (inherits(ts_obj, c("ts", "mts"))) {
-    temp_tsbl <- tryCatch({
-      if (is.matrix(ts_obj)) {
-        # Multivariate time series - keep wide format
-        tsibble::as_tsibble(ts_obj, pivot_longer = FALSE)
-      } else {
-        # Univariate time series
-        tsibble::as_tsibble(ts_obj)
+    temp_tsbl <- tryCatch(
+      {
+        if (is.matrix(ts_obj)) {
+          # Multivariate time series - keep wide format
+          tsibble::as_tsibble(ts_obj, pivot_longer = FALSE)
+        } else {
+          # Univariate time series
+          tsibble::as_tsibble(ts_obj)
+        }
+      },
+      error = function(e) {
+        cli::cli_abort(
+          "Error converting {.cls {class(ts_obj)[1]}} to tsibble: {e$message}"
+        )
       }
-    }, error = function(e) {
-      cli::cli_abort(
-        "Error converting {.cls {class(ts_obj)[1]}} to tsibble: {e$message}"
-      )
-    })
+    )
 
     return(temp_tsbl)
   }
@@ -402,18 +410,21 @@ convert_ts_to_tsibble <- function(ts_obj) {
   }
 
   # Try tsibble's as_tsibble for other time series classes
-  temp_tsbl <- tryCatch({
-    tsibble::as_tsibble(ts_obj)
-  }, error = function(e) {
-    # If that fails, provide a helpful error message
-    cli::cli_abort(
-      c(
-        "Unable to convert time series object of class {.cls {class(ts_obj)}} to tsibble.",
-        "i" = "Supported classes are: ts, mts, xts, zoo, zooreg, tsibble.",
-        "i" = "For xts/zoo objects, the {.pkg timetk} package is required."
+  temp_tsbl <- tryCatch(
+    {
+      tsibble::as_tsibble(ts_obj)
+    },
+    error = function(e) {
+      # If that fails, provide a helpful error message
+      cli::cli_abort(
+        c(
+          "Unable to convert time series object of class {.cls {class(ts_obj)}} to tsibble.",
+          "i" = "Supported classes are: ts, mts, xts, zoo, zooreg, tsibble.",
+          "i" = "For xts/zoo objects, the {.pkg timetk} package is required."
+        )
       )
-    )
-  })
+    }
+  )
 
   return(temp_tsbl)
 }
@@ -433,7 +444,6 @@ convert_ts_to_tsibble <- function(ts_obj) {
 #'   provide informative error message
 #' @srrstats {G5.2a} every error statement is unique
 check_list_columns <- function(data, relevant_cols) {
-
   # For time series objects, this check will happen after conversion to data.frame
   # So we can safely assume data is data.frame-like here
   if (!is.data.frame(data)) {
@@ -446,7 +456,9 @@ check_list_columns <- function(data, relevant_cols) {
         return(NULL)
       }
     )
-    if (is.null(data)) return(invisible(NULL))
+    if (is.null(data)) {
+      return(invisible(NULL))
+    }
   }
 
   # Get columns that exist in the data
@@ -495,7 +507,6 @@ check_list_columns <- function(data, relevant_cols) {
 #'   time sequence (explicit missing values). NA values (implicit missing
 #'   values) are not allowed due to the nature of the models.
 create_validated_timeseries <- function(data, columns, time_col = NULL) {
-
   # Step 1: Handle time series objects
   if (is_timeseries_class(data)) {
     if (!is.null(time_col)) {
@@ -527,7 +538,6 @@ create_validated_timeseries <- function(data, columns, time_col = NULL) {
         temp_tsbl[[col]] <- as.numeric(temp_tsbl[[col]])
       }
     }
-
   } else {
     # Step 2: Handle data frame-like objects
     if (is.null(time_col)) {
@@ -567,11 +577,14 @@ create_validated_timeseries <- function(data, columns, time_col = NULL) {
     }
 
     # Create tsibble
-    temp_tsbl <- tryCatch({
-      tsibble::tsibble(temp_df, index = !!rlang::sym(time_col))
-    }, error = function(e) {
-      cli::cli_abort("Error creating tsibble: {e$message}")
-    })
+    temp_tsbl <- tryCatch(
+      {
+        tsibble::tsibble(temp_df, index = !!rlang::sym(time_col))
+      },
+      error = function(e) {
+        cli::cli_abort("Error creating tsibble: {e$message}")
+      }
+    )
   }
 
   # Step 3: Validate tsibble properties (same for both paths)

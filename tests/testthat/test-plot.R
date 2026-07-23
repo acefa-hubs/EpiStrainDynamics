@@ -166,7 +166,7 @@ test_that("plot.growth_rate() handles multiple pathogens", {
   # Should have data for all pathogens
   pathogen_levels <- unique(p$data$pathogen)
   expect_true("Total" %in% pathogen_levels)
-  expect_equal(length(pathogen_levels), 5)  # 4 pathogens + Total
+  expect_equal(length(pathogen_levels), 5) # 4 pathogens + Total
 })
 
 test_that("plot.Rt() handles multiple pathogens", {
@@ -186,7 +186,7 @@ test_that("plot.proportion() uses distinct colors for combinations", {
 
   # Number of colors should match number of pathogen combinations
   n_combos <- length(unique(p$data$pathogen))
-  expect_equal(n_combos, 4)  # Default: each pathogen individually
+  expect_equal(n_combos, 4) # Default: each pathogen individually
 })
 
 # ==============================================================================
@@ -233,7 +233,8 @@ test_that("plot.growth_rate() includes horizontal line", {
 
   # Find hline layer
   hline_layers <- which(vapply(p$layers, function(x) inherits(x$geom, "GeomHline"),
-                               FUN.VALUE = logical(1)))
+    FUN.VALUE = logical(1)
+  ))
   expect_gt(length(hline_layers), 0)
 })
 
@@ -242,7 +243,8 @@ test_that("plot.Rt() includes horizontal line", {
 
   # Find hline layer
   hline_layers <- which(vapply(p$layers, function(x) inherits(x$geom, "GeomHline"),
-                               FUN.VALUE = logical(1)))
+    FUN.VALUE = logical(1)
+  ))
   expect_gt(length(hline_layers), 0)
 })
 
@@ -251,7 +253,8 @@ test_that("plot.proportion() includes horizontal line", {
 
   # Find hline layer
   hline_layers <- which(vapply(p$layers, function(x) inherits(x$geom, "GeomHline"),
-                               FUN.VALUE = logical(1)))
+    FUN.VALUE = logical(1)
+  ))
   expect_gt(length(hline_layers), 0)
 })
 
@@ -313,7 +316,8 @@ test_that("plot.incidence() includes both 50% and 95% credible intervals", {
 
   # Find ribbon layers
   ribbon_layers <- which(vapply(p$layers, function(x) inherits(x$geom, "GeomRibbon"),
-                                FUN.VALUE = logical(1)))
+    FUN.VALUE = logical(1)
+  ))
   expect_equal(length(ribbon_layers), 2)
 
   # Check that ribbons have ymin and ymax mappings
@@ -328,7 +332,8 @@ test_that("plot.growth_rate() includes credible intervals", {
   p <- plot(gr_single)
 
   ribbon_layers <- which(vapply(p$layers, function(x) inherits(x$geom, "GeomRibbon"),
-                                FUN.VALUE = logical(1)))
+    FUN.VALUE = logical(1)
+  ))
   expect_equal(length(ribbon_layers), 2)
 })
 
@@ -336,7 +341,8 @@ test_that("plot.Rt() includes credible intervals", {
   p <- plot(rt_single)
 
   ribbon_layers <- which(vapply(p$layers, function(x) inherits(x$geom, "GeomRibbon"),
-                                FUN.VALUE = logical(1)))
+    FUN.VALUE = logical(1)
+  ))
   expect_equal(length(ribbon_layers), 2)
 })
 
@@ -344,7 +350,8 @@ test_that("plot.proportion() includes credible intervals", {
   p <- plot(prop)
 
   ribbon_layers <- which(vapply(p$layers, function(x) inherits(x$geom, "GeomRibbon"),
-                                FUN.VALUE = logical(1)))
+    FUN.VALUE = logical(1)
+  ))
   expect_equal(length(ribbon_layers), 2)
 })
 
@@ -357,7 +364,8 @@ test_that("plot.incidence() includes original data points", {
 
   # Should have point and line layers for original data
   layers <- vapply(p$layers, function(x) class(x$geom)[1],
-                   FUN.VALUE = character(1))
+    FUN.VALUE = character(1)
+  )
 
   # Count points - should have at least one for raw data
   n_points <- sum(layers == "GeomPoint")
@@ -411,4 +419,3 @@ test_that("plots handle missing pathogen names", {
   expect_no_error(p <- plot(bad_metric))
   expect_s3_class(p, "ggplot")
 })
-

@@ -54,7 +54,8 @@ shared_smooth <- smoothing_structure("shared", tau_mean = 0, tau_sd = 1)
 
 # Independent smoothing with vector priors
 indep_smooth <- smoothing_structure("independent",
-                                    tau_mean = c(0, 0, 0),
-                                    tau_sd = c(1, 1, 1))
+  tau_mean = c(0, 0, 0),
+  tau_sd = c(1, 1, 1)
+)
 
 }

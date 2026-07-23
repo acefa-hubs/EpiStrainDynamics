@@ -62,42 +62,70 @@ test_that("Both method constructors return compatible objects", {
 # Validation tests
 test_that("p_spline() validates numeric inputs correctly", {
   # Non-numeric inputs
-  expect_error(p_spline(spline_degree = "3", days_per_knot = 3),
-               "must be numeric")
-  expect_error(p_spline(spline_degree = 3, days_per_knot = "5"),
-               "must be numeric")
+  expect_error(
+    p_spline(spline_degree = "3", days_per_knot = 3),
+    "must be numeric"
+  )
+  expect_error(
+    p_spline(spline_degree = 3, days_per_knot = "5"),
+    "must be numeric"
+  )
 
   # Invalid special values
-  expect_error(p_spline(spline_degree = NA, days_per_knot = 3),
-               "must be numeric")
-  expect_error(p_spline(spline_degree = 3, days_per_knot = Inf),
-               "must be a finite number")
-  expect_error(p_spline(spline_degree = NULL, days_per_knot = 3),
-               "must be numeric")
+  expect_error(
+    p_spline(spline_degree = NA, days_per_knot = 3),
+    "must be numeric"
+  )
+  expect_error(
+    p_spline(spline_degree = 3, days_per_knot = Inf),
+    "must be a finite number"
+  )
+  expect_error(
+    p_spline(spline_degree = NULL, days_per_knot = 3),
+    "must be numeric"
+  )
 
   # Vector inputs (length > 1)
-  expect_error(p_spline(spline_degree = c(2, 3), days_per_knot = 3),
-               "must be a single value")
-  expect_error(p_spline(spline_degree = 3, days_per_knot = c(3, 4)),
-               "must be a single value")
+  expect_error(
+    p_spline(spline_degree = c(2, 3), days_per_knot = 3),
+    "must be a single value"
+  )
+  expect_error(
+    p_spline(spline_degree = 3, days_per_knot = c(3, 4)),
+    "must be a single value"
+  )
 })
 
 test_that("p_spline() validates positive whole numbers correctly", {
   # Test decimal values are rejected
-  expect_error(p_spline(spline_degree = 2.5, days_per_knot = 3),
-               "must be a whole number")
-  expect_error(p_spline(spline_degree = 3, days_per_knot = 3.7),
-               "must be a whole number")
-  expect_error(p_spline(spline_degree = 2.1, days_per_knot = 4.9),
-               "must be a whole number")
+  expect_error(
+    p_spline(spline_degree = 2.5, days_per_knot = 3),
+    "must be a whole number"
+  )
+  expect_error(
+    p_spline(spline_degree = 3, days_per_knot = 3.7),
+    "must be a whole number"
+  )
+  expect_error(
+    p_spline(spline_degree = 2.1, days_per_knot = 4.9),
+    "must be a whole number"
+  )
 
   # Test zero and negative values are rejected
-  expect_error(p_spline(spline_degree = 0, days_per_knot = 3),
-               "must be a positive number")
-  expect_error(p_spline(spline_degree = 3, days_per_knot = 0),
-               "must be a positive number")
-  expect_error(p_spline(spline_degree = -1, days_per_knot = 3),
-               "must be a positive number")
-  expect_error(p_spline(spline_degree = 3, days_per_knot = -5),
-               "must be a positive number")
+  expect_error(
+    p_spline(spline_degree = 0, days_per_knot = 3),
+    "must be a positive number"
+  )
+  expect_error(
+    p_spline(spline_degree = 3, days_per_knot = 0),
+    "must be a positive number"
+  )
+  expect_error(
+    p_spline(spline_degree = -1, days_per_knot = 3),
+    "must be a positive number"
+  )
+  expect_error(
+    p_spline(spline_degree = 3, days_per_knot = -5),
+    "must be a positive number"
+  )
 })

@@ -50,9 +50,13 @@ test_that("Rt() works for single pathogen random walk model", {
 
   # Check measure data frame
   expect_s3_class(result$measure, "data.frame")
-  expect_named(result$measure,
-               c("time", "y", "lb_50", "ub_50", "lb_95",
-                 "ub_95", "prop", "pathogen"))
+  expect_named(
+    result$measure,
+    c(
+      "time", "y", "lb_50", "ub_50", "lb_95",
+      "ub_95", "prop", "pathogen"
+    )
+  )
 
   # Check dimensions - should start from time index = tau_max
   n_days <- nrow(fit_rw_single$constructed_model$validated_tsbl)
@@ -60,7 +64,7 @@ test_that("Rt() works for single pathogen random walk model", {
   expect_equal(nrow(result$measure), expected_rows)
 
   # Check values are reasonable
-  expect_true(all(result$measure$y > 0))  # Rt should be positive
+  expect_true(all(result$measure$y > 0)) # Rt should be positive
   expect_true(all(result$measure$lb_95 > 0))
   expect_true(all(result$measure$ub_50 <= result$measure$ub_95))
   expect_true(all(result$measure$lb_50 >= result$measure$lb_95))
@@ -187,9 +191,13 @@ test_that("incidence() works for single pathogen models", {
   expect_s3_class(result, "incidence")
   expect_s3_class(result, "EpiStrainDynamics.metric")
 
-  expect_named(result$measure,
-               c("time", "y", "lb_50", "ub_50", "lb_95", "ub_95",
-                 "prop", "pathogen"))
+  expect_named(
+    result$measure,
+    c(
+      "time", "y", "lb_50", "ub_50", "lb_95", "ub_95",
+      "prop", "pathogen"
+    )
+  )
 
   n_days <- nrow(fit_rw_single$constructed_model$validated_tsbl)
   expect_equal(nrow(result$measure), n_days)
@@ -337,8 +345,9 @@ test_that("proportion() works with custom numerator and denominator", {
   skip_if_not(exists("fit_rw_multi"), "Cached fitted models not available")
 
   result <- proportion(fit_rw_multi,
-                       numerator_combination = "alpha",
-                       denominator_combination = c("alpha", "delta"))
+    numerator_combination = "alpha",
+    denominator_combination = c("alpha", "delta")
+  )
 
   expect_s3_class(result, "proportion")
 
@@ -354,15 +363,17 @@ test_that("proportion() validates pathogen names", {
 
   expect_error(
     proportion(fit_rw_multi,
-               numerator_combination = "nonexistent",
-               denominator_combination = "all"),
+      numerator_combination = "nonexistent",
+      denominator_combination = "all"
+    ),
     "invalid pathogen name"
   )
 
   expect_error(
     proportion(fit_rw_multi,
-               numerator_combination = "alpha",
-               denominator_combination = c("alpha", "nonexistent")),
+      numerator_combination = "alpha",
+      denominator_combination = c("alpha", "nonexistent")
+    ),
     "invalid pathogen name"
   )
 })

@@ -105,10 +105,10 @@ test_that("Functions handle mix of numeric and units columns ", {
 
   df <- data.frame(
     date = seq.Date(as.Date("2020-01-01"), by = "day", length.out = 5),
-    cases = c(100, 200, 300, 400, 500),  # regular numeric
-    delta = c(5, 10, 15, 20, 25)         # regular numeric
+    cases = c(100, 200, 300, 400, 500), # regular numeric
+    delta = c(5, 10, 15, 20, 25) # regular numeric
   )
-  df$alpha <- as_units(c(10, 20, 30, 40, 50), "count")  # units object
+  df$alpha <- as_units(c(10, 20, 30, 40, 50), "count") # units object
 
   result <- multiple(
     data = df,
@@ -188,7 +188,7 @@ test_that("Units are properly stripped before modeling ", {
 test_that("Functions appropriately reject unsupported column types ", {
   df <- data.frame(
     date = seq.Date(as.Date("2020-01-01"), by = "day", length.out = 5),
-    cases = c("10", "20", "30", "40", "50")  # character, not numeric
+    cases = c("10", "20", "30", "40", "50") # character, not numeric
   )
 
   expect_error(
@@ -200,7 +200,7 @@ test_that("Functions appropriately reject unsupported column types ", {
 test_that("Functions reject factor columns appropriately ", {
   df <- data.frame(
     date = seq.Date(as.Date("2020-01-01"), by = "day", length.out = 5),
-    cases = factor(c(10, 20, 30, 40, 50))  # factor, not numeric
+    cases = factor(c(10, 20, 30, 40, 50)) # factor, not numeric
   )
 
   expect_error(
@@ -212,7 +212,7 @@ test_that("Functions reject factor columns appropriately ", {
 test_that("Functions reject logical columns appropriately ", {
   df <- data.frame(
     date = seq.Date(as.Date("2020-01-01"), by = "day", length.out = 5),
-    cases = c(TRUE, FALSE, TRUE, FALSE, TRUE)  # logical, not numeric
+    cases = c(TRUE, FALSE, TRUE, FALSE, TRUE) # logical, not numeric
   )
 
   expect_error(
@@ -311,7 +311,7 @@ test_that("Functions catch NA values in units columns ", {
 test_that("Functions handle integer columns (standard but non-double numeric) ", {
   df <- data.frame(
     date = seq.Date(as.Date("2020-01-01"), by = "day", length.out = 5),
-    cases = as.integer(c(10, 20, 30, 40, 50))  # integer, not double
+    cases = as.integer(c(10, 20, 30, 40, 50)) # integer, not double
   )
 
   result <- single(data = df, case_timeseries = "cases", time = "date")

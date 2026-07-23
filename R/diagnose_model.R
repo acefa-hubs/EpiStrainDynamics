@@ -31,17 +31,18 @@
 #'     from}
 #' @export
 #' @examplesIf interactive()
-#'   mod <- construct_model(
-#'     method = random_walk(),
-#'     pathogen_structure = single(
-#'       case_timeseries = sarscov2$cases,
-#'       time = sarscov2$date))
-#'   fit <- fit_model(mod)
-#'   diagnose_model(fit)
+#' mod <- construct_model(
+#'   method = random_walk(),
+#'   pathogen_structure = single(
+#'     case_timeseries = sarscov2$cases,
+#'     time = sarscov2$date
+#'   )
+#' )
+#' fit <- fit_model(mod)
+#' diagnose_model(fit)
 diagnose_model <- function(fitted_model,
                            rhat_threshold = 1.1,
                            eff_sample_threshold = 100) {
-
   if (!inherits(fitted_model, "EpiStrainDynamics.fit")) {
     cli::cli_abort("{.arg fitted_model} must be an {.cls EpiStrainDynamics.fit} object, got {.cls {class(fitted_model)}}")
   }
@@ -85,4 +86,3 @@ diagnose_model <- function(fitted_model,
 
   return(invisible(diagnostics))
 }
-

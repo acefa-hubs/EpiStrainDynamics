@@ -8,7 +8,6 @@
 validate_smoothing_structure <- function(smoothing_obj,
                                          pathogen_str,
                                          pathogen_names = NULL) {
-
   if (!inherits(smoothing_obj, "EpiStrainDynamics.smoothing")) {
     cli::cli_abort("{.arg smoothing_params} must be created using the {.fn smoothing_structure} function")
   }
@@ -23,7 +22,9 @@ validate_smoothing_structure <- function(smoothing_obj,
 
 #' @noRd
 validate_smoothing_for_single <- function(smoothing_obj, pathogen_str) {
-  if (pathogen_str != "single") return(smoothing_obj)
+  if (pathogen_str != "single") {
+    return(smoothing_obj)
+  }
 
   if (smoothing_obj$smoothing_type != "shared") {
     smoothing_obj$smoothing_type <- "shared"
@@ -38,7 +39,9 @@ validate_smoothing_for_single <- function(smoothing_obj, pathogen_str) {
 
 #' @noRd
 validate_smoothing_independent <- function(smoothing_obj, pathogen_names) {
-  if (smoothing_obj$smoothing_type != "independent") return(smoothing_obj)
+  if (smoothing_obj$smoothing_type != "independent") {
+    return(smoothing_obj)
+  }
 
   if (is.null(pathogen_names)) {
     cli::cli_abort("{.arg pathogen_names} is required for {.val independent} smoothing structure")
@@ -47,7 +50,7 @@ validate_smoothing_independent <- function(smoothing_obj, pathogen_names) {
 
   if (smoothing_obj$priors_provided == 1) {
     smoothing_obj$tau_priors$mean <- rep(0.0, expected_dim)
-    smoothing_obj$tau_priors$sd   <- rep(1.0, expected_dim)
+    smoothing_obj$tau_priors$sd <- rep(1.0, expected_dim)
   } else {
     smoothing_obj$tau_priors$mean <- validate_smoothing_dim(
       smoothing_obj$tau_priors$mean, expected_dim, "tau_mean"
@@ -73,26 +76,34 @@ validate_smoothing_dim <- function(values, expected_dim, name) {
 
 #' @noRd
 validate_smoothing_shared <- function(smoothing_obj) {
-  if (smoothing_obj$smoothing_type != "shared") return(smoothing_obj)
-  if (smoothing_obj$priors_provided != 1) return(smoothing_obj)
+  if (smoothing_obj$smoothing_type != "shared") {
+    return(smoothing_obj)
+  }
+  if (smoothing_obj$priors_provided != 1) {
+    return(smoothing_obj)
+  }
 
   if (is.null(smoothing_obj$tau_priors$mean) ||
-      length(smoothing_obj$tau_priors$mean) == 0) {
+    length(smoothing_obj$tau_priors$mean) == 0) {
     smoothing_obj$tau_priors$mean <- array(0.0, dim = 1)
-    smoothing_obj$tau_priors$sd   <- array(1.0, dim = 1)
+    smoothing_obj$tau_priors$sd <- array(1.0, dim = 1)
   }
   return(smoothing_obj)
 }
 
 #' @noRd
 validate_smoothing_correlated <- function(smoothing_obj) {
-  if (smoothing_obj$smoothing_type != "correlated") return(smoothing_obj)
-  if (smoothing_obj$priors_provided != 1) return(smoothing_obj)
+  if (smoothing_obj$smoothing_type != "correlated") {
+    return(smoothing_obj)
+  }
+  if (smoothing_obj$priors_provided != 1) {
+    return(smoothing_obj)
+  }
 
   if (is.null(smoothing_obj$tau_priors$mean) ||
-      length(smoothing_obj$tau_priors$mean) == 0) {
+    length(smoothing_obj$tau_priors$mean) == 0) {
     smoothing_obj$tau_priors$mean <- numeric(0)
-    smoothing_obj$tau_priors$sd   <- numeric(0)
+    smoothing_obj$tau_priors$sd <- numeric(0)
   }
   return(smoothing_obj)
 }

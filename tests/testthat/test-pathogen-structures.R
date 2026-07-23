@@ -348,8 +348,10 @@ test_that("all pathogen structure functions return required components", {
     time = "date"
   )
 
-  expect_true(all(c("pathogen_structure", "pathogen_names", "validated_tsbl",
-                    "data") %in% names(single_result)))
+  expect_true(all(c(
+    "pathogen_structure", "pathogen_names", "validated_tsbl",
+    "data"
+  ) %in% names(single_result)))
   expect_true(all(c("case_timeseries") %in% names(single_result$data)))
   expect_s3_class(single_result, "EpiStrainDynamics.pathogen_structure")
 
@@ -361,10 +363,12 @@ test_that("all pathogen structure functions return required components", {
     component_pathogen_timeseries = c("alpha", "delta")
   )
 
-  expect_true(all(c("pathogen_structure", "pathogen_names", "validated_tsbl",
-                    "data") %in% names(multiple_result)))
+  expect_true(all(c(
+    "pathogen_structure", "pathogen_names", "validated_tsbl",
+    "data"
+  ) %in% names(multiple_result)))
   expect_true(all(c("case_timeseries", "component_pathogens") %in%
-                    names(multiple_result$data)))
+    names(multiple_result$data)))
   expect_s3_class(multiple_result, "EpiStrainDynamics.pathogen_structure")
 
   # Test subtyped() components
@@ -377,10 +381,14 @@ test_that("all pathogen structure functions return required components", {
     other_pathogen_timeseries = c("inf_B")
   )
 
-  expect_true(all(c("pathogen_structure", "pathogen_names", "validated_tsbl",
-                    "data") %in% names(subtyped_result)))
-  expect_true(all(c("case_timeseries", "component_pathogens",
-                    "influenzaA_subtyped") %in% names(subtyped_result$data)))
+  expect_true(all(c(
+    "pathogen_structure", "pathogen_names", "validated_tsbl",
+    "data"
+  ) %in% names(subtyped_result)))
+  expect_true(all(c(
+    "case_timeseries", "component_pathogens",
+    "influenzaA_subtyped"
+  ) %in% names(subtyped_result$data)))
   expect_s3_class(subtyped_result, "EpiStrainDynamics.pathogen_structure")
 })
 
@@ -412,4 +420,3 @@ test_that("pathogen structure functions handle edge cases correctly", {
   expect_equal(ncol(result_multiple$data$component_pathogens), 5)
   expect_equal(nrow(result_multiple$data$component_pathogens), 2)
 })
-

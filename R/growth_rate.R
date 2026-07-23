@@ -39,14 +39,16 @@
 #' @srrstats {G1.4} uses `Roxygen2` documentation
 #'
 #' @examplesIf interactive()
-#'   mod <- construct_model(
-#'     method = random_walk(),
-#'     pathogen_structure = single(
-#'       case_timeseries = sarscov2$cases,
-#'       time = sarscov2$date))
+#' mod <- construct_model(
+#'   method = random_walk(),
+#'   pathogen_structure = single(
+#'     case_timeseries = sarscov2$cases,
+#'     time = sarscov2$date
+#'   )
+#' )
 #'
-#'   fit <- fit_model(mod)
-#'   gr <- growth_rate(fit)
+#' fit <- fit_model(mod)
+#' gr <- growth_rate(fit)
 growth_rate <- function(fitted_model, ...) {
   validate_class_inherits(fitted_model, "EpiStrainDynamics.fit")
   UseMethod("growth_rate")
@@ -56,7 +58,8 @@ growth_rate <- function(fitted_model, ...) {
 #' @export
 growth_rate.ps <- function(fitted_model, ...) {
   out <- compute_multi_pathogen(fitted_model, 2, "growth_rate",
-                                threshold = 0, use_splines = TRUE)
+    threshold = 0, use_splines = TRUE
+  )
   class(out) <- c("growth_rate", "EpiStrainDynamics.metric", class(out))
   out
 }
@@ -65,7 +68,8 @@ growth_rate.ps <- function(fitted_model, ...) {
 #' @export
 growth_rate.rw <- function(fitted_model, ...) {
   out <- compute_multi_pathogen(fitted_model, 2, "growth_rate",
-                                threshold = 0, use_splines = FALSE)
+    threshold = 0, use_splines = FALSE
+  )
   class(out) <- c("growth_rate", "EpiStrainDynamics.metric", class(out))
   out
 }
@@ -74,7 +78,8 @@ growth_rate.rw <- function(fitted_model, ...) {
 #' @export
 growth_rate.ps_single <- function(fitted_model, ...) {
   out <- compute_single_pathogen(fitted_model, 2, "growth_rate",
-                                 threshold = 0, use_splines = TRUE)
+    threshold = 0, use_splines = TRUE
+  )
   class(out) <- c("growth_rate", "EpiStrainDynamics.metric", class(out))
   out
 }
@@ -83,7 +88,8 @@ growth_rate.ps_single <- function(fitted_model, ...) {
 #' @export
 growth_rate.rw_single <- function(fitted_model, ...) {
   out <- compute_single_pathogen(fitted_model, 2, "growth_rate",
-                                 threshold = 0, use_splines = FALSE)
+    threshold = 0, use_splines = FALSE
+  )
   class(out) <- c("growth_rate", "EpiStrainDynamics.metric", class(out))
   out
 }

@@ -51,14 +51,14 @@
 #'
 #' # Independent smoothing with vector priors
 #' indep_smooth <- smoothing_structure("independent",
-#'                                     tau_mean = c(0, 0, 0),
-#'                                     tau_sd = c(1, 1, 1))
+#'   tau_mean = c(0, 0, 0),
+#'   tau_sd = c(1, 1, 1)
+#' )
 #'
 #' @export
 smoothing_structure <- function(smoothing_type = "shared",
                                 tau_mean = NULL,
                                 tau_sd = NULL) {
-
   #' @srrstats {G2.3, G2.3a, G2.3b} univariate variables must match and be
   #'   case insensitive
   smoothing_type <- tolower(smoothing_type)
@@ -75,14 +75,12 @@ smoothing_structure <- function(smoothing_type = "shared",
     }
     tau_priors <- list(mean = numeric(0), sd = numeric(0))
     priors_provided <- 1
-
   }
   # For shared and independent structures
   if (is.null(tau_mean) && is.null(tau_sd)) {
     # No priors provided
     tau_priors <- list(mean = NULL, sd = NULL)
     priors_provided <- 1
-
   } else {
     # Priors provided - validate them
     tau_priors <- validate_priors(tau_mean, tau_sd)
@@ -138,7 +136,6 @@ smoothing_structure <- function(smoothing_type = "shared",
 #'
 #' @export
 dispersion_structure <- function(phi_mean = NULL, phi_sd = NULL) {
-
   if (is.null(phi_mean) && is.null(phi_sd)) {
     # No priors provided - use dummy vectorised scalar values
     priors_provided <- 1
@@ -165,4 +162,3 @@ dispersion_structure <- function(phi_mean = NULL, phi_sd = NULL) {
   class(disp_obj) <- c("EpiStrainDynamics.dispersion", class(disp_obj))
   return(disp_obj)
 }
-

@@ -18,7 +18,7 @@
 #'   provides an informative error message if not
 #'
 #' @examples random_walk()
-random_walk <- function () {
+random_walk <- function() {
   model_inputs <- list(
     method = "random-walk"
   )
@@ -67,9 +67,8 @@ random_walk <- function () {
 #' # Non-numeric values
 #' try(p_spline(spline_degree = "invalid", days_per_knot = 5))
 #' }
-p_spline <- function (spline_degree = 3,
-                      days_per_knot = 3) {
-
+p_spline <- function(spline_degree = 3,
+                     days_per_knot = 3) {
   #' @srrstats {G2.1} assertions on types of inputs
   validate_positive_whole_number(spline_degree, "spline_degree")
   validate_positive_whole_number(days_per_knot, "days_per_knot")

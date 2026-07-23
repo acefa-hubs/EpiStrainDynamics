@@ -32,8 +32,8 @@
 #' # Using a data frame
 #' single(
 #'   data = sarscov2,
-#'   case_timeseries = 'cases',
-#'   time = 'date'
+#'   case_timeseries = "cases",
+#'   time = "date"
 #' )
 #'
 #' @examplesIf rlang::is_installed("xts")
@@ -41,17 +41,16 @@
 #' sarscov2_xts <- xts::xts(sarscov2[, c("cases", "alpha")], order.by = sarscov2$date)
 #' single(
 #'   data = sarscov2_xts,
-#'   case_timeseries = 'cases'
+#'   case_timeseries = "cases"
 #' )
 #'
 single <- function(data,
                    case_timeseries,
                    time = NULL) {
-
   #' @srrstats {G5.8c, G5.8d} edge cases produce errors
   #' @srrstats {G2.1, G5.8, G5.8b} assertions on types of inputs
   #' @srrstats {G2.1a} validation for vector inputs
-  if(!is.null(time)) check_column_exists(data, time)
+  if (!is.null(time)) check_column_exists(data, time)
   check_column_exists(data, case_timeseries)
 
   #' @srrstats {G2.0, G2.0a} validate matching lengths for input data
@@ -74,8 +73,10 @@ single <- function(data,
     )
   )
 
-  class(model_inputs) <- c("EpiStrainDynamics.pathogen_structure",
-                           class(model_inputs))
+  class(model_inputs) <- c(
+    "EpiStrainDynamics.pathogen_structure",
+    class(model_inputs)
+  )
   model_inputs
 }
 
@@ -111,9 +112,9 @@ single <- function(data,
 #' # Using a data frame
 #' multiple(
 #'   data = sarscov2,
-#'   case_timeseries = 'cases',
-#'   component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other'),
-#'   time = 'date'
+#'   case_timeseries = "cases",
+#'   component_pathogen_timeseries = c("alpha", "delta", "omicron", "other"),
+#'   time = "date"
 #' )
 #'
 #' @examplesIf rlang::is_installed("xts")
@@ -124,18 +125,17 @@ single <- function(data,
 #' )
 #' multiple(
 #'   data = sarscov2_xts,
-#'   case_timeseries = 'cases',
-#'   component_pathogen_timeseries = c('alpha', 'delta', 'omicron', 'other')
+#'   case_timeseries = "cases",
+#'   component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
 #' )
 multiple <- function(data,
                      case_timeseries,
                      component_pathogen_timeseries,
                      time = NULL) {
-
   #' @srrstats {G5.8c, G5.8d} edge cases produce errors
   #' @srrstats {G2.1, G5.8, G5.8b} assertions on types of inputs
   #' @srrstats {G2.1a} validation for vector inputs
-  if(!is.null(time)) check_column_exists(data, time)
+  if (!is.null(time)) check_column_exists(data, time)
   ts_cols <- c(case_timeseries, component_pathogen_timeseries)
   for (col in ts_cols) {
     check_column_exists(data, col)
@@ -150,8 +150,8 @@ multiple <- function(data,
 
   # Create matrix from validated tsibble
   component_pathogens <- t(as.matrix(
-    validated_tsbl[, component_pathogen_timeseries])
-  )
+    validated_tsbl[, component_pathogen_timeseries]
+  ))
 
   #' @srrstats {G5.3} data objects are returned with no missing values.
   #'   this is validated through conversion to tsibble in
@@ -167,8 +167,10 @@ multiple <- function(data,
       component_pathogens = component_pathogens
     )
   )
-  class(model_inputs) <- c("EpiStrainDynamics.pathogen_structure",
-                           class(model_inputs))
+  class(model_inputs) <- c(
+    "EpiStrainDynamics.pathogen_structure",
+    class(model_inputs)
+  )
   model_inputs
 }
 
@@ -210,11 +212,11 @@ multiple <- function(data,
 #' # Using a data frame
 #' subtyped(
 #'   data = influenza,
-#'   case_timeseries = 'ili',
-#'   influenzaA_unsubtyped_timeseries = 'inf_A',
-#'   influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
-#'   other_pathogen_timeseries = c('inf_B', 'other'),
-#'   time = 'week'
+#'   case_timeseries = "ili",
+#'   influenzaA_unsubtyped_timeseries = "inf_A",
+#'   influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+#'   other_pathogen_timeseries = c("inf_B", "other"),
+#'   time = "week"
 #' )
 #'
 #' @examplesIf rlang::is_installed("xts")
@@ -225,10 +227,10 @@ multiple <- function(data,
 #' )
 #' subtyped(
 #'   data = influenza_xts,
-#'   case_timeseries = 'ili',
-#'   influenzaA_unsubtyped_timeseries = 'inf_A',
-#'   influenzaA_subtyped_timeseries = c('inf_H3N2', 'inf_H1N1'),
-#'   other_pathogen_timeseries = c('inf_B', 'other')
+#'   case_timeseries = "ili",
+#'   influenzaA_unsubtyped_timeseries = "inf_A",
+#'   influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+#'   other_pathogen_timeseries = c("inf_B", "other")
 #' )
 #'
 subtyped <- function(data,
@@ -237,13 +239,14 @@ subtyped <- function(data,
                      influenzaA_subtyped_timeseries,
                      other_pathogen_timeseries,
                      time = NULL) {
-
   #' @srrstats {G5.8c, G5.8d} edge cases produce errors
   #' @srrstats {G2.1, G5.8, G5.8b} assertions on types of inputs
   #' @srrstats {G2.1a} validation for vector inputs
-  if(!is.null(time)) check_column_exists(data, time)
-  ts_cols <- c(case_timeseries, influenzaA_unsubtyped_timeseries,
-               influenzaA_subtyped_timeseries, other_pathogen_timeseries)
+  if (!is.null(time)) check_column_exists(data, time)
+  ts_cols <- c(
+    case_timeseries, influenzaA_unsubtyped_timeseries,
+    influenzaA_subtyped_timeseries, other_pathogen_timeseries
+  )
   for (col in ts_cols) {
     check_column_exists(data, col)
   }
@@ -260,13 +263,15 @@ subtyped <- function(data,
 
   # Create matrices directly from validated tsibble
   component_pathogens <- t(as.matrix(
-    validated_tsbl[, c(influenzaA_unsubtyped_timeseries,
-                       other_pathogen_timeseries)]
+    validated_tsbl[, c(
+      influenzaA_unsubtyped_timeseries,
+      other_pathogen_timeseries
+    )]
   ))
 
   influenzaA_subtyped <- t(as.matrix(
-    validated_tsbl[, influenzaA_subtyped_timeseries])
-  )
+    validated_tsbl[, influenzaA_subtyped_timeseries]
+  ))
 
   #' @srrstats {G5.3} data objects are returns with no missing values. this
   #'   is validated through conversion to tsibble in `create_validated_timeseries`
@@ -283,7 +288,9 @@ subtyped <- function(data,
     )
   )
 
-  class(model_inputs) <- c("EpiStrainDynamics.pathogen_structure",
-                           class(model_inputs))
+  class(model_inputs) <- c(
+    "EpiStrainDynamics.pathogen_structure",
+    class(model_inputs)
+  )
   model_inputs
 }

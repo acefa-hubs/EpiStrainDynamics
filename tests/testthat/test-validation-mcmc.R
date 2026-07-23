@@ -251,8 +251,10 @@ test_that("validate_suppress_warnings() rejects non-logical", {
 })
 
 test_that("validate_suppress_warnings() rejects multiple values", {
-  expect_error(EpiStrainDynamics:::validate_suppress_warnings(c(TRUE, FALSE)),
-               "must be a single value")
+  expect_error(
+    EpiStrainDynamics:::validate_suppress_warnings(c(TRUE, FALSE)),
+    "must be a single value"
+  )
 })
 
 test_that("validate_suppress_warnings() rejects NA", {
@@ -283,10 +285,14 @@ test_that("validate_rhat_threshold() rejects non-finite values", {
 })
 
 test_that("validate_rhat_threshold() rejects values below 1.0", {
-  expect_error(EpiStrainDynamics:::validate_rhat_threshold(0.99),
-               "must be greater than or equal to 1.0")
-  expect_error(EpiStrainDynamics:::validate_rhat_threshold(0.5),
-               "must be greater than or equal to 1.0")
+  expect_error(
+    EpiStrainDynamics:::validate_rhat_threshold(0.99),
+    "must be greater than or equal to 1.0"
+  )
+  expect_error(
+    EpiStrainDynamics:::validate_rhat_threshold(0.5),
+    "must be greater than or equal to 1.0"
+  )
 })
 
 test_that("validate_rhat_threshold() warns on unusually high values", {
@@ -308,8 +314,10 @@ test_that("validate_eff_sample_threshold() rejects non-numeric", {
 })
 
 test_that("validate_eff_sample_threshold() rejects multiple values", {
-  expect_error(EpiStrainDynamics:::validate_eff_sample_threshold(c(100, 200)),
-               "must be a single value")
+  expect_error(
+    EpiStrainDynamics:::validate_eff_sample_threshold(c(100, 200)),
+    "must be a single value"
+  )
 })
 
 test_that("validate_eff_sample_threshold() rejects non-finite values", {
@@ -337,12 +345,14 @@ test_that("validate_eff_sample_threshold() warns on very high values", {
 test_that("validate_mcmc_params_collective() checks n_warmup < n_iter", {
   expect_error(
     EpiStrainDynamics:::validate_mcmc_params_collective(
-      n_iter = 100, n_warmup = 100, n_chain = 1),
+      n_iter = 100, n_warmup = 100, n_chain = 1
+    ),
     "n_warmup.*must be less than.*n_iter"
   )
   expect_error(
     EpiStrainDynamics:::validate_mcmc_params_collective(
-      n_iter = 100, n_warmup = 150, n_chain = 1),
+      n_iter = 100, n_warmup = 150, n_chain = 1
+    ),
     "n_warmup.*must be less than.*n_iter"
   )
 })
@@ -350,12 +360,14 @@ test_that("validate_mcmc_params_collective() checks n_warmup < n_iter", {
 test_that("validate_mcmc_params_collective() warns about large n_iter", {
   expect_warning(
     EpiStrainDynamics:::validate_mcmc_params_collective(
-      n_iter = 25000, n_warmup = 1000, n_chain = 1),
+      n_iter = 25000, n_warmup = 1000, n_chain = 1
+    ),
     "Large.*n_iter.*long computation"
   )
   expect_silent(
     EpiStrainDynamics:::validate_mcmc_params_collective(
-      n_iter = 2000, n_warmup = 1000, n_chain = 1)
+      n_iter = 2000, n_warmup = 1000, n_chain = 1
+    )
   )
 })
 
@@ -364,7 +376,8 @@ test_that("validate_mcmc_params_collective() warns when n_chain exceeds cores", 
   if (!is.na(n_cores)) {
     expect_warning(
       EpiStrainDynamics:::validate_mcmc_params_collective(
-        n_iter = 1000, n_warmup = 500, n_chain = n_cores + 2),
+        n_iter = 1000, n_warmup = 500, n_chain = n_cores + 2
+      ),
       "exceeds available CPU cores"
     )
   }
@@ -373,7 +386,8 @@ test_that("validate_mcmc_params_collective() warns when n_chain exceeds cores", 
 test_that("validate_mcmc_params_collective() warns about excessive thinning", {
   expect_warning(
     EpiStrainDynamics:::validate_mcmc_params_collective(
-      n_iter = 100, n_warmup = 50, n_chain = 1, thin = 5),
+      n_iter = 100, n_warmup = 50, n_chain = 1, thin = 5
+    ),
     "Very few effective samples.*thinning"
   )
 })
@@ -381,25 +395,30 @@ test_that("validate_mcmc_params_collective() warns about excessive thinning", {
 test_that("validate_mcmc_params_collective() validates seed parameter", {
   expect_silent(
     EpiStrainDynamics:::validate_mcmc_params_collective(
-      n_iter = 1000, n_warmup = 500, n_chain = 1, seed = NULL)
+      n_iter = 1000, n_warmup = 500, n_chain = 1, seed = NULL
+    )
   )
   expect_silent(
     EpiStrainDynamics:::validate_mcmc_params_collective(
-      n_iter = 1000, n_warmup = 500, n_chain = 1, seed = 123)
+      n_iter = 1000, n_warmup = 500, n_chain = 1, seed = 123
+    )
   )
   expect_error(
     EpiStrainDynamics:::validate_mcmc_params_collective(
-      n_iter = 1000, n_warmup = 500, n_chain = 1, seed = "abc"),
+      n_iter = 1000, n_warmup = 500, n_chain = 1, seed = "abc"
+    ),
     "seed.*must be a single numeric value"
   )
   expect_error(
     EpiStrainDynamics:::validate_mcmc_params_collective(
-      n_iter = 1000, n_warmup = 500, n_chain = 1, seed = c(1, 2)),
+      n_iter = 1000, n_warmup = 500, n_chain = 1, seed = c(1, 2)
+    ),
     "seed.*must be a single numeric value"
   )
   expect_warning(
     EpiStrainDynamics:::validate_mcmc_params_collective(
-      n_iter = 1000, n_warmup = 500, n_chain = 1, seed = 123.5),
+      n_iter = 1000, n_warmup = 500, n_chain = 1, seed = 123.5
+    ),
     "seed.*not an integer"
   )
 })
@@ -408,12 +427,14 @@ test_that("validate_mcmc_params_collective() respects suppress_warnings", {
   expect_silent(
     EpiStrainDynamics:::validate_mcmc_params_collective(
       n_iter = 100, n_warmup = 50, n_chain = 1, thin = 5,
-      suppress_warnings = TRUE)
+      suppress_warnings = TRUE
+    )
   )
   expect_silent(
     EpiStrainDynamics:::validate_mcmc_params_collective(
       n_iter = 25000, n_warmup = 1000, n_chain = 1,
-      suppress_warnings = TRUE)
+      suppress_warnings = TRUE
+    )
   )
 })
 

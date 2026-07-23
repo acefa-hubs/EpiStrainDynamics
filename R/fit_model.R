@@ -71,40 +71,41 @@
 #'   epidemiological metrics using the `metrics` family of functions.
 #'
 #' @examplesIf interactive()
-#'   mod <- construct_model(
-#'     method = random_walk(),
-#'     pathogen_structure = single(
-#'       case_timeseries = sarscov2$cases,
-#'       time = sarscov2$date))
-#'
-#'   fit <- fit_model(mod)
-#'
-#'   # Suppress progress and messages but keep warnings/errors
-#'   fit <- fit_model(mod, verbose = FALSE)
-#'
-#'   # Suppress warnings too
-#'   fit <- fit_model(mod, verbose = FALSE, suppress_warnings = TRUE)
-#'
-#'   # Catch errors and inspect
-#'   result <- tryCatch(
-#'     fit_model(mod),
-#'     error = function(e) e
+#' mod <- construct_model(
+#'   method = random_walk(),
+#'   pathogen_structure = single(
+#'     case_timeseries = sarscov2$cases,
+#'     time = sarscov2$date
 #'   )
-#'   if (inherits(result, "EpiStrainDynamics.fit.error")) {
-#'     cat("Fitting failed:", result$message, "\n")
-#'     # Can still access the model: result$constructed_model
-#'   }
-fit_model <- function (constructed_model,
-                       n_chain = 4,
-                       n_iter = 2000,
-                       n_warmup = floor(n_iter/2),
-                       thin = 1,
-                       adapt_delta = 0.9,
-                       multi_cores = TRUE,
-                       verbose = TRUE,
-                       suppress_warnings = FALSE,
-                       seed = NULL, ...) {
-
+#' )
+#'
+#' fit <- fit_model(mod)
+#'
+#' # Suppress progress and messages but keep warnings/errors
+#' fit <- fit_model(mod, verbose = FALSE)
+#'
+#' # Suppress warnings too
+#' fit <- fit_model(mod, verbose = FALSE, suppress_warnings = TRUE)
+#'
+#' # Catch errors and inspect
+#' result <- tryCatch(
+#'   fit_model(mod),
+#'   error = function(e) e
+#' )
+#' if (inherits(result, "EpiStrainDynamics.fit.error")) {
+#'   cat("Fitting failed:", result$message, "\n")
+#'   # Can still access the model: result$constructed_model
+#' }
+fit_model <- function(constructed_model,
+                      n_chain = 4,
+                      n_iter = 2000,
+                      n_warmup = floor(n_iter / 2),
+                      thin = 1,
+                      adapt_delta = 0.9,
+                      multi_cores = TRUE,
+                      verbose = TRUE,
+                      suppress_warnings = FALSE,
+                      seed = NULL, ...) {
   # validate inputs
   validate_class_inherits(constructed_model, "EpiStrainDynamics.model")
   validate_n_chain(n_chain)
@@ -117,7 +118,8 @@ fit_model <- function (constructed_model,
   validate_suppress_warnings(suppress_warnings)
   validate_multi_cores(multi_cores)
   validate_mcmc_params_collective(n_iter, n_warmup, n_chain, thin, seed,
-                                  suppress_warnings = suppress_warnings)
+    suppress_warnings = suppress_warnings
+  )
 
   UseMethod("fit_model")
 }
@@ -140,17 +142,16 @@ abort_fit_error <- function(message, call, constructed_model, error_type) {
 
 #' @rdname fit_model
 #' @export
-fit_model.rw_subtyped <- function (constructed_model,
-                                   n_chain = 4,
-                                   n_iter = 2000,
-                                   n_warmup = floor(n_iter/2),
-                                   thin = 1,
-                                   adapt_delta = 0.9,
-                                   multi_cores = TRUE,
-                                   verbose = TRUE,
-                                   suppress_warnings = FALSE,
-                                   seed = NULL, ...) {
-
+fit_model.rw_subtyped <- function(constructed_model,
+                                  n_chain = 4,
+                                  n_iter = 2000,
+                                  n_warmup = floor(n_iter / 2),
+                                  thin = 1,
+                                  adapt_delta = 0.9,
+                                  multi_cores = TRUE,
+                                  verbose = TRUE,
+                                  suppress_warnings = FALSE,
+                                  seed = NULL, ...) {
   # Prepare Stan sampling call
   stan_call <- function() {
     rstan::sampling(
@@ -162,8 +163,9 @@ fit_model.rw_subtyped <- function (constructed_model,
       warmup = as.integer(n_warmup),
       thin = as.integer(thin),
       seed = ifelse(!is.null(seed), as.integer(seed),
-                    sample.int(.Machine$integer.max, 1)),
-      cores = ifelse(multi_cores == TRUE, parallel::detectCores()-1, 1),
+        sample.int(.Machine$integer.max, 1)
+      ),
+      cores = ifelse(multi_cores == TRUE, parallel::detectCores() - 1, 1),
       control = list(adapt_delta = adapt_delta),
       #' @srrstats {BS2.12, BS2.13} refresh controls progress display
       refresh = ifelse(verbose == TRUE, 500, 0),
@@ -174,27 +176,28 @@ fit_model.rw_subtyped <- function (constructed_model,
   }
 
   #' @srrstats {BS2.15} Catch errors from Stan and provide informative handling
-  fit_object <- tryCatch({
-
-    #' @srrstats {BS2.14} Conditionally suppress warnings
-    if (suppress_warnings) {
-      suppressWarnings(stan_call())
-    } else {
-      stan_call()
+  fit_object <- tryCatch(
+    {
+      #' @srrstats {BS2.14} Conditionally suppress warnings
+      if (suppress_warnings) {
+        suppressWarnings(stan_call())
+      } else {
+        stan_call()
+      }
+    },
+    error = function(e) {
+      # Create error object that can be inspected
+      abort_fit_error(
+        conditionMessage(e),
+        conditionCall(e), constructed_model, class(e)
+      )
     }
-
-  }, error = function(e) {
-    # Create error object that can be inspected
-    abort_fit_error(
-      conditionMessage(e),
-      conditionCall(e), constructed_model, class(e)
-    )
-  })
+  )
 
   #' @srrstats {BS2.15} Check if Stan sampling actually succeeded
   #' Stan sometimes returns a failed stanfit object rather than throwing an error
   if (!inherits(fit_object, "stanfit") ||
-      length(fit_object@sim$samples) == 0) {
+    length(fit_object@sim$samples) == 0) {
     abort_fit_error(
       "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
       sys.call(), constructed_model, "stan_failure"
@@ -203,17 +206,19 @@ fit_model.rw_subtyped <- function (constructed_model,
 
   #' @srrstats {BS5.5} the `model` return object is of class `stanfit`, which
   #'   includes information about convergence
-  out <- list(fit = fit_object,
-              constructed_model = constructed_model,
-              mcmc_info = list(
-                seed = seed,
-                chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
-                init = rstan::get_inits(fit_object),
-                n_chain = n_chain,
-                n_iter = n_iter,
-                n_warmup = n_warmup,
-                thin = thin
-              ))
+  out <- list(
+    fit = fit_object,
+    constructed_model = constructed_model,
+    mcmc_info = list(
+      seed = seed,
+      chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
+      init = rstan::get_inits(fit_object),
+      n_chain = n_chain,
+      n_iter = n_iter,
+      n_warmup = n_warmup,
+      thin = thin
+    )
+  )
 
   class(out) <- c("rw", "EpiStrainDynamics.fit", class(out))
   return(out)
@@ -221,17 +226,16 @@ fit_model.rw_subtyped <- function (constructed_model,
 
 #' @rdname fit_model
 #' @export
-fit_model.ps_subtyped <- function (constructed_model,
-                                   n_chain = 4,
-                                   n_iter = 2000,
-                                   n_warmup = floor(n_iter/2),
-                                   thin = 1,
-                                   adapt_delta = 0.9,
-                                   multi_cores = TRUE,
-                                   verbose = TRUE,
-                                   suppress_warnings = FALSE,
-                                   seed = NULL, ...) {
-
+fit_model.ps_subtyped <- function(constructed_model,
+                                  n_chain = 4,
+                                  n_iter = 2000,
+                                  n_warmup = floor(n_iter / 2),
+                                  thin = 1,
+                                  adapt_delta = 0.9,
+                                  multi_cores = TRUE,
+                                  verbose = TRUE,
+                                  suppress_warnings = FALSE,
+                                  seed = NULL, ...) {
   stan_call <- function() {
     rstan::sampling(
       stanmodels$ps_subtyped,
@@ -241,8 +245,9 @@ fit_model.ps_subtyped <- function (constructed_model,
       warmup = as.integer(n_warmup),
       thin = as.integer(thin),
       seed = ifelse(!is.null(seed), as.integer(seed),
-                    sample.int(.Machine$integer.max, 1)),
-      cores = ifelse(multi_cores == TRUE, parallel::detectCores()-1, 1),
+        sample.int(.Machine$integer.max, 1)
+      ),
+      cores = ifelse(multi_cores == TRUE, parallel::detectCores() - 1, 1),
       control = list(adapt_delta = adapt_delta),
       refresh = ifelse(verbose == TRUE, 500, 0),
       show_messages = verbose,
@@ -250,38 +255,43 @@ fit_model.ps_subtyped <- function (constructed_model,
     )
   }
 
-  fit_object <- tryCatch({
-    if (suppress_warnings) {
-      suppressWarnings(stan_call())
-    } else {
-      stan_call()
+  fit_object <- tryCatch(
+    {
+      if (suppress_warnings) {
+        suppressWarnings(stan_call())
+      } else {
+        stan_call()
+      }
+    },
+    error = function(e) {
+      abort_fit_error(
+        conditionMessage(e),
+        conditionCall(e), constructed_model, class(e)
+      )
     }
-  }, error = function(e) {
-    abort_fit_error(
-      conditionMessage(e),
-      conditionCall(e), constructed_model, class(e)
-    )
-  })
+  )
 
   if (!inherits(fit_object, "stanfit") ||
-      length(fit_object@sim$samples) == 0) {
+    length(fit_object@sim$samples) == 0) {
     abort_fit_error(
       "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
       sys.call(), constructed_model, "stan_failure"
     )
   }
 
-  out <- list(fit = fit_object,
-              constructed_model = constructed_model,
-              mcmc_info = list(
-                seed = seed,
-                chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
-                init = rstan::get_inits(fit_object),
-                n_chain = n_chain,
-                n_iter = n_iter,
-                n_warmup = n_warmup,
-                thin = thin
-              ))
+  out <- list(
+    fit = fit_object,
+    constructed_model = constructed_model,
+    mcmc_info = list(
+      seed = seed,
+      chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
+      init = rstan::get_inits(fit_object),
+      n_chain = n_chain,
+      n_iter = n_iter,
+      n_warmup = n_warmup,
+      thin = thin
+    )
+  )
 
   class(out) <- c("ps", "EpiStrainDynamics.fit", class(out))
 
@@ -290,17 +300,16 @@ fit_model.ps_subtyped <- function (constructed_model,
 
 #' @rdname fit_model
 #' @export
-fit_model.rw_multiple <- function (constructed_model,
-                                   n_chain = 4,
-                                   n_iter = 2000,
-                                   n_warmup = floor(n_iter/2),
-                                   thin = 1,
-                                   adapt_delta = 0.9,
-                                   multi_cores = TRUE,
-                                   verbose = TRUE,
-                                   suppress_warnings = FALSE,
-                                   seed = NULL, ...) {
-
+fit_model.rw_multiple <- function(constructed_model,
+                                  n_chain = 4,
+                                  n_iter = 2000,
+                                  n_warmup = floor(n_iter / 2),
+                                  thin = 1,
+                                  adapt_delta = 0.9,
+                                  multi_cores = TRUE,
+                                  verbose = TRUE,
+                                  suppress_warnings = FALSE,
+                                  seed = NULL, ...) {
   stan_call <- function() {
     rstan::sampling(
       stanmodels$rw_multiple,
@@ -310,8 +319,9 @@ fit_model.rw_multiple <- function (constructed_model,
       warmup = as.integer(n_warmup),
       thin = as.integer(thin),
       seed = ifelse(!is.null(seed), as.integer(seed),
-                    sample.int(.Machine$integer.max, 1)),
-      cores = ifelse(multi_cores == TRUE, parallel::detectCores()-1, 1),
+        sample.int(.Machine$integer.max, 1)
+      ),
+      cores = ifelse(multi_cores == TRUE, parallel::detectCores() - 1, 1),
       control = list(adapt_delta = adapt_delta),
       refresh = ifelse(verbose == TRUE, 500, 0),
       show_messages = verbose,
@@ -319,38 +329,43 @@ fit_model.rw_multiple <- function (constructed_model,
     )
   }
 
-  fit_object <- tryCatch({
-    if (suppress_warnings) {
-      suppressWarnings(stan_call())
-    } else {
-      stan_call()
+  fit_object <- tryCatch(
+    {
+      if (suppress_warnings) {
+        suppressWarnings(stan_call())
+      } else {
+        stan_call()
+      }
+    },
+    error = function(e) {
+      abort_fit_error(
+        conditionMessage(e),
+        conditionCall(e), constructed_model, class(e)
+      )
     }
-  }, error = function(e) {
-    abort_fit_error(
-      conditionMessage(e),
-      conditionCall(e), constructed_model, class(e)
-    )
-  })
+  )
 
   if (!inherits(fit_object, "stanfit") ||
-      length(fit_object@sim$samples) == 0) {
+    length(fit_object@sim$samples) == 0) {
     abort_fit_error(
       "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
       sys.call(), constructed_model, "stan_failure"
     )
   }
 
-  out <- list(fit = fit_object,
-              constructed_model = constructed_model,
-              mcmc_info = list(
-                seed = seed,
-                chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
-                init = rstan::get_inits(fit_object),
-                n_chain = n_chain,
-                n_iter = n_iter,
-                n_warmup = n_warmup,
-                thin = thin
-              ))
+  out <- list(
+    fit = fit_object,
+    constructed_model = constructed_model,
+    mcmc_info = list(
+      seed = seed,
+      chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
+      init = rstan::get_inits(fit_object),
+      n_chain = n_chain,
+      n_iter = n_iter,
+      n_warmup = n_warmup,
+      thin = thin
+    )
+  )
 
   class(out) <- c("rw", "EpiStrainDynamics.fit", class(out))
   return(out)
@@ -358,17 +373,16 @@ fit_model.rw_multiple <- function (constructed_model,
 
 #' @rdname fit_model
 #' @export
-fit_model.ps_multiple <- function (constructed_model,
-                                   n_chain = 4,
-                                   n_iter = 2000,
-                                   n_warmup = floor(n_iter/2),
-                                   thin = 1,
-                                   adapt_delta = 0.9,
-                                   multi_cores = TRUE,
-                                   verbose = TRUE,
-                                   suppress_warnings = FALSE,
-                                   seed = NULL, ...) {
-
+fit_model.ps_multiple <- function(constructed_model,
+                                  n_chain = 4,
+                                  n_iter = 2000,
+                                  n_warmup = floor(n_iter / 2),
+                                  thin = 1,
+                                  adapt_delta = 0.9,
+                                  multi_cores = TRUE,
+                                  verbose = TRUE,
+                                  suppress_warnings = FALSE,
+                                  seed = NULL, ...) {
   stan_call <- function() {
     rstan::sampling(
       stanmodels$ps_multiple,
@@ -378,8 +392,9 @@ fit_model.ps_multiple <- function (constructed_model,
       warmup = as.integer(n_warmup),
       thin = as.integer(thin),
       seed = ifelse(!is.null(seed), as.integer(seed),
-                    sample.int(.Machine$integer.max, 1)),
-      cores = ifelse(multi_cores == TRUE, parallel::detectCores()-1, 1),
+        sample.int(.Machine$integer.max, 1)
+      ),
+      cores = ifelse(multi_cores == TRUE, parallel::detectCores() - 1, 1),
       control = list(adapt_delta = adapt_delta),
       refresh = ifelse(verbose == TRUE, 500, 0),
       show_messages = verbose,
@@ -387,38 +402,43 @@ fit_model.ps_multiple <- function (constructed_model,
     )
   }
 
-  fit_object <- tryCatch({
-    if (suppress_warnings) {
-      suppressWarnings(stan_call())
-    } else {
-      stan_call()
+  fit_object <- tryCatch(
+    {
+      if (suppress_warnings) {
+        suppressWarnings(stan_call())
+      } else {
+        stan_call()
+      }
+    },
+    error = function(e) {
+      abort_fit_error(
+        conditionMessage(e),
+        conditionCall(e), constructed_model, class(e)
+      )
     }
-  }, error = function(e) {
-    abort_fit_error(
-      conditionMessage(e),
-      conditionCall(e), constructed_model, class(e)
-    )
-  })
+  )
 
   if (!inherits(fit_object, "stanfit") ||
-      length(fit_object@sim$samples) == 0) {
+    length(fit_object@sim$samples) == 0) {
     abort_fit_error(
       "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
       sys.call(), constructed_model, "stan_failure"
     )
   }
 
-  out <- list(fit = fit_object,
-              constructed_model = constructed_model,
-              mcmc_info = list(
-                seed = seed,
-                chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
-                init = rstan::get_inits(fit_object),
-                n_chain = n_chain,
-                n_iter = n_iter,
-                n_warmup = n_warmup,
-                thin = thin
-              ))
+  out <- list(
+    fit = fit_object,
+    constructed_model = constructed_model,
+    mcmc_info = list(
+      seed = seed,
+      chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
+      init = rstan::get_inits(fit_object),
+      n_chain = n_chain,
+      n_iter = n_iter,
+      n_warmup = n_warmup,
+      thin = thin
+    )
+  )
 
   class(out) <- c("ps", "EpiStrainDynamics.fit", class(out))
   return(out)
@@ -426,17 +446,16 @@ fit_model.ps_multiple <- function (constructed_model,
 
 #' @rdname fit_model
 #' @export
-fit_model.rw_single <- function (constructed_model,
-                                 n_chain = 4,
-                                 n_iter = 2000,
-                                 n_warmup = floor(n_iter/2),
-                                 thin = 1,
-                                 adapt_delta = 0.9,
-                                 multi_cores = TRUE,
-                                 verbose = TRUE,
-                                 suppress_warnings = FALSE,
-                                 seed = NULL, ...) {
-
+fit_model.rw_single <- function(constructed_model,
+                                n_chain = 4,
+                                n_iter = 2000,
+                                n_warmup = floor(n_iter / 2),
+                                thin = 1,
+                                adapt_delta = 0.9,
+                                multi_cores = TRUE,
+                                verbose = TRUE,
+                                suppress_warnings = FALSE,
+                                seed = NULL, ...) {
   stan_call <- function() {
     rstan::sampling(
       stanmodels$rw_single,
@@ -446,8 +465,9 @@ fit_model.rw_single <- function (constructed_model,
       warmup = as.integer(n_warmup),
       thin = as.integer(thin),
       seed = ifelse(!is.null(seed), as.integer(seed),
-                    sample.int(.Machine$integer.max, 1)),
-      cores = ifelse(multi_cores == TRUE, parallel::detectCores()-1, 1),
+        sample.int(.Machine$integer.max, 1)
+      ),
+      cores = ifelse(multi_cores == TRUE, parallel::detectCores() - 1, 1),
       control = list(adapt_delta = adapt_delta),
       refresh = ifelse(verbose == TRUE, 500, 0),
       show_messages = verbose,
@@ -455,38 +475,43 @@ fit_model.rw_single <- function (constructed_model,
     )
   }
 
-  fit_object <- tryCatch({
-    if (suppress_warnings) {
-      suppressWarnings(stan_call())
-    } else {
-      stan_call()
+  fit_object <- tryCatch(
+    {
+      if (suppress_warnings) {
+        suppressWarnings(stan_call())
+      } else {
+        stan_call()
+      }
+    },
+    error = function(e) {
+      abort_fit_error(
+        conditionMessage(e),
+        conditionCall(e), constructed_model, class(e)
+      )
     }
-  }, error = function(e) {
-    abort_fit_error(
-      conditionMessage(e),
-      conditionCall(e), constructed_model, class(e)
-    )
-  })
+  )
 
   if (!inherits(fit_object, "stanfit") ||
-      length(fit_object@sim$samples) == 0) {
+    length(fit_object@sim$samples) == 0) {
     abort_fit_error(
       "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
       sys.call(), constructed_model, "stan_failure"
     )
   }
 
-  out <- list(fit = fit_object,
-              constructed_model = constructed_model,
-              mcmc_info = list(
-                seed = seed,
-                chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
-                init = rstan::get_inits(fit_object),
-                n_chain = n_chain,
-                n_iter = n_iter,
-                n_warmup = n_warmup,
-                thin = thin
-              ))
+  out <- list(
+    fit = fit_object,
+    constructed_model = constructed_model,
+    mcmc_info = list(
+      seed = seed,
+      chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
+      init = rstan::get_inits(fit_object),
+      n_chain = n_chain,
+      n_iter = n_iter,
+      n_warmup = n_warmup,
+      thin = thin
+    )
+  )
 
   class(out) <- c("rw_single", "EpiStrainDynamics.fit", class(out))
   return(out)
@@ -494,17 +519,16 @@ fit_model.rw_single <- function (constructed_model,
 
 #' @rdname fit_model
 #' @export
-fit_model.ps_single <- function (constructed_model,
-                                 n_chain = 4,
-                                 n_iter = 2000,
-                                 n_warmup = floor(n_iter/2),
-                                 thin = 1,
-                                 adapt_delta = 0.9,
-                                 multi_cores = TRUE,
-                                 verbose = TRUE,
-                                 suppress_warnings = FALSE,
-                                 seed = NULL, ...) {
-
+fit_model.ps_single <- function(constructed_model,
+                                n_chain = 4,
+                                n_iter = 2000,
+                                n_warmup = floor(n_iter / 2),
+                                thin = 1,
+                                adapt_delta = 0.9,
+                                multi_cores = TRUE,
+                                verbose = TRUE,
+                                suppress_warnings = FALSE,
+                                seed = NULL, ...) {
   stan_call <- function() {
     rstan::sampling(
       stanmodels$ps_single,
@@ -514,8 +538,9 @@ fit_model.ps_single <- function (constructed_model,
       warmup = as.integer(n_warmup),
       thin = as.integer(thin),
       seed = ifelse(!is.null(seed), as.integer(seed),
-                    sample.int(.Machine$integer.max, 1)),
-      cores = ifelse(multi_cores == TRUE, parallel::detectCores()-1, 1),
+        sample.int(.Machine$integer.max, 1)
+      ),
+      cores = ifelse(multi_cores == TRUE, parallel::detectCores() - 1, 1),
       control = list(adapt_delta = adapt_delta),
       refresh = ifelse(verbose == TRUE, 500, 0),
       show_messages = verbose,
@@ -523,38 +548,43 @@ fit_model.ps_single <- function (constructed_model,
     )
   }
 
-  fit_object <- tryCatch({
-    if (suppress_warnings) {
-      suppressWarnings(stan_call())
-    } else {
-      stan_call()
+  fit_object <- tryCatch(
+    {
+      if (suppress_warnings) {
+        suppressWarnings(stan_call())
+      } else {
+        stan_call()
+      }
+    },
+    error = function(e) {
+      abort_fit_error(
+        conditionMessage(e),
+        conditionCall(e), constructed_model, class(e)
+      )
     }
-  }, error = function(e) {
-    abort_fit_error(
-      conditionMessage(e),
-      conditionCall(e), constructed_model, class(e)
-    )
-  })
+  )
 
   if (!inherits(fit_object, "stanfit") ||
-      length(fit_object@sim$samples) == 0) {
+    length(fit_object@sim$samples) == 0) {
     abort_fit_error(
       "Stan sampling failed to produce valid samples. Check for initialization failures or data issues.",
       sys.call(), constructed_model, "stan_failure"
     )
   }
 
-  out <- list(fit = fit_object,
-              constructed_model = constructed_model,
-              mcmc_info = list(
-                seed = seed,
-                chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
-                init = rstan::get_inits(fit_object),
-                n_chain = n_chain,
-                n_iter = n_iter,
-                n_warmup = n_warmup,
-                thin = thin
-              ))
+  out <- list(
+    fit = fit_object,
+    constructed_model = constructed_model,
+    mcmc_info = list(
+      seed = seed,
+      chain_seeds = sapply(fit_object@stan_args, function(x) x$seed),
+      init = rstan::get_inits(fit_object),
+      n_chain = n_chain,
+      n_iter = n_iter,
+      n_warmup = n_warmup,
+      thin = thin
+    )
+  )
 
   class(out) <- c("ps_single", "EpiStrainDynamics.fit", class(out))
   return(out)

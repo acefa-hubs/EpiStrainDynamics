@@ -15,8 +15,10 @@ test_that("construct_model() works with all standard model configurations", {
 
     # Test structure and classes
     expect_type(result, "list")
-    expect_named(result, c("data", "validated_tsbl", "standata",
-                           "pathogen_names", "dow_effect"))
+    expect_named(result, c(
+      "data", "validated_tsbl", "standata",
+      "pathogen_names", "dow_effect"
+    ))
     expect_s3_class(result, c(model_name, "EpiStrainDynamics.model"))
 
     # Test data structure
@@ -56,11 +58,17 @@ test_that("p_spline models include spline-specific parameters in standata", {
     rw_model <- models[[paste0("rw_", structure_type)]]
 
     expect_true("knots" %in% names(ps_model$standata),
-                info = paste("P-spline", structure_type,
-                             "should have knots in standata"))
+      info = paste(
+        "P-spline", structure_type,
+        "should have knots in standata"
+      )
+    )
     expect_false("knots" %in% names(rw_model$standata),
-                 info = paste("Random walk", structure_type,
-                              "should not have knots in standata"))
+      info = paste(
+        "Random walk", structure_type,
+        "should not have knots in standata"
+      )
+    )
 
     # Test spline parameters in standata
     expect_true("spline_degree" %in% names(ps_model$standata))
@@ -106,21 +114,29 @@ test_that("construct_model() validates inputs appropriately", {
 
   # Test invalid method class
   invalid_method <- list(method = "random-walk")
-  expect_error(construct_model(invalid_method, pathogen),
-               "EpiStrainDynamics.method")
+  expect_error(
+    construct_model(invalid_method, pathogen),
+    "EpiStrainDynamics.method"
+  )
 
   # Test invalid pathogen structure class
   invalid_pathogen <- list(pathogen_structure = "single")
-  expect_error(construct_model(method, invalid_pathogen),
-               "EpiStrainDynamics.pathogen_structure")
+  expect_error(
+    construct_model(method, invalid_pathogen),
+    "EpiStrainDynamics.pathogen_structure"
+  )
 
   # Test dow_effect validation
-  expect_error(construct_model(method, pathogen, dow_effect = "TRUE"),
-               "must be a single logical value")
+  expect_error(
+    construct_model(method, pathogen, dow_effect = "TRUE"),
+    "must be a single logical value"
+  )
 
   # Test pathogen_noise validation
-  expect_error(construct_model(method, pathogen, pathogen_noise = "TRUE"),
-               "must be a single logical value")
+  expect_error(
+    construct_model(method, pathogen, pathogen_noise = "TRUE"),
+    "must be a single logical value"
+  )
 })
 
 test_that("smoothing parameters are correctly incorporated into standata", {
@@ -146,8 +162,9 @@ test_that("smoothing parameters are correctly incorporated into standata", {
   result_indep <- construct_model(
     method, pathogen,
     smoothing_params = smoothing_structure("independent",
-                                           tau_mean = c(0, 0.1, 0.3, 0),
-                                           tau_sd = rep(1, 4))
+      tau_mean = c(0, 0.1, 0.3, 0),
+      tau_sd = rep(1, 4)
+    )
   )
   expect_equal(result_indep$standata$cov_structure, 1)
   expect_equal(result_indep$standata$tau_priors_provided, 2)
@@ -160,7 +177,6 @@ test_that("smoothing parameters are correctly incorporated into standata", {
     smoothing_params = smoothing_structure("correlated")
   )
   expect_equal(result_corr$standata$cov_structure, 2)
-
 })
 
 test_that("smoothing_structure() alerts when tau priors provided for correlated type", {
@@ -261,8 +277,10 @@ test_that("models with various parameter combinations work correctly", {
 
   # Test model with independent smoothing
   expect_equal(models$rw_multiple_indep_smooth$standata$cov_structure, 1)
-  expect_equal(models$rw_multiple_indep_smooth$standata$tau_mean,
-               c(0, 0.1, 0.3, 0))
+  expect_equal(
+    models$rw_multiple_indep_smooth$standata$tau_mean,
+    c(0, 0.1, 0.3, 0)
+  )
 
   # Test model with correlated smoothing
   expect_equal(models$rw_multiple_corr_smooth$standata$cov_structure, 2)
@@ -287,32 +305,52 @@ test_that("models with various parameter combinations work correctly", {
 
 # Tests for get_model_type() - kept as is since they test pure logic
 test_that("get_model_type() returns correct model types", {
-  expect_equal(EpiStrainDynamics:::get_model_type("random-walk", "single"),
-               "rw_single")
-  expect_equal(EpiStrainDynamics:::get_model_type("random-walk", "multiple"),
-               "rw_multiple")
-  expect_equal(EpiStrainDynamics:::get_model_type("random-walk", "subtyped"),
-               "rw_subtyped")
-  expect_equal(EpiStrainDynamics:::get_model_type("p-spline", "single"),
-               "ps_single")
-  expect_equal(EpiStrainDynamics:::get_model_type("p-spline", "multiple"),
-               "ps_multiple")
-  expect_equal(EpiStrainDynamics:::get_model_type("p-spline", "subtyped"),
-               "ps_subtyped")
+  expect_equal(
+    EpiStrainDynamics:::get_model_type("random-walk", "single"),
+    "rw_single"
+  )
+  expect_equal(
+    EpiStrainDynamics:::get_model_type("random-walk", "multiple"),
+    "rw_multiple"
+  )
+  expect_equal(
+    EpiStrainDynamics:::get_model_type("random-walk", "subtyped"),
+    "rw_subtyped"
+  )
+  expect_equal(
+    EpiStrainDynamics:::get_model_type("p-spline", "single"),
+    "ps_single"
+  )
+  expect_equal(
+    EpiStrainDynamics:::get_model_type("p-spline", "multiple"),
+    "ps_multiple"
+  )
+  expect_equal(
+    EpiStrainDynamics:::get_model_type("p-spline", "subtyped"),
+    "ps_subtyped"
+  )
 })
 
 test_that("get_model_type() validates inputs and provides helpful errors", {
   # Test invalid methods
-  expect_error(EpiStrainDynamics:::get_model_type("invalid-method", "single"),
-               "Unknown `method`.*invalid-method")
-  expect_error(EpiStrainDynamics:::get_model_type("random_walk", "single"),
-               "Unknown `method`.*random_walk")
+  expect_error(
+    EpiStrainDynamics:::get_model_type("invalid-method", "single"),
+    "Unknown `method`.*invalid-method"
+  )
+  expect_error(
+    EpiStrainDynamics:::get_model_type("random_walk", "single"),
+    "Unknown `method`.*random_walk"
+  )
 
   # Test invalid structures
-  expect_error(EpiStrainDynamics:::get_model_type("random-walk", "invalid-structure"),
-               "Unknown `pathogen_type`.*invalid-structure")
-  expect_error(EpiStrainDynamics:::get_model_type("p-spline", ""),
-               "Unknown `pathogen_type`")
+  expect_error(
+    EpiStrainDynamics:::get_model_type("random-walk", "invalid-structure"),
+    "Unknown `pathogen_type`.*invalid-structure"
+  )
+  expect_error(
+    EpiStrainDynamics:::get_model_type("p-spline", ""),
+    "Unknown `pathogen_type`"
+  )
 })
 
 # Tests for get_knots() - kept similar but updated for consistency
@@ -346,20 +384,32 @@ test_that("get_knots() validates inputs properly", {
   X <- 1:10
 
   # Test invalid X
-  expect_error(EpiStrainDynamics:::get_knots(character(5)),
-               "must be a non-empty numeric vector")
-  expect_error(EpiStrainDynamics:::get_knots(numeric(0)),
-               "must be a non-empty numeric vector")
+  expect_error(
+    EpiStrainDynamics:::get_knots(character(5)),
+    "must be a non-empty numeric vector"
+  )
+  expect_error(
+    EpiStrainDynamics:::get_knots(numeric(0)),
+    "must be a non-empty numeric vector"
+  )
 
   # Test invalid parameters
-  expect_error(EpiStrainDynamics:::get_knots(X, days_per_knot = 0),
-               "must be a positive")
-  expect_error(EpiStrainDynamics:::get_knots(X, days_per_knot = 2.5),
-               "must be a whole number")
-  expect_error(EpiStrainDynamics:::get_knots(X, spline_degree = 0),
-               "must be a positive")
-  expect_error(EpiStrainDynamics:::get_knots(X, spline_degree = 3.7),
-               "must be a whole number")
+  expect_error(
+    EpiStrainDynamics:::get_knots(X, days_per_knot = 0),
+    "must be a positive"
+  )
+  expect_error(
+    EpiStrainDynamics:::get_knots(X, days_per_knot = 2.5),
+    "must be a whole number"
+  )
+  expect_error(
+    EpiStrainDynamics:::get_knots(X, spline_degree = 0),
+    "must be a positive"
+  )
+  expect_error(
+    EpiStrainDynamics:::get_knots(X, spline_degree = 3.7),
+    "must be a whole number"
+  )
   expect_error(
     EpiStrainDynamics:::get_knots(c(NA_real_, NA_real_, NA_real_)),
     "'from' must be a finite number"
@@ -372,8 +422,10 @@ test_that("get_cov_structure() returns correct numeric codes", {
   expect_equal(EpiStrainDynamics:::get_cov_structure("correlated"), 2)
 
   # Test error handling
-  expect_error(EpiStrainDynamics:::get_cov_structure("invalid"),
-               "Invalid option provided")
+  expect_error(
+    EpiStrainDynamics:::get_cov_structure("invalid"),
+    "Invalid option provided"
+  )
 })
 
 # Integration tests using helper functions
@@ -388,20 +440,28 @@ test_that("Full integration: all model combinations work correctly", {
   test_cases <- list(
     list(name = "rw_single", pathogen_count = 1, dataset = "sarscov2"),
     list(name = "ps_single", pathogen_count = 1, dataset = "sarscov2"),
-    list(name = "rw_multiple",
-         pathogen_count = expected_lengths$sarscov2_pathogen_count,
-         dataset = "sarscov2"),
-    list(name = "ps_multiple",
-         pathogen_count = expected_lengths$sarscov2_pathogen_count,
-         dataset = "sarscov2"),
-    list(name = "rw_subtyped",
-         pathogen_count = expected_lengths$influenza_subtyped_count +
-           expected_lengths$influenza_other_count,
-         dataset = "influenza"),
-    list(name = "ps_subtyped",
-         pathogen_count = expected_lengths$influenza_subtyped_count +
-           expected_lengths$influenza_other_count,
-         dataset = "influenza")
+    list(
+      name = "rw_multiple",
+      pathogen_count = expected_lengths$sarscov2_pathogen_count,
+      dataset = "sarscov2"
+    ),
+    list(
+      name = "ps_multiple",
+      pathogen_count = expected_lengths$sarscov2_pathogen_count,
+      dataset = "sarscov2"
+    ),
+    list(
+      name = "rw_subtyped",
+      pathogen_count = expected_lengths$influenza_subtyped_count +
+        expected_lengths$influenza_other_count,
+      dataset = "influenza"
+    ),
+    list(
+      name = "ps_subtyped",
+      pathogen_count = expected_lengths$influenza_subtyped_count +
+        expected_lengths$influenza_other_count,
+      dataset = "influenza"
+    )
   )
 
   for (test_case in test_cases) {
@@ -429,7 +489,7 @@ test_that("Full integration: all model combinations work correctly", {
 
     # Test required standata components
     expect_true(all(c("num_data", "Y", "week_effect", "DOW") %in%
-                      names(model$standata)))
+      names(model$standata)))
   }
 })
 
@@ -456,8 +516,8 @@ test_that("Custom model construction with specific parameters", {
   expect_s3_class(result, c("ps_multiple", "EpiStrainDynamics.model"))
   expect_equal(result$standata$spline_degree, 4L)
   expect_equal(result$standata$week_effect, 7L)
-  expect_equal(result$standata$cov_structure, 2)  # correlated
-  expect_equal(result$standata$noise_structure, 1)  # pathogen noise = TRUE
+  expect_equal(result$standata$cov_structure, 2) # correlated
+  expect_equal(result$standata$noise_structure, 1) # pathogen noise = TRUE
   expect_equal(result$pathogen_names, c("alpha", "delta", "omicron"))
   expect_true(result$dow_effect)
 })

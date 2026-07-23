@@ -69,31 +69,33 @@ This metric function can be run directly on the fitted model output.
 }
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
-  mod <- construct_model(
-    method = p_spline(),
-    pathogen_structure = multiple(
-      case_timeseries = sarscov2$cases,
-      time = sarscov2$date,
-      component_pathogen_timeseries = list(
-        alpha = sarscov2$alpha,
-        delta = sarscov2$delta,
-        omicron = sarscov2$omicron,
-        other = sarscov2$other))
+mod <- construct_model(
+  method = p_spline(),
+  pathogen_structure = multiple(
+    case_timeseries = sarscov2$cases,
+    time = sarscov2$date,
+    component_pathogen_timeseries = list(
+      alpha = sarscov2$alpha,
+      delta = sarscov2$delta,
+      omicron = sarscov2$omicron,
+      other = sarscov2$other
+    )
   )
+)
 
-  fit <- fit_model(mod)
-  prop <- proportion(fit)
+fit <- fit_model(mod)
+prop <- proportion(fit)
 
-  # or a unique combination, compared to all pathogens
-  prop2 <- proportion(fit,
-    numerator_combination = c("alpha", "delta", "omicron")
-  )
+# or a unique combination, compared to all pathogens
+prop2 <- proportion(fit,
+  numerator_combination = c("alpha", "delta", "omicron")
+)
 
-  # or a user-specified combination in both numerator and denominator
-  prop3 <- proportion(fit,
-    numerator_combination = "alpha",
-    denominator_combination = c("alpha", "delta", "omicron")
-  )
+# or a user-specified combination in both numerator and denominator
+prop3 <- proportion(fit,
+  numerator_combination = "alpha",
+  denominator_combination = c("alpha", "delta", "omicron")
+)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

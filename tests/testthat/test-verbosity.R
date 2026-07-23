@@ -64,11 +64,14 @@ test_that("fit_model with verbose=FALSE suppresses progress", {
   )
 
   # Capture output with verbose=FALSE
-  output <- capture.output({
-    suppressWarnings(
-      fit <- fit_model(mod, n_iter = 100, n_chain = 1, verbose = FALSE)
-    )
-  }, type = "message")
+  output <- capture.output(
+    {
+      suppressWarnings(
+        fit <- fit_model(mod, n_iter = 100, n_chain = 1, verbose = FALSE)
+      )
+    },
+    type = "message"
+  )
 
   # Should complete successfully
   expect_s3_class(fit, "EpiStrainDynamics.fit")
@@ -277,23 +280,31 @@ test_that("fit_model verbose and suppress_warnings work independently", {
 
   # Test all four combinations
   suppressWarnings({
-    fit1 <- fit_model(mod, n_iter = 100, n_chain = 1,
-                      verbose = TRUE, suppress_warnings = FALSE)
+    fit1 <- fit_model(mod,
+      n_iter = 100, n_chain = 1,
+      verbose = TRUE, suppress_warnings = FALSE
+    )
   })
 
   suppressWarnings({
-    fit2 <- fit_model(mod, n_iter = 100, n_chain = 1,
-                      verbose = TRUE, suppress_warnings = TRUE)
+    fit2 <- fit_model(mod,
+      n_iter = 100, n_chain = 1,
+      verbose = TRUE, suppress_warnings = TRUE
+    )
   })
 
   suppressWarnings({
-    fit3 <- fit_model(mod, n_iter = 100, n_chain = 1,
-                      verbose = FALSE, suppress_warnings = FALSE)
+    fit3 <- fit_model(mod,
+      n_iter = 100, n_chain = 1,
+      verbose = FALSE, suppress_warnings = FALSE
+    )
   })
 
   suppressWarnings({
-    fit4 <- fit_model(mod, n_iter = 100, n_chain = 1,
-                      verbose = FALSE, suppress_warnings = TRUE)
+    fit4 <- fit_model(mod,
+      n_iter = 100, n_chain = 1,
+      verbose = FALSE, suppress_warnings = TRUE
+    )
   })
 
   expect_s3_class(fit1, "EpiStrainDynamics.fit")
