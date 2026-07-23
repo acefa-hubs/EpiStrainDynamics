@@ -3,7 +3,7 @@
 #' S3 methods for plotting metrics calculated from the output sof either
 #' [incidence()], [growth_rate()], [Rt()], or [proportion()].
 #'
-#' @param df Metrics calculation output of class `EpiStrainDynamics.metric`
+#' @param x Metrics calculation output of class `EpiStrainDynamics.metric`
 #' @param xlab Time label for x axis, defaults to "Time"
 #' @param ... Additional arguments passed to plot
 #' @importFrom viridis viridis
@@ -33,10 +33,10 @@
 #'   fit <- fit_model(mod)
 #'   gr <- growth_rate(mod)
 #'   plot(gr)
-plot.incidence <- function(df, xlab = "Time", ...) {
-  validate_class_inherits(df, "EpiStrainDynamics.metric")
+plot.incidence <- function(x, xlab = "Time", ...) {
+  validate_class_inherits(x, "EpiStrainDynamics.metric")
 
-  measure_df <- df$measure
+  measure_df <- x$measure
 
   total_pathogens <- "Total"
   all_levels <- unique(measure_df$pathogen)
@@ -47,7 +47,7 @@ plot.incidence <- function(df, xlab = "Time", ...) {
     setNames(viridis::viridis(length(other_levels)), other_levels)
   )
 
-  tsbl <- df$constructed_model$validated_tsbl
+  tsbl <- x$constructed_model$validated_tsbl
   time_col <- tsibble::index_var(tsbl)
   input_data <- tsbl[, c(time_col, "case_timeseries")]
 
@@ -88,10 +88,10 @@ plot.incidence <- function(df, xlab = "Time", ...) {
 
 #' @rdname plot
 #' @export
-plot.growth_rate <- function(df, xlab = "Time", ...) {
-  validate_class_inherits(df, "EpiStrainDynamics.metric")
+plot.growth_rate <- function(x, xlab = "Time", ...) {
+  validate_class_inherits(x, "EpiStrainDynamics.metric")
 
-  measure_df <- df$measure
+  measure_df <- x$measure
 
   total_pathogens <- "Total"
   all_levels <- unique(measure_df$pathogen)
@@ -152,10 +152,10 @@ plot.growth_rate <- function(df, xlab = "Time", ...) {
 
 #' @rdname plot
 #' @export
-plot.Rt <- function(df, xlab = "Time", ...) {
-  validate_class_inherits(df, "EpiStrainDynamics.metric")
+plot.Rt <- function(x, xlab = "Time", ...) {
+  validate_class_inherits(x, "EpiStrainDynamics.metric")
 
-  measure_df <- df$measure
+  measure_df <- x$measure
 
   total_pathogens <- "Total"
   all_levels <- unique(measure_df$pathogen)
@@ -195,10 +195,10 @@ plot.Rt <- function(df, xlab = "Time", ...) {
 
 #' @rdname plot
 #' @export
-plot.proportion <- function(df, xlab = "Time", ...) {
-  validate_class_inherits(df, "EpiStrainDynamics.metric")
+plot.proportion <- function(x, xlab = "Time", ...) {
+  validate_class_inherits(x, "EpiStrainDynamics.metric")
 
-  measure_df <- df$measure
+  measure_df <- x$measure
 
   combos <- unique(measure_df$pathogen)
   colors <- setNames(viridis::viridis(length(combos)), combos)

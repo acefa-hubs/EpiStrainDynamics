@@ -6,16 +6,13 @@
 # ==============================================================================
 
 test_that("plot() validates input class", {
+  bad_growth_rate <- structure(list(measure = data.frame()), class = "growth_rate")
   expect_error(
-    plot(list(measure = data.frame())),
-    "Input must be of class"
-  )
-
-  expect_error(
-    plot(data.frame(x = 1:10, y = 1:10)),
+    plot(bad_growth_rate),
     "Input must be of class"
   )
 })
+
 
 # ==============================================================================
 # TESTS: PLOT RETURNS CORRECT OBJECT TYPE

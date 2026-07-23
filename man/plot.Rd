@@ -8,16 +8,16 @@
 \alias{plot.proportion}
 \title{Plot metrics calculation outputs}
 \usage{
-\method{plot}{incidence}(df, xlab = "Time", ...)
+\method{plot}{incidence}(x, xlab = "Time", ...)
 
-\method{plot}{growth_rate}(df, xlab = "Time", ...)
+\method{plot}{growth_rate}(x, xlab = "Time", ...)
 
-\method{plot}{Rt}(df, xlab = "Time", ...)
+\method{plot}{Rt}(x, xlab = "Time", ...)
 
-\method{plot}{proportion}(df, xlab = "Time", ...)
+\method{plot}{proportion}(x, xlab = "Time", ...)
 }
 \arguments{
-\item{df}{Metrics calculation output of class \code{EpiStrainDynamics.metric}}
+\item{x}{Metrics calculation output of class \code{EpiStrainDynamics.metric}}
 
 \item{xlab}{Time label for x axis, defaults to "Time"}
 
