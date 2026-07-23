@@ -1,6 +1,8 @@
 ---
 title: "Using EpiStrainDynamics"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    pandoc_args: ["--from", "markdown-implicit_figures"]
 vignette: >
   %\VignetteIndexEntry{Using EpiStrainDynamics}
   %\VignetteEngine{knitr::rmarkdown}
@@ -11,9 +13,10 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "vignettes/figures/Using-EpiStrainDynamics-",
+  fig.path = "figures/Using-EpiStrainDynamics-",
   fig.width = 7,
-  fig.height = 5
+  fig.height = 5,
+  dpi = 300
 )
 library(EpiStrainDynamics)
 
@@ -164,15 +167,15 @@ The model estimates the expected value of the time series (eg, a smoothed trend 
 ```{r}
 fit <- fit_model(
   mod,
-  n_iter = 2000,
-  n_warmup = 1000,
+  n_iter = 20,
+  n_warmup = 10,
   verbose = FALSE
 )
 ```
 
 The output of this function is a list with the stan fit object, accessed with `$fit`, and the elements of the constructed model object from the previous step, accessed with `$constructed_model`.
 
-## Step 3: Check fit
+# Step 3: Check fit
 
 A summary of model convergence diagnostics can be viewed using:
 
@@ -205,7 +208,7 @@ Model not converging? You can find more information about divergent transitions 
 * Try reducing the complexity of the model. For example, by using `pathogen_noise = FALSE` or a shared smoothing structure.
 * Increase the number of warmup samples with the n_warmup parameter.
 
-# Step 3: Calculate and explore epidemiological quantities
+# Step 4: Calculate and explore epidemiological quantities
 
 The package provides helper functions to calculate a number of useful epidemiological quantities. The output of these methods functions are a named list containing a tsibble of the outcome quantity (`$measure`), the fit object (`$fit`), and the constructed model object (`$constructed_model`). `measure` is a tsibble containing the median of the epidemiological quantity (`y`), the 50% credible interval of the quantity (`lb_50` & `ub_50`), the 95% credible interval (`lb_95` & `ub_95`), the proportion greater than a defined threshold value (`prop`), the pathogen name (`pathogen`), and the time index (`time`).
 
@@ -266,8 +269,8 @@ mod_covid <- construct_model(
 
 fit_covid <- fit_model(
   mod_covid,
-  n_iter = 2000,
-  n_warmup = 1000,
+  n_iter = 20,
+  n_warmup = 10,
   verbose = FALSE
 )
 ```
@@ -280,6 +283,7 @@ plot(gr_covid)
 ```
 
 ```{r proportion_covid}
-prop_covid <- proportion(fit_covid)                                   plot(prop_covid)
+prop_covid <- proportion(fit_covid)
+plot(prop_covid)
 ```
 
