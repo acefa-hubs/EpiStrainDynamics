@@ -8,6 +8,10 @@
   the underlying figure path so plots render correctly (#45).
 * Fixed the `Rt()` equation failing to render on the pkgdown site by setting
   MathJax as the math renderer (#44).
+* Fixed `construct_model()` and `compute_multi_pathogen()` erroring on R
+  versions before 4.4.0 with "could not find function '%||%'", by
+  explicitly importing `%||%` from `rlang` instead of relying on base R's
+  version, which only exists from R 4.4.0 (related to #43).
 
 ## Minor improvements
 
@@ -20,7 +24,10 @@
 * Added tests for MCMC validation.
 * Added a `print()` method for `EpiStrainDynamics.model` objects (#47).
 * Standardised error handling on `cli::cli_abort()` (#49).
-* `plot()` is no longer redefined as a generic (#48).
+* `plot()` is no longer redefined as a generic (#48), and its S3 methods'
+  first argument was renamed from `df` to `x` to match the base generic's
+  signature, resolving an R CMD check S3 generic/method consistency
+  warning.
 * Increased the minimum R version to 4.1.0, matching actual base pipe usage,
   and added it to the R-CMD-check.yaml test matrix (#43).
 * Fixed all lintr-identified issues (#50): styling (line length, indentation,
