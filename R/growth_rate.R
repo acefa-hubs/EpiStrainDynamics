@@ -3,7 +3,14 @@
 #' Computes the epidemiological growth rate, defined as the instantaneous
 #' rate of change in log-incidence over time. Mathematically, it represents:
 #' \deqn{r_t = \log(I_t) - \log(I_{t-1}) = \log\left(\frac{I_t}{I_{t-1}}\right)}
-#' where \eqn{I_t} is incidence at time t.
+#' where \eqn{I_t} is incidence (see [incidence()]) at time \eqn{t}.
+#'
+#' Growth rate and \eqn{R_t} both describe transmission trends, but on
+#' different scales: growth rate is a direct log-scale rate of change, while
+#' [Rt()] additionally accounts for the generation interval to translate
+#' that rate into an average number of secondary infections per case.
+#' Growth rate is positive whenever \eqn{R_t > 1} and negative whenever
+#' \eqn{R_t < 1}, since both describe the same underlying growth or decline.
 #'
 #' This metric quantifies the **proportional change** in disease incidence
 #' from one time period to the next on a logarithmic scale, where:

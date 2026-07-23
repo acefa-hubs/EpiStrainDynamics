@@ -9,6 +9,10 @@
 #' Where incidences are derived from the exponential of log-incidence estimates:
 #' \deqn{P_t = \frac{\sum_{i \in \text{numerator}} \exp(\log\text{-incidence}_{i,t})}{\sum_{j \in \text{denominator}} \exp(\log\text{-incidence}_{j,t})}}
 #'
+#' Where the numerator and denominator are each a user-specified set of
+#' pathogens or subtypes (via `numerator_combination`/`denominator_combination`),
+#' and \eqn{i}, \eqn{j} index the pathogens included in each.
+#'
 #' This metric quantifies the **relative contribution** of specific pathogen(s)
 #' or strain(s) to the total disease burden. Key characteristics:
 #' \itemize{

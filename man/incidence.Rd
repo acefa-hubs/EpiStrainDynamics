@@ -58,9 +58,16 @@ point, where it is:
 the incidence is further adjusted as:
 \deqn{I_t^{adj} = I_t \times \text{week\_effect} \times \text{dow\_simplex}[\text{DOW}(t)]}
 
-This accounts for systematic variations in case reporting or transmission
-patterns across different days of the week (e.g., lower weekend reporting,
-higher weekday transmission).
+Where:
+\itemize{
+\item \eqn{\text{week\_effect}} is the number of distinct days modelled
+(7 for a full weekly cycle)
+\item \eqn{\text{dow\_simplex}} gives the relative reporting weight for
+each day of the week, estimated from the data
+\item \eqn{\text{DOW}(t)} maps time \eqn{t} to its day of the week
+}
+This accounts for systematic variations in case reporting (e.g. lower
+weekend reporting) that are not part of the underlying transmission trend.
 
 This metric function can be run directly on the fitted model output.
 }
