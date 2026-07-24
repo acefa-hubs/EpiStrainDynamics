@@ -26,6 +26,10 @@
   `%||%` from `rlang` instead of relying on base R’s version, which only
   exists from R 4.4.0 (related to
   [\#43](https://github.com/acefa-hubs/EpiStrainDynamics/issues/43)).
+- Fixed intermittent R CMD check failures on Windows CI, where compiling
+  the six bundled Stan models exhausted the runner’s default virtual
+  memory (pagefile) at an inconsistent point in the build, by enlarging
+  the pagefile on the Windows job.
 
 ### Minor improvements
 
