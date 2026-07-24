@@ -19,6 +19,13 @@
   equation failing to render on the pkgdown site by setting MathJax as
   the math renderer
   ([\#44](https://github.com/acefa-hubs/EpiStrainDynamics/issues/44)).
+- Fixed
+  [`construct_model()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/construct_model.md)
+  and `compute_multi_pathogen()` erroring on R versions before 4.4.0
+  with “could not find function ‘%\|\|%’”, by explicitly importing
+  `%||%` from `rlang` instead of relying on base R’s version, which only
+  exists from R 4.4.0 (related to
+  [\#43](https://github.com/acefa-hubs/EpiStrainDynamics/issues/43)).
 
 ### Minor improvements
 
@@ -41,7 +48,10 @@
   ([\#49](https://github.com/acefa-hubs/EpiStrainDynamics/issues/49)).
 - [`plot()`](https://acefa-hubs.github.io/EpiStrainDynamics/reference/plot.md)
   is no longer redefined as a generic
-  ([\#48](https://github.com/acefa-hubs/EpiStrainDynamics/issues/48)).
+  ([\#48](https://github.com/acefa-hubs/EpiStrainDynamics/issues/48)),
+  and its S3 methods’ first argument was renamed from `df` to `x` to
+  match the base generic’s signature, resolving an R CMD check S3
+  generic/method consistency warning.
 - Increased the minimum R version to 4.1.0, matching actual base pipe
   usage, and added it to the R-CMD-check.yaml test matrix
   ([\#43](https://github.com/acefa-hubs/EpiStrainDynamics/issues/43)).
