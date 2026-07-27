@@ -2,20 +2,29 @@ STANHEADERS_SRC = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" -e
 
 STANC_FLAGS = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "cat(ifelse(utils::packageVersion('rstan') >= '2.26', '-DUSE_STANC3',''))")
 PKG_CPPFLAGS = -I"../inst/include" -I"$(STANHEADERS_SRC)" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error $(STANC_FLAGS) -D_HAS_AUTO_PTR_ETC=0
-# Lower optimisation from R's Windows default (-O2) to -O1 by appending it
-# to PKG_CXXFLAGS, positioned last so it is the final -O flag on the
-# compiler command line (GCC honours the last one given). Compiling the
+PKG_CXXFLAGS = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "RcppParallel::CxxFlags()") $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "StanHeaders:::CxxFlags()")
+PKG_LIBS = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "RcppParallel::RcppParallelLibs()") $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "StanHeaders:::LdFlags()")
+
+CXX_STD = CXX17
+
+# Lower optimisation from R's Windows default (-O2) to -O1. Compiling the
 # heavy Eigen/Boost/StanHeaders template instantiations in each
 # stanExports_*.cc at -O2 can exhaust cc1plus's available memory on
 # GitHub-hosted Windows runners; -O1 keeps compiled models fast enough
 # while substantially reducing peak compiler memory.
 #
-# This can't be done by setting CXXFLAGS/CXX17FLAGS directly: per
-# "Writing R Extensions", R's own etc/Makeconf is included *after*
-# Makevars.win, so a later plain `=` assignment there silently
-# overwrites any override of those variables made here. PKG_CXXFLAGS is
-# never reassigned by Makeconf (only read), so it's the correct hook.
-PKG_CXXFLAGS = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "RcppParallel::CxxFlags()") $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "StanHeaders:::CxxFlags()") -O1
-PKG_LIBS = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "RcppParallel::RcppParallelLibs()") $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "StanHeaders:::LdFlags()")
-
-CXX_STD = CXX17
+# Two earlier attempts at this failed:
+#  - Setting CXXFLAGS directly: wrong variable, since CXX_STD = CXX17
+#    routes compilation through CXX17FLAGS instead.
+#  - Setting CXX17FLAGS with a plain assignment, and separately
+#    appending -O1 to PKG_CXXFLAGS: R's own etc/Makeconf is included
+#    *after* Makevars.win (per "Writing R Extensions") and assembles
+#    ALL_CXXFLAGS with PKG_CXXFLAGS positioned *before* CXX17FLAGS, so
+#    Makeconf's own plain `=` assignment to CXX17FLAGS always ends up
+#    both later in inclusion order and later in the command line,
+#    silently winning either way.
+#
+# The `override` directive is immune to being reset by any later plain
+# assignment, regardless of inclusion order, which is exactly what's
+# needed here.
+override CXX17FLAGS = -O1 -Wall -mfpmath=sse -msse2 -mstackrealign

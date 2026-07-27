@@ -16,12 +16,13 @@
   failed" during compilation of the six bundled Stan models' heavy
   Eigen/Boost/StanHeaders template instantiations), by lowering
   optimisation from R's Windows default (`-O2`) to `-O1` via a new
-  `src/Makevars.win`, substantially reducing peak compiler memory. This is
-  done by appending `-O1` to `PKG_CXXFLAGS` rather than setting
-  `CXXFLAGS`/`CXX17FLAGS` directly, since R's own `etc/Makeconf` is
-  included *after* `Makevars.win` and would otherwise silently overwrite
-  those variables. Also forced serial compilation (`MAKEFLAGS=-j1`) and
-  enlarged the Windows runner's pagefile as additional safeguards.
+  `src/Makevars.win`, substantially reducing peak compiler memory. This
+  uses an `override CXX17FLAGS = ...` directive, since R's own
+  `etc/Makeconf` is included *after* `Makevars.win` and a plain `=`
+  assignment there would otherwise silently overwrite a plain
+  reassignment made here. Also forced serial compilation
+  (`MAKEFLAGS=-j1`) and enlarged the Windows runner's pagefile as
+  additional safeguards.
 
 ## Minor improvements
 
