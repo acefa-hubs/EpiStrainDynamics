@@ -26,14 +26,17 @@
   `%||%` from `rlang` instead of relying on base R’s version, which only
   exists from R 4.4.0 (related to
   [\#43](https://github.com/acefa-hubs/EpiStrainDynamics/issues/43)).
-- Fixed intermittent R CMD check failures on Windows CI (“cc1plus.exe:
-  out of memory” / “Build process failed”), caused by Rtools compiling
-  the six bundled Stan models’ heavy Eigen/Boost/StanHeaders template
-  instantiations in parallel and exceeding the runner’s available
-  memory, by forcing serial compilation (`MAKEFLAGS=-j1`) and lowering
-  optimisation to `-O1` for Windows specifically via a new
-  `src/Makevars.win`. Also enlarged the Windows runner’s pagefile as an
-  additional safeguard.
+- Fixed intermittent R CMD check failures on Windows CI (“Build process
+  failed” during compilation of the six bundled Stan models’ heavy
+  Eigen/Boost/StanHeaders template instantiations), by lowering
+  optimisation from R’s Windows default (`-O2`) to `-O1` via a new
+  `src/Makevars.win`, substantially reducing peak compiler memory. This
+  uses an `override CXX17FLAGS = ...` directive, since R’s own
+  `etc/Makeconf` is included *after* `Makevars.win` and a plain `=`
+  assignment there would otherwise silently overwrite a plain
+  reassignment made here. Also forced serial compilation
+  (`MAKEFLAGS=-j1`) and enlarged the Windows runner’s pagefile as
+  additional safeguards.
 
 ### Minor improvements
 
