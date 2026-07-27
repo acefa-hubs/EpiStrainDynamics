@@ -13,17 +13,27 @@
   explicitly importing `%||%` from `rlang` instead of relying on base R's
   version, which only exists from R 4.4.0 (related to #43).
 * Fixed intermittent R CMD check failures on Windows CI. The reported
-  error ("Build process failed") was misleading: all six bundled Stan
-  models were actually compiling and linking successfully, but the
-  package then failed to lazy-load because `rstan`'s own precompiled
-  Windows binary DLL failed to load ("LoadLibrary failure: The
-  specified module could not be found"), most likely an ABI mismatch
-  between the RSPM binary and the runner's Rtools version. Fixed by
-  reinstalling `rstan` from source on the Windows CI job specifically.
-  Also added `src/Makevars.win` (lowering optimisation from `-O2` to
-  `-O1` and suppressing compiler warnings) and enlarged the Windows
-  runner's pagefile; these weren't the actual fix, but remain in place
-  as they reduce build time/noise and are otherwise harmless.
+  error ("Build process failed") was misleading and had two distinct,
+  unrelated causes hiding behind it, both only visible once compiler
+  warning noise was suppressed (see below):
+  - `rstan`'s own precompiled Windows binary DLL failed to load
+    ("LoadLibrary failure"), most likely an ABI mismatch between the
+    RSPM binary and the runner's Rtools version. Fixed by reinstalling
+    `rstan` from source on the Windows CI job specifically.
+  - With that resolved, the package's own compiled DLL then failed to
+    load the same way, because `StanHeaders:::LdFlags()` unconditionally
+    links against a *dynamic* `tbb`/`tbbmalloc`, which `RcppParallel`
+    (from version 6.0.0) no longer reliably provides on Windows (having
+    moved to static TBB linking), and `-Wl,-rpath` has no effect on
+    Windows regardless. Fixed by dropping `StanHeaders:::LdFlags()` from
+    `src/Makevars.win`'s `PKG_LIBS` and relying solely on
+    `RcppParallel::RcppParallelLibs()`, matching what `rstan`'s own
+    Windows build does.
+  Also lowered optimisation from `-O2` to `-O1`, suppressed compiler
+  warnings, and enlarged the Windows runner's pagefile in
+  `src/Makevars.win`/CI config; these weren't the actual fix for either
+  issue above, but remain in place as they reduce build time/noise and
+  are otherwise harmless.
 
 ## Minor improvements
 
