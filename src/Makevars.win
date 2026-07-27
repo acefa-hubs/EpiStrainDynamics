@@ -27,4 +27,14 @@ CXX_STD = CXX17
 # The `override` directive is immune to being reset by any later plain
 # assignment, regardless of inclusion order, which is exactly what's
 # needed here.
-override CXX17FLAGS = -O1 -Wall -mfpmath=sse -msse2 -mstackrealign
+#
+# -O1 alone (this override confirmed working via CI logs, dropping -O2
+# entirely) did not fix the Windows failure on its own. Also add -w to
+# suppress compiler warnings: Eigen/Boost/StanHeaders headers emit an
+# enormous volume of template-instantiation warnings under -Wall
+# (190,000+ log lines for a single file), and Windows named pipes have
+# far smaller buffers than Unix -- a plausible cause of the observed
+# "Error in proc$get_built_file(): Build process failed" is the R-side
+# monitoring process losing sync with the compiler's stdout under that
+# volume, independent of actual memory exhaustion.
+override CXX17FLAGS = -O1 -w -mfpmath=sse -msse2 -mstackrealign

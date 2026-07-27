@@ -14,15 +14,17 @@
   version, which only exists from R 4.4.0 (related to #43).
 * Fixed intermittent R CMD check failures on Windows CI ("Build process
   failed" during compilation of the six bundled Stan models' heavy
-  Eigen/Boost/StanHeaders template instantiations), by lowering
-  optimisation from R's Windows default (`-O2`) to `-O1` via a new
-  `src/Makevars.win`, substantially reducing peak compiler memory. This
-  uses an `override CXX17FLAGS = ...` directive, since R's own
-  `etc/Makeconf` is included *after* `Makevars.win` and a plain `=`
-  assignment there would otherwise silently overwrite a plain
-  reassignment made here. Also forced serial compilation
-  (`MAKEFLAGS=-j1`) and enlarged the Windows runner's pagefile as
-  additional safeguards.
+  Eigen/Boost/StanHeaders template instantiations), via a new
+  `src/Makevars.win`: lowered optimisation from R's Windows default
+  (`-O2`) to `-O1`, and suppressed compiler warnings (`-w`), since the
+  Eigen/Boost/StanHeaders headers generate an enormous volume of
+  template-instantiation warnings that may overwhelm the small stdout
+  pipe buffers on Windows. This uses an `override CXX17FLAGS = ...`
+  directive, since R's own `etc/Makeconf` is included *after*
+  `Makevars.win` and a plain `=` assignment there would otherwise
+  silently overwrite a plain reassignment made here. Also forced serial
+  compilation (`MAKEFLAGS=-j1`) and enlarged the Windows runner's
+  pagefile as additional safeguards.
 
 ## Minor improvements
 
