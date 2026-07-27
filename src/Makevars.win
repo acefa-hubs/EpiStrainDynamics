@@ -1,0 +1,17 @@
+STANHEADERS_SRC = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" -e "cat(system.file('include', 'src', package = 'StanHeaders', mustWork = TRUE))" -e "message()" | grep "StanHeaders")
+
+STANC_FLAGS = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "cat(ifelse(utils::packageVersion('rstan') >= '2.26', '-DUSE_STANC3',''))")
+PKG_CPPFLAGS = -I"../inst/include" -I"$(STANHEADERS_SRC)" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error $(STANC_FLAGS) -D_HAS_AUTO_PTR_ETC=0
+PKG_CXXFLAGS = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "RcppParallel::CxxFlags()") $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "StanHeaders:::CxxFlags()")
+PKG_LIBS = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "RcppParallel::RcppParallelLibs()") $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "StanHeaders:::LdFlags()")
+
+CXX_STD = CXX17
+
+# Lower optimisation from R's Windows default (-O2) to -O1. Compiling the
+# heavy Eigen/Boost/StanHeaders template instantiations in each
+# stanExports_*.cc at -O2 can exhaust cc1plus's available memory on
+# GitHub-hosted Windows runners ("cc1plus.exe: out of memory allocating
+# ... bytes"); -O1 keeps compiled models fast enough while substantially
+# reducing peak compiler memory. Other flags mirror R's own Windows
+# defaults so we're not otherwise changing the build.
+CXXFLAGS = -O1 -Wall -mfpmath=sse -msse2 -mstackrealign
