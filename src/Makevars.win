@@ -14,4 +14,7 @@ CXX_STD = CXX17
 # ... bytes"); -O1 keeps compiled models fast enough while substantially
 # reducing peak compiler memory. Other flags mirror R's own Windows
 # defaults so we're not otherwise changing the build.
-CXXFLAGS = -O1 -Wall -mfpmath=sse -msse2 -mstackrealign
+#
+# Since CXX_STD is CXX17 above, R compiles with CXX17/CXX17FLAGS, not
+# CXX/CXXFLAGS -- the latter is silently ignored for this package.
+CXX17FLAGS = -O1 -Wall -mfpmath=sse -msse2 -mstackrealign
