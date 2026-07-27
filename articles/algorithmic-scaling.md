@@ -303,10 +303,10 @@ knitr::kable(scaling_results,
 
 | method      | pathogen_structure | scaling_exponent | r_squared |
 |:------------|:-------------------|-----------------:|----------:|
-| p_spline    | multiple           |            1.013 |     0.996 |
-| p_spline    | single             |            0.842 |     0.989 |
-| random_walk | multiple           |            0.955 |     0.999 |
-| random_walk | single             |            0.885 |     0.983 |
+| p_spline    | multiple           |            1.004 |     0.996 |
+| p_spline    | single             |            0.825 |     0.991 |
+| random_walk | multiple           |            0.956 |     0.999 |
+| random_walk | single             |            0.858 |     0.981 |
 
 Scaling exponents: time complexity approximately O(n^exponent) {.table}
 
@@ -852,7 +852,7 @@ sessionInfo()
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] tidyselect_1.2.1    viridisLite_0.4.3   timeDate_4052.112  
-#>  [4] farver_2.1.2        viridis_0.6.5       loo_2.10.0         
+#>  [4] farver_2.1.2        viridis_0.6.5       loo_2.10.1         
 #>  [7] S7_0.2.2            fastmap_1.2.0       digest_0.6.39      
 #> [10] rpart_4.1.27        timechange_0.4.0    lifecycle_1.0.5    
 #> [13] StanHeaders_2.32.10 survival_3.8-6      magrittr_2.0.5     
