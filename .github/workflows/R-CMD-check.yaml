@@ -58,6 +58,11 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
+      - name: Reinstall rstan from source on Windows
+        if: runner.os == 'Windows'
+        shell: Rscript {0}
+        run: install.packages("rstan", type = "source", repos = "https://cloud.r-project.org")
+
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
