@@ -2,6 +2,9 @@
 
 ## Bug fixes
 
+* Fixed `plot.incidence()` hardcoding "Modelled influenza cases" as its
+  y-axis label regardless of the pathogen(s) actually being modelled; it
+  now reads the disease-agnostic "Modelled cases".
 * Fixed the negative-binomial likelihood in the random-walk single-pathogen
   model when `dow_effect = TRUE` (#42).
 * Corrected the `proportion()` / `plot()` example in the vignette and fixed

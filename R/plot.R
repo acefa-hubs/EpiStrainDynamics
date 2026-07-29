@@ -100,7 +100,7 @@ plot.incidence <- function(x, xlab = "Time", ...) {
       values = colors,
       aesthetics = c("colour", "fill")
     ) +
-    ggplot2::ylab("Modelled influenza cases") +
+    ggplot2::ylab("Modelled cases") +
     ggplot2::theme(legend.title = ggplot2::element_blank()) +
     ggplot2::xlab(xlab)
 }
