@@ -59,7 +59,6 @@
 #'
 #' @examplesIf interactive()
 #' mod <- construct_model(
-#'   method = p_spline(),
 #'   pathogen_structure = multiple(
 #'     case_timeseries = sarscov2$cases,
 #'     time = sarscov2$date,
@@ -69,7 +68,8 @@
 #'       omicron = sarscov2$omicron,
 #'       other = sarscov2$other
 #'     )
-#'   )
+#'   ),
+#'   method = p_spline()
 #' )
 #'
 #' fit <- fit_model(mod)

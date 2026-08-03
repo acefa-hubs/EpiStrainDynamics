@@ -40,11 +40,11 @@ either check.
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 mod <- construct_model(
-  method = random_walk(),
   pathogen_structure = single(
     case_timeseries = sarscov2$cases,
     time = sarscov2$date
-  )
+  ),
+  method = random_walk()
 )
 fit <- fit_model(mod)
 diagnose_model(fit)

@@ -444,12 +444,12 @@ test_that("fit_model uses collective validation", {
     cases = rpois(30, lambda = 100)
   )
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = test_data,
       case_timeseries = "cases",
       time = "dates"
-    )
+    ),
+    method = random_walk()
   )
   expect_error(
     fit_model(mod, n_iter = 100, n_warmup = 100, n_chain = 1, verbose = FALSE),

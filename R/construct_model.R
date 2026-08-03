@@ -1,7 +1,7 @@
 #' Construct model
 #'
-#' @param method either [random_walk()] or [p_spline()]
 #' @param pathogen_structure either [single()], [multiple()], or [subtyped()]
+#' @param method either [random_walk()] or [p_spline()]
 #' @param smoothing_params argument is optional and defines the structure of the
 #'   smoothing terms including optionally setting the smoothing prior tau.
 #'   Created with [smoothing_structure()]. NULL option defaults to "shared"
@@ -31,13 +31,13 @@
 #' @examples
 #'
 #' mod <- construct_model(
-#'   method = p_spline(),
 #'   pathogen_structure = multiple(
 #'     data = sarscov2,
 #'     case_timeseries = "cases",
 #'     time = "date",
 #'     component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
 #'   ),
+#'   method = p_spline(),
 #'   smoothing_params = smoothing_structure(
 #'     "independent",
 #'     tau_mean = c(0, 0.1, 0.3, 0), tau_sd = rep(1, times = 4)
@@ -47,18 +47,18 @@
 #'   dow_effect = TRUE
 #' )
 #'
-construct_model <- function(method,
-                            pathogen_structure,
+construct_model <- function(pathogen_structure,
+                            method,
                             smoothing_params = smoothing_structure(),
                             dispersion_params = dispersion_structure(),
                             pathogen_noise = FALSE,
                             dow_effect = FALSE) {
   #' @srrstats {G2.1, G2.2, G5.8, G5.8b} assertions on types of inputs
   validate_class_inherits(
-    method, "EpiStrainDynamics.method"
+    pathogen_structure, "EpiStrainDynamics.pathogen_structure"
   )
   validate_class_inherits(
-    pathogen_structure, "EpiStrainDynamics.pathogen_structure"
+    method, "EpiStrainDynamics.method"
   )
   smoothing_params <- validate_smoothing_structure(
     smoothing_params, pathogen_structure$pathogen_structure,
@@ -185,12 +185,12 @@ construct_model <- function(method,
 #'
 #' @examples
 #' mod <- construct_model(
-#'   method = random_walk(),
 #'   pathogen_structure = single(
 #'     data = sarscov2,
 #'     case_timeseries = "cases",
 #'     time = "date"
-#'   )
+#'   ),
+#'   method = random_walk()
 #' )
 #' print(mod)
 print.EpiStrainDynamics.model <- function(x, ...) {

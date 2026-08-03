@@ -21,12 +21,12 @@ test_that("fit_model with verbose=TRUE shows progress", {
   sarscov2_subset <- sarscov2[1:40, ]
 
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = sarscov2_subset,
       case_timeseries = "cases",
       time = "date"
-    )
+    ),
+    method = random_walk()
   )
 
   # With verbose=TRUE, function should complete successfully
@@ -55,12 +55,12 @@ test_that("fit_model with verbose=FALSE suppresses progress", {
   sarscov2_subset <- sarscov2[1:40, ]
 
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = sarscov2_subset,
       case_timeseries = "cases",
       time = "date"
-    )
+    ),
+    method = random_walk()
   )
 
   # Capture output with verbose=FALSE
@@ -98,12 +98,12 @@ test_that("fit_model with suppress_warnings=TRUE suppresses warnings", {
   sarscov2_subset <- sarscov2[1:40, ]
 
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = sarscov2_subset,
       case_timeseries = "cases",
       time = "date"
-    )
+    ),
+    method = random_walk()
   )
 
   # With suppress_warnings=TRUE, warnings should be suppressed
@@ -141,12 +141,12 @@ test_that("fit_model catches Stan failures and provides informative output", {
   sarscov2_subset <- sarscov2[1:40, ]
 
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = sarscov2_subset,
       case_timeseries = "cases",
       time = "date"
-    )
+    ),
+    method = random_walk()
   )
 
   # Set standata to NULL - this will cause Stan to fail
@@ -170,12 +170,12 @@ test_that("fit_model errors can be caught and inspected", {
   sarscov2_subset <- sarscov2[1:40, ]
 
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = sarscov2_subset,
       case_timeseries = "cases",
       time = "date"
-    )
+    ),
+    method = random_walk()
   )
 
   # Corrupt standata
@@ -206,12 +206,12 @@ test_that("fit_model errors contain the constructed model for inspection", {
   sarscov2_subset <- sarscov2[1:40, ]
 
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = sarscov2_subset,
       case_timeseries = "cases",
       time = "date"
-    )
+    ),
+    method = random_walk()
   )
 
   mod$standata <- NULL
@@ -240,12 +240,12 @@ test_that("fit_model can suppress both messages and warnings", {
   sarscov2_subset <- sarscov2[1:40, ]
 
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = sarscov2_subset,
       case_timeseries = "cases",
       time = "date"
-    )
+    ),
+    method = random_walk()
   )
 
   # Should work with both suppressions
@@ -270,12 +270,12 @@ test_that("fit_model verbose and suppress_warnings work independently", {
   sarscov2_subset <- sarscov2[1:40, ]
 
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = sarscov2_subset,
       case_timeseries = "cases",
       time = "date"
-    )
+    ),
+    method = random_walk()
   )
 
   # Test all four combinations

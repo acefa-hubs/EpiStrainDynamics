@@ -425,7 +425,6 @@ test_that("intake functions work with construct_model()", {
     # Test that construct_model works with the intake function output
     expect_no_error(
       construct_model(
-        method = random_walk(),
         pathogen_structure = multiple(
           data = test_data,
           case_timeseries = "cases",
@@ -435,6 +434,7 @@ test_that("intake functions work with construct_model()", {
             "omicron", "other"
           )
         ),
+        method = random_walk(),
         smoothing_params = smoothing_structure(
           "independent",
           tau_mean = rep(0, 4),
@@ -453,7 +453,6 @@ test_that("intake functions work with construct_model()", {
 
     expect_no_error(
       construct_model(
-        method = random_walk(),
         pathogen_structure = multiple(
           data = test_xts,
           case_timeseries = "cases",
@@ -462,6 +461,7 @@ test_that("intake functions work with construct_model()", {
             "omicron", "other"
           )
         ),
+        method = random_walk(),
         smoothing_params = smoothing_structure(
           "independent",
           tau_mean = rep(0, 4),

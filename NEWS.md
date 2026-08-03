@@ -1,5 +1,15 @@
 # EpiStrainDynamics (development version)
 
+## Breaking changes
+
+* `construct_model()`'s first two arguments are now `pathogen_structure`
+  then `method` (previously `method` then `pathogen_structure`), to match
+  the logical order in which a model is built: prepare the pathogen
+  structure, then choose how to model it (#70). Any code calling
+  `construct_model()` positionally (e.g. `construct_model(my_method,
+  my_pathogen_structure)`) will need to swap the order of these two
+  arguments; calls using named arguments are unaffected.
+
 ## Bug fixes
 
 * Fixed `plot.incidence()` hardcoding "Modelled influenza cases" as its

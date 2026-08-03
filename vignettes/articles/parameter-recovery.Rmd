@@ -125,12 +125,12 @@ for (i in seq_along(seeds)) {
   cat("Fitting with seed", seeds[i], "\n")
 
   model <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = single_data,
       case_timeseries = "cases",
       time = "date"
-    )
+    ),
+    method = random_walk()
   )
 
   fit <- fit_model(model,
@@ -285,13 +285,13 @@ for (i in seq_along(seeds)) {
   cat("Fitting with seed", seeds[i], "\n")
 
   model <- construct_model(
-    method = random_walk(),
     pathogen_structure = multiple(
       data = multiple_data,
       case_timeseries = "cases",
       time = "date",
       component_pathogen_timeseries = c("pathogen1", "pathogen2", "pathogen3")
-    )
+    ),
+    method = random_walk()
   )
 
   fit <- fit_model(model,
@@ -463,13 +463,13 @@ set.seed(999)
 
 # Use the same multiple pathogen data
 model_ps <- construct_model(
-  method = p_spline(spline_degree = 3, days_per_knot = 7),
   pathogen_structure = multiple(
     data = multiple_data,
     case_timeseries = "cases",
     time = "date",
     component_pathogen_timeseries = c("pathogen1", "pathogen2", "pathogen3")
-  )
+  ),
+  method = p_spline(spline_degree = 3, days_per_knot = 7)
 )
 
 fit_ps <- fit_model(model_ps,
@@ -608,7 +608,6 @@ subtyped_data <- data.frame(
 
 ```{r fit-subtyped-recovery, cache=TRUE, dependson="simulate-subtyped"}
 model_subtyped <- construct_model(
-  method = random_walk(),
   pathogen_structure = subtyped(
     data = subtyped_data,
     case_timeseries = "ili",
@@ -616,7 +615,8 @@ model_subtyped <- construct_model(
     influenzaA_unsubtyped_timeseries = "inf_A",
     influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
     other_pathogen_timeseries = c("inf_B", "other")
-  )
+  ),
+  method = random_walk()
 )
 
 fit_subtyped <- fit_model(model_subtyped,

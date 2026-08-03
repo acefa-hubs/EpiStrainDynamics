@@ -41,10 +41,10 @@ influenza_subset <- influenza[1:40, ]
 message("  Fitting: Random walk, single pathogen...")
 fit_rw_single <- suppressWarnings(fit_model(
   construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = sarscov2_subset, case_timeseries = "cases", time = "date"
-    )
+    ),
+    method = random_walk()
   ),
   n_iter = 500, n_chain = 1, verbose = FALSE, seed = 123
 ))
@@ -53,10 +53,10 @@ saveRDS(fit_rw_single, "inst/testfixtures/fit_rw_single.rds")
 message("  Fitting: P-spline, single pathogen...")
 fit_ps_single <- suppressWarnings(fit_model(
   construct_model(
-    method = p_spline(),
     pathogen_structure = single(
       data = sarscov2_subset, case_timeseries = "cases", time = "date"
-    )
+    ),
+    method = p_spline()
   ),
   n_iter = 500, n_chain = 1, verbose = FALSE, seed = 123
 ))
@@ -65,11 +65,11 @@ saveRDS(fit_ps_single, "inst/testfixtures/fit_ps_single.rds")
 message("  Fitting: Random walk, multiple pathogens...")
 fit_rw_multi <- suppressWarnings(fit_model(
   construct_model(
-    method = random_walk(),
     pathogen_structure = multiple(
       data = sarscov2_subset, case_timeseries = "cases", time = "date",
       component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
-    )
+    ),
+    method = random_walk()
   ),
   n_iter = 500, n_chain = 1, verbose = FALSE, seed = 123
 ))
@@ -78,11 +78,11 @@ saveRDS(fit_rw_multi, "inst/testfixtures/fit_rw_multi.rds")
 message("  Fitting: P-spline, multiple pathogens...")
 fit_ps_multi <- suppressWarnings(fit_model(
   construct_model(
-    method = p_spline(),
     pathogen_structure = multiple(
       data = sarscov2_subset, case_timeseries = "cases", time = "date",
       component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
-    )
+    ),
+    method = p_spline()
   ),
   n_iter = 500, n_chain = 1, verbose = FALSE, seed = 123
 ))
@@ -91,13 +91,13 @@ saveRDS(fit_ps_multi, "inst/testfixtures/fit_ps_multi.rds")
 message("  Fitting: Random walk, subtyped pathogens...")
 fit_rw_subtyped <- suppressWarnings(fit_model(
   construct_model(
-    method = random_walk(),
     pathogen_structure = subtyped(
       data = influenza_subset, case_timeseries = "ili", time = "week",
       influenzaA_unsubtyped_timeseries = "inf_A",
       influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
       other_pathogen_timeseries = c("inf_B", "other")
-    )
+    ),
+    method = random_walk()
   ),
   n_iter = 500, n_chain = 1, verbose = FALSE, seed = 123
 ))
@@ -106,13 +106,13 @@ saveRDS(fit_rw_subtyped, "inst/testfixtures/fit_rw_subtyped.rds")
 message("  Fitting: P-spline, subtyped pathogens...")
 fit_ps_subtyped <- suppressWarnings(fit_model(
   construct_model(
-    method = p_spline(),
     pathogen_structure = subtyped(
       data = influenza_subset, case_timeseries = "ili", time = "week",
       influenzaA_unsubtyped_timeseries = "inf_A",
       influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
       other_pathogen_timeseries = c("inf_B", "other")
-    )
+    ),
+    method = p_spline()
   ),
   n_iter = 500, n_chain = 1, verbose = FALSE, seed = 123
 ))
@@ -121,10 +121,10 @@ saveRDS(fit_ps_subtyped, "inst/testfixtures/fit_ps_subtyped.rds")
 message("  Fitting: Random walk, single pathogen, day-of-week...")
 fit_rw_single_dow <- suppressWarnings(fit_model(
   construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = sarscov2_subset, case_timeseries = "cases", time = "date"
     ),
+    method = random_walk(),
     dow_effect = TRUE
   ),
   n_iter = 500, n_chain = 1, verbose = FALSE, seed = 123
@@ -154,10 +154,10 @@ message("=== Generating extended fixtures ===")
 message("  Fitting: Random walk, single pathogen...")
 fit_rw_single_ext <- fit_model(
   construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = sarscov2, case_timeseries = "cases", time = "date"
-    )
+    ),
+    method = random_walk()
   ),
   n_iter = 2000, n_chain = 4, verbose = FALSE
 )
@@ -166,10 +166,10 @@ saveRDS(fit_rw_single_ext, "inst/testfixtures/ext_fit_rw_single.rds")
 message("  Fitting: P-spline, single pathogen...")
 fit_ps_single_ext <- fit_model(
   construct_model(
-    method = p_spline(),
     pathogen_structure = single(
       data = sarscov2, case_timeseries = "cases", time = "date"
-    )
+    ),
+    method = p_spline()
   ),
   n_iter = 2000, n_chain = 4, verbose = FALSE
 )
@@ -178,11 +178,11 @@ saveRDS(fit_ps_single_ext, "inst/testfixtures/ext_fit_ps_single.rds")
 message("  Fitting: Random walk, multiple pathogens...")
 fit_rw_multi_ext <- fit_model(
   construct_model(
-    method = random_walk(),
     pathogen_structure = multiple(
       data = sarscov2, case_timeseries = "cases", time = "date",
       component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
-    )
+    ),
+    method = random_walk()
   ),
   n_iter = 2000, n_chain = 4, verbose = FALSE
 )
@@ -191,11 +191,11 @@ saveRDS(fit_rw_multi_ext, "inst/testfixtures/ext_fit_rw_multi.rds")
 message("  Fitting: P-spline, multiple pathogens...")
 fit_ps_multi_ext <- fit_model(
   construct_model(
-    method = p_spline(),
     pathogen_structure = multiple(
       data = sarscov2, case_timeseries = "cases", time = "date",
       component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
-    )
+    ),
+    method = p_spline()
   ),
   n_iter = 2000, n_chain = 4, verbose = FALSE
 )
@@ -204,13 +204,13 @@ saveRDS(fit_ps_multi_ext, "inst/testfixtures/ext_fit_ps_multi.rds")
 message("  Fitting: Random walk, subtyped pathogens...")
 fit_rw_subtyped_ext <- fit_model(
   construct_model(
-    method = random_walk(),
     pathogen_structure = subtyped(
       data = influenza, case_timeseries = "ili", time = "week",
       influenzaA_unsubtyped_timeseries = "inf_A",
       influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
       other_pathogen_timeseries = c("inf_B", "other")
-    )
+    ),
+    method = random_walk()
   ),
   n_iter = 2000, n_chain = 4, verbose = FALSE
 )
@@ -219,13 +219,13 @@ saveRDS(fit_rw_subtyped_ext, "inst/testfixtures/ext_fit_rw_subtyped.rds")
 message("  Fitting: P-spline, subtyped pathogens...")
 fit_ps_subtyped_ext <- fit_model(
   construct_model(
-    method = p_spline(),
     pathogen_structure = subtyped(
       data = influenza, case_timeseries = "ili", time = "week",
       influenzaA_unsubtyped_timeseries = "inf_A",
       influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
       other_pathogen_timeseries = c("inf_B", "other")
-    )
+    ),
+    method = p_spline()
   ),
   n_iter = 2000, n_chain = 4, verbose = FALSE
 )

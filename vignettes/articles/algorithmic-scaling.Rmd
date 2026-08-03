@@ -170,8 +170,8 @@ for (n in data_sizes) {
 
   # Time single pathogen
   model_single <- construct_model(
-    method = random_walk(),
-    pathogen_structure = single_struct
+    pathogen_structure = single_struct,
+    method = random_walk()
   )
 
   time_single <- system.time({
@@ -187,8 +187,8 @@ for (n in data_sizes) {
 
   # Time multiple pathogens
   model_multi <- construct_model(
-    method = random_walk(),
-    pathogen_structure = multi_struct
+    pathogen_structure = multi_struct,
+    method = random_walk()
   )
 
   time_multi <- system.time({
@@ -233,8 +233,8 @@ for (n in data_sizes) {
 
   # Time single pathogen
   model_single <- construct_model(
-    method = p_spline(),
-    pathogen_structure = single_struct
+    pathogen_structure = single_struct,
+    method = p_spline()
   )
 
   time_single <- system.time({
@@ -250,8 +250,8 @@ for (n in data_sizes) {
 
   # Time multiple pathogens
   model_multi <- construct_model(
-    method = p_spline(),
-    pathogen_structure = multi_struct
+    pathogen_structure = multi_struct,
+    method = p_spline()
   )
 
   time_multi <- system.time({
@@ -327,13 +327,13 @@ data(sarscov2)
 
 # Fit model
 model <- construct_model(
-  method = random_walk(),
   pathogen_structure = multiple(
     data = sarscov2,
     case_timeseries = "cases",
     time = "date",
     component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
-  )
+  ),
+  method = random_walk()
 )
 
 fit <- fit_model(model, n_chain = 2, n_iter = 1000, verbose = FALSE)
@@ -423,12 +423,12 @@ for (scale in test_scales) {
 
   # Fit model
   model <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = test_data,
       case_timeseries = "cases",
       time = "date"
-    )
+    ),
+    method = random_walk()
   )
 
   fit <- fit_model(model, n_chain = 2, n_iter = 500, verbose = FALSE)
@@ -478,13 +478,13 @@ set.seed(999)
 
 # Fit model to original data
 model_original <- construct_model(
-  method = random_walk(),
   pathogen_structure = multiple(
     data = sarscov2,
     case_timeseries = "cases",
     time = "date",
     component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
-  )
+  ),
+  method = random_walk()
 )
 
 fit_original <- fit_model(model_original,
@@ -521,13 +521,13 @@ for (noise_level in noise_levels) {
 
   # Fit model to noisy data
   model_noisy <- construct_model(
-    method = random_walk(),
     pathogen_structure = multiple(
       data = sarscov2_noisy,
       case_timeseries = "cases",
       time = "date",
       component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
-    )
+    ),
+    method = random_walk()
   )
 
   fit_noisy <- fit_model(model_noisy,
@@ -642,13 +642,13 @@ fit_with_seed <- function(seed) {
   set.seed(seed)
 
   model <- construct_model(
-    method = random_walk(),
     pathogen_structure = multiple(
       data = sarscov2,
       case_timeseries = "cases",
       time = "date",
       component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
-    )
+    ),
+    method = random_walk()
   )
 
   fit <- fit_model(model, n_chain = 2, n_iter = 1000, verbose = FALSE)

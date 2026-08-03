@@ -191,9 +191,9 @@ has been provided with the package - `sarscov2`:
     )
 
     mod <- construct_model(
-      method = random_walk(),                   # random_walk method
-
       pathogen_structure = sarscov2_multi,
+
+      method = random_walk(),                   # random_walk method
 
       smoothing_params = smoothing_structure(   # independent smoothing structure
         'independent',                          # with four values for each prior

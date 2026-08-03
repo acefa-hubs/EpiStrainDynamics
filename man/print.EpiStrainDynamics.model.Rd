@@ -21,12 +21,12 @@ list to the console.
 }
 \examples{
 mod <- construct_model(
-  method = random_walk(),
   pathogen_structure = single(
     data = sarscov2,
     case_timeseries = "cases",
     time = "date"
-  )
+  ),
+  method = random_walk()
 )
 print(mod)
 }
