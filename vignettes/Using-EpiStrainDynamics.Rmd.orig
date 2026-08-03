@@ -27,25 +27,9 @@ options(mc.cores = 1)
 
 EpiStrainDynamics extends an existing statistical modelling framework capable of inferring the trends of up to two pathogens. The modeling framework has been extended here to handle any number of pathogens; fit to time series data of counts (eg, daily number of cases); incorporate influenza testing data in which the subtype for influenza A samples may be undetermined; account for day-of-the-week effects in daily data; include options for fitting penalized splines or random walks; support additional (optional) correlation structures in the parameters describing the smoothness of the penalized splines (or random walks); and account for additional (optional) sources of noise in the observation process.
 
-# Step 1: Construct model
+A full analysis proceeds through four phases, each producing an object consumed by the next: preparing the pathogen data, configuring the model, fitting it, and deriving epidemiological quantities.
 
-These modelling specifications are specified using the `construct_model` function. The correct stan model is then applied based on the specifications provided. `construct_model()` requires specification of the `method` and `pathogen_structure`, and allows the user to additionally specify four arguments related to model design: `smoothing_params`, `dispersion_params`, `pathogen_noise`, and `dow_effect`. We will break these down one by one.
-
-## Method
-
-EpiStrainDynamics has pre-compiled stan models that fit either with bayesian penalised splines or random walks. These are specified using the `method` argument of `construct_model()` as functions, either with `random_walk()` or `p_spline()`. The penalised spline model has two further options to specify: `spline_degree` is the polynomial degree of the individual spline segments used to construct the overall curve (must be a positive whole number) and `days_per_knot`, which is the number of days for each knot (must also be a positive whole number).
-
-So we may specify:
-```
-method = random_walk(),
-
-# OR
-
-method = p_spline(spline_degree = 3,  # example value for spline degree
-                  days_per_knot = 2)  # example value for days per knot
-```
-
-## Pathogen structure
+# Phase 1: Preparing pathogen data
 
 There are three main types of pathogen structure available to model: `single()`, `multiple()`, and `subtyped()`.
 These functions require the name of the dataset itself and the column names for different data elements. These can also ingest timeseries class objects, which would then make the `time` column specification optional. Any timeseries class input that is handled by the [`tsbox` package](https://docs.ropensci.org/tsbox/reference/tsbox-package.html) is acceptable. The models are not currently equipped to handle missing values or irregular date sequences.
@@ -90,6 +74,26 @@ pathogen_structure = subtyped(
     'inf_B', 'other'
   )
 )
+```
+
+Each of these functions returns a pathogen structure object, which is then passed into `construct_model()` in Phase 2.
+
+# Phase 2: Configuring the model
+
+These modelling specifications are provided using the `construct_model()` function, which takes the pathogen structure object from Phase 1 plus arguments describing the model: `method`, `smoothing_params`, `dispersion_params`, `pathogen_noise`, and `dow_effect`. The correct stan model is then applied based on the specifications provided. We will break these down one by one.
+
+## Method
+
+EpiStrainDynamics has pre-compiled stan models that fit either with bayesian penalised splines or random walks. These are specified using the `method` argument of `construct_model()` as functions, either with `random_walk()` or `p_spline()`. The penalised spline model has two further options to specify: `spline_degree` is the polynomial degree of the individual spline segments used to construct the overall curve (must be a positive whole number) and `days_per_knot`, which is the number of days for each knot (must also be a positive whole number).
+
+So we may specify:
+```
+method = random_walk(),
+
+# OR
+
+method = p_spline(spline_degree = 3,  # example value for spline degree
+                  days_per_knot = 2)  # example value for days per knot
 ```
 
 ## Smoothing parameters
@@ -159,9 +163,9 @@ mod <- construct_model(
 
 The constructed model object is a named list containing the formatted data to be modelled, accessed with `$data`, a timeseries object of class `tsibble` that has been validated for gaps and regularity, accessed with `$validated_tsbl`, parameter values structured for the stan interface (such as smoothing structure, observation noise, and penalised spline parameters, if appropriate), accessed with `model_params`, names of provided pathogens, accessed with `pathogen_names`, and record of whether day of week effect has been selected, accessed with `dow_effect`.
 
-# Step 2: Fit model
+# Phase 3: Fitting
 
-The model estimates the expected value of the time series (eg, a smoothed trend in the daily number of cases accounting for noise) for each individual pathogen. Model parameterisation decisions specified when constructing the model in step 1 mean the correct stan model will be applied at this stage by simply calling `fit_model()` onto the constructed model object.
+The model estimates the expected value of the time series (eg, a smoothed trend in the daily number of cases accounting for noise) for each individual pathogen. Model parameterisation decisions specified when configuring the model in Phase 2 mean the correct stan model will be applied at this stage by simply calling `fit_model()` onto the constructed model object.
 
 ```{r}
 fit <- fit_model(
@@ -172,9 +176,9 @@ fit <- fit_model(
 )
 ```
 
-The output of this function is a list with the stan fit object, accessed with `$fit`, and the elements of the constructed model object from the previous step, accessed with `$constructed_model`.
+The output of this function is a list with the stan fit object, accessed with `$fit`, and the elements of the constructed model object from the previous phase, accessed with `$constructed_model`.
 
-# Step 3: Check fit
+## Checking convergence
 
 A summary of model convergence diagnostics can be viewed using:
 
@@ -207,7 +211,7 @@ Model not converging? You can find more information about divergent transitions 
 * Try reducing the complexity of the model. For example, by using `pathogen_noise = FALSE` or a shared smoothing structure.
 * Increase the number of warmup samples with the n_warmup parameter.
 
-# Step 4: Calculate and explore epidemiological quantities
+# Phase 4: Deriving epidemiological quantities
 
 The package provides helper functions to calculate a number of useful epidemiological quantities. The output of these methods functions are a named list containing a tsibble of the outcome quantity (`$measure`), the fit object (`$fit`), and the constructed model object (`$constructed_model`). `measure` is a tsibble containing the median of the epidemiological quantity (`y`), the 50% credible interval of the quantity (`lb_50` & `ub_50`), the 95% credible interval (`lb_95` & `ub_95`), the proportion greater than a defined threshold value (`prop`), the pathogen name (`pathogen`), and the time index (`time`).
 
@@ -285,4 +289,3 @@ plot(gr_covid)
 prop_covid <- proportion(fit_covid)
 plot(prop_covid)
 ```
-
