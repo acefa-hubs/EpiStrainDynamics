@@ -46,7 +46,7 @@ plot.incidence <- function(x, xlab = "Time", ...) {
 
   colors <- c(
     setNames("black", total_pathogens),
-    setNames(viridis::viridis(length(other_levels)), other_levels)
+    setNames(viridis::viridis(length(other_levels), end = 0.9), other_levels)
   )
 
   tsbl <- x$constructed_model$validated_tsbl
@@ -118,7 +118,7 @@ plot.growth_rate <- function(x, xlab = "Time", ...) {
 
   colors <- c(
     setNames("black", total_pathogens),
-    setNames(viridis::viridis(length(other_levels)), other_levels)
+    setNames(viridis::viridis(length(other_levels), end = 0.9), other_levels)
   )
 
   p <- ggplot2::ggplot(measure_df) +
@@ -194,7 +194,7 @@ plot.Rt <- function(x, xlab = "Time", ...) {
 
   colors <- c(
     setNames("black", total_pathogens),
-    setNames(viridis::viridis(length(other_levels)), other_levels)
+    setNames(viridis::viridis(length(other_levels), end = 0.9), other_levels)
   )
 
   ggplot2::ggplot(measure_df) +
@@ -242,7 +242,11 @@ plot.proportion <- function(x, xlab = "Time", ...) {
   measure_df <- x$measure
 
   combos <- unique(measure_df$pathogen)
-  colors <- setNames(viridis::viridis(length(combos)), combos)
+  colors <- if (length(combos) == 1) {
+    setNames("black", combos)
+  } else {
+    setNames(viridis::viridis(length(combos), end = 0.9), combos)
+  }
 
   ggplot2::ggplot(measure_df) +
     ggplot2::geom_line(ggplot2::aes(

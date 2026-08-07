@@ -50,6 +50,8 @@
 
 ## Minor improvements
 
+* Capped the viridis palette used by `plot()` methods at `end = 0.9` so the
+  palest yellow no longer makes lines hard to distinguish (#71).
 * Plot functions now call `ggplot2` functions explicitly rather than importing
   the whole package (#35).
 * Standardised quotation-mark style (#37).
