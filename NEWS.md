@@ -50,6 +50,12 @@
 
 ## Minor improvements
 
+* `proportion()` now returns the resolved pathogen names used as its
+  numerator and denominator (`$numerator_combination` /
+  `$denominator_combination`), and `plot.proportion()` adds a subtitle
+  reporting the denominator when it isn't the default (all pathogens),
+  since the denominator otherwise has no representation anywhere on the
+  plot (#69).
 * Capped the viridis palette used by `plot()` methods at `end = 0.9` so the
   palest yellow no longer makes lines hard to distinguish (#71).
 * Plot functions now call `ggplot2` functions explicitly rather than importing

@@ -358,6 +358,27 @@ test_that("proportion() works with custom numerator and denominator", {
   expect_true(all(result$measure$y <= 1))
 })
 
+test_that("proportion() records the resolved numerator/denominator combinations", {
+  skip_if_not(exists("fit_rw_multi"), "Cached fitted models not available")
+
+  default_result <- proportion(fit_rw_multi)
+  expect_setequal(
+    default_result$numerator_combination,
+    c("alpha", "delta", "omicron", "other")
+  )
+  expect_setequal(
+    default_result$denominator_combination,
+    c("alpha", "delta", "omicron", "other")
+  )
+
+  custom_result <- proportion(fit_rw_multi,
+    numerator_combination = "alpha",
+    denominator_combination = c("alpha", "delta")
+  )
+  expect_equal(custom_result$numerator_combination, "alpha")
+  expect_setequal(custom_result$denominator_combination, c("alpha", "delta"))
+})
+
 test_that("proportion() validates pathogen names", {
   skip_if_not(exists("fit_rw_multi"), "Cached fitted models not available")
 

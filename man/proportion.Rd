@@ -25,8 +25,14 @@ proportion denominator, or NULL. If NULL, it will use all pathogens.}
 }
 \value{
 named list of class \code{EpiStrainDynamics.metric} containing a dataframe
-of the calculated metric outcome (\verb{$measure}), the fit object (\verb{$fit}), and the
-constructed model object (\verb{$constructed_model}). The \code{measure} data frame
+of the calculated metric outcome (\verb{$measure}), the fit object (\verb{$fit}), the
+constructed model object (\verb{$constructed_model}), the resolved pathogen names
+used as the numerator (\verb{$numerator_combination}), and the resolved pathogen
+names used as the denominator (\verb{$denominator_combination}). When
+\code{numerator_combination} is left as the default (\code{NULL}), every pathogen name
+is listed in \verb{$numerator_combination}, but each was computed as its own
+separate proportion line (one per pathogen), not summed into a single group
+the way \verb{$denominator_combination} always is. The \code{measure} data frame
 contains the median of the epidemiological quantity (\code{y}), the 50\% credible
 interval of the quantity (\code{lb_50} & \code{ub_50}), the 95\% credible interval
 (\code{lb_95} & \code{ub_95}), the proportion greater than a defined threshold value
