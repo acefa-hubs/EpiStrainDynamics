@@ -7,6 +7,8 @@
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![R-CMD-check](https://github.com/ropensci/EpiStrainDynamics/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci/EpiStrainDynamics/actions/workflows/R-CMD-check.yaml)
+[![Status at rOpenSci Software Peer
+Review](https://badges.ropensci.org/763_status.svg)](https://github.com/ropensci/software-review/issues/763)
 
 `EpiStrainDynamics` is a statistical modelling framework capable of
 inferring trends of multiple pathogens. Estimating the temporal trends
