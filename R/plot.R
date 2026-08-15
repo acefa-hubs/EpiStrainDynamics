@@ -10,7 +10,7 @@
 #' @importFrom stats setNames
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon geom_point geom_hline
 #'  theme_bw theme scale_colour_manual scale_y_continuous sec_axis xlab ylab
-#'  ggplot_build element_blank
+#'  ggplot_build element_blank labs
 #' @importFrom rlang .data
 #'
 #' @return ggplot2 plot output
@@ -25,11 +25,11 @@
 #'
 #' @examplesIf interactive()
 #' mod <- construct_model(
-#'   method = random_walk(),
 #'   pathogen_structure = single(
 #'     case_timeseries = sarscov2$cases,
 #'     time = sarscov2$date
-#'   )
+#'   ),
+#'   method = random_walk()
 #' )
 #'
 #' fit <- fit_model(mod)
@@ -46,7 +46,7 @@ plot.incidence <- function(x, xlab = "Time", ...) {
 
   colors <- c(
     setNames("black", total_pathogens),
-    setNames(viridis::viridis(length(other_levels)), other_levels)
+    setNames(viridis::viridis(length(other_levels), end = 0.9), other_levels)
   )
 
   tsbl <- x$constructed_model$validated_tsbl
@@ -100,7 +100,7 @@ plot.incidence <- function(x, xlab = "Time", ...) {
       values = colors,
       aesthetics = c("colour", "fill")
     ) +
-    ggplot2::ylab("Modelled influenza cases") +
+    ggplot2::ylab("Modelled cases") +
     ggplot2::theme(legend.title = ggplot2::element_blank()) +
     ggplot2::xlab(xlab)
 }
@@ -118,7 +118,7 @@ plot.growth_rate <- function(x, xlab = "Time", ...) {
 
   colors <- c(
     setNames("black", total_pathogens),
-    setNames(viridis::viridis(length(other_levels)), other_levels)
+    setNames(viridis::viridis(length(other_levels), end = 0.9), other_levels)
   )
 
   p <- ggplot2::ggplot(measure_df) +
@@ -194,7 +194,7 @@ plot.Rt <- function(x, xlab = "Time", ...) {
 
   colors <- c(
     setNames("black", total_pathogens),
-    setNames(viridis::viridis(length(other_levels)), other_levels)
+    setNames(viridis::viridis(length(other_levels), end = 0.9), other_levels)
   )
 
   ggplot2::ggplot(measure_df) +
@@ -242,9 +242,13 @@ plot.proportion <- function(x, xlab = "Time", ...) {
   measure_df <- x$measure
 
   combos <- unique(measure_df$pathogen)
-  colors <- setNames(viridis::viridis(length(combos)), combos)
+  colors <- if (length(combos) == 1) {
+    setNames("black", combos)
+  } else {
+    setNames(viridis::viridis(length(combos), end = 0.9), combos)
+  }
 
-  ggplot2::ggplot(measure_df) +
+  p <- ggplot2::ggplot(measure_df) +
     ggplot2::geom_line(ggplot2::aes(
       x = .data$time,
       y = .data$y,
@@ -279,4 +283,19 @@ plot.proportion <- function(x, xlab = "Time", ...) {
     ggplot2::ylab("Modelled proportion of cases") +
     ggplot2::theme(legend.title = ggplot2::element_blank()) +
     ggplot2::xlab(xlab)
+
+  # Surface a non-default denominator: it has no other representation in the
+  # plot (unlike the numerator, which already appears in the pathogen legend).
+  all_pathogens <- unique(x$constructed_model$pathogen_names)
+  if (!is.null(x$denominator_combination) &&
+    !setequal(x$denominator_combination, all_pathogens)) {
+    p <- p + ggplot2::labs(
+      subtitle = paste(
+        "Denominator:",
+        paste(x$denominator_combination, collapse = ", ")
+      )
+    )
+  }
+
+  p
 }

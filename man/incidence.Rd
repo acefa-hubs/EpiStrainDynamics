@@ -74,11 +74,11 @@ This metric function can be run directly on the fitted model output.
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 mod <- construct_model(
-  method = random_walk(),
   pathogen_structure = single(
     case_timeseries = sarscov2$cases,
     time = sarscov2$date
-  )
+  ),
+  method = random_walk()
 )
 
 fit <- fit_model(mod)

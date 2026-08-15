@@ -1,7 +1,28 @@
 # EpiStrainDynamics (development version)
 
+## Breaking changes
+
+* `construct_model()`'s first two arguments are now `pathogen_structure`
+  then `method` (previously `method` then `pathogen_structure`), to match
+  the logical order in which a model is built: prepare the pathogen
+  structure, then choose how to model it (#70). Any code calling
+  `construct_model()` positionally (e.g. `construct_model(my_method,
+  my_pathogen_structure)`) will need to swap the order of these two
+  arguments; calls using named arguments are unaffected.
+* `subtyped()`'s `influenzaA_unsubtyped_timeseries` and
+  `influenzaA_subtyped_timeseries` arguments are now `unsubtyped_timeseries`
+  and `subtyped_timeseries`. The `influenzaA_` prefix implied the structure
+  only applied to influenza A subtypes, when it applies to any pathogen with
+  a combined, unsubtyped timeseries alongside partial subtype data —
+  influenza A is just the most common example (#73). Any code calling
+  `subtyped()` with these named arguments will need to update the argument
+  names.
+
 ## Bug fixes
 
+* Fixed `plot.incidence()` hardcoding "Modelled influenza cases" as its
+  y-axis label regardless of the pathogen(s) actually being modelled; it
+  now reads the disease-agnostic "Modelled cases".
 * Fixed the negative-binomial likelihood in the random-walk single-pathogen
   model when `dow_effect = TRUE` (#42).
 * Corrected the `proportion()` / `plot()` example in the vignette and fixed
@@ -37,6 +58,14 @@
 
 ## Minor improvements
 
+* `proportion()` now returns the resolved pathogen names used as its
+  numerator and denominator (`$numerator_combination` /
+  `$denominator_combination`), and `plot.proportion()` adds a subtitle
+  reporting the denominator when it isn't the default (all pathogens),
+  since the denominator otherwise has no representation anywhere on the
+  plot (#69).
+* Capped the viridis palette used by `plot()` methods at `end = 0.9` so the
+  palest yellow no longer makes lines hard to distinguish (#71).
 * Plot functions now call `ggplot2` functions explicitly rather than importing
   the whole package (#35).
 * Standardised quotation-mark style (#37).

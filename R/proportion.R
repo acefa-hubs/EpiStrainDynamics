@@ -45,8 +45,14 @@
 #'  proportion denominator, or NULL. If NULL, it will use all pathogens.
 #' @param ... Additional arguments passed to metrics calculation
 #' @return named list of class `EpiStrainDynamics.metric` containing a dataframe
-#'  of the calculated metric outcome (`$measure`), the fit object (`$fit`), and the
-#'  constructed model object (`$constructed_model`). The `measure` data frame
+#'  of the calculated metric outcome (`$measure`), the fit object (`$fit`), the
+#'  constructed model object (`$constructed_model`), the resolved pathogen names
+#'  used as the numerator (`$numerator_combination`), and the resolved pathogen
+#'  names used as the denominator (`$denominator_combination`). When
+#'  `numerator_combination` is left as the default (`NULL`), every pathogen name
+#'  is listed in `$numerator_combination`, but each was computed as its own
+#'  separate proportion line (one per pathogen), not summed into a single group
+#'  the way `$denominator_combination` always is. The `measure` data frame
 #'  contains the median of the epidemiological quantity (`y`), the 50% credible
 #'  interval of the quantity (`lb_50` & `ub_50`), the 95% credible interval
 #'  (`lb_95` & `ub_95`), the proportion greater than a defined threshold value
@@ -59,7 +65,6 @@
 #'
 #' @examplesIf interactive()
 #' mod <- construct_model(
-#'   method = p_spline(),
 #'   pathogen_structure = multiple(
 #'     case_timeseries = sarscov2$cases,
 #'     time = sarscov2$date,
@@ -69,7 +74,8 @@
 #'       omicron = sarscov2$omicron,
 #'       other = sarscov2$other
 #'     )
-#'   )
+#'   ),
+#'   method = p_spline()
 #' )
 #'
 #' fit <- fit_model(mod)
@@ -127,7 +133,9 @@ proportion <- function(fitted_model,
   out <- list(
     measure = measure,
     fit = fitted_model$fit,
-    constructed_model = fitted_model$constructed_model
+    constructed_model = fitted_model$constructed_model,
+    numerator_combination = pathogen_names[num_idx],
+    denominator_combination = pathogen_names[denom_idx]
   )
   class(out) <- c("proportion", "EpiStrainDynamics.metric", class(out))
   out

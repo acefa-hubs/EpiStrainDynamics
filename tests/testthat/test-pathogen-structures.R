@@ -143,8 +143,8 @@ test_that("subtyped() creates correct structure", {
     data = influenza,
     case_timeseries = "ili",
     time = "week",
-    influenzaA_unsubtyped_timeseries = "inf_A",
-    influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+    unsubtyped_timeseries = "inf_A",
+    subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
     other_pathogen_timeseries = c("inf_B", "other")
   )
 
@@ -157,8 +157,8 @@ test_that("subtyped() creates correct structure", {
   expect_equal(length(result$data$case_timeseries), nrow(influenza))
   expect_equal(nrow(result$data$component_pathogens), 3) # inf_A + inf_B + other
   expect_equal(ncol(result$data$component_pathogens), nrow(influenza))
-  expect_equal(nrow(result$data$influenzaA_subtyped), 2) # H3N2 + H1N1
-  expect_equal(ncol(result$data$influenzaA_subtyped), nrow(influenza))
+  expect_equal(nrow(result$data$subtyped), 2) # H3N2 + H1N1
+  expect_equal(ncol(result$data$subtyped), nrow(influenza))
 })
 
 test_that("subtyped() correctly orders and transposes pathogen data", {
@@ -168,8 +168,8 @@ test_that("subtyped() correctly orders and transposes pathogen data", {
     data = influenza,
     case_timeseries = "ili",
     time = "week",
-    influenzaA_unsubtyped_timeseries = "inf_A",
-    influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+    unsubtyped_timeseries = "inf_A",
+    subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
     other_pathogen_timeseries = c("inf_B", "other")
   )
 
@@ -180,9 +180,9 @@ test_that("subtyped() correctly orders and transposes pathogen data", {
   expect_equal(result$data$component_pathogens[1, ], influenza$inf_A)
   expect_equal(result$data$component_pathogens[2, ], influenza$inf_B)
 
-  # Test matrix transposition for influenzaA_subtyped
-  expect_equal(result$data$influenzaA_subtyped[1, ], influenza$inf_H3N2)
-  expect_equal(result$data$influenzaA_subtyped[2, ], influenza$inf_H1N1)
+  # Test matrix transposition for subtyped
+  expect_equal(result$data$subtyped[1, ], influenza$inf_H3N2)
+  expect_equal(result$data$subtyped[2, ], influenza$inf_H1N1)
 })
 
 test_that("subtyped() validates column existence and types", {
@@ -194,8 +194,8 @@ test_that("subtyped() validates column existence and types", {
       data = influenza,
       case_timeseries = "ili",
       time = "nonexistent",
-      influenzaA_unsubtyped_timeseries = "inf_A",
-      influenzaA_subtyped_timeseries = c("inf_H3N2"),
+      unsubtyped_timeseries = "inf_A",
+      subtyped_timeseries = c("inf_H3N2"),
       other_pathogen_timeseries = c("inf_B")
     ),
     "Column .nonexistent. not found in data"
@@ -207,34 +207,34 @@ test_that("subtyped() validates column existence and types", {
       data = influenza,
       case_timeseries = "nonexistent",
       time = "week",
-      influenzaA_unsubtyped_timeseries = "inf_A",
-      influenzaA_subtyped_timeseries = c("inf_H3N2"),
+      unsubtyped_timeseries = "inf_A",
+      subtyped_timeseries = c("inf_H3N2"),
       other_pathogen_timeseries = c("inf_B")
     ),
     "Column .nonexistent. not found in data"
   )
 
-  # Test non-existent influenzaA_unsubtyped column
+  # Test non-existent unsubtyped column
   expect_error(
     subtyped(
       data = influenza,
       case_timeseries = "ili",
       time = "week",
-      influenzaA_unsubtyped_timeseries = "nonexistent",
-      influenzaA_subtyped_timeseries = c("inf_H3N2"),
+      unsubtyped_timeseries = "nonexistent",
+      subtyped_timeseries = c("inf_H3N2"),
       other_pathogen_timeseries = c("inf_B")
     ),
     "Column .nonexistent. not found in data"
   )
 
-  # Test non-existent influenzaA_subtyped column
+  # Test non-existent subtyped column
   expect_error(
     subtyped(
       data = influenza,
       case_timeseries = "ili",
       time = "week",
-      influenzaA_unsubtyped_timeseries = "inf_A",
-      influenzaA_subtyped_timeseries = c("nonexistent"),
+      unsubtyped_timeseries = "inf_A",
+      subtyped_timeseries = c("nonexistent"),
       other_pathogen_timeseries = c("inf_B")
     ),
     "Column .nonexistent. not found in data"
@@ -246,8 +246,8 @@ test_that("subtyped() validates column existence and types", {
       data = influenza,
       case_timeseries = "ili",
       time = "week",
-      influenzaA_unsubtyped_timeseries = "inf_A",
-      influenzaA_subtyped_timeseries = c("inf_H3N2"),
+      unsubtyped_timeseries = "inf_A",
+      subtyped_timeseries = c("inf_H3N2"),
       other_pathogen_timeseries = c("nonexistent")
     ),
     "Column .nonexistent. not found in data"
@@ -262,8 +262,8 @@ test_that("subtyped() validates column existence and types", {
       data = test_data,
       case_timeseries = "text_col",
       time = "week",
-      influenzaA_unsubtyped_timeseries = "inf_A",
-      influenzaA_subtyped_timeseries = c("inf_H3N2"),
+      unsubtyped_timeseries = "inf_A",
+      subtyped_timeseries = c("inf_H3N2"),
       other_pathogen_timeseries = c("inf_B")
     ),
     "numeric"
@@ -274,8 +274,8 @@ test_that("subtyped() validates column existence and types", {
       data = test_data,
       case_timeseries = "ili",
       time = "week",
-      influenzaA_unsubtyped_timeseries = "text_col",
-      influenzaA_subtyped_timeseries = c("inf_H3N2"),
+      unsubtyped_timeseries = "text_col",
+      subtyped_timeseries = c("inf_H3N2"),
       other_pathogen_timeseries = c("inf_B")
     ),
     "numeric"
@@ -329,8 +329,8 @@ test_that("all pathogen structure functions handle missing data", {
       data = test_influenza,
       case_timeseries = "ili",
       time = "week",
-      influenzaA_unsubtyped_timeseries = "inf_A",
-      influenzaA_subtyped_timeseries = c("inf_H3N2"),
+      unsubtyped_timeseries = "inf_A",
+      subtyped_timeseries = c("inf_H3N2"),
       other_pathogen_timeseries = c("inf_B")
     ),
     "missing|NA"
@@ -376,8 +376,8 @@ test_that("all pathogen structure functions return required components", {
     data = influenza,
     case_timeseries = "ili",
     time = "week",
-    influenzaA_unsubtyped_timeseries = "inf_A",
-    influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+    unsubtyped_timeseries = "inf_A",
+    subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
     other_pathogen_timeseries = c("inf_B")
   )
 
@@ -387,7 +387,7 @@ test_that("all pathogen structure functions return required components", {
   ) %in% names(subtyped_result)))
   expect_true(all(c(
     "case_timeseries", "component_pathogens",
-    "influenzaA_subtyped"
+    "subtyped"
   ) %in% names(subtyped_result$data)))
   expect_s3_class(subtyped_result, "EpiStrainDynamics.pathogen_structure")
 })

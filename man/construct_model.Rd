@@ -5,8 +5,8 @@
 \title{Construct model}
 \usage{
 construct_model(
-  method,
   pathogen_structure,
+  method,
   smoothing_params = smoothing_structure(),
   dispersion_params = dispersion_structure(),
   pathogen_noise = FALSE,
@@ -14,9 +14,9 @@ construct_model(
 )
 }
 \arguments{
-\item{method}{either \code{\link[=random_walk]{random_walk()}} or \code{\link[=p_spline]{p_spline()}}}
-
 \item{pathogen_structure}{either \code{\link[=single]{single()}}, \code{\link[=multiple]{multiple()}}, or \code{\link[=subtyped]{subtyped()}}}
+
+\item{method}{either \code{\link[=random_walk]{random_walk()}} or \code{\link[=p_spline]{p_spline()}}}
 
 \item{smoothing_params}{argument is optional and defines the structure of the
 smoothing terms including optionally setting the smoothing prior tau.
@@ -44,13 +44,13 @@ Construct model
 \examples{
 
 mod <- construct_model(
-  method = p_spline(),
   pathogen_structure = multiple(
     data = sarscov2,
     case_timeseries = "cases",
     time = "date",
     component_pathogen_timeseries = c("alpha", "delta", "omicron", "other")
   ),
+  method = p_spline(),
   smoothing_params = smoothing_structure(
     "independent",
     tau_mean = c(0, 0.1, 0.3, 0), tau_sd = rep(1, times = 4)

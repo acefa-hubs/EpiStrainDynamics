@@ -73,20 +73,47 @@ Detailed instructions can be found on the
 [vignette](https://acefa-hubs.github.io/EpiStrainDynamics/articles/Using-EpiStrainDyamics.html).
 Here we provide a short overview.
 
-To build a model, you specify the model and pathogen structure with
-`construct_model()`, then fit it to your data with `fit_model()`. The
-steps below walk through this using the `sarscov2` data bundled with the
+A full analysis proceeds through four phases, each producing an object
+consumed by the next: preparing the pathogen data, configuring the
+model, fitting it, and deriving epidemiological quantities. The sections
+below walk through each phase using the `sarscov2` data bundled with the
 package.
 
-### Step 1: Construct model
+### Phase 1: Preparing pathogen data
+
+There are three main types of pathogen structure available to model:
+`single()`, `multiple()`, and `subtyped()`. These functions require the
+name of the dataset itself and the column names for different data
+elements.
+
+The `single()` pathogen structure is the simplest and models a single
+pathogen timeseries. The user must specify the dataset name, the name of
+the column with total case data, and the name of the column of time
+data. The `multiple()` pathogen structure allows modelling of different
+component pathogens. In addition to specifying the dataset, total case
+data, and time, the additional pathogens are specified as a vector of
+column names. The `subtyped()` pathogen structure enables additional
+complexity for a scenario where the user has a combined, unsubtyped
+pathogen timeseries alongside data on some of the underlying subtypes —
+most commonly an influenza modelling scenario with testing data for
+different influenza A subtypes. The user specifies columns containing
+the unsubtyped case count as well as the subtyped cases, and any
+additional pathogens to be modelled. See the vignette for further
+detail.
+
+Each of these functions returns a pathogen structure object, which is
+then passed into `construct_model()` in Phase 2.
+
+### Phase 2: Configuring the model
 
 Modelling specifications are provided using the `construct_model()`
 function. The correct stan model is then applied based on the
-specifications provided. `construct_model()` takes these arguments:
-`method`, `pathogen_structure`, `smoothing_params`, `dispersion_params`,
+specifications provided. `construct_model()` takes the pathogen
+structure object from Phase 1, plus these arguments describing the
+model: `method`, `smoothing_params`, `dispersion_params`,
 `pathogen_noise`, and `dow_effect`.
 
-#### `method`
+#### Method
 
 EpiStrainDynamics has pre-compiled stan models that fit either with
 bayesian penalised splines or random walks. These are specified using
@@ -103,27 +130,7 @@ So we may specify:
     # OR
     method = p_spline(spline_degree = 3, days_per_knot = 2)
 
-## Pathogen structure
-
-There are three main types of pathogen structure available to model:
-`single()`, `multiple()`, and `subtyped()`. These functions require the
-name of the dataset itself and the column names for different data
-elements.
-
-The `single()` pathogen structure is the simplest and models a single
-pathogen timeseries. The user must specify the dataset name, the name of
-the column with total case data, and the name of the column of time
-data. The `multiple()` pathogen structure allows modelling of different
-component pathogens. In addition to specifying the dataset, total case
-data, and time, the additional pathogens are specified as a vector of
-column names. The `subtyped()` pathogen structure enables additional
-complexity, specifically for an influenza modelling scenario, by
-allowing the user to incorporate testing data for influenza A subtypes.
-The user specifies columns containing the unsubtyped influenza A case
-count as well as the subtyped influenza A cases, and any additional
-pathogens to be modelled. See the vignette for further detail.
-
-## Smoothing parameters
+#### Smoothing parameters
 
 The argument `smoothing_params` allows users to modify the correlation
 structures in the parameters describing smoothness and to set related
@@ -148,7 +155,7 @@ pathogens are provided. As below:
       tau_sd = c(1, 1, 1, 1)
     )
 
-## Dispersion parameters
+#### Dispersion parameters
 
 The argument `dispersion_params` optionally allows users to set a prior
 for the overdispersion parameter of the negative binomial likelihood for
@@ -159,36 +166,38 @@ single value. It is specified using `dispersion_structure()` as below:
       phi_mean = 0, phi_sd = 1
     )
 
-## Pathogen noise
+#### Pathogen noise
 
 A logical (`TRUE` or `FALSE`) value indicating whether to include noise
 between individual pathogens in addition to the observation noise.
 
-## Day of week effect
+#### Day of week effect
 
 Day of week effect is specified as a logical (`TRUE` or `FALSE`) to the
 `dow_effect` argument. In plotting, the day of week effect can be
 selectively removed.
 
-## Example
+#### Example
 
 Altogether, an example constructed model for a random walk model with
 multiple pathogens might look as follows, illustrated using data that
 has been provided with the package - `sarscov2`:
 
-    mod <- construct_model(
-      method = random_walk(),                   # random_walk method
-      
-      pathogen_structure = multiple(            # multiple pathogen structure
+    sarscov2_multi <- multiple(                 # multiple pathogen structure
        data = sarscov2,
        case_timeseries = 'cases',               # timeseries of case data
        time = 'date',                           # date or time variable labels
        component_pathogen_timeseries = c(       # component pathogens
          'alpha', 'delta', 'omicron', 'other'
        )
-      ),
-       
-      smoothing_params = smoothing_structure(   # independent smoothing structure 
+    )
+
+    mod <- construct_model(
+      pathogen_structure = sarscov2_multi,
+
+      method = random_walk(),                   # random_walk method
+
+      smoothing_params = smoothing_structure(   # independent smoothing structure
         'independent',                          # with four values for each prior
         tau_mean = c(0, 0.1, 0.3, 0),           # parameter - one for each pathogen
         tau_sd = rep(1, times = 4)
@@ -198,7 +207,7 @@ has been provided with the package - `sarscov2`:
       dow_effect = TRUE
     )
 
-### Step 2: fit model
+### Phase 3: Fitting
 
 The model estimates the expected value of the time series (eg, a
 smoothed trend in the daily number of cases accounting for noise) for
@@ -206,13 +215,17 @@ each individual pathogen. In this step additional fitting parameters
 related to stan models can be modified such as `n_chain`, `n_iter`,
 `n_warmup`, `thin`, `adapt_delta`, `multi_cores`, `verbose`, and `seed`,
 which are described in further detail in the documentation. Model
-parameterisation decisions specified when constructing the model in step
-1 mean the correct stan model will be applied at this stage by simply
+parameterisation decisions specified when configuring the model in Phase
+2 mean the correct stan model will be applied at this stage by simply
 calling:
 
     fit <- fit_model(mod)
 
-### Step 3: Calculate and visualise epidemiological quantities
+Convergence can then be checked with `diagnose_model(fit)`; see the
+vignette for guidance on interpreting and troubleshooting these
+diagnostics.
+
+### Phase 4: Deriving epidemiological quantities
 
 Calculate epidemic growth rate with `growth_rate(fit)`, effective
 reproduction number over time with `Rt(fit, gi_dist = X)` (requiring
@@ -247,16 +260,17 @@ For code corresponding to the AJE paper, see branch
 
 ## Contribution
 
-`EpiStrainDynamics` is in a stable state of development, with some 
-degree of active subsequent development as envisioned by the primary 
-authors. Authors are committed to maintaining the package. 
-If you spot a bug, have a feature request, or want to contribute an 
-improvement to the package (branch `main`) or the code associated with 
-the paper analyses (branch `paper_analysis`), please open an 
-[issue](https://github.com/acefa-hubs/EpiStrainDynamics/issues) or pull 
-request. The [contributing guide](https://github.com/acefa-hubs/EpiStrainDynamics/blob/main/.github/CONTRIBUTING.md) 
-describes the recommended workflow and scope for contributions.
-Test cases and improvements are especially welcome. 
+`EpiStrainDynamics` is in a stable state of development, with some
+degree of active subsequent development as envisioned by the primary
+authors. Authors are committed to maintaining the package. If you spot a
+bug, have a feature request, or want to contribute an improvement to the
+package (branch `main`) or the code associated with the paper analyses
+(branch `paper_analysis`), please open an
+[issue](https://github.com/acefa-hubs/EpiStrainDynamics/issues) or pull
+request. The [contributing
+guide](https://github.com/acefa-hubs/EpiStrainDynamics/blob/main/.github/CONTRIBUTING.md)
+describes the recommended workflow and scope for contributions. Test
+cases and improvements are especially welcome.
 
 ## Code of Conduct
 

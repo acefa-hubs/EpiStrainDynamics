@@ -141,8 +141,8 @@ test_that("subtyped() rejects data.frame with list columns", {
       data = df,
       case_timeseries = "ili",
       time = "week",
-      influenzaA_unsubtyped_timeseries = "inf_A",
-      influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+      unsubtyped_timeseries = "inf_A",
+      subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
       other_pathogen_timeseries = c("inf_B", "other")
     ),
     "List columns detected"

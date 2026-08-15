@@ -225,6 +225,32 @@ test_that("plot.proportion() has appropriate axis labels", {
 })
 
 # ==============================================================================
+# TESTS: DENOMINATOR SUBTITLE
+# ==============================================================================
+
+test_that("plot.proportion() has no subtitle for the default denominator", {
+  skip_if_not(exists("fit_rw_multi"), "Cached fitted models not available")
+
+  default_prop <- proportion(fit_rw_multi)
+  p <- plot(default_prop)
+
+  expect_null(p$labels$subtitle)
+})
+
+test_that("plot.proportion() shows a subtitle for a custom denominator", {
+  skip_if_not(exists("fit_rw_multi"), "Cached fitted models not available")
+
+  custom_prop <- proportion(fit_rw_multi,
+    numerator_combination = "alpha",
+    denominator_combination = c("alpha", "delta")
+  )
+  p <- plot(custom_prop)
+
+  expect_match(p$labels$subtitle, "alpha")
+  expect_match(p$labels$subtitle, "delta")
+})
+
+# ==============================================================================
 # TESTS: REFERENCE LINES
 # ==============================================================================
 

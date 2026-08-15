@@ -63,12 +63,12 @@ test_that("fit_model() validates constructed_model class", {
 test_that("fit_model() validates MCMC parameters", {
   test_data <- create_test_data(n_days = 30)
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = test_data,
       case_timeseries = "cases",
       time = "dates"
-    )
+    ),
+    method = random_walk()
   )
 
   # Invalid n_chain
@@ -91,12 +91,12 @@ test_that("fit_model() validates MCMC parameters", {
 test_that("fit_model() returns correct structure for single pathogen RW", {
   test_data <- create_test_data(n_days = 30)
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = test_data,
       case_timeseries = "cases",
       time = "dates"
-    )
+    ),
+    method = random_walk()
   )
 
   suppressWarnings(
@@ -121,12 +121,12 @@ test_that("fit_model() returns correct structure for single pathogen RW", {
 test_that("fit_model() returns correct structure for single pathogen PS", {
   test_data <- create_test_data(n_days = 30)
   mod <- construct_model(
-    method = p_spline(),
     pathogen_structure = single(
       data = test_data,
       case_timeseries = "cases",
       time = "dates"
-    )
+    ),
+    method = p_spline()
   )
 
   suppressWarnings(
@@ -144,13 +144,13 @@ test_that("fit_model() returns correct structure for single pathogen PS", {
 test_that("fit_model() returns correct structure for multiple pathogen RW", {
   test_data <- create_test_data_multi(n_days = 30)
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = multiple(
       data = test_data,
       case_timeseries = "total",
       time = "dates",
       component_pathogen_timeseries = c("var1", "var2", "var3", "var4")
-    )
+    ),
+    method = random_walk()
   )
 
   suppressWarnings(
@@ -168,13 +168,13 @@ test_that("fit_model() returns correct structure for multiple pathogen RW", {
 test_that("fit_model() returns correct structure for multiple pathogen PS", {
   test_data <- create_test_data_multi(n_days = 30)
   mod <- construct_model(
-    method = p_spline(),
     pathogen_structure = multiple(
       data = test_data,
       case_timeseries = "total",
       time = "dates",
       component_pathogen_timeseries = c("var1", "var2", "var3", "var4")
-    )
+    ),
+    method = p_spline()
   )
 
   suppressWarnings(
@@ -196,12 +196,12 @@ test_that("fit_model() returns correct structure for multiple pathogen PS", {
 test_that("fit_model() respects n_chain parameter", {
   test_data <- create_test_data(n_days = 30)
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = test_data,
       case_timeseries = "cases",
       time = "dates"
-    )
+    ),
+    method = random_walk()
   )
 
   suppressWarnings(
@@ -218,12 +218,12 @@ test_that("fit_model() respects n_chain parameter", {
 test_that("fit_model() respects n_iter parameter", {
   test_data <- create_test_data(n_days = 30)
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = test_data,
       case_timeseries = "cases",
       time = "dates"
-    )
+    ),
+    method = random_walk()
   )
 
   suppressWarnings(
@@ -245,12 +245,12 @@ test_that("fit_model() respects n_iter parameter", {
 test_that("fitted model works with metric functions", {
   test_data <- create_test_data(n_days = 30)
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = test_data,
       case_timeseries = "cases",
       time = "dates"
-    )
+    ),
+    method = random_walk()
   )
 
   suppressWarnings(
@@ -281,12 +281,12 @@ test_that("fitted model works with metric functions", {
 test_that("posterior samples have correct dimensions for single pathogen", {
   test_data <- create_test_data(n_days = 30)
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = test_data,
       case_timeseries = "cases",
       time = "dates"
-    )
+    ),
+    method = random_walk()
   )
 
   suppressWarnings(
@@ -310,13 +310,13 @@ test_that("posterior samples have correct dimensions for single pathogen", {
 test_that("posterior samples have correct dimensions for multiple pathogens", {
   test_data <- create_test_data_multi(n_days = 30)
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = multiple(
       data = test_data,
       case_timeseries = "total",
       time = "dates",
       component_pathogen_timeseries = c("var1", "var2", "var3", "var4")
-    )
+    ),
+    method = random_walk()
   )
 
   suppressWarnings(
@@ -342,12 +342,12 @@ test_that("posterior samples have correct dimensions for multiple pathogens", {
 test_that("verbose = FALSE suppresses Stan output", {
   test_data <- create_test_data(n_days = 30)
   mod <- construct_model(
-    method = random_walk(),
     pathogen_structure = single(
       data = test_data,
       case_timeseries = "cases",
       time = "dates"
-    )
+    ),
+    method = random_walk()
   )
 
   # Capture output

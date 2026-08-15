@@ -43,7 +43,7 @@ test_that("construct_model() works with all standard model configurations", {
 
     expect_s3_class(result, c(model_name, "EpiStrainDynamics.model"))
     expect_equal(result$pathogen_names, expected_names$influenza_subtyped)
-    expect_true("influenzaA_subtyped" %in% names(result$data))
+    expect_true("subtyped" %in% names(result$data))
   }
 })
 
@@ -90,13 +90,13 @@ test_that("construct_model() handles day-of-week effects correctly", {
   expected_length <- get_expected_data_lengths()$sarscov2_length
 
   # Test with dow_effect = TRUE
-  result_dow <- construct_model(method, pathogen, dow_effect = TRUE)
+  result_dow <- construct_model(pathogen, method, dow_effect = TRUE)
   expect_equal(result_dow$standata$week_effect, 7L)
   expect_equal(result_dow$standata$DOW, ((1:expected_length - 1L) %% 7L) + 1L)
   expect_true(result_dow$dow_effect)
 
   # Test with dow_effect = FALSE (default)
-  result_no_dow <- construct_model(method, pathogen, dow_effect = FALSE)
+  result_no_dow <- construct_model(pathogen, method, dow_effect = FALSE)
   expect_equal(result_no_dow$standata$week_effect, 1L)
   expect_equal(result_no_dow$standata$DOW, rep(1L, expected_length))
   expect_false(result_no_dow$dow_effect)
@@ -115,26 +115,26 @@ test_that("construct_model() validates inputs appropriately", {
   # Test invalid method class
   invalid_method <- list(method = "random-walk")
   expect_error(
-    construct_model(invalid_method, pathogen),
+    construct_model(pathogen, invalid_method),
     "EpiStrainDynamics.method"
   )
 
   # Test invalid pathogen structure class
   invalid_pathogen <- list(pathogen_structure = "single")
   expect_error(
-    construct_model(method, invalid_pathogen),
+    construct_model(invalid_pathogen, method),
     "EpiStrainDynamics.pathogen_structure"
   )
 
   # Test dow_effect validation
   expect_error(
-    construct_model(method, pathogen, dow_effect = "TRUE"),
+    construct_model(pathogen, method, dow_effect = "TRUE"),
     "must be a single logical value"
   )
 
   # Test pathogen_noise validation
   expect_error(
-    construct_model(method, pathogen, pathogen_noise = "TRUE"),
+    construct_model(pathogen, method, pathogen_noise = "TRUE"),
     "must be a single logical value"
   )
 })
@@ -152,7 +152,7 @@ test_that("smoothing parameters are correctly incorporated into standata", {
 
   # Test shared smoothing (default)
   result_shared <- construct_model(
-    method, pathogen,
+    pathogen, method,
     smoothing_params = smoothing_structure("shared")
   )
   expect_equal(result_shared$standata$cov_structure, 0)
@@ -160,7 +160,7 @@ test_that("smoothing parameters are correctly incorporated into standata", {
 
   # Test independent smoothing with custom priors
   result_indep <- construct_model(
-    method, pathogen,
+    pathogen, method,
     smoothing_params = smoothing_structure("independent",
       tau_mean = c(0, 0.1, 0.3, 0),
       tau_sd = rep(1, 4)
@@ -173,7 +173,7 @@ test_that("smoothing parameters are correctly incorporated into standata", {
 
   # Test correlated smoothing
   result_corr <- construct_model(
-    method, pathogen,
+    pathogen, method,
     smoothing_params = smoothing_structure("correlated")
   )
   expect_equal(result_corr$standata$cov_structure, 2)
@@ -198,14 +198,14 @@ test_that("dispersion parameters are correctly incorporated into standata", {
 
   # Test default dispersion (no priors)
   result_default <- construct_model(
-    method, pathogen,
+    pathogen, method,
     dispersion_params = dispersion_structure()
   )
   expect_equal(result_default$standata$phi_priors_provided, 1)
 
   # Test custom dispersion priors
   result_custom <- construct_model(
-    method, pathogen,
+    pathogen, method,
     dispersion_params = dispersion_structure(phi_mean = 2.0, phi_sd = 0.5)
   )
   expect_equal(result_custom$standata$phi_priors_provided, 2)
@@ -225,11 +225,11 @@ test_that("pathogen_noise parameter is correctly incorporated into standata", {
   )
 
   # Test pathogen_noise = FALSE (default)
-  result_no_noise <- construct_model(method, pathogen, pathogen_noise = FALSE)
+  result_no_noise <- construct_model(pathogen, method, pathogen_noise = FALSE)
   expect_equal(result_no_noise$standata$noise_structure, 0)
 
   # Test pathogen_noise = TRUE
-  result_with_noise <- construct_model(method, pathogen, pathogen_noise = TRUE)
+  result_with_noise <- construct_model(pathogen, method, pathogen_noise = TRUE)
   expect_equal(result_with_noise$standata$noise_structure, 1)
 })
 
@@ -266,7 +266,7 @@ test_that("pathogen structure parameters are preserved correctly in standata", {
 
     # Verify data is also in model$data
     expect_true("component_pathogens" %in% names(model$data))
-    expect_true("influenzaA_subtyped" %in% names(model$data))
+    expect_true("subtyped" %in% names(model$data))
   }
 })
 
@@ -506,8 +506,8 @@ test_that("Custom model construction with specific parameters", {
   )
 
   result <- construct_model(
-    method,
     pathogen,
+    method,
     smoothing_params = smoothing_structure("correlated"),
     pathogen_noise = TRUE,
     dow_effect = TRUE
