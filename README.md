@@ -1,12 +1,12 @@
 
 # EpiStrainDynamics
 
-[![codecov](https://codecov.io/gh/acefa-hubs/EpiStrainDynamics/graph/badge.svg)](https://app.codecov.io/gh/acefa-hubs/EpiStrainDynamics)
+[![codecov](https://codecov.io/gh/ropensci/EpiStrainDynamics/graph/badge.svg)](https://app.codecov.io/gh/ropensci/EpiStrainDynamics)
 [![](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Project Status: Active - The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![R-CMD-check](https://github.com/acefa-hubs/EpiStrainDynamics/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/acefa-hubs/EpiStrainDynamics/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/ropensci/EpiStrainDynamics/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci/EpiStrainDynamics/actions/workflows/R-CMD-check.yaml)
 
 `EpiStrainDynamics` is a statistical modelling framework capable of
 inferring trends of multiple pathogens. Estimating the temporal trends
@@ -50,7 +50,7 @@ You can install the development version of EpiStrainDynamics from
 
 ``` r
 # install.packages("pak")
-pak::pak("acefa-hubs/EpiStrainDynamics")
+pak::pak("ropensci/EpiStrainDynamics")
 ```
 
 As there is not yet a CRAN release, this always builds
@@ -58,6 +58,15 @@ As there is not yet a CRAN release, this always builds
 C++ toolchain first. This is because `EpiStrainDynamics` implements the
 underlying models in Stan (a statistical modelling language built on
 C++).
+
+Alternatively, thanks to
+[R-universe](https://ropensci.r-universe.dev/EpiStrainDynamics), you can
+install a pre-built binary without needing to configure a C++
+toolchain:
+
+``` r
+install.packages("EpiStrainDynamics", repos = c('https://ropensci.r-universe.dev', 'https://cloud.r-project.org'))
+```
 
 Each operating system has a different set up procedure. Windows users
 need to install an appropriate version of
@@ -70,7 +79,7 @@ guide](https://github.com/stan-dev/rstan/wiki/Configuring-C-Toolchain-for-Linux)
 ## Using `EpiStrainDynamics`
 
 Detailed instructions can be found on the
-[vignette](https://acefa-hubs.github.io/EpiStrainDynamics/articles/Using-EpiStrainDyamics.html).
+[vignette](https://docs.ropensci.org/EpiStrainDynamics/articles/Using-EpiStrainDyamics.html).
 Here we provide a short overview.
 
 A full analysis proceeds through four phases, each producing an object
@@ -239,7 +248,7 @@ combinations of cases attributable to different pathogens/subtypes using
     plot(prop)
 
 For a more detailed discussion, check out the
-[vignette](https://acefa-hubs.github.io/EpiStrainDynamics/articles/Using-EpiStrainDyamics.html).
+[vignette](https://docs.ropensci.org/EpiStrainDynamics/articles/Using-EpiStrainDyamics.html).
 
 ## Citation
 
@@ -248,7 +257,7 @@ article underlying the statistical model developments:
 
 Windecker S, Eales O (2025). EpiStrainDynamics: Infer temporal trends of
 multiple pathogens. R package version 0.0.1,
-<https://acefa-hubs.github.io/EpiStrainDynamics/>.
+<https://docs.ropensci.org/EpiStrainDynamics/>.
 
 Oliver Eales, Saras M Windecker, James M McCaw, Freya M Shearer,
 Inferring temporal trends of multiple pathogens, variants, subtypes or
@@ -256,7 +265,7 @@ serotypes from routine surveillance data, American Journal of
 Epidemiology, 2025;, kwaf119, <https://doi.org/10.1093/aje/kwaf119>
 
 For code corresponding to the AJE paper, see branch
-[`paper_analysis`](https://github.com/acefa-hubs/EpiStrainDynamics/tree/paper_analysis).
+[`paper_analysis`](https://github.com/ropensci/EpiStrainDynamics/tree/paper_analysis).
 
 ## Contribution
 
@@ -266,9 +275,9 @@ authors. Authors are committed to maintaining the package. If you spot a
 bug, have a feature request, or want to contribute an improvement to the
 package (branch `main`) or the code associated with the paper analyses
 (branch `paper_analysis`), please open an
-[issue](https://github.com/acefa-hubs/EpiStrainDynamics/issues) or pull
+[issue](https://github.com/ropensci/EpiStrainDynamics/issues) or pull
 request. The [contributing
-guide](https://github.com/acefa-hubs/EpiStrainDynamics/blob/main/.github/CONTRIBUTING.md)
+guide](https://github.com/ropensci/EpiStrainDynamics/blob/main/.github/CONTRIBUTING.md)
 describes the recommended workflow and scope for contributions. Test
 cases and improvements are especially welcome.
 
@@ -276,7 +285,7 @@ cases and improvements are especially welcome.
 
 Please note that the `EpiStrainDynamics` project is released with a
 [Contributor Code of
-Conduct](https://acefa-hubs.github.io/EpiStrainDynamics/CODE_OF_CONDUCT.html).
+Conduct](https://ropensci.org/code-of-conduct/).
 By contributing to this project, you agree to abide by its terms.
 
 ## Support

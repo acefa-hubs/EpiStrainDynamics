@@ -37,7 +37,7 @@ This package includes stan models precompiled with `rstantools`. If any revision
 
 ### Pull request process
 
-*   Fork the package and clone onto your computer. If you haven't done this before, we recommend using `usethis::create_from_github("acefa-hubs/EpiStrainDynamics", fork = TRUE)`.
+*   Fork the package and clone onto your computer. If you haven't done this before, we recommend using `usethis::create_from_github("ropensci/EpiStrainDynamics", fork = TRUE)`.
 
 *   Install all development dependencies with `devtools::install_dev_deps()`, and then make sure the package passes R CMD check by running `devtools::check()`. 
     If R CMD check doesn't pass cleanly, it's a good idea to ask for help before continuing. 
@@ -64,5 +64,5 @@ This package includes stan models precompiled with `rstantools`. If any revision
 ## Code of Conduct
 
 Please note that the EpiStrainDynamics project is released with a
-[Contributor Code of Conduct](CODE_OF_CONDUCT.md). By contributing to this
-project you agree to abide by its terms.
+[Contributor Code of Conduct](https://ropensci.org/code-of-conduct/). By
+contributing to this project you agree to abide by its terms.

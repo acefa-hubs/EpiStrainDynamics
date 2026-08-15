@@ -241,7 +241,7 @@ message("=== Uploading fixtures to GitHub Release ===")
 
 pb_upload(
   file      = list.files("inst/testfixtures", full.names = TRUE),
-  repo      = "acefa-hubs/epistraindynamics",
+  repo      = "ropensci/epistraindynamics",
   tag       = "test-fixtures-v1"
 )
 

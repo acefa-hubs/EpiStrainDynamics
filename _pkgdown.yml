@@ -1,8 +1,5 @@
-url: https://acefa-hubs.github.io/EpiStrainDynamics/
+url: https://docs.ropensci.org/EpiStrainDynamics/
 template:
-  bootstrap: 5
-  light-switch: true
-  bootswatch: flatly
   math-rendering: mathjax
 articles:
   - title: Statistical Properties

@@ -27,7 +27,7 @@ dir.create(fixture_dir, showWarnings = FALSE)
 download_ok <- tryCatch(
   {
     piggyback::pb_download(
-      repo      = "acefa-hubs/epistraindynamics",
+      repo      = "ropensci/epistraindynamics",
       tag       = "test-fixtures-v1",
       dest      = fixture_dir,
       overwrite = TRUE

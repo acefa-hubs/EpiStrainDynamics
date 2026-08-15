@@ -4,17 +4,17 @@
   "identifier": "EpiStrainDynamics",
   "description": "'EpiStrainDynamics' is a statistical framework developed for inferring temporal trends of multiple pathogens from routinely collected surveillance data.",
   "name": "EpiStrainDynamics: Infer temporal trends of multiple pathogens",
-  "relatedLink": "https://acefa-hubs.github.io/EpiStrainDynamics/",
-  "codeRepository": "https://github.com/acefa-hubs/EpiStrainDynamics",
-  "issueTracker": "https://github.com/acefa-hubs/EpiStrainDynamics/issues",
+  "relatedLink": "https://docs.ropensci.org/EpiStrainDynamics/",
+  "codeRepository": "https://github.com/ropensci/EpiStrainDynamics",
+  "issueTracker": "https://github.com/ropensci/EpiStrainDynamics/issues",
   "license": "https://spdx.org/licenses/Apache-2.0",
-  "version": "0.0.0.9000",
+  "version": "0.1.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.5.1 (2025-06-13)",
+  "runtimePlatform": "R version 4.5.3 (2026-03-11)",
   "author": [
     {
       "@type": "Person",
@@ -61,6 +61,18 @@
   "softwareSuggestions": [
     {
       "@type": "SoftwareApplication",
+      "identifier": "data.table",
+      "name": "data.table",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=data.table"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "knitr",
       "name": "knitr",
       "provider": {
@@ -70,6 +82,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=knitr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "piggyback",
+      "name": "piggyback",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=piggyback"
     },
     {
       "@type": "SoftwareApplication",
@@ -95,6 +119,66 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=testthat"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "tibble",
+      "name": "tibble",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=tibble"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "tibbletime",
+      "name": "tibbletime",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=tibbletime"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "units",
+      "name": "units",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=units"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "xts",
+      "name": "xts",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=xts"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "zoo",
+      "name": "zoo",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=zoo"
     }
   ],
   "softwareRequirements": {
@@ -102,7 +186,7 @@
       "@type": "SoftwareApplication",
       "identifier": "R",
       "name": "R",
-      "version": ">= 3.5"
+      "version": ">= 4.1.0"
     },
     "2": {
       "@type": "SoftwareApplication",
@@ -235,6 +319,18 @@
     },
     "13": {
       "@type": "SoftwareApplication",
+      "identifier": "timetk",
+      "name": "timetk",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=timetk"
+    },
+    "14": {
+      "@type": "SoftwareApplication",
       "identifier": "tsibble",
       "name": "tsibble",
       "provider": {
@@ -245,7 +341,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tsibble"
     },
-    "14": {
+    "15": {
       "@type": "SoftwareApplication",
       "identifier": "viridis",
       "name": "viridis",
@@ -259,7 +355,7 @@
     },
     "SystemRequirements": "GNU make"
   },
-  "fileSize": "376012.884KB",
+  "fileSize": "826473.424KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
@@ -287,7 +383,7 @@
         }
       ],
       "name": "Infer temporal trends of multiple pathogens",
-      "url": "https://github.com/acefa-hubs/EpiStrainDynamics",
+      "url": "https://github.com/ropensci/EpiStrainDynamics",
       "description": "R package"
     },
     {
@@ -330,7 +426,8 @@
       }
     }
   ],
-  "readme": "https://github.com/acefa-hubs/EpiStrainDynamics/blob/main/README.md",
-  "contIntegration": ["https://app.codecov.io/gh/acefa-hubs/EpiStrainDynamics", "https://github.com/acefa-hubs/EpiStrainDynamics/actions/workflows/R-CMD-check.yaml"],
+  "releaseNotes": "https://github.com/ropensci/EpiStrainDynamics/blob/main/NEWS.md",
+  "readme": "https://github.com/ropensci/EpiStrainDynamics/blob/main/README.md",
+  "contIntegration": ["https://app.codecov.io/gh/ropensci/EpiStrainDynamics", "https://github.com/ropensci/EpiStrainDynamics/actions/workflows/R-CMD-check.yaml"],
   "developmentStatus": ["https://lifecycle.r-lib.org/articles/stages.html#stable", "https://www.repostatus.org/#active"]
 }

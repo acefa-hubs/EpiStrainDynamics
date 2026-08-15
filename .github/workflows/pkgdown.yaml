@@ -1,11 +1,12 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+#
+# Deployment is handled by docs.ropensci.org, which builds and publishes the
+# site automatically from `main` after this repo's rOpenSci transfer. This
+# workflow only builds the site (not deploys it) as a PR check to catch
+# pkgdown build errors before they land.
 on:
-  push:
-    branches: main
   pull_request:
-  release:
-    types: [published]
   workflow_dispatch:
 
 name: pkgdown.yaml
@@ -15,13 +16,8 @@ permissions: read-all
 jobs:
   pkgdown:
     runs-on: ubuntu-latest
-    # Only restrict concurrency for non-PR jobs
     concurrency:
-      group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-    permissions:
-      contents: write
+      group: pkgdown-${{ github.run_id }}
     steps:
       - uses: actions/checkout@v4
 
@@ -39,11 +35,3 @@ jobs:
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
-
-      - name: Deploy to GitHub pages 🚀
-        if: github.event_name != 'pull_request'
-        uses: JamesIves/github-pages-deploy-action@v4.5.0
-        with:
-          clean: false
-          branch: gh-pages
-          folder: docs

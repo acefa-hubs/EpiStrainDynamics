@@ -1,6 +1,6 @@
 Package: EpiStrainDynamics
 Title: Infer temporal trends of multiple pathogens
-Version: 0.0.1.9000
+Version: 0.1.0
 Authors@R: 
     c(person("Saras", "Windecker", email = "saras.windecker@gmail.com", 
         role = c("aut", "cre"),
@@ -11,12 +11,14 @@ Authors@R:
         comment = c(ORCID = "0000-0002-2452-3098")),
       person("Freya", "Shearer", role = "aut",
         comment = c(ORCID = "0000-0001-9600-3473")),
-      person("Milad", "Kharratzadeh", role = "ctb")
+      person("Milad", "Kharratzadeh", role = "ctb"),
+      person("Sangeeta", "Bhatia", role = "rev"),
+      person("Joshua", "Lambert", role = "rev")
     )
 Description: 'EpiStrainDynamics' is a statistical framework developed for inferring temporal trends of multiple pathogens from routinely collected surveillance data.
-BugReports: https://github.com/acefa-hubs/EpiStrainDynamics/issues
+BugReports: https://github.com/ropensci/EpiStrainDynamics/issues
 License: Apache License 2.0
-URL: https://acefa-hubs.github.io/EpiStrainDynamics/, https://github.com/acefa-hubs/EpiStrainDynamics
+URL: https://docs.ropensci.org/EpiStrainDynamics, https://github.com/ropensci/EpiStrainDynamics
 Encoding: UTF-8
 Language: en
 RoxygenNote: 7.3.3
