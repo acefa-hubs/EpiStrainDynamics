@@ -320,8 +320,8 @@ test_that("subtyped() accepts data.frame-like objects with time argument", {
         data = test_data,
         case_timeseries = "cases",
         time = "date",
-        influenzaA_unsubtyped_timeseries = "inf_A",
-        influenzaA_subtyped_timeseries = c("inf_H1N1", "inf_H3N2"),
+        unsubtyped_timeseries = "inf_A",
+        subtyped_timeseries = c("inf_H1N1", "inf_H3N2"),
         other_pathogen_timeseries = c("inf_B", "other")
       )
     )
@@ -337,8 +337,8 @@ test_that("subtyped() accepts time series objects with optional time arg", {
       subtyped(
         data = test_data,
         case_timeseries = "cases",
-        influenzaA_unsubtyped_timeseries = "inf_A",
-        influenzaA_subtyped_timeseries = c("inf_H1N1", "inf_H3N2"),
+        unsubtyped_timeseries = "inf_A",
+        subtyped_timeseries = c("inf_H1N1", "inf_H3N2"),
         other_pathogen_timeseries = c("inf_B", "other")
       )
     )
@@ -354,8 +354,8 @@ test_that("subtyped() requires time argument for data.frame-like objects", {
       subtyped(
         data = test_data,
         case_timeseries = "cases",
-        influenzaA_unsubtyped_timeseries = "inf_A",
-        influenzaA_subtyped_timeseries = c("inf_H1N1", "inf_H3N2"),
+        unsubtyped_timeseries = "inf_A",
+        subtyped_timeseries = c("inf_H1N1", "inf_H3N2"),
         other_pathogen_timeseries = c("inf_B", "other")
       ),
       "When `time` is not specified, data must be a time series class object"
@@ -370,8 +370,8 @@ test_that("subtyped() returns expected structure with all classes", {
     data = test_df,
     case_timeseries = "cases",
     time = "date",
-    influenzaA_unsubtyped_timeseries = "inf_A",
-    influenzaA_subtyped_timeseries = c("inf_H1N1", "inf_H3N2"),
+    unsubtyped_timeseries = "inf_A",
+    subtyped_timeseries = c("inf_H1N1", "inf_H3N2"),
     other_pathogen_timeseries = c("inf_B", "other")
   )
 
@@ -382,10 +382,10 @@ test_that("subtyped() returns expected structure with all classes", {
     c("inf_H1N1", "inf_H3N2", "inf_B", "other")
   )
   expect_type(result_df$data, "list")
-  expect_named(result_df$data, c("case_timeseries", "component_pathogens", "influenzaA_subtyped"))
+  expect_named(result_df$data, c("case_timeseries", "component_pathogens", "subtyped"))
   expect_length(result_df$data$case_timeseries, 100)
   expect_equal(dim(result_df$data$component_pathogens), c(3, 100))
-  expect_equal(dim(result_df$data$influenzaA_subtyped), c(2, 100))
+  expect_equal(dim(result_df$data$subtyped), c(2, 100))
 
   # Test with time series object (time optional)
   if (requireNamespace("xts", quietly = TRUE)) {
@@ -393,8 +393,8 @@ test_that("subtyped() returns expected structure with all classes", {
     result_xts <- subtyped(
       data = test_xts,
       case_timeseries = "cases",
-      influenzaA_unsubtyped_timeseries = "inf_A",
-      influenzaA_subtyped_timeseries = c("inf_H1N1", "inf_H3N2"),
+      unsubtyped_timeseries = "inf_A",
+      subtyped_timeseries = c("inf_H1N1", "inf_H3N2"),
       other_pathogen_timeseries = c("inf_B", "other")
     )
 
@@ -405,7 +405,7 @@ test_that("subtyped() returns expected structure with all classes", {
       c("inf_H1N1", "inf_H3N2", "inf_B", "other")
     )
     expect_equal(dim(result_xts$data$component_pathogens), c(3, 100))
-    expect_equal(dim(result_xts$data$influenzaA_subtyped), c(2, 100))
+    expect_equal(dim(result_xts$data$subtyped), c(2, 100))
   }
 })
 

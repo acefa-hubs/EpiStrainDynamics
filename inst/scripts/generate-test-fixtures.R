@@ -93,8 +93,8 @@ fit_rw_subtyped <- suppressWarnings(fit_model(
   construct_model(
     pathogen_structure = subtyped(
       data = influenza_subset, case_timeseries = "ili", time = "week",
-      influenzaA_unsubtyped_timeseries = "inf_A",
-      influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+      unsubtyped_timeseries = "inf_A",
+      subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
       other_pathogen_timeseries = c("inf_B", "other")
     ),
     method = random_walk()
@@ -108,8 +108,8 @@ fit_ps_subtyped <- suppressWarnings(fit_model(
   construct_model(
     pathogen_structure = subtyped(
       data = influenza_subset, case_timeseries = "ili", time = "week",
-      influenzaA_unsubtyped_timeseries = "inf_A",
-      influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+      unsubtyped_timeseries = "inf_A",
+      subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
       other_pathogen_timeseries = c("inf_B", "other")
     ),
     method = p_spline()
@@ -206,8 +206,8 @@ fit_rw_subtyped_ext <- fit_model(
   construct_model(
     pathogen_structure = subtyped(
       data = influenza, case_timeseries = "ili", time = "week",
-      influenzaA_unsubtyped_timeseries = "inf_A",
-      influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+      unsubtyped_timeseries = "inf_A",
+      subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
       other_pathogen_timeseries = c("inf_B", "other")
     ),
     method = random_walk()
@@ -221,8 +221,8 @@ fit_ps_subtyped_ext <- fit_model(
   construct_model(
     pathogen_structure = subtyped(
       data = influenza, case_timeseries = "ili", time = "week",
-      influenzaA_unsubtyped_timeseries = "inf_A",
-      influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+      unsubtyped_timeseries = "inf_A",
+      subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
       other_pathogen_timeseries = c("inf_B", "other")
     ),
     method = p_spline()

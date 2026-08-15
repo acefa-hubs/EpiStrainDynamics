@@ -87,15 +87,15 @@ test_that("subtyped() handles units objects across all pathogen types ", {
     data = df,
     case_timeseries = "ili",
     time = "week",
-    influenzaA_unsubtyped_timeseries = "inf_A",
-    influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+    unsubtyped_timeseries = "inf_A",
+    subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
     other_pathogen_timeseries = c("inf_B", "other")
   )
 
   expect_s3_class(result, "EpiStrainDynamics.pathogen_structure")
   expect_type(result$data$case_timeseries, "double")
   expect_type(result$data$component_pathogens, "double")
-  expect_type(result$data$influenzaA_subtyped, "double")
+  expect_type(result$data$subtyped, "double")
 })
 
 # Mixed Standard and Non-Standard Column Types

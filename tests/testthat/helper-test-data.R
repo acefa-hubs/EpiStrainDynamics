@@ -55,8 +55,8 @@ create_test_models <- function() {
     data = influenza,
     case_timeseries = "ili",
     time = "week",
-    influenzaA_unsubtyped_timeseries = "inf_A",
-    influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+    unsubtyped_timeseries = "inf_A",
+    subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
     other_pathogen_timeseries = c("inf_B", "other")
   )
 

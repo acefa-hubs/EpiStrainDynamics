@@ -93,11 +93,13 @@ data. The `multiple()` pathogen structure allows modelling of different
 component pathogens. In addition to specifying the dataset, total case
 data, and time, the additional pathogens are specified as a vector of
 column names. The `subtyped()` pathogen structure enables additional
-complexity, specifically for an influenza modelling scenario, by
-allowing the user to incorporate testing data for influenza A subtypes.
-The user specifies columns containing the unsubtyped influenza A case
-count as well as the subtyped influenza A cases, and any additional
-pathogens to be modelled. See the vignette for further detail.
+complexity for a scenario where the user has a combined, unsubtyped
+pathogen timeseries alongside data on some of the underlying subtypes —
+most commonly an influenza modelling scenario with testing data for
+different influenza A subtypes. The user specifies columns containing
+the unsubtyped case count as well as the subtyped cases, and any
+additional pathogens to be modelled. See the vignette for further
+detail.
 
 Each of these functions returns a pathogen structure object, which is
 then passed into `construct_model()` in Phase 2.

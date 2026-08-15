@@ -95,7 +95,7 @@ construct_model <- function(pathogen_structure,
   cases <- pathogen_structure$data$case_timeseries
   pathogen_names <- pathogen_structure$pathogen_names
   component_pathogens <- pathogen_structure$data$component_pathogens %||% NULL
-  influenzaA_subtyped <- pathogen_structure$data$influenzaA_subtyped %||% NULL
+  subtyped <- pathogen_structure$data$subtyped %||% NULL
   cov_structure <- get_cov_structure(smoothing_params$smoothing_type)
   noise_structure <- as.numeric(pathogen_noise)
   spline_degree <- method$model_params$spline_degree %||% NULL
@@ -121,7 +121,7 @@ construct_model <- function(pathogen_structure,
         cov_structure = cov_structure,
         noise_structure = noise_structure,
         P1 = component_pathogens,
-        P2 = influenzaA_subtyped
+        P2 = subtyped
       )
     )
   }

@@ -9,6 +9,14 @@
   `construct_model()` positionally (e.g. `construct_model(my_method,
   my_pathogen_structure)`) will need to swap the order of these two
   arguments; calls using named arguments are unaffected.
+* `subtyped()`'s `influenzaA_unsubtyped_timeseries` and
+  `influenzaA_subtyped_timeseries` arguments are now `unsubtyped_timeseries`
+  and `subtyped_timeseries`. The `influenzaA_` prefix implied the structure
+  only applied to influenza A subtypes, when it applies to any pathogen with
+  a combined, unsubtyped timeseries alongside partial subtype data —
+  influenza A is just the most common example (#73). Any code calling
+  `subtyped()` with these named arguments will need to update the argument
+  names.
 
 ## Bug fixes
 

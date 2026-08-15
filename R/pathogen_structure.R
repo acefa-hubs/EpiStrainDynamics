@@ -180,11 +180,11 @@ multiple <- function(data,
 #'   series object (ts, xts, zoo, tsibble, etc.)
 #' @param case_timeseries Column name containing case counts. Must be numeric
 #'   or a \code{units} object from the \pkg{units} package.
-#' @param influenzaA_unsubtyped_timeseries vector of column names with additional
-#'   unsubtyped influenzaA case count timeseries. Must be numeric or a
+#' @param unsubtyped_timeseries vector of column names with additional
+#'   unsubtyped pathogen case count timeseries. Must be numeric or a
 #'   \code{units} object from the \pkg{units} package.
-#' @param influenzaA_subtyped_timeseries vector of column names with additional
-#'   subtyped influenzaA case count timeseries. Must be numeric or a
+#' @param subtyped_timeseries vector of column names with additional
+#'   subtyped pathogen case count timeseries. Must be numeric or a
 #'   \code{units} object from the \pkg{units} package.
 #' @param other_pathogen_timeseries vector of column names with additional
 #'   pathogen case count timeseries to model. Must be numeric or a \code{units}
@@ -213,8 +213,8 @@ multiple <- function(data,
 #' subtyped(
 #'   data = influenza,
 #'   case_timeseries = "ili",
-#'   influenzaA_unsubtyped_timeseries = "inf_A",
-#'   influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+#'   unsubtyped_timeseries = "inf_A",
+#'   subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
 #'   other_pathogen_timeseries = c("inf_B", "other"),
 #'   time = "week"
 #' )
@@ -228,15 +228,15 @@ multiple <- function(data,
 #' subtyped(
 #'   data = influenza_xts,
 #'   case_timeseries = "ili",
-#'   influenzaA_unsubtyped_timeseries = "inf_A",
-#'   influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+#'   unsubtyped_timeseries = "inf_A",
+#'   subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
 #'   other_pathogen_timeseries = c("inf_B", "other")
 #' )
 #'
 subtyped <- function(data,
                      case_timeseries,
-                     influenzaA_unsubtyped_timeseries,
-                     influenzaA_subtyped_timeseries,
+                     unsubtyped_timeseries,
+                     subtyped_timeseries,
                      other_pathogen_timeseries,
                      time = NULL) {
   #' @srrstats {G5.8c, G5.8d} edge cases produce errors
@@ -244,8 +244,8 @@ subtyped <- function(data,
   #' @srrstats {G2.1a} validation for vector inputs
   if (!is.null(time)) check_column_exists(data, time)
   ts_cols <- c(
-    case_timeseries, influenzaA_unsubtyped_timeseries,
-    influenzaA_subtyped_timeseries, other_pathogen_timeseries
+    case_timeseries, unsubtyped_timeseries,
+    subtyped_timeseries, other_pathogen_timeseries
   )
   for (col in ts_cols) {
     check_column_exists(data, col)
@@ -259,18 +259,18 @@ subtyped <- function(data,
     "case_timeseries"
 
   # Create pathogen names
-  pathogen_names <- c(influenzaA_subtyped_timeseries, other_pathogen_timeseries)
+  pathogen_names <- c(subtyped_timeseries, other_pathogen_timeseries)
 
   # Create matrices directly from validated tsibble
   component_pathogens <- t(as.matrix(
     validated_tsbl[, c(
-      influenzaA_unsubtyped_timeseries,
+      unsubtyped_timeseries,
       other_pathogen_timeseries
     )]
   ))
 
-  influenzaA_subtyped <- t(as.matrix(
-    validated_tsbl[, influenzaA_subtyped_timeseries]
+  subtyped <- t(as.matrix(
+    validated_tsbl[, subtyped_timeseries]
   ))
 
   #' @srrstats {G5.3} data objects are returns with no missing values. this
@@ -284,7 +284,7 @@ subtyped <- function(data,
     data = list(
       case_timeseries = validated_tsbl$case_timeseries,
       component_pathogens = component_pathogens,
-      influenzaA_subtyped = influenzaA_subtyped
+      subtyped = subtyped
     )
   )
 

@@ -43,7 +43,7 @@ test_that("construct_model() works with all standard model configurations", {
 
     expect_s3_class(result, c(model_name, "EpiStrainDynamics.model"))
     expect_equal(result$pathogen_names, expected_names$influenza_subtyped)
-    expect_true("influenzaA_subtyped" %in% names(result$data))
+    expect_true("subtyped" %in% names(result$data))
   }
 })
 
@@ -266,7 +266,7 @@ test_that("pathogen structure parameters are preserved correctly in standata", {
 
     # Verify data is also in model$data
     expect_true("component_pathogens" %in% names(model$data))
-    expect_true("influenzaA_subtyped" %in% names(model$data))
+    expect_true("subtyped" %in% names(model$data))
   }
 })
 
