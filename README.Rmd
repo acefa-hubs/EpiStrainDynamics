@@ -71,7 +71,7 @@ Each operating system has a different set up procedure. Windows users need to in
 
 ## Using `EpiStrainDynamics`
 
-Detailed instructions can be found on the [vignette](https://docs.ropensci.org/EpiStrainDynamics/articles/Using-EpiStrainDyamics.html).
+Detailed instructions can be found on the [vignette](https://docs.ropensci.org/EpiStrainDynamics/articles/Using-EpiStrainDynamics.html).
 Here we provide a short overview.
 
 A full analysis proceeds through four phases, each producing an object consumed by the next: preparing the pathogen data, configuring the model, fitting it, and deriving epidemiological quantities. The sections below walk through each phase using the `sarscov2` data bundled with the package.
@@ -191,7 +191,7 @@ prop <- proportion(fit)
 plot(prop)
 ```
 
-For a more detailed discussion, check out the [vignette](https://docs.ropensci.org/EpiStrainDynamics/articles/Using-EpiStrainDyamics.html).
+For a more detailed discussion, check out the [vignette](https://docs.ropensci.org/EpiStrainDynamics/articles/Using-EpiStrainDynamics.html).
 
 ## Citation
 

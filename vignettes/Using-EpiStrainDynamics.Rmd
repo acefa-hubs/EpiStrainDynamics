@@ -169,7 +169,7 @@ fit <- fit_model(
 #> Warning: There were 4 chains where the estimated Bayesian Fraction of Missing Information was low. See
 #> https://mc-stan.org/misc/warnings.html#bfmi-low
 #> Warning: Examine the pairs() plot to diagnose sampling problems
-#> Warning: The largest R-hat is 2.39, indicating chains have not mixed.
+#> Warning: The largest R-hat is 2.54, indicating chains have not mixed.
 #> Running the chains for more iterations may help. See
 #> https://mc-stan.org/misc/warnings.html#r-hat
 #> Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
@@ -192,8 +192,8 @@ diagnose_model(fit)
 #> Model Convergence Diagnostics
 #> =============================
 #> Overall convergence: ISSUES DETECTED 
-#> Maximum R-hat: 3.025 
-#> Minimum n_eff: 3
+#> Maximum R-hat: 3.45 
+#> Minimum n_eff: 2
 ```
 
 Beyond this summary, the stan fit object can be interrogated with any package that works with stan outputs. For example, one could visualise posteriors with the package `bayesplot`:
@@ -238,14 +238,15 @@ gr <- growth_rate(fit)
 head(gr$measure)
 #> # A tsibble: 6 x 9 [7D]
 #> # Key:       pathogen [1]
-#>   pathogen pathogen_idx      y    lb_50  ub_50   lb_95 ub_95  prop time      
-#>   <chr>           <int>  <dbl>    <dbl>  <dbl>   <dbl> <dbl> <dbl> <date>    
-#> 1 Total              NA 0.0510 -0.0101  0.115  -0.118  0.347 0.7   2012-01-09
-#> 2 Total              NA 0.0125 -0.0493  0.0704 -0.181  0.249 0.6   2012-01-16
-#> 3 Total              NA 0.0220 -0.0358  0.0687 -0.127  0.173 0.65  2012-01-23
-#> 4 Total              NA 0.0411 -0.0227  0.113  -0.0745 0.325 0.625 2012-01-30
-#> 5 Total              NA 0.0391 -0.00629 0.143  -0.0728 0.449 0.675 2012-02-06
-#> 6 Total              NA 0.0315  0.00408 0.132  -0.0815 0.300 0.775 2012-02-13
+#>   pathogen pathogen_idx        y   lb_50  ub_50   lb_95 ub_95  prop
+#>   <chr>           <int>    <dbl>   <dbl>  <dbl>   <dbl> <dbl> <dbl>
+#> 1 Total              NA  0.220    0.161  0.275   0.0570 0.599 0.975
+#> 2 Total              NA  0.163    0.0725 0.236  -0.115  0.477 0.925
+#> 3 Total              NA  0.113    0.0294 0.177  -0.164  0.272 0.825
+#> 4 Total              NA  0.0546  -0.0242 0.130  -0.180  0.239 0.675
+#> 5 Total              NA  0.00562 -0.0626 0.116  -0.220  0.230 0.5  
+#> 6 Total              NA -0.0289  -0.0776 0.0615 -0.168  0.150 0.4  
+#> # ℹ 1 more variable: time <date>
 plot(gr)
 ```
 
@@ -319,12 +320,12 @@ fit_covid <- fit_model(
 #> ℹ With `n_iter` = 20, `n_warmup` = 10, `thin` = 1, and `n_chain` = 4
 #> ℹ Only 40 samples will be retained
 #> ℹ Consider reducing `thin` or increasing `n_iter`
-#> Warning: There were 4 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
+#> Warning: There were 9 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
 #> https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
 #> Warning: There were 4 chains where the estimated Bayesian Fraction of Missing Information was low. See
 #> https://mc-stan.org/misc/warnings.html#bfmi-low
 #> Warning: Examine the pairs() plot to diagnose sampling problems
-#> Warning: The largest R-hat is 4.6, indicating chains have not mixed.
+#> Warning: The largest R-hat is 4.08, indicating chains have not mixed.
 #> Running the chains for more iterations may help. See
 #> https://mc-stan.org/misc/warnings.html#r-hat
 #> Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.

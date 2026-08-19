@@ -58,7 +58,7 @@ pathogen_structure = multiple(
 )
 ```
 
-The `subtyped()` pathogen structure enables additional complexity specifically for an influenza modelling scenario by allowing the user to incorporate testing data for influenza A subtypes. The unsubtyped column is specified with `influenzaA_unsubtyped_timeseries`, and the subtyped data are specified with vector of column names of provided to `influenzaA_subtyped_timeseries`. Additional pathogens are provided as a vector of column names to `other_pathogen_timeseries`. Example pathogen structure specification for subtyped model using the `influenza` dataset included in the package:
+The `subtyped()` pathogen structure enables additional complexity specifically for a scenario where the user has a timeseries of unsubtyped pathogens combined and some data on the underlying subtypes. The most common example of this would be an influenza modelling scenario where the user has testing data for different influenza A subtypes. The unsubtyped column is specified with `unsubtyped_timeseries`, and the subtyped data are specified as a vector of column names provided to `subtyped_timeseries`. Additional pathogens are provided as a vector of column names to `other_pathogen_timeseries`. Example pathogen structure specification for subtyped model using the `influenza` dataset included in the package:
 
 ```
 pathogen_structure = subtyped(
@@ -66,8 +66,8 @@ pathogen_structure = subtyped(
   case_timeseries = ili,                       # timeseries of case data
   time = week,                                 # date or time variable labels
 
-  influenzaA_unsubtyped_timeseries = 'inf_A',  # unsubtyped influenzaA
-  influenzaA_subtyped_timeseries = c(          # subtyped influenzaA
+  unsubtyped_timeseries = 'inf_A',             # unsubtyped influenzaA
+  subtyped_timeseries = c(                     # subtyped influenzaA
     'inf_H3N2', 'inf_H1N1'
   ),
   other_pathogen_timeseries = c(               # other pathogens
@@ -144,8 +144,8 @@ mod <- construct_model(
     data = influenza,
     case_timeseries = "ili",
     time = "week",
-    influenzaA_unsubtyped_timeseries = "inf_A",
-    influenzaA_subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
+    unsubtyped_timeseries = "inf_A",
+    subtyped_timeseries = c("inf_H3N2", "inf_H1N1"),
     other_pathogen_timeseries = c("inf_B", "other")
   ),
   method = p_spline(),

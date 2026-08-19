@@ -81,7 +81,7 @@ guide](https://github.com/stan-dev/rstan/wiki/Configuring-C-Toolchain-for-Linux)
 ## Using `EpiStrainDynamics`
 
 Detailed instructions can be found on the
-[vignette](https://docs.ropensci.org/EpiStrainDynamics/articles/Using-EpiStrainDyamics.html).
+[vignette](https://docs.ropensci.org/EpiStrainDynamics/articles/Using-EpiStrainDynamics.html).
 Here we provide a short overview.
 
 A full analysis proceeds through four phases, each producing an object
@@ -250,7 +250,7 @@ combinations of cases attributable to different pathogens/subtypes using
     plot(prop)
 
 For a more detailed discussion, check out the
-[vignette](https://docs.ropensci.org/EpiStrainDynamics/articles/Using-EpiStrainDyamics.html).
+[vignette](https://docs.ropensci.org/EpiStrainDynamics/articles/Using-EpiStrainDynamics.html).
 
 ## Citation
 

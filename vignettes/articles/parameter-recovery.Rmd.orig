@@ -7,9 +7,26 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "figures/parameter-recovery-",
+  cache.path = "vignettes/articles/parameter-recovery_cache/",
+  fig.width = 7,
+  fig.height = 5,
+  warning = FALSE,
+  message = FALSE,
+  cache.lazy = FALSE
+)
+```
 
-
-
+```{r srr-tags, eval = FALSE, echo = FALSE}
+#' @srrstats {G5.6, G5.6a, G5.6b} Parameter recovery with data of known
+#'   properties, recovery within defined tolerance, and consistency across
+#'   multiple random seeds
+#'
+```
 
 This document demonstrates parameter recovery properties of `EpiStrainDynamics` models, addressing the following statistical software standards:
 
@@ -17,7 +34,11 @@ This document demonstrates parameter recovery properties of `EpiStrainDynamics` 
 - Recovery within defined tolerance rather than exact values
 - Multiple random seeds when algorithm contains random component
 
-
+```{r load-packages, echo=FALSE}
+library(EpiStrainDynamics)
+library(ggplot2)
+library(dplyr)
+```
 
 ## Overview
 
@@ -38,8 +59,7 @@ We start with the simplest case: a single pathogen with known epidemic dynamics.
 
 ### 1.1 Generate Data with Known SIR Dynamics
 
-
-``` r
+```{r simulate-single, cache=TRUE}
 set.seed(42)
 
 # SIR model simulation
@@ -99,8 +119,7 @@ true_values_single <- data.frame(
 
 ### 1.2 Fit Model with Multiple Seeds
 
-
-``` r
+```{r fit-single-recovery, cache=TRUE, dependson="simulate-single"}
 seeds <- c(111, 222)
 single_fits <- list()
 
@@ -133,14 +152,11 @@ for (i in seq_along(seeds)) {
     upper_95 = inc_values$ub_95
   )
 }
-#> Fitting with seed 111
-#> Fitting with seed 222
 ```
 
 ### 1.3 Evaluate Recovery
 
-
-``` r
+```{r evaluate-single-recovery, dependson="fit-single-recovery"}
 # Calculate metrics for each seed
 recovery_metrics_single <- data.frame(
   seed = seeds,
@@ -162,36 +178,15 @@ knitr::kable(
   digits = 4,
   caption = "Single pathogen parameter recovery metrics across seeds"
 )
-```
-
-
-
-Table: Single pathogen parameter recovery metrics across seeds
-
-| seed| correlation|   rmse| relative_rmse| coverage_95| coverage_50|
-|----:|-----------:|------:|-------------:|-----------:|-----------:|
-|  111|      0.9907| 5.9361|        0.1193|           1|      0.3556|
-|  222|      0.9918| 5.6351|        0.1133|           1|      0.3556|
-
-
-
-``` r
 
 cat("\nSummary across seeds:\n")
-#> 
-#> Summary across seeds:
 cat("Mean correlation:", round(mean(recovery_metrics_single$correlation), 4), "\n")
-#> Mean correlation: 0.9913
 cat("Mean relative RMSE:", round(mean(recovery_metrics_single$relative_rmse), 4), "\n")
-#> Mean relative RMSE: 0.1163
 cat("Mean 95% CI coverage:", round(mean(recovery_metrics_single$coverage_95), 4), "\n")
-#> Mean 95% CI coverage: 1
 cat("Mean 50% CI coverage:", round(mean(recovery_metrics_single$coverage_50), 4), "\n")
-#> Mean 50% CI coverage: 0.3556
 ```
 
-
-``` r
+```{r plot-single-recovery, dependson="fit-single-recovery", fig.height=6}
 # Plot first seed results
 plot_data <- data.frame(
   date = dates,
@@ -220,8 +215,6 @@ ggplot(plot_data, aes(x = date)) +
   theme(legend.position = "bottom")
 ```
 
-![plot of chunk plot-single-recovery](figures/parameter-recovery-plot-single-recovery-1.png)
-
 **Interpretation**: High correlation (>0.95) and good credible interval coverage (near 0.95) indicate successful recovery of the true SIR-generated epidemic pattern.
 
 ---
@@ -232,8 +225,7 @@ Now test recovery of multiple pathogen proportions with realistic succession dyn
 
 ### 2.1 Generate Data with Known Pathogen Succession
 
-
-``` r
+```{r simulate-multiple, cache=TRUE}
 set.seed(123)
 
 n_timepoints <- 120
@@ -287,8 +279,7 @@ multiple_data <- data.frame(
 
 ### 2.2 Fit Model with Multiple Seeds
 
-
-``` r
+```{r fit-multiple-recovery, cache=TRUE, dependson="simulate-multiple"}
 seeds <- c(555, 666)
 multiple_fits <- list()
 
@@ -317,14 +308,11 @@ for (i in seq_along(seeds)) {
     proportions = props
   )
 }
-#> Fitting with seed 555
-#> Fitting with seed 666
 ```
 
 ### 2.3 Evaluate Proportion Recovery
 
-
-``` r
+```{r evaluate-multiple-recovery, dependson="fit-multiple-recovery"}
 # Calculate recovery metrics for each pathogen and seed
 recovery_metrics_multiple <- data.frame()
 
@@ -362,22 +350,9 @@ knitr::kable(summary_by_pathogen,
 )
 ```
 
-
-
-Table: Multiple pathogen proportion recovery summary across seeds (G5.6a, G5.6b)
-
-|pathogen  | mean_correlation| mean_rmse| mean_mae| sd_correlation|
-|:---------|----------------:|---------:|--------:|--------------:|
-|pathogen1 |           0.9990|    0.0187|   0.0115|         0.0001|
-|pathogen2 |           0.9947|    0.0318|   0.0213|         0.0018|
-|pathogen3 |           0.9979|    0.0258|   0.0132|         0.0014|
-
-
-
 ### 2.4 Visualize True vs Estimated Proportions
 
-
-``` r
+```{r plot-multiple-recovery, dependson="fit-multiple-recovery", fig.height=10}
 # Plot recovery for first seed with true proportions
 props_first <- multiple_fits[[1]]$proportions
 prop1 <- props_first$measure$y[props_first$measure$pathogen == "pathogen1"]
@@ -414,10 +389,7 @@ ggplot(plot_data, aes(x = date)) +
   theme(legend.position = "bottom")
 ```
 
-![plot of chunk plot-multiple-recovery](figures/parameter-recovery-plot-multiple-recovery-1.png)
-
-
-``` r
+```{r plot-proportion-comparison, dependson="fit-multiple-recovery", fig.height=8}
 # Create comparison plots showing both true and estimated side by side
 comparison_data <- data.frame(
   date = rep(dates, 6),
@@ -447,12 +419,9 @@ ggplot(comparison_data, aes(x = date, y = proportion, color = type, linetype = t
   theme(legend.position = "bottom")
 ```
 
-![plot of chunk plot-proportion-comparison](figures/parameter-recovery-plot-proportion-comparison-1.png)
-
 ### 2.5 Consistency Across Seeds (G5.6b)
 
-
-``` r
+```{r seed-consistency, dependson="fit-multiple-recovery"}
 # Compare estimates across seeds at specific time points
 check_times <- c(30, 60, 90)
 
@@ -483,24 +452,6 @@ knitr::kable(consistency_results,
 )
 ```
 
-
-
-Table: Consistency of estimates across random seeds at key timepoints
-
-|           |pathogen  | timepoint| true_value| mean_estimate| sd_estimate|     cv|
-|:----------|:---------|---------:|----------:|-------------:|-----------:|------:|
-|pathogen1  |pathogen1 |        30|     1.0000|        0.9652|      0.0202| 0.0209|
-|pathogen11 |pathogen1 |        60|     0.1308|        0.1008|      0.0010| 0.0101|
-|pathogen12 |pathogen1 |        90|     0.0217|        0.0159|      0.0000| 0.0000|
-|pathogen2  |pathogen2 |        30|     0.0000|        0.0348|      0.0202| 0.5821|
-|pathogen21 |pathogen2 |        60|     0.8692|        0.8874|      0.0008| 0.0009|
-|pathogen22 |pathogen2 |        90|     0.1574|        0.1265|      0.0312| 0.2465|
-|pathogen3  |pathogen3 |        30|     0.0000|        0.0000|      0.0000| 0.6742|
-|pathogen31 |pathogen3 |        60|     0.0000|        0.0118|      0.0002| 0.0200|
-|pathogen32 |pathogen3 |        90|     0.8209|        0.8576|      0.0312| 0.0364|
-
-
-
 **Interpretation**: Low coefficient of variation (<0.05) across seeds indicates robust parameter recovery regardless of random seed choice. The model successfully recovers realistic pathogen succession patterns.
 
 ---
@@ -509,8 +460,7 @@ Table: Consistency of estimates across random seeds at key timepoints
 
 Test whether the p-spline method also successfully recovers parameters from SIR-generated data.
 
-
-``` r
+```{r pspline-recovery, cache=TRUE, dependson="simulate-multiple"}
 set.seed(999)
 
 # Use the same multiple pathogen data
@@ -555,20 +505,7 @@ knitr::kable(ps_recovery,
 )
 ```
 
-
-
-Table: P-spline method parameter recovery
-
-|pathogen  | correlation|   rmse|
-|:---------|-----------:|------:|
-|pathogen1 |      0.9991| 0.0179|
-|pathogen2 |      0.9969| 0.0243|
-|pathogen3 |      0.9992| 0.0169|
-
-
-
-
-``` r
+```{r compare-methods, dependson=c("fit-multiple-recovery", "pspline-recovery"), fig.height=6}
 # Compare random walk vs p-spline for pathogen 1
 rw_props1 <- multiple_fits[[1]]$proportions$measure$y[
   multiple_fits[[1]]$proportions$measure$pathogen == "pathogen1"
@@ -596,16 +533,13 @@ ggplot(comparison_data, aes(x = date, y = proportion, color = method, linetype =
   theme(legend.position = "bottom")
 ```
 
-![plot of chunk compare-methods](figures/parameter-recovery-compare-methods-1.png)
-
 ---
 
 ## 4. Subtyped Pathogen Structure Recovery
 
 Test recovery with the more complex subtyped structure using realistic influenza-like dynamics.
 
-
-``` r
+```{r simulate-subtyped, cache=TRUE}
 set.seed(2024)
 
 n_timepoints <- 100
@@ -674,8 +608,7 @@ subtyped_data <- data.frame(
 )
 ```
 
-
-``` r
+```{r fit-subtyped-recovery, cache=TRUE, dependson="simulate-subtyped"}
 model_subtyped <- construct_model(
   pathogen_structure = subtyped(
     data = subtyped_data,
@@ -722,21 +655,7 @@ knitr::kable(subtyped_recovery,
 )
 ```
 
-
-
-Table: Subtyped pathogen structure parameter recovery
-
-|pathogen | correlation|   rmse|
-|:--------|-----------:|------:|
-|inf_H3N2 |      0.9938| 0.0338|
-|inf_H1N1 |      0.9968| 0.0234|
-|inf_B    |      0.9972| 0.0204|
-|other    |      0.9683| 0.0397|
-
-
-
-
-``` r
+```{r plot-subtyped-recovery, dependson="fit-subtyped-recovery", fig.height=10}
 # Create comparison plot
 plot_data_subtyped <- data.frame(
   date = rep(dates, 4),
@@ -772,8 +691,6 @@ ggplot(plot_data_subtyped, aes(x = date)) +
   theme(legend.position = "bottom")
 ```
 
-![plot of chunk plot-subtyped-recovery](figures/parameter-recovery-plot-subtyped-recovery-1.png)
-
 ---
 
 ## Summary
@@ -797,67 +714,6 @@ All simulations use realistic SIR-based epidemic dynamics with pathogen successi
 
 ## Session Information
 
-
-``` r
+```{r session-info}
 sessionInfo()
-#> R version 4.5.3 (2026-03-11)
-#> Platform: aarch64-apple-darwin20
-#> Running under: macOS Tahoe 26.5
-#> 
-#> Matrix products: default
-#> BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
-#> LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
-#> 
-#> locale:
-#> [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
-#> 
-#> time zone: Europe/Warsaw
-#> tzcode source: internal
-#> 
-#> attached base packages:
-#> [1] stats     graphics  grDevices utils     datasets  methods   base     
-#> 
-#> other attached packages:
-#> [1] EpiStrainDynamics_0.1.0 testthat_3.3.2         
-#> [3] dplyr_1.2.0             ggplot2_4.0.2          
-#> 
-#> loaded via a namespace (and not attached):
-#>   [1] piggyback_0.1.5       httr2_1.2.2           gridExtra_2.3        
-#>   [4] remotes_2.5.0         inline_0.3.21         rlang_1.1.7          
-#>   [7] magrittr_2.0.4        furrr_0.3.1           otel_0.2.0           
-#>  [10] matrixStats_1.5.0     ggridges_0.5.7        compiler_4.5.3       
-#>  [13] loo_2.9.0             vctrs_0.7.1           reshape2_1.4.5       
-#>  [16] stringr_1.6.0         pkgconfig_2.0.3       fastmap_1.2.0        
-#>  [19] backports_1.5.0       ellipsis_0.3.2        labeling_0.4.3       
-#>  [22] utf8_1.2.6            prodlim_2026.03.11    sessioninfo_1.2.3    
-#>  [25] anytime_0.3.12        purrr_1.2.1           xfun_0.56            
-#>  [28] cachem_1.1.0          jsonlite_2.0.0        recipes_1.3.1        
-#>  [31] parallel_4.5.3        R6_2.6.1              rsample_1.3.2        
-#>  [34] stringi_1.8.7         RColorBrewer_1.1-3    StanHeaders_2.32.10  
-#>  [37] parallelly_1.46.1     pkgload_1.5.0         rpart_4.1.24         
-#>  [40] brio_1.1.5            lubridate_1.9.5       Rcpp_1.1.1           
-#>  [43] rstan_2.32.7          knitr_1.51            future.apply_1.20.2  
-#>  [46] zoo_1.8-15            usethis_3.2.1         gitcreds_0.1.2       
-#>  [49] bayesplot_1.15.0      Matrix_1.7-4          splines_4.5.3        
-#>  [52] nnet_7.3-20           timechange_0.4.0      tidyselect_1.2.1     
-#>  [55] rstudioapi_0.18.0     dichromat_2.0-0.1     abind_1.4-8          
-#>  [58] viridis_0.6.5         timeDate_4052.112     codetools_0.2-20     
-#>  [61] curl_7.0.0            listenv_0.10.1        pkgbuild_1.4.8       
-#>  [64] lattice_0.22-9        tibble_3.3.1          plyr_1.8.9           
-#>  [67] withr_3.0.2           S7_0.2.1              posterior_1.6.1      
-#>  [70] evaluate_1.0.5        timetk_2.9.1          future_1.69.0        
-#>  [73] desc_1.4.3            survival_3.8-6        RcppParallel_5.1.11-2
-#>  [76] xts_0.14.2            pillar_1.11.1         tensorA_0.36.2.1     
-#>  [79] checkmate_2.3.4       stats4_4.5.3          distributional_0.6.0 
-#>  [82] generics_0.1.4        rprojroot_2.1.1       rstantools_2.6.0     
-#>  [85] tsibble_1.2.0         scales_1.4.0          globals_0.19.1       
-#>  [88] class_7.3-23          glue_1.8.0            tools_4.5.3          
-#>  [91] data.table_1.18.2.1   gower_1.0.2           fs_1.6.7             
-#>  [94] grid_4.5.3            tidyr_1.3.2           QuickJSR_1.9.0       
-#>  [97] gh_1.5.0              ipred_0.9-15          devtools_2.4.6       
-#> [100] colorspace_2.1-2      cli_3.6.5             rappdirs_0.3.4       
-#> [103] viridisLite_0.4.3     lava_1.8.2            V8_8.0.1             
-#> [106] gtable_0.3.6          digest_0.6.39         farver_2.1.2         
-#> [109] memoise_2.0.1         lifecycle_1.0.5       httr_1.4.8           
-#> [112] hardhat_1.4.2         MASS_7.3-65
 ```
