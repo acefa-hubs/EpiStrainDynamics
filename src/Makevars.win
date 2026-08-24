@@ -51,4 +51,19 @@ CXX_STD = CXX17
 # "Error in proc$get_built_file(): Build process failed" is the R-side
 # monitoring process losing sync with the compiler's stdout under that
 # volume, independent of actual memory exhaustion.
+#
+# -mfpmath=sse -msse2 -mstackrealign only apply to x86_64: they mirror
+# R's own Windows x86_64 defaults, but SSE is an x86 instruction set
+# extension with no equivalent on Windows on ARM64, where R now also
+# ships. Passing them there makes clang (targeting
+# aarch64-w64-mingw32) reject the very first compiled file with
+# "unsupported option '-msse2' for target 'aarch64-w64-mingw32'",
+# before Stan code is ever reached. -O1 -w carry no such
+# architecture assumption and stay unconditional.
+WINARCH = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "cat(R.version[['arch']])")
+
+ifeq ($(WINARCH),x86_64)
 override CXX17FLAGS = -O1 -w -mfpmath=sse -msse2 -mstackrealign
+else
+override CXX17FLAGS = -O1 -w
+endif

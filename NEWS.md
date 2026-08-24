@@ -20,6 +20,12 @@
 
 ## Bug fixes
 
+* Fixed compilation failing on Windows ARM64 (`R CMD INSTALL` erroring with
+  "unsupported option '-msse2' for target 'aarch64-w64-mingw32'"). The
+  `-mfpmath=sse -msse2 -mstackrealign` compiler flags added to work around
+  an unrelated Windows x86_64 CI memory issue (see below) are x86-specific
+  and don't exist on ARM64; they're now only applied when compiling for
+  x86_64.
 * Fixed `plot.incidence()` hardcoding "Modelled influenza cases" as its
   y-axis label regardless of the pathogen(s) actually being modelled; it
   now reads the disease-agnostic "Modelled cases".
